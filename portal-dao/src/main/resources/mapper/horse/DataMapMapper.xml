@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yonghui.portal.mapper.horse.DataMapIndexApertureMapper" >
+
+	<select id="getindexlist" resultType="Map">
+		SELECT DISTINCT a.measurename FROM platform.report_measure_relation a where
+		a.themename = #{theme}
+	</select>
+
+	<select id="getthemelist" resultType="Map">
+		SELECT DISTINCT a.themename FROM platform.report_measure_relation a
+	</select>
+
+	<select id="getDataMapIndexAperture" parameterType="Map"
+			resultType="com.yonghui.portal.model.horse.DataMapIndexAperture">
+		call mdm.query_mdm_index_aperture(#{theme},#{index})
+	</select>
+
+</mapper>

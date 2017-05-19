@@ -1,0 +1,70 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://www.mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yonghui.portal.mapper.horse.HorseStoreWarningMapper">
+
+    <select id="storeLight" parameterType="Map" resultType="com.yonghui.portal.model.horse.HorseStoreWarning">
+        select a.*,(select sname from dw.d_bravo_shop where SAP_ShopID=#{store}) as shopname,
+        (select groupname from platform.d_grouplist_sm where groupid=a.groupid) as groupname
+        from saima.sm_storewarning_2017 as a where a.sapshopid=#{store} and a.sdate= (SELECT MAX(sdate) from
+        saima.sm_storewarning_2017)
+    </select>
+
+    <update id="shopOffLightBySaleFlag">
+        update saima.sm_storewarning_2017 set sale_flag=-1 where groupid=#{groupId} and sapshopid=#{shopId} and
+        sdate=date_format(#{time},'%Y%m%d')
+    </update>
+    <update id="shopOffLightByZZFlag">
+        update saima.sm_storewarning_2017 set zzts_flag=-1 where groupid=#{groupId} and sapshopid=#{shopId} and
+        sdate=date_format(#{time},'%Y%m%d')
+    </update>
+    <update id="shopOffLightByJxcFlag">
+        update saima.sm_storewarning_2017 set jxc_flag=-1 where groupid=#{groupId} and sapshopid=#{shopId} and
+        sdate=date_format(#{time},'%Y%m%d')
+    </update>
+    <update id="shopOffLightByProFlag">
+        update saima.sm_storewarning_2017 set profitrate_flag=-1 where groupid=#{groupId} and sapshopid=#{shopId} and
+        sdate=date_format(#{time},'%Y%m%d')
+    </update>
+    <update id="shopOffLightByQtyFlag">
+        update saima.sm_storewarning_2017 set sheetqty_flag=-1 where groupid=#{groupId} and sapshopid=#{shopId} and
+        sdate=date_format(#{time},'%Y%m%d')
+    </update>
+    <update id="shopOffLightByKdFlag">
+        update saima.sm_storewarning_2017 set kd_flag=-1 where groupid=#{groupId} and sapshopid=#{shopId} and
+        sdate=date_format(#{time},'%Y%m%d')
+    </update>
+
+
+    <update id="shopOffLightBySaleFlagQy">
+        update saima.sm_storewarning_2017 set sale_flag1=-1 where groupid=#{groupId} and sapshopid=#{shopId} and
+        sdate=date_format(#{time},'%Y%m%d')
+    </update>
+    <update id="shopOffLightByZZFlagQy">
+        update saima.sm_storewarning_2017 set zzts_flag1=-1 where groupid=#{groupId} and sapshopid=#{shopId} and
+        sdate=date_format(#{time},'%Y%m%d')
+    </update>
+    <update id="shopOffLightByJxcFlagQy">
+        update saima.sm_storewarning_2017 set jxc_flag1=-1 where groupid=#{groupId} and sapshopid=#{shopId} and
+        sdate=date_format(#{time},'%Y%m%d')
+    </update>
+    <update id="shopOffLightByProFlagQy">
+        update saima.sm_storewarning_2017 set profitrate_flag1=-1 where groupid=#{groupId} and sapshopid=#{shopId} and
+        sdate=date_format(#{time},'%Y%m%d')
+    </update>
+    <update id="shopOffLightByQtyFlagQy">
+        update saima.sm_storewarning_2017 set sheetqty_flag1=-1 where groupid=#{groupId} and sapshopid=#{shopId} and
+        sdate=date_format(#{time},'%Y%m%d')
+    </update>
+    <update id="shopOffLightByKdFlagQy">
+        update saima.sm_storewarning_2017 set kd_flag1=-1 where groupid=#{groupId} and sapshopid=#{shopId} and
+        sdate=date_format(#{time},'%Y%m%d')
+    </update>
+
+    <select id="areaLight" parameterType="Map" resultType="com.yonghui.portal.model.horse.HorseStoreWarning">
+        select a.*,
+        (select sname from dw.d_bravo_shop where SAP_ShopID=a.sapshopid) as shopname,
+        (select groupname from platform.d_grouplist_sm where groupid=#{groupId}) as groupname
+        from saima.sm_storewarning_2017 as a where a.areamans=#{areaname} and a.groupid=#{groupId} and
+        a.sdate= (SELECT MAX(sdate) from saima.sm_storewarning_2017)
+    </select>
+</mapper>

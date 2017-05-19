@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://www.mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yonghui.portal.mapper.sys.StHydTotalRealTimeMapper" >
+
+	<select id="realTimeNowSalesTrendLine" parameterType="Map" resultType="Double">
+		<!-- 当天销售趋势 -->
+	select sum(orderAmount) from dws.st_hyd_total_realtime where 
+		typeFlag=1
+		and rq =date_format(#{date},'%Y-%m-%d')
+		and hr>=7
+		group by hr
+		order by hr asc
+	</select>
+
+</mapper>

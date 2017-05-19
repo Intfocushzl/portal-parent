@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN"  
+"http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+	<!-- 全局配置 -->
+	<settings>
+		<!-- 启用下划线与驼峰式命名规则的映射 -->
+		<setting name="mapUnderscoreToCamelCase" value="true" />
+		<!-- 在null时也调用 setter,适应于返回Map,3.2版本以上可用 -->
+		<!-- 解决mybatis 空值不映射的问题 -->
+		<setting name="callSettersOnNulls" value="true"/>
+		<!-- 不启用缓存 -->
+		<setting name="cacheEnabled" value="false"/>
+    </settings>
+</configuration>

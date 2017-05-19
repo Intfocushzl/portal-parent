@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yonghui.portal.mapper.horse.HorseImportExcelMapper">
+
+	<select id="getlatelycashlist" resultType="com.yonghui.portal.model.horse.HorseImportCash">
+    		SELECT a.* FROM
+    		saima.data_import_cash a where a.account = #{user} and a.sdate
+    		=#{time}
+    		and a.areamans=#{areamans}
+    	</select>
+
+    	<select id="getlatelyscorelist" resultType="com.yonghui.portal.model.horse.HorseOperateScore">
+    		SELECT a.* FROM
+    		saima.data_import_checkscore a where a.account = #{user} and a.sdate =
+    		#{time} and a.areamans=#{areamans}
+    	</select>
+
+    	<select id="getlatelyscorelisthuman" resultType="com.yonghui.portal.model.horse.HorseOperateScore">
+    		SELECT a.* FROM
+    		saima.data_import_humanscore a where a.account = #{user} and a.sdate =
+    		#{time} and a.areamans=#{areamans}
+    	</select>
+
+    	<select id="getlatelycashlistState" resultType="com.yonghui.portal.model.horse.HorseImportCash">
+    		SELECT a.* FROM
+    		saima.data_import_cash a where a.account = #{user} and a.sdate
+    		=#{time}
+    		and a.areamans=#{areamans} and a.flag = 0
+    	</select>
+
+    	<select id="getlatelyscoreListState" resultType="com.yonghui.portal.model.horse.HorseOperateScore">
+    		SELECT a.* FROM
+    		saima.data_import_checkscore a where a.account = #{user} and a.sdate =
+    		#{time} and a.areamans=#{areamans} and a.flag = 0
+    	</select>
+
+    	<select id="getlatelyscoreListStatehuman" resultType="com.yonghui.portal.model.horse.HorseOperateScore">
+    		SELECT a.*
+    		FROM
+    		saima.data_import_humanscore a where a.account = #{user} and
+    		a.sdate =
+    		#{time} and a.areamans=#{areamans} and a.flag = 0
+    	</select>
+
+    	<select id="getchashlist" resultType="com.yonghui.portal.model.horse.HorseImportCash">
+    		SELECT a.* FROM
+    		saima.data_import_cash a where a.account = #{user} and a.areamans =
+    		#{areamans}
+    	</select>
+
+    	<select id="getscorelist" resultType="com.yonghui.portal.model.horse.HorseOperateScore">
+    		SELECT a.* FROM
+    		saima.data_import_checkscore a where a.account = #{user} and
+    		a.areamans
+    		= #{areamans}
+    	</select>
+
+    	<select id="getscorelisthuman" resultType="com.yonghui.portal.model.horse.HorseOperateScore">
+    		SELECT a.* FROM
+    		saima.data_import_humanscore a where a.account = #{user} and
+    		a.areamans
+    		= #{areamans}
+    	</select>
+
+    	<update id="updatecashstate" parameterType="java.lang.String">
+    		update
+    		saima.data_import_cash a set flag = 1 ,updatetime=#{updatetime} where
+    		a.account = #{user} and
+    		a.sdate =#{time}
+    		and a.areamans=#{areamans} and
+    		a.flag = 0
+    	</update>
+
+    	<update id="updatescorestate" parameterType="java.lang.String">
+    		update
+    		saima.data_import_checkscore a set flag = 1,updatetime=#{updatetime}
+    		where a.account = #{user}
+    		and a.sdate =#{time}
+    		and
+    		a.areamans=#{areamans} and a.flag = 0
+    	</update>
+
+    	<update id="updatescorestatehuman" parameterType="java.lang.String">
+    		update
+    		saima.data_import_humanscore a set flag = 1,updatetime=#{updatetime}
+    		where a.account = #{user}
+    		and a.sdate =#{time}
+    		and
+    		a.areamans=#{areamans} and a.flag = 0
+    	</update>
+
+
+    	<insert id="insertcashlist" parameterType="java.util.List">
+    		insert into saima.data_import_cash (sdate, sapshopid, groupid,
+    		wrong,
+    		number, flag,
+    		account, updatetime, areamans)
+    		values
+    		<foreach collection="list" item="item" index="index"
+    			separator=",">
+    			(#{item.sdate,jdbcType=VARCHAR},
+    			#{item.sapshopid,jdbcType=VARCHAR}, #{item.groupid,jdbcType=INTEGER},
+    			#{item.wrong,jdbcType=DECIMAL}, #{item.number,jdbcType=DECIMAL},
+    			#{item.flag,jdbcType=INTEGER}, #{item.account,jdbcType=VARCHAR},
+    			#{item.updatetime,jdbcType=DATE},
+    			#{item.areamans,jdbcType=VARCHAR}
+    			)
+    		</foreach>
+    	</insert>
+
+    	<insert id="insertscorelist" parameterType="java.util.List">
+    		insert into saima.data_import_checkscore (sdate, sapshopid, groupid,
+    		thevalue, flag,
+    		account,updatetime,areamans)
+    		values
+    		<foreach collection="list" item="item" index="index"
+    			separator=",">
+    			(#{item.sdate,jdbcType=VARCHAR},
+    			#{item.sapshopid,jdbcType=VARCHAR}, #{item.groupid,jdbcType=INTEGER},
+    			#{item.thevalue,jdbcType=DECIMAL}, #{item.flag,jdbcType=INTEGER},
+    			#{item.account,jdbcType=VARCHAR},
+    			#{item.updatetime,jdbcType=DATE},
+    			#{item.areamans,jdbcType=VARCHAR}
+    			)
+    		</foreach>
+    	</insert>
+
+    	<insert id="insertscorelisthuman" parameterType="java.util.List">
+    		insert into saima.data_import_humanscore (sdate, sapshopid, groupid,
+    		thevalue, flag,
+    		account,updatetime,areamans)
+    		values
+    		<foreach collection="list" item="item" index="index"
+    			separator=",">
+    			(#{item.sdate,jdbcType=VARCHAR},
+    			#{item.sapshopid,jdbcType=VARCHAR}, #{item.groupid,jdbcType=INTEGER},
+    			#{item.thevalue,jdbcType=DECIMAL}, #{item.flag,jdbcType=INTEGER},
+    			#{item.account,jdbcType=VARCHAR},
+    			#{item.updatetime,jdbcType=DATE},
+    			#{item.areamans,jdbcType=VARCHAR}
+    			)
+    		</foreach>
+    	</insert>
+
+    	<delete id="deleteUnconfirmedCash" parameterType="java.lang.String">
+    		delete a from
+    		saima.data_import_cash a
+    		where a.account = #{user} and a.sdate =#{time}
+    		and a.areamans=#{areamans} and a.flag = 0
+    	</delete>
+
+    	<delete id="deleteUnconfirmedScore" parameterType="java.lang.String">
+    		delete a from
+    		saima.data_import_checkscore a
+    		where a.account = #{user} and a.sdate
+    		=#{time}
+    		and a.areamans=#{areamans} and a.flag = 0
+    	</delete>
+
+    	<delete id="deleteUnconfirmedScorehuman" parameterType="java.lang.String">
+    		delete a
+    		from
+    		saima.data_import_humanscore a
+    		where a.account = #{user} and
+    		a.sdate
+    		=#{time}
+    		and a.areamans=#{areamans} and a.flag = 0
+    	</delete>
+
+    	<select id="getareamans" resultType="com.yonghui.portal.model.horse.HorseImportAreaMans">
+    		SELECT SAP_ShopID as id ,
+    		AreaMans as areamans
+    		FROM dw.`d_bravo_shop`
+    	</select>
+
+    	<select id="getshopname" resultType="Map">
+    		select sname as shopname
+    		from dw.d_bravo_shop where SAP_ShopID=#{sapshopid}
+    	</select>
+
+        <select id="getgroupname" resultType="Map">
+    		select groupname from platform.d_grouplist_sm where
+    		groupid=#{groupid}
+    	</select>
+</mapper>

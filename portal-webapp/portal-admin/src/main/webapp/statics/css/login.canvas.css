@@ -1,0 +1,8 @@
+.login-page, .register-page {
+    background: #060e1b;
+}
+
+canvas {
+    width: 100%;
+    height: 100%;
+}

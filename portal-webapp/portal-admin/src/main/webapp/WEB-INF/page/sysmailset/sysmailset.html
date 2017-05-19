@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>发件邮箱账号设置</title>
+    #parse("sys/header.html")
+</head>
+<body>
+<div id="rrapp" v-cloak>
+	<div v-show="showList">
+        <div id="queryDiv" class="queryDiv">
+            <div class="grid-btn">
+                <div class="form-group col-sm-2">
+                    <input type="text" class="form-control" v-model="sysMailSet.id" @keyup.enter="query" placeholder="主键ID">
+                </div>
+                <div class="form-group col-sm-2">
+                	<input type="text" class="form-control" v-model="sysMailSet.remark" @keyup.enter="query" placeholder="备注说明">
+                </div>
+                <a class="btn btn-primary" @click="query">查询</a>
+            </div>
+			<div class="grid-btn">
+				#if($shiro.hasPermission("sysmailset:save"))
+				<a class="btn btn-primary" @click="add"><i class="fa fa-plus"></i>&nbsp;新增</a>
+				#end
+				#if($shiro.hasPermission("sysmailset:update"))
+				<a class="btn btn-primary" @click="update"><i class="fa fa-pencil-square-o"></i>&nbsp;修改</a>
+				#end
+				#if($shiro.hasPermission("sysmailset:delete"))
+				<a class="btn btn-primary" @click="del"><i class="fa fa-trash-o"></i>&nbsp;删除</a>
+				#end
+			</div>
+		</div>
+	    <table id="jqGrid"></table>
+	    <div id="jqGridPager"></div>
+    </div>
+    
+    <div v-show="!showList" class="panel panel-default">
+		<div class="panel-heading">{{title}}</div>
+		<form class="form-horizontal">
+			<div class="form-group">
+			   	<div class="col-sm-2 control-label">唯一主键</div>
+			   	<div class="col-sm-10">
+			        <input type="text" class="form-control" v-model="sysMailSet.code" placeholder="唯一主键"/>
+			    </div>
+			</div>
+			<div class="form-group">
+			   	<div class="col-sm-2 control-label">发送邮箱</div>
+			   	<div class="col-sm-10">
+			        <input type="text" class="form-control" v-model="sysMailSet.fromAddress" placeholder="发送邮箱"/>
+			    </div>
+			</div>
+			<div class="form-group">
+			   	<div class="col-sm-2 control-label">发送邮箱密码</div>
+			   	<div class="col-sm-10">
+			        <input type="text" class="form-control" v-model="sysMailSet.fromAddressPwd" placeholder="发送邮箱密码"/>
+			    </div>
+			</div>
+			<div class="form-group">
+			   	<div class="col-sm-2 control-label">简单邮件传输协议</div>
+			   	<div class="col-sm-10">
+			        <input type="text" class="form-control" v-model="sysMailSet.smtp" placeholder="简单邮件传输协议"/>
+			    </div>
+			</div>
+			<div class="form-group">
+			   	<div class="col-sm-2 control-label">debug模式 0 开启 1 关闭</div>
+			   	<div class="col-sm-10">
+			        <input type="text" class="form-control" v-model="sysMailSet.debug" placeholder="debug模式 0 开启 1 关闭"/>
+			    </div>
+			</div>
+			<div class="form-group">
+			   	<div class="col-sm-2 control-label">需要身份验证  0需要 1 不需要</div>
+			   	<div class="col-sm-10">
+			        <input type="text" class="form-control" v-model="sysMailSet.auth" placeholder="需要身份验证  0需要 1 不需要"/>
+			    </div>
+			</div>
+			<div class="form-group">
+			   	<div class="col-sm-2 control-label">发送邮件的服务Ip</div>
+			   	<div class="col-sm-10">
+			        <input type="text" class="form-control" v-model="sysMailSet.host" placeholder="发送邮件的服务Ip"/>
+			    </div>
+			</div>
+			<div class="form-group">
+			   	<div class="col-sm-2 control-label">端口</div>
+			   	<div class="col-sm-10">
+			        <input type="text" class="form-control" v-model="sysMailSet.port" placeholder="端口"/>
+			    </div>
+			</div>
+			<div class="form-group">
+			   	<div class="col-sm-2 control-label">发件抄送人邮箱</div>
+			   	<div class="col-sm-10">
+			        <input type="text" class="form-control" v-model="sysMailSet.copyto" placeholder="发件抄送人邮箱"/>
+			    </div>
+			</div>
+			<div class="form-group">
+			   	<div class="col-sm-2 control-label"></div>
+			   	<div class="col-sm-10">
+			        <input type="text" class="form-control" v-model="sysMailSet.remark" placeholder=""/>
+			    </div>
+			</div>
+			<div class="form-group">
+			   	<div class="col-sm-2 control-label">创建时间</div>
+			   	<div class="col-sm-10">
+			        <input type="text" class="form-control" v-model="sysMailSet.createTime" placeholder="创建时间"/>
+			    </div>
+			</div>
+			<div class="form-group">
+			   	<div class="col-sm-2 control-label"></div>
+			   	<div class="col-sm-10">
+			        <input type="text" class="form-control" v-model="sysMailSet.creater" placeholder=""/>
+			    </div>
+			</div>
+			<div class="form-group">
+			   	<div class="col-sm-2 control-label"></div>
+			   	<div class="col-sm-10">
+			        <input type="text" class="form-control" v-model="sysMailSet.modifier" placeholder=""/>
+			    </div>
+			</div>
+			<div class="form-group">
+			   	<div class="col-sm-2 control-label"></div>
+			   	<div class="col-sm-10">
+			        <input type="text" class="form-control" v-model="sysMailSet.modifyTime" placeholder=""/>
+			    </div>
+			</div>
+			<div class="form-group">
+			   	<div class="col-sm-2 control-label"></div>
+			   	<div class="col-sm-10">
+			        <input type="text" class="form-control" v-model="sysMailSet.version" placeholder=""/>
+			    </div>
+			</div>
+			<div class="form-group">
+				<div class="col-sm-2 control-label"></div> 
+				<input type="button" class="btn btn-primary" @click="saveOrUpdate" value="确定"/>
+				&nbsp;&nbsp;<input type="button" class="btn btn-warning" @click="reload" value="返回"/>
+			</div>
+		</form>
+	</div>
+</div>
+
+<script src="${rc.contextPath}/js/sysmailset/sysmailset.js?_${date.systemTime}"></script>
+</body>
+</html>

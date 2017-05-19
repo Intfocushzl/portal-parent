@@ -1,0 +1,18 @@
+
+/*查看页面*/
+.form-horizontal {
+    width: 98%;
+    padding-top: 20px;
+}
+
+.col-sm-2 {
+    width: 240px;
+}
+
+textarea {
+    resize: none;
+}
+
+.col-sm-10 input {
+    float: right;
+}

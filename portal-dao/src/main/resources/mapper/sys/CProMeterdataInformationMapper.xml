@@ -1,0 +1,280 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yonghui.portal.mapper.sys.CProMeterdataInformationMapper" >
+  <resultMap id="BaseResultMap" type="com.yonghui.portal.model.sys.CProMeterdataInformation" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="proname" property="proname" jdbcType="VARCHAR" />
+    <result column="taskname" property="taskname" jdbcType="VARCHAR" />
+    <result column="prodb" property="prodb" jdbcType="VARCHAR" />
+    <result column="owner" property="owner" jdbcType="VARCHAR" />
+    <result column="created_by" property="createdBy" jdbcType="VARCHAR" />
+    <result column="created_at" property="createdAt" jdbcType="VARCHAR" />
+    <result column="runtime" property="runtime" jdbcType="BIGINT" />
+    <result column="statustype" property="statustype" jdbcType="INTEGER" />
+    <result column="dateparatype" property="dateparatype" jdbcType="INTEGER" />
+    <result column="shopparatype" property="shopparatype" jdbcType="INTEGER" />
+    <result column="useflag" property="useflag" jdbcType="INTEGER" />
+    <result column="updatetime" property="updatetime" jdbcType="VARCHAR" />
+    <result column="remark" property="remark" jdbcType="LONGVARCHAR" />
+    <result column="fromtable" property="fromtable" jdbcType="LONGVARCHAR" />
+    <result column="intable" property="intable" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, proname, taskname, prodb, owner, created_by, created_at, runtime, statustype, 
+    dateparatype, shopparatype, useflag, updatetime,remark,fromtable,intable
+  </sql>
+  
+  <select id="getAddOwner" resultType="Map">
+  		SELECT account,`name` from platform.`user`  WHERE roleId = 10
+  </select>
+  
+  <select id="getAddProdb" resultType="Map">
+  		SELECT DISTINCT db,db from mysql.db WHERE db not in('sys','yonghuibi\_s')
+  </select>
+  
+  <select id="getOwner" resultMap="BaseResultMap">
+  		select * from mdm.c_pro_meterdata_information GROUP BY `owner`;
+  </select>
+  
+  <select id="getProdb" resultMap="BaseResultMap">
+  		SELECT * from mdm.c_pro_meterdata_information GROUP BY prodb;
+  </select>
+  
+  <select id="getprocDetail" resultMap="BaseResultMap" parameterType="java.lang.Long">
+  		SELECT * from mdm.c_pro_meterdata_information where id = #{id,jdbcType=BIGINT};
+  </select>
+  
+  <select id="getprocSqlDetail" resultType="Map" parameterType="String" >
+  		${value}
+  </select>
+  
+  <select id="getProcedureList" resultMap="BaseResultMap" parameterType="Map">
+  	select * from mdm.c_pro_meterdata_information where useflag = 1 
+  	<if test="'all'!= owner ">
+  		and `owner` = #{owner,jdbcType=VARCHAR} 
+  	</if>
+  	<if test="null != proname and ''!= proname ">
+  		and proname LIKE "%"#{proname,jdbcType=VARCHAR}"%"  	
+  	</if>
+  	<if test="null != prodb and ''!= prodb">
+  		and prodb = #{prodb,jdbcType=VARCHAR}
+  	</if>
+  	<if test="'' != sDate and '' != eDate">
+  		and created_at between DATE_FORMAT(#{sDate,jdbcType=VARCHAR},"%Y%m%d") and DATE_FORMAT(#{eDate,jdbcType=VARCHAR},"%Y%m%d") 
+  	</if>
+  	<if test="'all'!= statustype">
+  		and statustype = #{statustype,jdbcType=INTEGER} 
+  	</if>
+  	 ORDER BY created_at DESC
+  </select>
+  
+  
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" /> 
+    from mdm.c_pro_meterdata_information
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from mdm.c_pro_meterdata_information
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.yonghui.portal.model.sys.CProMeterdataInformation" >
+    insert into mdm.c_pro_meterdata_information (id, proname, taskname, 
+      prodb, owner, created_by, 
+      created_at, runtime, statustype, 
+      dateparatype, shopparatype, useflag, 
+      updatetime, remark, fromtable, 
+      intable)
+    values (#{id,jdbcType=BIGINT}, #{proname,jdbcType=VARCHAR}, #{taskname,jdbcType=VARCHAR}, 
+      #{prodb,jdbcType=VARCHAR}, #{owner,jdbcType=VARCHAR}, #{createdBy,jdbcType=VARCHAR}, 
+      #{createdAt,jdbcType=VARCHAR}, #{runtime,jdbcType=BIGINT}, #{statustype,jdbcType=INTEGER}, 
+      #{dateparatype,jdbcType=INTEGER}, #{shopparatype,jdbcType=INTEGER}, #{useflag,jdbcType=INTEGER}, 
+      #{updatetime,jdbcType=VARCHAR}, #{remark,jdbcType=LONGVARCHAR}, #{fromtable,jdbcType=LONGVARCHAR}, 
+      #{intable,jdbcType=LONGVARCHAR})
+  </insert>
+  <insert id="insertSelective" useGeneratedKeys="true" keyProperty="id" 
+  parameterType="com.yonghui.portal.model.sys.CProMeterdataInformation" >
+    insert into mdm.c_pro_meterdata_information
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="proname != null" >
+        proname,
+      </if>
+      <if test="taskname != null" >
+        taskname,
+      </if>
+      <if test="prodb != null" >
+        prodb,
+      </if>
+      <if test="owner != null" >
+        owner,
+      </if>
+      <if test="createdBy != null" >
+        created_by,
+      </if>
+      <if test="createdAt != null" >
+        created_at,
+      </if>
+      <if test="runtime != null" >
+        runtime,
+      </if>
+      <if test="statustype != null" >
+        statustype,
+      </if>
+      <if test="dateparatype != null" >
+        dateparatype,
+      </if>
+      <if test="shopparatype != null" >
+        shopparatype,
+      </if>
+      <if test="useflag != null" >
+        useflag,
+      </if>
+      <if test="updatetime != null" >
+        updatetime,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+      <if test="fromtable != null" >
+        fromtable,
+      </if>
+      <if test="intable != null" >
+        intable,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="proname != null" >
+        #{proname,jdbcType=VARCHAR},
+      </if>
+      <if test="taskname != null" >
+        #{taskname,jdbcType=VARCHAR},
+      </if>
+      <if test="prodb != null" >
+        #{prodb,jdbcType=VARCHAR},
+      </if>
+      <if test="owner != null" >
+        #{owner,jdbcType=VARCHAR},
+      </if>
+      <if test="createdBy != null" >
+        #{createdBy,jdbcType=VARCHAR},
+      </if>
+      <if test="createdAt != null" >
+        #{createdAt,jdbcType=VARCHAR},
+      </if>
+      <if test="runtime != null" >
+        #{runtime,jdbcType=BIGINT},
+      </if>
+      <if test="statustype != null" >
+        #{statustype,jdbcType=INTEGER},
+      </if>
+      <if test="dateparatype != null" >
+        #{dateparatype,jdbcType=INTEGER},
+      </if>
+      <if test="shopparatype != null" >
+        #{shopparatype,jdbcType=INTEGER},
+      </if>
+      <if test="useflag != null" >
+        #{useflag,jdbcType=INTEGER},
+      </if>
+      <if test="updatetime != null" >
+        #{updatetime,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="fromtable != null" >
+        #{fromtable,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="intable != null" >
+        #{intable,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.yonghui.portal.model.sys.CProMeterdataInformation" >
+    update mdm.c_pro_meterdata_information
+    <set >
+      <if test="proname != null" >
+        proname = #{proname,jdbcType=VARCHAR},
+      </if>
+      <if test="taskname != null" >
+        taskname = #{taskname,jdbcType=VARCHAR},
+      </if>
+      <if test="prodb != null" >
+        prodb = #{prodb,jdbcType=VARCHAR},
+      </if>
+      <if test="owner != null" >
+        owner = #{owner,jdbcType=VARCHAR},
+      </if>
+      <if test="createdBy != null" >
+        created_by = #{createdBy,jdbcType=VARCHAR},
+      </if>
+      <if test="createdAt != null" >
+        created_at = #{createdAt,jdbcType=VARCHAR},
+      </if>
+      <if test="runtime != null" >
+        runtime = #{runtime,jdbcType=BIGINT},
+      </if>
+      <if test="statustype != null" >
+        statustype = #{statustype,jdbcType=INTEGER},
+      </if>
+      <if test="dateparatype != null" >
+        dateparatype = #{dateparatype,jdbcType=INTEGER},
+      </if>
+      <if test="shopparatype != null" >
+        shopparatype = #{shopparatype,jdbcType=INTEGER},
+      </if>
+      <if test="useflag != null" >
+        useflag = #{useflag,jdbcType=INTEGER},
+      </if>
+      <if test="updatetime != null" >
+        updatetime = #{updatetime,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="fromtable != null" >
+        fromtable = #{fromtable,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="intable != null" >
+        intable = #{intable,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.yonghui.portal.model.sys.CProMeterdataInformation" >
+    update mdm.c_pro_meterdata_information
+    set proname = #{proname,jdbcType=VARCHAR},
+      taskname = #{taskname,jdbcType=VARCHAR},
+      prodb = #{prodb,jdbcType=VARCHAR},
+      owner = #{owner,jdbcType=VARCHAR},
+      created_by = #{createdBy,jdbcType=VARCHAR},
+      created_at = #{createdAt,jdbcType=VARCHAR},
+      runtime = #{runtime,jdbcType=BIGINT},
+      statustype = #{statustype,jdbcType=INTEGER},
+      dateparatype = #{dateparatype,jdbcType=INTEGER},
+      shopparatype = #{shopparatype,jdbcType=INTEGER},
+      useflag = #{useflag,jdbcType=INTEGER},
+      updatetime = #{updatetime,jdbcType=VARCHAR},
+      remark = #{remark,jdbcType=LONGVARCHAR},
+      fromtable = #{fromtable,jdbcType=LONGVARCHAR},
+      intable = #{intable,jdbcType=LONGVARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.yonghui.portal.model.sys.CProMeterdataInformation" >
+    update mdm.c_pro_meterdata_information
+    set proname = #{proname,jdbcType=VARCHAR},
+      taskname = #{taskname,jdbcType=VARCHAR},
+      prodb = #{prodb,jdbcType=VARCHAR},
+      owner = #{owner,jdbcType=VARCHAR},
+      created_by = #{createdBy,jdbcType=VARCHAR},
+      created_at = #{createdAt,jdbcType=VARCHAR},
+      runtime = #{runtime,jdbcType=BIGINT},
+      statustype = #{statustype,jdbcType=INTEGER},
+      dateparatype = #{dateparatype,jdbcType=INTEGER},
+      shopparatype = #{shopparatype,jdbcType=INTEGER},
+      useflag = #{useflag,jdbcType=INTEGER},
+      updatetime = #{updatetime,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

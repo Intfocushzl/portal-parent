@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yonghui.portal.mapper.global.RoleMapper">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap id="roleMap" type="com.yonghui.portal.model.global.Role">
+        <result property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="status" column="status"/>
+        <result property="createTime" column="createTime"/>
+        <result property="createdAt" column="created_at"/>
+        <result property="updatedAt" column="updated_at"/>
+        <result property="type" column="type"/>
+        <result property="ownerType" column="ownertype"/>
+    </resultMap>
+
+	<select id="queryObject" resultType="com.yonghui.portal.model.global.Role">
+		select * from platform.role_forfront where id = #{value}
+	</select>
+
+	<select id="queryList" resultType="com.yonghui.portal.model.global.Role">
+		select * from platform.role_forfront
+        <where>
+            <if test="id != null and id !=''">
+                and id = #{id}
+            </if>
+            <if test="name != null and name !=''">
+                and `name` like concat('%',#{name},'%')
+            </if>
+        </where>
+        <choose>
+            <when test="sidx != null and sidx.trim() != ''">
+                order by ${sidx} ${order}
+            </when>
+			<otherwise>
+                order by id ASC
+			</otherwise>
+        </choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="queryTotal" resultType="int">
+		select count(*) from platform.role_forfront
+        <where>
+            <if test="id != null and id !=''">
+                and id = #{id}
+            </if>
+            <if test="name != null and name !=''">
+                and `name` like concat('%',#{name},'%')
+            </if>
+        </where>
+	</select>
+
+    <insert id="save" parameterType="com.yonghui.portal.model.global.Role" useGeneratedKeys="true" keyProperty="id">
+		insert into platform.role_forfront
+		(
+			`name`, 
+			`status`, 
+			`createTime`, 
+			`created_at`, 
+			`updated_at`, 
+			`type`, 
+			`ownertype`
+		)
+		values
+		(
+			#{name}, 
+			#{status}, 
+			NOW(),
+			NOW(),
+			#{updatedAt}, 
+			#{type}, 
+			#{ownerType}
+		)
+	</insert>
+
+    <update id="update" parameterType="com.yonghui.portal.model.global.Role">
+        update platform.role_forfront
+        <set>
+			<if test="name != null">`name` = #{name}, </if>
+			<if test="status != null">`status` = #{status}, </if>
+			<if test="createTime != null">`createTime` = #{createTime}, </if>
+			<if test="createdAt != null">`created_at` = #{createdAt}, </if>
+			<if test="type != null">`type` = #{type}, </if>
+			<if test="ownerType != null">`ownerType` = #{ownerType}, </if>
+			`updated_at` =  NOW(),
+        </set>
+        where id = #{id}
+    </update>
+	
+	<delete id="delete">
+		delete from platform.role_forfront where id = #{value}
+	</delete>
+	
+	<delete id="deleteBatch">
+		delete from platform.role_forfront where id in
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+
+	<select id="queryMenuIdList" resultType="Map">
+		select * from platform.r_role_menu_forfront where roleId = #{value}
+	</select>
+
+	<delete id="deleteRoleMenuByRoleId">
+		delete from platform.r_role_menu_forfront where roleId = #{value}
+	</delete>
+
+	<insert id="saveRoleMenu" parameterType="Map" useGeneratedKeys="true" keyProperty="id">
+		insert into platform.r_role_menu_forfront
+		(
+		`roleId`,
+		`menuId`,
+		`createTime`,
+		`created_at`
+		)
+		values
+		(
+		#{roleId},
+		#{menuId},
+		now(),
+		now()
+		)
+	</insert>
+
+	<update id="updateRoleMenu" parameterType="Map">
+		update platform.r_role_menu_forfront
+		<set>
+			<if test="menuId != null">`menuId` = #{menuId}, </if>
+			`updated_at` = now()
+		</set>
+		where roleId = #{roleId}
+	</update>
+
+</mapper>

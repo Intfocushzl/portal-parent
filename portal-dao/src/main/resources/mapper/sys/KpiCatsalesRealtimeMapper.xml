@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://www.mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yonghui.portal.mapper.sys.KpiCatsalesRealtimeMapper">
+
+	<select id="brovaRealTimeNowSalesTrendLine" parameterType="Map" resultType="Double">
+		select sum(sales_amount) from dws.kpi_catsales_realtime where
+		sales_date =date_format(#{date},'%Y%m%d')
+		and sales_hour>=7
+		group by sales_hour
+		order by sales_hour asc
+	</select>
+	
+	
+	<select id="indexRealTimeSaleLine" parameterType="Map" resultType="Double">
+		SELECT
+		b.sales_amount as sales_amount
+		FROM
+		(
+		SELECT
+		day_year_num as dt
+		FROM dw.d_day
+		where day_year = 2014
+		and day_year_num between 6 and 23
+		) a
+		left join 
+		(
+		SELECT 
+		sales_hour
+		,sales_amount
+		FROM
+		realtime.kpi_bravo_realtime
+		where flagtype = 'hour'
+		and store_class = 'class2'
+		) b
+		on a.dt = b.sales_hour
+		left join 
+		(
+		SELECT 
+		sales_hour
+		,sales_amount
+		FROM
+		realtime.kpi_bravo_realtime_lastweek
+		where flagtype = 'hour'
+		and store_class = 'class2'
+		) c
+		on a.dt = c.sales_hour
+	</select>
+	
+	<select id="indexRealTimeLastSaleLine" parameterType="Map" resultType="Double">
+		SELECT
+		c.sales_amount as last_sales_amount
+		FROM
+		(
+		SELECT
+		day_year_num as dt
+		FROM dw.d_day
+		where day_year = 2014
+		and day_year_num between 6 and 23
+		) a
+		left join 
+		(
+		SELECT 
+		sales_hour
+		,sales_amount
+		#,last_sales_amount
+		FROM
+		realtime.kpi_bravo_realtime
+		where flagtype = 'hour'
+		and store_class = 'class2'
+		) b
+		on a.dt = b.sales_hour
+		left join 
+		(
+		SELECT 
+		sales_hour
+		,sales_amount
+		#,last_sales_amount
+		FROM
+		realtime.kpi_bravo_realtime_lastweek
+		where flagtype = 'hour'
+		and store_class = 'class2'
+		) c
+		on a.dt = c.sales_hour
+	</select>
+
+</mapper>

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://www.mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yonghui.portal.mapper.sys.UserAuthMenuMapper">
+    <resultMap id="BaseResultMap" type="com.yonghui.portal.model.global.Menu">
+        <id column="id" property="id" jdbcType="INTEGER" />
+        <result column="name" property="name" jdbcType="VARCHAR" />
+        <result column="url" property="url" jdbcType="VARCHAR" />
+        <result column="pid" property="pid" jdbcType="INTEGER" />
+        <result column="icon" property="icon" jdbcType="VARCHAR" />
+        <result column="createTime" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="status" property="status" jdbcType="INTEGER" />
+    </resultMap>
+    <sql id="Base_Column_List">
+        id, name, url, pid, icon, createTime, status
+    </sql>
+
+
+    <select id="listMenu" resultMap="BaseResultMap">
+        select * from platform.menu_forfront order by sort asc
+    </select>
+
+
+    <select id="listRoleMenu" parameterType="List" resultMap="BaseResultMap">
+        select *,1 as checked from platform.menu_forfront
+        <if test="null != list ">
+            where id in
+            <foreach collection="list" item="list" index="index" open="("
+                     close=")" separator=",">
+                #{list}
+            </foreach>
+        </if>
+        order by sort asc
+    </select>
+
+
+</mapper>
+
+
+
+
+
+

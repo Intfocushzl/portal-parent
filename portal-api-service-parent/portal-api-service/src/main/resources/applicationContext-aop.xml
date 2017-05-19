@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:tx="http://www.springframework.org/schema/tx" xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+	                    http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+	                    http://www.springframework.org/schema/tx 
+	                    http://www.springframework.org/schema/tx/spring-tx-3.1.xsd
+	                    http://www.springframework.org/schema/aop 
+	                    http://www.springframework.org/schema/aop/spring-aop-3.1.xsd"
+       default-lazy-init="true">
+
+    <tx:annotation-driven transaction-manager="transactionManager"/>
+
+    <aop:config>
+        <!-- 拦截所有方法需要被执行"AOP" -->
+        <!--<aop:pointcut id="dataSourcePointcut" expression="execution(* com.yonghui..*.*(..))"/>-->
+        <!-- 带有@DataSource标注的任意方法需要被执行"AOP" -->
+        <aop:pointcut id="transactionPointCut" expression="@annotation(com.yonghui.portal.annotation.DataSource)"/>
+        <aop:advisor advice-ref="transactionAdvice" pointcut-ref="transactionPointCut"/>
+        <!-- 切换数据源的事务需要放到数据库事务开启前执行。order（值越小，执行越靠前） -->
+        <aop:aspect ref="dataSourceAspectBean" order="-1">
+            <!-- 切换数据源 -->
+            <aop:before method="before" pointcut-ref="transactionPointCut"/>
+            <!-- 清除数据源 -->
+            <aop:after method="after" pointcut-ref="transactionPointCut"/>
+        </aop:aspect>
+    </aop:config>
+
+    <!-- 事物处理 -->
+    <tx:advice id="transactionAdvice" transaction-manager="transactionManager">
+        <tx:attributes>
+            <tx:method name="*" propagation="REQUIRED"/>
+        </tx:attributes>
+    </tx:advice>
+
+    <!-- 设置默认数据源 -->
+    <bean id="dataSourceAspectBean" class="com.yonghui.portal.db.DataSourceAspectBean">
+        <property name="defaultDataSource" value="mysqlPortalSlave"/>
+    </bean>
+
+</beans>

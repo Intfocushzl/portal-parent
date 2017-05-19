@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+          http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <!-- 加载tomcat下*.properties配置文件 -->
+    <bean id="initProperties" class="com.yonghui.portal.init.InitProperties"/>
+
+    <import resource="classpath:springMVC-servlet.xml"/>
+    <import resource="classpath:applicationContext-redis.xml"/>
+    <import resource="classpath:applicationContext-jdbc.xml"/>
+    <import resource="classpath:applicationContext-aop.xml"/>
+    <import resource="classpath:applicationContext-shiro.xml"/>
+    <import resource="classpath:applicationContext-scheduler.xml"/>
+
+</beans>

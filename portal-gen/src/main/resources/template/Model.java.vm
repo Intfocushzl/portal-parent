@@ -1,0 +1,40 @@
+package ${package}.model;
+
+import ${package}.model.base.AuditAuto;
+#if(${hasBigDecimal})
+import java.math.BigDecimal;
+#end
+
+/**
+ * ${comments}
+ *
+ * @author ${author}
+ * @email ${email}
+ * @date ${datetime}
+ */
+public class ${className} extends AuditAuto {
+
+#foreach ($column in $columns)
+#if($column.auditAutoExist == "NOTEXISTAUDIT")
+    //$column.comments
+    private $column.attrType $column.attrname;
+#end
+#end
+
+#foreach ($column in $columns)
+#if($column.auditAutoExist == "NOTEXISTAUDIT")
+    /**
+     * 设置：${column.comments}
+     */
+    public void set${column.attrName}($column.attrType $column.attrname) {
+            this.$column.attrname = $column.attrname;
+            }
+    /**
+     * 获取：${column.comments}
+     */
+    public $column.attrType get${column.attrName}() {
+            return $column.attrname;
+            }
+#end
+#end
+}

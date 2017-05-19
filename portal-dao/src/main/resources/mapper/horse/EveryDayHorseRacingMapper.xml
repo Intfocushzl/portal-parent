@@ -1,0 +1,161 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://www.mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yonghui.portal.mapper.horse.EveryDayHorseRacingMapper">
+    <!-- 旧版商行汇总 -->
+    <select id="sameGroupRanking" parameterType="Map" resultType="com.yonghui.portal.model.horse.EveryDayHorseRacing">
+        SELECT
+        score.sdate,
+        playid.Sname,
+        score.shopid,
+        score.groupid,
+        SUM( IF( rule.title = '周转天数', score.score, 0 ) ) AS turnoverDays,
+        SUM( IF( rule.title = '进销存准确性', score.score, 0 ) ) AS inventory,
+        SUM( IF( rule.title IN( '销售同比', '销售环比' ), score.score, 0 ) ) AS sale
+        FROM
+        orange.sm_daily_rule AS rule,
+        orange.sm_daily_score AS score,
+        ods.ods_groupplayid AS playid
+        WHERE
+        rule.id = score.id
+        AND rule.type = score.type
+        AND playid.sap_shopid = score.shopid
+        AND playid.sdate =(
+        SELECT
+        MAX( sdate )
+        FROM
+        ods.ods_groupplayid
+        )
+        AND score.groupid =#{groupId}
+        AND playid.gid =(
+        SELECT
+        gid
+        FROM
+        ods.ods_groupplayid
+        WHERE
+        sap_shopid = #{store}
+        AND sdate =(
+        SELECT
+        MAX( sdate )
+        FROM
+        ods.ods_groupplayid
+        )
+        )
+        GROUP BY
+        score.sdate,
+        playid.Sname,
+        score.shopid,
+        score.groupid
+
+
+    </select>
+    <!-- 旧版门店明细 -->
+    <select id="horseAnalysis" parameterType="Map" resultType="com.yonghui.portal.model.horse.EveryDayHorseRacing">
+        <!-- select a.sdate , @gid as gid , a.shopId , c.sname , a.groupid ,
+        GROUP_CONCAT(if(b.title in ('销售同比','销售环比'),b.notes2,null)) as xstbDes ,
+        sum(if(b.title in ('销售同比','销售环比'),a.thevalue_comp,0)) as xstbValueComp ,
+        sum(if(b.title in ('销售同比','销售环比'),a.thevalue,0)) as xstbValue ,
+        sum(if(b.title in ('销售同比','销售环比'),a.score,0)) as xstb,
+        GROUP_CONCAT(if(b.title in ('进销存准确性'),b.notes2,null)) as jxczqxDes ,
+        sum(if(b.title in ('进销存准确性'),a.thevalue_comp,0)) as jxczqxValueComp ,
+        sum(if(b.title in ('进销存准确性'),a.thevalue,0)) as jxczqxValue ,
+        sum(if(b.title in ('进销存准确性'),a.score,0)) as jxczqx ,
+        GROUP_CONCAT(if(b.title in ('周转天数'),b.notes2,null)) as zztsDes ,
+        sum(if(b.title in ('周转天数'),a.thevalue_comp,null)) as zztsComp ,
+        sum(if(b.title in ('周转天数'),a.thevalue,0)) as zztsValue ,
+        sum(if(b.title in ('周转天数'),a.score,0)) as zzts
+        from orange.sm_daily_score as a inner join orange.sm_daily_rule as b on a.type=b.type and a.id = b.id
+        inner join dw.d_bravo_shop as c on a.shopid = c.shopid
+        inner join (select @maxDate :=sdate, @gid := gid from ods.ods_groupplayid where shopid = #{store} and sdate = (select max(sdate) from ods.ods_groupplayid)) as m on 1=1
+        inner join ods.ods_groupplayid as d on a.shopid = d.shopid and d.SDate = @maxDate
+        where a.sdate = date_format(date_sub(current_date,interval 1 day),'%Y%m%d')
+        and a.groupid =#{groupId}  and d.GID = @gid
+        group by a.sdate, a.shopid, a.groupid,b.flag  -->
+        SELECT
+        a.sdate,
+        @gid AS gid,
+        a.shopId,
+        c.sname,
+        a.groupid,
+        GROUP_CONCAT(
+        IF(
+        b.title IN(
+        '销售同比',
+        '销售环比'
+        ),
+        b.notes2,
+        NULL
+        )
+        ) AS xstbDes,
+        SUM( IF( b.title IN( '销售同比', '销售环比' ), a.thevalue_comp, 0 ) ) AS xstbValueComp,
+        SUM( IF( b.title IN( '销售同比', '销售环比' ), a.thevalue, 0 ) ) AS xstbValue,
+        SUM( IF( b.title IN( '销售同比', '销售环比' ), a.score, 0 ) ) AS xstb,
+        GROUP_CONCAT(
+        IF(
+        b.title IN('进销存准确性'),
+        b.notes2,
+        NULL
+        )
+        ) AS jxczqxDes,
+        SUM( IF( b.title IN( '进销存准确性' ), a.thevalue_comp, 0 ) ) AS jxczqxValueComp,
+        SUM( IF( b.title IN( '进销存准确性' ), a.thevalue, 0 ) ) AS jxczqxValue,
+        SUM( IF( b.title IN( '进销存准确性' ), a.score, 0 ) ) AS jxczqx,
+        GROUP_CONCAT(
+        IF(
+        b.title IN('周转天数'),
+        b.notes2,
+        NULL
+        )
+        ) AS zztsDes,
+        SUM( IF( b.title IN( '周转天数' ), a.thevalue_comp, NULL ) ) AS zztsComp,
+        SUM( IF( b.title IN( '周转天数' ), a.thevalue, 0 ) ) AS zztsValue,
+        SUM( IF( b.title IN( '周转天数' ), a.score, 0 ) ) AS zzts
+        FROM
+        orange.sm_daily_score AS a
+        INNER JOIN orange.sm_daily_rule AS b
+        ON a.type = b.type
+        AND a.id = b.id
+        INNER JOIN dw.d_bravo_shop AS c
+        ON a.shopid = c.sap_shopid
+        JOIN(
+        SELECT
+        @maxDate := sdate,
+        @gid := gid
+        FROM
+        ods.ods_groupplayid
+        WHERE
+        sap_shopid =#{store}
+        AND sdate =(
+        SELECT
+        MAX( sdate )
+        FROM
+        ods.ods_groupplayid
+        )
+        ) AS m
+        INNER JOIN ods.ods_groupplayid AS d
+        ON d.sap_shopID = a.shopid
+        AND d.SDate = @maxDate
+        WHERE
+        a.sdate = DATE_FORMAT( date_sub( CURRENT_DATE, INTERVAL 1 DAY ), '%Y%m%d' )
+        AND a.groupid =#{groupId}
+        AND d.GID = @gid
+        GROUP BY
+        a.sdate,
+        a.shopid,
+        a.groupid,
+        b.flag
+
+    </select>
+
+
+    <!-- 新版商行汇总 shengwm -->
+    <select id="groupHorseTotal" parameterType="Map" resultType="com.yonghui.portal.model.horse.EveryDayHorseRacingNew">
+        call saima.daily_score_hz(#{sapshopid},#{group_id})
+    </select>
+
+
+    <!-- 新版门店明细 shengwm -->
+    <select id="shopHorse" parameterType="Map" resultType="com.yonghui.portal.model.horse.EveryDayHorseRacingNew">
+        call saima.daily_score_mx(#{sapshopid},#{group_id})
+    </select>
+
+</mapper>

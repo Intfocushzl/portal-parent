@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://www.mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yonghui.portal.mapper.fresh.FreshReportsMapper">
+
+    <!-- 销售概况报表 -->
+	<select id="shellSurveyReports" resultType="Map" parameterType="Map">
+		call fresh.query_theme_fresh_sales_survey(1,DATE_FORMAT(#{sDate},"%Y%m%d"),DATE_FORMAT(#{eDate},"%Y%m%d"),'','','','','','');
+	</select>
+
+	<!--销售下3个表  -->
+	<select id="shellSurvey" resultType="Map" parameterType="Map">
+		<if test="holdName!= null and areaName == null and className == null and areaMans == null">
+			call fresh.query_theme_fresh_sales_survey(2,DATE_FORMAT(#{sDate},"%Y%m%d"),DATE_FORMAT(#{eDate},"%Y%m%d"),#{holdName},'','','','','')
+		</if>
+		<if test="holdName!= null and className != null and areaName == null  and areaMans == null">
+			call fresh.query_theme_fresh_sales_survey(3,DATE_FORMAT(#{sDate},"%Y%m%d"),DATE_FORMAT(#{eDate},"%Y%m%d"),#{holdName},#{className},'','','','')
+		</if>
+		<if test="holdName!= null and className != null and areaName != null  and areaMans == null">
+			call fresh.query_theme_fresh_sales_survey(4,DATE_FORMAT(#{sDate},"%Y%m%d"),DATE_FORMAT(#{eDate},"%Y%m%d"),#{holdName},#{className},#{areaName},'','','')
+		</if>
+		<if test="holdName!= null and className != null and areaName != null  and areaMans != null">
+			call fresh.query_theme_fresh_sales_survey(5,DATE_FORMAT(#{sDate},"%Y%m%d"),DATE_FORMAT(#{eDate},"%Y%m%d"),#{holdName},#{className},#{areaName},#{areaMans},'','')
+		</if>
+	</select>
+	<!--损耗概况  -->
+	<select id="lossSurveyList" resultType="Map" parameterType="Map">
+		<if test="holdName==null and areaName == null and className == null and areaMans == null">
+			call fresh.query_theme_fresh_wastage_survey(1,DATE_FORMAT(#{sDate},"%Y%m%d"),DATE_FORMAT(#{eDate},"%Y%m%d"),'','','','','')
+		</if>
+		<if test="holdName!=null and areaName == null and className == null and areaMans == null">
+			call fresh.query_theme_fresh_wastage_survey(2,DATE_FORMAT(#{sDate},"%Y%m%d"),DATE_FORMAT(#{eDate},"%Y%m%d"),#{holdName},'','','','')
+		</if>
+		<if test="holdName!=null and className != null and areaName == null and areaMans == null">
+			call fresh.query_theme_fresh_wastage_survey(3,DATE_FORMAT(#{sDate},"%Y%m%d"),DATE_FORMAT(#{eDate},"%Y%m%d"),#{holdName},'',#{className},'','')
+		</if>
+		<if test="holdName!=null and className != null and areaName != null and areaMans == null">
+			call fresh.query_theme_fresh_wastage_survey (4,DATE_FORMAT(#{sDate},"%Y%m%d"),DATE_FORMAT(#{eDate},"%Y%m%d"),#{holdName},#{areaName},#{className},'','')
+		</if>
+		<if test="holdName!=null and className != null and areaName != null and areaMans != null">
+			call fresh.query_theme_fresh_wastage_survey (5,DATE_FORMAT(#{sDate},"%Y%m%d"),DATE_FORMAT(#{eDate},"%Y%m%d"),#{holdName},#{areaName},#{className},#{areaMans},'')
+		</if>
+	</select>
+	<!-- 负毛利概况 -->
+	<select id="minusProfitSurvey" resultType="Map" parameterType="Map">
+		<if test="holdName != null and areaName == null and className == null and areaMans == null">
+			call fresh.query_theme_fresh_minusProfit_survey (1,DATE_FORMAT(#{sDate},"%Y%m%d"),DATE_FORMAT(#{eDate},"%Y%m%d"),#{holdName},'','','')
+		</if>
+		<if test="holdName != null and areaName == null and className != null and areaMans == null">
+			call fresh.query_theme_fresh_minusProfit_survey (2,DATE_FORMAT(#{sDate},"%Y%m%d"),DATE_FORMAT(#{eDate},"%Y%m%d"),#{holdName},'',#{className},'')
+		</if>
+		<if test ="holdName != null and areaName != null and className != null and areaMans == null">
+			call fresh.query_theme_fresh_minusProfit_survey (3,DATE_FORMAT(#{sDate},"%Y%m%d"),DATE_FORMAT(#{eDate},"%Y%m%d"),#{holdName},#{areaName},#{className},'')
+		</if>
+		<if test="holdName != null and areaName != null and className != null and areaMans != null">
+			call fresh.query_theme_fresh_minusProfit_survey (4,DATE_FORMAT(#{sDate},"%Y%m%d"),DATE_FORMAT(#{eDate},"%Y%m%d"),#{holdName},#{areaName},#{className},#{areaMans})
+		</if>
+	</select>
+
+</mapper>

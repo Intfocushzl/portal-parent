@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="
+          http://www.springframework.org/schema/beans
+          http://www.springframework.org/schema/beans/spring-beans.xsd
+          http://www.springframework.org/schema/tx
+          http://www.springframework.org/schema/tx/spring-tx.xsd">
+
+
+    <!--
+        动态数据源 这里用的是Druid数据源
+        使用com.alibaba.druid.pool.DruidDataSource或者org.apache.commons.dbcp.BasicDataSource
+        命名规则：数据库类型+业务系统名称+数据库名称
+    -->
+    <bean id="dataSource" class="com.yonghui.portal.db.DynamicDataSource">
+        <property name="targetDataSources">
+            <map key-type="java.lang.String">
+                <!-- mysql 数据源 -->
+                <entry key="mysqlPortalMaster" value-ref="mysqlPortalMaster"></entry>
+                <entry key="mysqlPortalSlave" value-ref="mysqlPortalSlave"></entry>
+                <!-- oracle 数据源 -->
+                <!--
+                <entry key="oraclePortalMaster" value-ref="oraclePortalMaster"></entry>
+                <entry key="oraclePortalSlave" value-ref="oraclePortalSlave"></entry>
+                -->
+                <!-- sqlServer 数据源 -->
+                <!--
+                <entry key="sqlserverPortalMaster" value-ref="sqlserverPortalMaster"></entry>
+                <entry key="sqlserverPortalSlave" value-ref="sqlserverPortalSlave"></entry>
+                -->
+            </map>
+        </property>
+        <!-- 默认数据源 -->
+        <property name="defaultTargetDataSource" ref="mysqlPortalSlave"></property>
+
+    </bean>
+    <!-- mysql -->
+    <bean id="mysqlPortalMaster" class="com.alibaba.druid.pool.DruidDataSource" init-method="init"
+          destroy-method="close" parent="mysqlBasicDataSource">
+        <property name="url" value="${jdbc.mysql.master.url}"/>
+        <property name="username" value="${jdbc.mysql.master.username}"/>
+        <property name="password" value="${jdbc.mysql.master.password}"/>
+    </bean>
+    <bean id="mysqlPortalSlave" class="com.alibaba.druid.pool.DruidDataSource" init-method="init" destroy-method="close"
+          parent="mysqlBasicDataSource">
+        <property name="url" value="${jdbc.mysql.slave.url}"/>
+        <property name="username" value="${jdbc.mysql.slave.username}"/>
+        <property name="password" value="${jdbc.mysql.slave.password}"/>
+    </bean>
+    <!-- oracle -->
+    <!--
+    <bean id="oraclePortalMaster" class="com.alibaba.druid.pool.DruidDataSource" init-method="init"
+          destroy-method="close" parent="oracleBasicDataSource">
+        <property name="url" value="${jdbc.oracle.master.url}"></property>
+        <property name="username" value="${jdbc.oracle.master.username}"></property>
+        <property name="password" value="${jdbc.oracle.master.password}"></property>
+    </bean>
+    -->
+    <!--
+    <bean id="oraclePortalSlave" class="com.alibaba.druid.pool.DruidDataSource" init-method="init"
+          destroy-method="close" parent="oracleBasicDataSource">
+        <property name="url" value="${jdbc.oracle.slave.url}"></property>
+        <property name="username" value="${jdbc.oracle.slave.username}"></property>
+        <property name="password" value="${jdbc.oracle.slave.password}"></property>
+    </bean>
+    -->
+    <!-- sqlserver -->
+    <!--
+    <bean id="sqlserverPortalMaster" class="com.alibaba.druid.pool.DruidDataSource" init-method="init" destroy-method="close"  parent="sqlserverBasicDataSource">
+        <property name="url" value="${jdbc.sqlserver.master.url}"/>
+        <property name="username" value="${jdbc.sqlserver.master.username}"/>
+        <property name="password" value="${jdbc.sqlserver.master.password}"/>
+    </bean>
+    -->
+    <!--
+    <bean id="sqlserverPortalSlave" class="com.alibaba.druid.pool.DruidDataSource" init-method="init" destroy-method="close"  parent="sqlserverBasicDataSource">
+        <property name="url" value="${jdbc.sqlserver.slave.url}"/>
+        <property name="username" value="${jdbc.sqlserver.slave.username}"/>
+        <property name="password" value="${jdbc.sqlserver.slave.password}"/>
+    </bean>
+    -->
+
+
+    <!-- sysql数据源通用配置 -->
+    <bean id="mysqlBasicDataSource" class="com.alibaba.druid.pool.DruidDataSource" destroy-method="close">
+        <property name="driverClassName" value="${jdbc.mysql.driver}"/>
+        <property name="initialSize" value="${jdbc.mysql.initialSize}"/>
+        <property name="maxActive" value="${jdbc.mysql.maxActive}"/>
+        <property name="minIdle" value="${jdbc.mysql.minIdle}"/>
+        <property name="maxWait" value="${jdbc.mysql.maxWait}"/>
+        <property name="removeAbandoned" value="${jdbc.mysql.removeAbandoned}"/>
+        <property name="removeAbandonedTimeout" value="${jdbc.mysql.removeAbandonedTimeout}"/>
+        <property name="timeBetweenEvictionRunsMillis" value="${jdbc.mysql.timeBetweenEvictionRunsMillis}"/>
+        <property name="minEvictableIdleTimeMillis" value="${jdbc.mysql.minEvictableIdleTimeMillis}"/>
+        <property name="validationQuery" value="SELECT 1 "/>
+        <property name="testWhileIdle" value="${jdbc.mysql.testWhileIdle}"/>
+        <property name="filters" value="stat"/>
+    </bean>
+    <!-- oracle 数据源通用配置 -->
+    <bean id="oracleBasicDataSource" class="com.alibaba.druid.pool.DruidDataSource" destroy-method="close">
+        <property name="driverClassName" value="${jdbc.oracle.driver}"/>
+        <property name="initialSize" value="${jdbc.oracle.initialSize}"/>
+        <property name="maxActive" value="${jdbc.oracle.maxActive}"/>
+        <property name="minIdle" value="${jdbc.oracle.minIdle}"/>
+        <property name="maxWait" value="${jdbc.oracle.maxWait}"/>
+        <property name="removeAbandoned" value="${jdbc.oracle.removeAbandoned}"/>
+        <property name="removeAbandonedTimeout" value="${jdbc.oracle.removeAbandonedTimeout}"/>
+        <property name="timeBetweenEvictionRunsMillis" value="${jdbc.oracle.timeBetweenEvictionRunsMillis}"/>
+        <property name="minEvictableIdleTimeMillis" value="${jdbc.oracle.minEvictableIdleTimeMillis}"/>
+        <property name="testWhileIdle" value="${jdbc.oracle.testWhileIdle}"/>
+    </bean>
+    <!-- sqlserver 数据源通用配置 -->
+    <bean id="sqlserverBasicDataSource" class="com.alibaba.druid.pool.DruidDataSource" destroy-method="close">
+        <property name="driverClassName" value="${jdbc.sqlserver.driver}"/>
+        <property name="initialSize" value="${jdbc.sqlserver.initialSize}"/>
+        <property name="maxActive" value="${jdbc.sqlserver.maxActive}"/>
+        <property name="minIdle" value="${jdbc.sqlserver.minIdle}"/>
+        <property name="maxWait" value="${jdbc.sqlserver.maxWait}"/>
+        <property name="removeAbandoned" value="${jdbc.sqlserver.removeAbandoned}"/>
+        <property name="removeAbandonedTimeout" value="${jdbc.sqlserver.removeAbandonedTimeout}"/>
+        <property name="timeBetweenEvictionRunsMillis" value="${jdbc.sqlserver.timeBetweenEvictionRunsMillis}"/>
+        <property name="minEvictableIdleTimeMillis" value="${jdbc.sqlserver.minEvictableIdleTimeMillis}"/>
+        <property name="testWhileIdle" value="${jdbc.sqlserver.testWhileIdle}"/>
+    </bean>
+
+
+    <!-- 为Mybatis创建SqlSessionFactory，同时指定数据源 -->
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" ref="dataSource"/>
+        <property name="configLocation" value="classpath:mybatis-config.xml"/>
+        <property name="typeAliasesPackage" value="com.yonghui.portal.**.model.**"/>
+        <property name="mapperLocations" value="classpath*:/mapper/**/*.xml"/>
+    </bean>
+
+    <!-- Mapper接口所在包名，Spring会自动查找其下的Mapper -->
+    <bean id="mapperScannerConfigurer" class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="basePackage" value="**.mapper.**"/>
+        <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"/>
+    </bean>
+
+    <!-- 事务管理器 -->
+    <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+
+    <!-- 启动注解事务 -->
+    <tx:annotation-driven transaction-manager="transactionManager"/>
+
+
+</beans>

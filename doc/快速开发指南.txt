@@ -1,0 +1,55 @@
+
+代码自动生成
+---
+新建数据库表必须字段如下
+CREATE TABLE `bamboo_table_name` (
+  `ID` bigint(20) NOT NULL,
+
+  ***这里创建其他字段***
+
+  `REMARK` varchar(2000) DEFAULT NULL COMMENT '说明',
+  `CREATER` bigint(20) DEFAULT NULL COMMENT '创建人',
+  `CREATE_TIME` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `MODIFIER` bigint(20) DEFAULT NULL COMMENT '修改人',
+  `MODIFY_TIME` timestamp NULL DEFAULT '0000-00-00 00:00:00' COMMENT '修改时间',
+  `DISABLED` bigint(1) DEFAULT '0' COMMENT '启用,禁用(0启用，1禁用)',
+  `VERSION` bigint(20) DEFAULT NULL COMMENT '版本号',
+  PRIMARY KEY (`ID`)
+) ENGINE=InnoDB AUTO_INCREMENT=139 DEFAULT CHARSET=utf8 COMMENT='数据表名称';
+
+如：
+CREATE TABLE `sys_start_log` (
+  `ID` bigint(20) NOT NULL AUTO_INCREMENT,
+
+  `IP` varchar(50) DEFAULT NULL COMMENT 'IP地址',
+  `User_Name` varchar(200) DEFAULT NULL COMMENT '用户名',
+  `Host_Name` varchar(200) DEFAULT NULL COMMENT '本机名称',
+  `Computer_Name` varchar(200) DEFAULT NULL COMMENT '计算机名称',
+  `User_Domain` varchar(200) DEFAULT NULL COMMENT '计算机域名',
+
+  `REMARK` varchar(2000) DEFAULT NULL COMMENT '说明',
+  `CREATER` bigint(20) DEFAULT NULL COMMENT '创建人',
+  `CREATE_TIME` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `MODIFIER` bigint(20) DEFAULT NULL COMMENT '修改人',
+  `MODIFY_TIME` timestamp NULL DEFAULT '0000-00-00 00:00:00' COMMENT '修改时间',
+  `DISABLED` bigint(1) DEFAULT '0' COMMENT '启用,禁用(0启用，1禁用)',
+  `VERSION` bigint(20) DEFAULT NULL COMMENT '版本号',
+  PRIMARY KEY (`ID`)
+) ENGINE=InnoDB AUTO_INCREMENT=139 DEFAULT CHARSET=utf8 COMMENT='系统启动日志记录';
+
+生成的html代码注意引用js的路径【自定义js路径】
+    <script src="${rc.contextPath}/js/sysstartlog/sysstartlog.js?_${date.systemTime}"></script>
+生成的controller代码注意操作权限设置
+	@RequiresPermissions("sysstartlog:list")
+
+
+
+添加必要字段
+---
+alter table tablename add `remark` varchar(2000) default null comment '说明';
+alter table tablename add `creater` bigint(20) default null comment '创建人';
+alter table tablename add `create_time` timestamp not null default current_timestamp comment '创建时间';
+alter table tablename add `modifier` bigint(20) default null comment '修改人';
+alter table tablename add `modify_time` timestamp null default '0000-00-00 00:00:00' comment '修改时间';
+alter table tablename add `disabled` bigint(1) default '0' comment '启用,禁用(0启用，1禁用)';
+alter table tablename add `version` bigint(20) default null comment '版本号';

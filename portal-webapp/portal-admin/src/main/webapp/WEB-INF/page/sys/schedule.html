@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>定时任务</title>
+    #parse("sys/header.html")
+</head>
+<body>
+<div id="rrapp" v-cloak>
+    <div v-show="showList">
+        <div id="queryDiv" class="queryDiv">
+            <div class="grid-btn" style="height:34px;">
+                <div class="form-group col-sm-2">
+                    <input type="text" class="form-control" v-model="q.beanName" @keyup.enter="query"
+                           placeholder="bean名称">
+                </div>
+                <a class="btn btn-default" @click="query">查询</a>
+                #if($shiro.hasPermission("sys:schedule:save"))
+                <a class="btn btn-primary" @click="add"><i class="fa fa-plus"></i>&nbsp;新增</a>
+                #end
+                #if($shiro.hasPermission("sys:schedule:update"))
+                <a class="btn btn-primary" @click="update"><i class="fa fa-pencil-square-o"></i>&nbsp;修改</a>
+                #end
+                #if($shiro.hasPermission("sys:schedule:delete"))
+                <a class="btn btn-primary" @click="del"><i class="fa fa-trash-o"></i>&nbsp;删除</a>
+                #end
+                #if($shiro.hasPermission("sys:schedule:pause"))
+                <a class="btn btn-primary" @click="pause"><i class="fa fa-pause"></i>&nbsp;暂停</a>
+                #end
+                #if($shiro.hasPermission("sys:schedule:resume"))
+                <a class="btn btn-primary" @click="resume"><i class="fa fa-play"></i>&nbsp;恢复</a>
+                #end
+                #if($shiro.hasPermission("sys:schedule:run"))
+                <a class="btn btn-primary" @click="runOnce"><i class="fa fa-arrow-circle-right"></i>&nbsp;立即执行</a>
+                #end
+                #if($shiro.hasPermission("sys:schedule:log"))
+                <a class="btn btn-danger" style="float:right;" href="schedule_log.html">日志列表</a>
+                #end
+            </div>
+        </div>
+        <table id="jqGrid"></table>
+        <div id="jqGridPager"></div>
+    </div>
+
+    <div v-show="!showList" class="panel panel-default">
+        <div class="panel-heading">{{title}}</div>
+        <form class="form-horizontal">
+            <div class="form-group">
+                <div class="col-sm-2 control-label">bean名称</div>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" v-model="schedule.beanName"
+                           placeholder="spring bean名称，如：testTask"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">方法名称</div>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" v-model="schedule.methodName" placeholder="方法名称"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">参数</div>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" v-model="schedule.params" placeholder="参数"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">cron表达式</div>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" v-model="schedule.cronExpression"
+                           placeholder="如：0 0 12 * * ?"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">备注</div>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" v-model="schedule.remark" placeholder="备注"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label"></div>
+                <input type="button" class="btn btn-primary" @click="saveOrUpdate" value="确定"/>
+                &nbsp;&nbsp;<input type="button" class="btn btn-warning" @click="reload" value="返回"/>
+            </div>
+            <div style="text-align:left;margin-top:60px;padding-left: 100px;">
+                <label style="color: #f67114;"><a href="javascript:void(0);" onclick="open_cron();">Cron表达式范例：</a></label><br>
+                <label>每隔5秒执行一次：0/5 * * * * ?</label><br>
+                <label>每隔1分钟执行一次：0 */1 * * * ?</label><br>
+                <label>每天23点执行一次：0 0 23 * * ?</label><br>
+                <label>每天凌晨1点执行一次：0 0 1 * * ?</label><br>
+                <label>每月1号凌晨1点执行一次：0 0 1 1 * ?</label><br>
+                <label>每月最后一天23点执行一次：0 0 23 L * ?</label><br>
+                <label>每周星期天凌晨1点实行一次：0 0 1 ? * L</label><br>
+                <label>在26分、29分、33分执行一次：0 26,29,33 * * * ?</label><br>
+                <label>每天的0点、13点、18点、21点都执行一次：0 0 0,13,18,21 * * ?</label><br><br>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script src="${rc.contextPath}/js/sys/schedule.js?_${date.systemTime}"></script>
+</body>
+</html>

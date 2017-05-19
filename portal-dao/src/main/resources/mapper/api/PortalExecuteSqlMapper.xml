@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yonghui.portal.mapper.api.PortalExecuteSqlMapper">
+
+    <select id="queryObject" resultType="com.yonghui.portal.model.api.PortalExecuteSql">
+		select * from portal_execute_sql where id = #{id}
+	</select>
+
+    <select id="queryObjectBySqlcode" resultType="com.yonghui.portal.model.api.PortalExecuteSql">
+        select * from portal_execute_sql where sqlcode = #{sqlcode}
+    </select>
+
+    <select id="queryList" parameterType="map" resultType="com.yonghui.portal.model.api.PortalExecuteSql">
+        select * from portal_execute_sql
+        <where>
+            <if test="id != null and id !=''">
+                and id = #{id}
+            </if>
+            <if test="remark != null and remark !=''">
+                and remark like concat('%',#{remark},'%')
+            </if>
+        </where>
+        <choose>
+            <when test="sidx != null and sidx.trim() != ''">
+                order by ${sidx} ${order}
+            </when>
+            <otherwise>
+                order by id desc
+            </otherwise>
+        </choose>
+        <if test="offset != null and limit != null">
+            limit #{offset}, #{limit}
+        </if>
+    </select>
+
+    <select id="queryTotal" parameterType="map" resultType="int">
+        select count(*) from portal_execute_sql
+        <where>
+            <if test="id != null and id !=''">
+                and id = #{id}
+            </if>
+            <if test="remark != null and remark !=''">
+                and remark like concat('%',#{remark},'%')
+            </if>
+        </where>
+    </select>
+
+    <insert id="save" parameterType="com.yonghui.portal.model.api.PortalExecuteSql">
+		insert into portal_execute_sql
+		(
+			`id`,
+			`sqlcode`,
+			`title`,
+			`execute_sql`,
+			`data_source_code`,
+			`parameter`,
+			`remark`,
+			`creater`,
+			`create_time`,
+			`modifier`,
+			`modify_time`,
+			`disabled`,
+			`version`
+		)
+		values
+		(
+			#{id},
+			#{sqlcode},
+			#{title},
+			#{executeSql},
+			#{dataSourceCode},
+			#{parameter},
+			#{remark},
+			#{creater},
+			#{createTime},
+			#{modifier},
+			NOW(),
+			#{disabled},
+			#{version}
+		)
+	</insert>
+
+    <update id="update" parameterType="com.yonghui.portal.model.api.PortalExecuteSql">
+        update portal_execute_sql
+        <set>
+            <if test="sqlcode != null">`sqlcode` = #{sqlcode}, </if>
+            <if test="title != null">`title` = #{title}, </if>
+            <if test="executeSql != null">`execute_sql` = #{executeSql}, </if>
+            <if test="dataSourceCode != null">`data_source_code` = #{dataSourceCode}, </if>
+            <if test="parameter != null">`parameter` = #{parameter}, </if>
+            <if test="remark != null">`remark` = #{remark}, </if>
+            <if test="creater != null">`creater` = #{creater}, </if>
+            <if test="createTime != null">`create_time` = #{createTime}, </if>
+            <if test="modifier != null">`modifier` = #{modifier}, </if>
+            `modify_time` = NOW(),
+            <if test="disabled != null">`disabled` = #{disabled}, </if>
+            <if test="version != null">`version` = #{version}</if>
+        </set>
+        where id = #{id}
+	</update>
+
+    <!-- 批量删除 -->
+    <delete id="deleteBatch" parameterType="int">
+        delete from portal_execute_sql where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yonghui.portal.mapper.api.PortalProcedureMapper">
+
+    <select id="queryObject" resultType="com.yonghui.portal.model.api.PortalProcedure">
+		select * from portal_procedure where id = #{id}
+	</select>
+
+    <select id="queryObjectByProcode" resultType="com.yonghui.portal.model.api.PortalProcedure">
+        select * from portal_procedure where procode = #{procode}
+    </select>
+
+    <select id="queryList" parameterType="map" resultType="com.yonghui.portal.model.api.PortalProcedure">
+        select * from portal_procedure
+        <if test="offset != null and limit != null">
+            limit #{offset}, #{limit}
+        </if>
+    </select>
+
+    <select id="queryTotal" parameterType="map" resultType="int">
+        select count(*) from portal_procedure
+    </select>
+
+    <insert id="save" parameterType="com.yonghui.portal.model.api.PortalProcedure">
+		insert into portal_procedure
+		(
+			`id`,
+			`procode`,
+			`title`,
+			`data_source_code`,
+			`proname`,
+			`parameter`,
+			`prodb`,
+			`remark`,
+			`creater`,
+			`create_time`,
+			`modifier`,
+			`modify_time`,
+			`disabled`,
+			`version`
+		)
+		values
+		(
+			#{id},
+			#{procode},
+			#{title},
+			#{dataSourceCode},
+			#{proname},
+			#{parameter},
+			#{prodb},
+			#{remark},
+			#{creater},
+			#{createTime},
+			#{modifier},
+			NOW(),
+			#{disabled},
+			#{version}
+		)
+	</insert>
+
+    <update id="update" parameterType="com.yonghui.portal.model.api.PortalProcedure">
+        update portal_procedure
+        <set>
+            <if test="procode != null">`procode` = #{procode}, </if>
+            <if test="title != null">`title` = #{title}, </if>
+            <if test="dataSourceCode != null">`data_source_code` = #{dataSourceCode}, </if>
+            <if test="proname != null">`proname` = #{proname}, </if>
+            <if test="parameter != null">`parameter` = #{parameter}, </if>
+            <if test="prodb != null">`prodb` = #{prodb}, </if>
+            <if test="remark != null">`remark` = #{remark}, </if>
+            <if test="creater != null">`creater` = #{creater}, </if>
+            <if test="createTime != null">`create_time` = #{createTime}, </if>
+            <if test="modifier != null">`modifier` = #{modifier}, </if>
+            `modify_time` = NOW(),
+            <if test="disabled != null">`disabled` = #{disabled}, </if>
+            <if test="version != null">`version` = #{version}</if>
+        </set>
+        where id = #{id}
+	</update>
+
+    <!-- 根据key，更新value -->
+    <!--<update id="updateValueByKey" parameterType="map">
+		update portal_procedure set `value` = #{value} where `key` = #{key}
+	</update>-->
+
+    <!-- 根据key，查询value -->
+    <!--<select id="queryByKey" parameterType="string" resultType="string">
+        select value from portal_procedure where `key` = #{key}
+    </select>-->
+
+
+    <delete id="delete">
+        delete from portal_procedure where id = #{value}
+    </delete>
+    <!-- 批量删除 -->
+    <delete id="deleteBatch">
+        delete from portal_procedure where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <!-- 通用调用存储过程 -->
+    <select id="callProResultMap" statementType="CALLABLE" resultType="map" parameterType="java.util.HashMap">
+        <![CDATA[
+
+		    {
+		      call ${proname}(${parameter})
+		    }
+
+        ]]>
+    </select>
+
+    <select id="callProListResultListMap" statementType="CALLABLE" resultType="map" parameterType="java.util.HashMap">
+        <![CDATA[
+
+		    {
+		      call ${proname}(${parameter})
+		    }
+
+        ]]>
+    </select>
+
+    <select id="callProResultMapByParam" statementType="CALLABLE" resultType="map" parameterType="java.util.HashMap">
+        <![CDATA[
+
+		    {
+		      call ${proname}(${parameter})
+		    }
+
+        ]]>
+    </select>
+
+    <select id="callProListResultListMapByParam" statementType="CALLABLE" resultType="map" parameterType="java.util.HashMap">
+        <![CDATA[
+
+		    {
+		      call ${proname}(${parameter})
+		    }
+
+        ]]>
+    </select>
+
+</mapper>

@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="
+        http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context 
+        http://www.springframework.org/schema/context/spring-context.xsd
+        http://www.springframework.org/schema/mvc
+        http://www.springframework.org/schema/mvc/spring-mvc.xsd
+        http://www.springframework.org/schema/aop
+        http://www.springframework.org/schema/aop/spring-aop.xsd">
+
+
+    <!-- properties配置文件 -->
+    <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="order" value="0"/>
+        <!-- 忽略不可解析的 Placeholder -->
+        <property name="ignoreUnresolvablePlaceholders" value="true"/>
+        <property name="ignoreResourceNotFound" value="true"/>
+        <property name="locations">
+            <list>
+                <value>classpath:portal-webapp-api.properties</value>
+                <value>file:D:/config/portal-webapp-api.properties</value>
+                <value>file:/opt/config/portal-webapp-api.properties</value>
+            </list>
+        </property>
+    </bean>
+
+
+    <!-- 扫描装载 自动实例化指定包以及子包下的所有bean -->
+    <context:component-scan base-package="com.yonghui.*"/>
+
+    <!-- 开启注解功能 -->
+    <context:annotation-config/>
+
+    <!-- redis配置文件 -->
+    <import resource="classpath:applicationContext-redis.xml"/>
+    <!-- dubbo配置文件和spring配置文件必须放到一起 -->
+    <import resource="classpath:applicationContext-dubbo-consumer.xml"/>
+
+    <!-- restful管理项目API工具 -->
+    <bean id="swagger2Config"
+          class="springfox.documentation.swagger2.configuration.Swagger2DocumentationConfiguration"/>
+
+    <!-- 启动aop注解基于类的代理（这时需要cglib库），如果proxy-target-class属值被设置为false或者这个属性被省略，那么标准的JDK 基于接口的代理将起作用 -->
+    <aop:config proxy-target-class="true"/>
+
+    <!-- 静态资源的请求转由Web应用服务器默认的Servlet处理，不是静态资源的请求，由DispatcherServlet继续处理 -->
+    <mvc:default-servlet-handler/>
+
+    <!-- 使用注解功能 -->
+    <mvc:annotation-driven>
+        <mvc:message-converters>
+            <bean class="org.springframework.http.converter.ResourceHttpMessageConverter"/>
+            <!-- 让@ResponseBody注解自动转换json -->
+            <bean class="com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter">
+                <property name="supportedMediaTypes">
+                    <list>
+                        <value>text/html;charset=UTF-8</value>
+                        <value>application/json</value>
+                    </list>
+                </property>
+                <property name="features">
+                    <list>
+                        <!-- json解析器设置QuoteFieldNames和WriteMapNullValue的值为true,即输出时key使用双引号,同时也输出值为null的字段 -->
+                        <value>WriteMapNullValue</value>
+                        <value>QuoteFieldNames</value>
+                        <value>WriteDateUseDateFormat</value>
+                        <!-- 禁用fastjson循环引用检测 -->
+                        <value>DisableCircularReferenceDetect</value>
+                    </list>
+                </property>
+            </bean>
+
+            <!--
+            避免IE执行ajax时，返回json出现下载文件
+            spring3.x是org.springframework.http.converter.json.MappingJacksonHttpMessageConverter
+            spring4.x是org.springframework.http.converter.json.MappingJackson2HttpMessageConverter 需要最新的jackson
+            -->
+            <!--
+            <bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
+                &lt;!&ndash; 配置一个新的json转换器，此转换器比spring内置的json转换器优先级更高，所以与json有关的转换，spring会优先使用它。&ndash;&gt;
+                <property name="supportedMediaTypes">
+                    <list>
+                        <value>application/json;charset=UTF-8</value>
+                        <value>application/*+json;charset=UTF-8</value>
+                        <value>text/javascript;charset=UTF-8</value>
+                        <value>text/html;charset=UTF-8</value>
+                    </list>
+                </property>
+            </bean>
+            <bean class="org.springframework.http.converter.StringHttpMessageConverter">
+                <property name="supportedMediaTypes">
+                    <list>
+                        <value>text/html;charset=UTF-8</value>
+                        <value>text/plain;charset=UTF-8</value>
+                        <value>text/javascript;charset=UTF-8</value>
+                    </list>
+                </property>
+            </bean>
+            -->
+        </mvc:message-converters>
+    </mvc:annotation-driven>
+
+    <!-- 拦截器配置 -->
+    <mvc:interceptors>
+        <!-- 后台拦截器 -->
+        <mvc:interceptor>
+            <!-- 拦截路径 -->
+            <mvc:mapping path="/**"/>
+            <!-- 非拦截路径 -->
+            <mvc:exclude-mapping path="/login"/>
+            <mvc:exclude-mapping path="/swagger**"/>
+            <!-- 拦截器对象 -->
+            <bean id="manageInterceptor" class="com.yonghui.portal.interceptor.AuthorizationInterceptor"/>
+        </mvc:interceptor>
+    </mvc:interceptors>
+
+</beans>

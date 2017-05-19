@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yonghui.portal.mapper.api.PortalDataSourceMapper">
+
+    <select id="queryObject" resultType="com.yonghui.portal.model.api.PortalDataSource">
+		select * from portal_data_source where id = #{id}
+	</select>
+
+    <select id="queryObjectByCode" resultType="com.yonghui.portal.model.api.PortalDataSource">
+        select * from portal_data_source where code = #{code}
+    </select>
+
+    <select id="queryList" parameterType="map" resultType="com.yonghui.portal.model.api.PortalDataSource">
+        select * from portal_data_source where 1 = 1
+        <if test="key != null and key.trim() != ''">
+            and `key` like concat('%',#{key},'%')
+        </if>
+        <if test="offset != null and limit != null">
+            limit #{offset}, #{limit}
+        </if>
+    </select>
+
+    <select id="queryTotal" parameterType="map" resultType="int">
+        select count(*) from portal_data_source where 1 = 1
+        <if test="key != null and key.trim() != ''">
+            and `key` like concat('%',#{key},'%')
+        </if>
+    </select>
+
+    <insert id="save" parameterType="com.yonghui.portal.model.api.PortalDataSource">
+		insert into portal_data_source
+		(
+			`id`,
+			`code`,
+			`title`,
+			`url`,
+			`jdbc_driver`,
+			`user`,
+			`password`,
+			`min_connections_per_partition`,
+			`max_connections_per_partition`,
+			`connection_tag`,
+			`remark`,
+			`creater`,
+			`create_time`,
+			`modifier`,
+			`modify_time`,
+			`disabled`,
+			`version`
+		)
+		values
+		(
+			#{id},
+			#{code},
+			#{title},
+			#{url},
+			#{jdbcDriver},
+			#{user},
+			#{password},
+			#{minConnectionsPerPartition},
+			#{maxConnectionsPerPartition},
+			#{connectionTag},
+			#{remark},
+			#{creater},
+			#{createTime},
+			#{modifier},
+			NOW(),
+			#{disabled},
+			#{version}
+		)
+	</insert>
+
+    <update id="update" parameterType="com.yonghui.portal.model.api.PortalDataSource">
+        update portal_data_source
+        <set>
+            <if test="code != null">`code` = #{code}, </if>
+            <if test="title != null">`title` = #{title}, </if>
+            <if test="url != null">`url` = #{url}, </if>
+            <if test="jdbcDriver != null">`jdbc_driver` = #{jdbcDriver}, </if>
+            <if test="user != null">`user` = #{user}, </if>
+            <if test="password != null">`password` = #{password}, </if>
+            <if test="minConnectionsPerPartition != null">`min_connections_per_partition` = #{minConnectionsPerPartition}, </if>
+            <if test="maxConnectionsPerPartition != null">`max_connections_per_partition` = #{maxConnectionsPerPartition}, </if>
+            <if test="connectionTag != null">`connection_tag` = #{connectionTag}, </if>
+            <if test="remark != null">`remark` = #{remark}, </if>
+            <if test="creater != null">`creater` = #{creater}, </if>
+            <if test="createTime != null">`create_time` = #{createTime}, </if>
+            <if test="modifier != null">`modifier` = #{modifier}, </if>
+            `modify_time` = NOW(),
+            <if test="disabled != null">`disabled` = #{disabled}, </if>
+            <if test="version != null">`version` = #{version}</if>
+        </set>
+        where id = #{id}
+	</update>
+
+    <!-- 根据key，更新value -->
+    <update id="updateValueByKey" parameterType="map">
+		update Report set `value` = #{value} where `key` = #{key}
+	</update>
+
+    <!-- 根据key，查询value -->
+    <select id="queryByKey" parameterType="string" resultType="string">
+		select value from portal_data_source where `key` = #{key}
+	</select>
+
+    <delete id="delete">
+        delete from portal_data_source where id = #{value}
+    </delete>
+
+    <delete id="deleteBatch">
+        delete from portal_data_source where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>
