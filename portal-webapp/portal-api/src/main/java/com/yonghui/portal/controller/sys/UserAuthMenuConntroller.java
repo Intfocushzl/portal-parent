@@ -6,6 +6,7 @@ import com.yonghui.portal.model.global.Menu;
 import com.yonghui.portal.model.global.RoleMenu;
 import com.yonghui.portal.service.sys.UserAuthMenuService;
 import com.yonghui.portal.service.sys.UserAuthRoleMenuService;
+import com.yonghui.portal.util.ListToTreeUtils;
 import com.yonghui.portal.util.R;
 import org.apache.log4j.Logger;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -35,24 +36,28 @@ public class UserAuthMenuConntroller {
     // 查看用户菜单
     @RequestMapping("listRoleMenu")
     @ResponseBody
-    //@IgnoreAuth
+    @IgnoreAuth
     public R listRoleMenu(HttpServletRequest request, Integer roleId, HttpServletResponse reseponse) {
         try {
+            String str;
+            List<Menu> menus = new ArrayList<>();
             if (roleId != null) {
                 RoleMenu roleMenu = userAuthRoleMenuService.getUserRoleId(roleId);
                 List<Menu> menuList = new ArrayList<>();
                 if (roleMenu.getMenuId().equals("0")) {
                     menuList = userAuthMenuService.listMenu();
+                    menus = new ListToTreeUtils().listTreeMenu(menuList);
                 } else {
                     List<Integer> list = new ArrayList<Integer>();
                     for (String menuId : roleMenu.getMenuId().split(",")) {
                         list.add(Integer.parseInt(menuId));
                     }
                     menuList = userAuthMenuService.listRoleMenu(list);
+                    menus = new ListToTreeUtils().listTreeMenu(menuList);
 
                 }
                 log.info("角色菜单数据:" + menuList);
-                return R.success().setData(menuList);
+                return R.success().setData(menus);
             } else {
                 return R.error("roleId 为空 ！！！");
             }
