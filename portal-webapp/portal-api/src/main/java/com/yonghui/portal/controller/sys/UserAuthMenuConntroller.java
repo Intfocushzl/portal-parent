@@ -36,7 +36,7 @@ public class UserAuthMenuConntroller {
     // 查看用户菜单
     @RequestMapping("listRoleMenu")
     @ResponseBody
-    @IgnoreAuth
+    //@IgnoreAuth
     public R listRoleMenu(HttpServletRequest request, Integer roleId, HttpServletResponse reseponse) {
         try {
             String str;
