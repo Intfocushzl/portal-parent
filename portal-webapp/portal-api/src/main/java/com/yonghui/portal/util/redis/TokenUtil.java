@@ -36,9 +36,17 @@ public class TokenUtil {
      * @return
      */
     public TokenApi createToken(TokenApi tokenApiLast, User user) {
-        // 先删除上次登陆保存的token
-        if (tokenApiLast != null && !StringUtils.isEmpty(tokenApiLast.getToken())) {
-            redisBizUtil.removeApiToken(tokenApiLast.getToken());
+        //用户首次登陆设置tokenApi，其他情况是更新tokenApi（根据tokenApiLast是否为空来判断）
+       boolean isFirstFlag = true;
+        if (tokenApiLast == null) {
+            tokenApiLast = new TokenApi();
+            tokenApiLast.setJobNumber(user.getJobNumber());
+        } else {
+            isFirstFlag = false;
+            // 先删除上次登陆保存的token
+            if (tokenApiLast != null && !StringUtils.isEmpty(tokenApiLast.getToken())) {
+                redisBizUtil.removeApiToken(tokenApiLast.getToken());
+            }
         }
         // 生成60位长度token，返回给客户端，以后每次请求在header里面带上
         String token = RandomNumString.createToken(user.getJobNumber(), 60);
@@ -53,7 +61,12 @@ public class TokenUtil {
         redisBizUtil.setApiToken(token, JSONObject.toJSONString(tokenApiLast));
         //保存用户信息到redis
         redisBizUtil.setUserInfo(user.getJobNumber(), JSONObject.toJSONString(user));
-        tokenApiService.update(tokenApiLast);
+        //首次登陆时设置，否是更新
+        if(isFirstFlag){
+            tokenApiService.save(tokenApiLast);
+        }else{
+            tokenApiService.update(tokenApiLast);
+        }
         return tokenApiLast;
     }
 
