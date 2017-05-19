@@ -14,6 +14,14 @@ import java.util.Map;
 public interface PortalProcedureMapper extends BaseMapper<PortalProcedure> {
 
     /**
+     * 批量删除对象
+     *
+     * @param procodes
+     * @return
+     */
+    int deleteBatchByProcodes(String[] procodes);
+
+    /**
      * 根据编码查询
      * @param procode
      * @return

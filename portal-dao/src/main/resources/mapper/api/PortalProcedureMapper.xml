@@ -75,28 +75,17 @@
             <if test="disabled != null">`disabled` = #{disabled}, </if>
             <if test="version != null">`version` = #{version}</if>
         </set>
-        where id = #{id}
+        where procode = #{procode}
 	</update>
-
-    <!-- 根据key，更新value -->
-    <!--<update id="updateValueByKey" parameterType="map">
-		update portal_procedure set `value` = #{value} where `key` = #{key}
-	</update>-->
-
-    <!-- 根据key，查询value -->
-    <!--<select id="queryByKey" parameterType="string" resultType="string">
-        select value from portal_procedure where `key` = #{key}
-    </select>-->
-
 
     <delete id="delete">
         delete from portal_procedure where id = #{value}
     </delete>
     <!-- 批量删除 -->
-    <delete id="deleteBatch">
-        delete from portal_procedure where id in
-        <foreach item="id" collection="array" open="(" separator="," close=")">
-            #{id}
+    <delete id="deleteBatchByProcodes">
+        delete from portal_procedure where procode in
+        <foreach item="procode" collection="array" open="(" separator="," close=")">
+            #{procode}
         </foreach>
     </delete>
 
