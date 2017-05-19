@@ -48,10 +48,10 @@ public class PortalProcedureController extends AbstractController {
     /**
      * 信息
      */
-    @RequestMapping("/info/{id}")
+    @RequestMapping("/info/{procode}")
     @RequiresPermissions("portalprocedure:info")
-    public R info(@PathVariable("id") Integer id) {
-        PortalProcedure portalProcedure = portalProcedureService.queryObject(id);
+    public R info(@PathVariable("procode") String procode) {
+        PortalProcedure portalProcedure = portalProcedureService.queryObjectByProcode(procode);
         return R.success().put("portalProcedure", portalProcedure);
     }
 
@@ -62,7 +62,7 @@ public class PortalProcedureController extends AbstractController {
     @RequiresPermissions("portalprocedure:save")
     public R save(@RequestBody PortalProcedure portalProcedure) {
         portalProcedureService.save(portalProcedure);
-        redisBizUtilAdmin.setPortalProcedure(portalProcedure.getProcode(), JSONObject.toJSONString(portalProcedure));
+        redisBizUtilAdmin.setPortalProcedure(portalProcedure.getProcodeOld(), portalProcedure.getProcode(), JSONObject.toJSONString(portalProcedure));
         return R.success();
     }
 
@@ -73,7 +73,7 @@ public class PortalProcedureController extends AbstractController {
     @RequiresPermissions("portalprocedure:update")
     public R update(@RequestBody PortalProcedure portalProcedure) {
         portalProcedureService.update(portalProcedure);
-        redisBizUtilAdmin.setPortalProcedure(portalProcedure.getProcode(), JSONObject.toJSONString(portalProcedure));
+        redisBizUtilAdmin.setPortalProcedure(portalProcedure.getProcodeOld(), portalProcedure.getProcode(), JSONObject.toJSONString(portalProcedure));
         return R.success();
     }
 
@@ -82,8 +82,8 @@ public class PortalProcedureController extends AbstractController {
      */
     @RequestMapping("/delete")
     @RequiresPermissions("portalprocedure:delete")
-    public R delete(@RequestBody Integer[] ids, @RequestBody String[] procodes) {
-        portalProcedureService.deleteBatch(ids);
+    public R delete(@RequestBody String[] procodes) {
+        portalProcedureService.deleteBatch(procodes);
         for (String procode : procodes) {
             redisBizUtilAdmin.removePortalProcedure(procode);
         }

@@ -4,13 +4,13 @@ $(function () {
         datatype: "json",                // 后台返回的数据格式
         // 列表标题及列表模型
         colModel: [
-            {label: 'id', name: 'id', index: 'id', width: 50, key: true },
-            {label: '标题简介', name: 'title', index: 'title', width: 80 }, 
-            {label: '存储过程唯一编码', name: 'procode', index: 'procode', width: 80 }, 
-            {label: '数据源唯一编码', name: 'dataSourceCode', index: 'data_source_code', width: 80 }, 
-            {label: '存储过程名称,用户执行', name: 'proname', index: 'proname', width: 80 }, 
-            {label: '存储过程执行参数，格式如aa@@bb@@cc', name: 'parameter', index: 'parameter', width: 80 }, 
-            {label: '数据源（不启用）', name: 'prodb', index: 'prodb', width: 80 }
+            {label: 'id', name: 'id', index: 'id', width: 50, hidden: true },
+            {label: '编码', name: 'procode', index: 'procode', width: 80, key: true },
+            {label: '标题', name: 'title', index: 'title', width: 80 },
+            {label: '数据源编码', name: 'dataSourceCode', index: 'data_source_code', width: 80 },
+            {label: '存储过程名称', name: 'proname', index: 'proname', width: 80 },
+            {label: '执行参数，格式如aa@@bb@@cc', name: 'parameter', index: 'parameter', width: 80 },
+            {label: '数据库', name: 'prodb', index: 'prodb', width: 80 }
         ],
         viewrecords: true,     // 是否显示行号，默认值是false，不显示
         height: 385,            // 表格高度
@@ -53,7 +53,7 @@ var vm = new Vue({
             //vm.reload();
             $("#jqGrid").jqGrid('setGridParam', {
                 postData: {
-                    id: vm.portalProcedure.id,
+                    procode: vm.portalProcedure.procode,
                     remark: vm.portalProcedure.remark
                 },
                 page: 1
@@ -65,14 +65,14 @@ var vm = new Vue({
             vm.portalProcedure = {};
         },
         update: function (event) {
-            var id = getSelectedRow();
-            if(id == null){
+            var procode = getSelectedRow();
+            if(procode == null){
                 return ;
             }
             vm.showList = false;
             vm.title = "修改";
 
-            vm.getInfo(id)
+            vm.getInfo(procode)
         },
         saveOrUpdate: function (event) {
             var url = vm.portalProcedure.id == null ? "../portalprocedure/save" : "../portalprocedure/update";
@@ -92,8 +92,8 @@ var vm = new Vue({
             });
         },
         del: function (event) {
-            var ids = getSelectedRows();
-            if(ids == null){
+            var procodes = getSelectedRows();
+            if(procodes == null){
                 return ;
             }
 
@@ -101,7 +101,7 @@ var vm = new Vue({
                 $.ajax({
                     type: "POST",
                     url: "../portalprocedure/delete",
-                    data: JSON.stringify(ids),
+                    data: JSON.stringify(procodes),
                     success: function(r){
                         if(r.code == 0){
                             alert('操作成功', function(index){
@@ -114,9 +114,10 @@ var vm = new Vue({
                 });
             });
         },
-        getInfo: function(id){
-            $.get("../portalprocedure/info/"+id, function(r){
+        getInfo: function(procode){
+            $.get("../portalprocedure/info/"+procode, function(r){
                 vm.portalProcedure = r.portalProcedure;
+                vm.portalProcedure.procodeOld = vm.portalProcedure.procode;
             });
         },
         reload: function (event) {
