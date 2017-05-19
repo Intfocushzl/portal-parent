@@ -1,5 +1,6 @@
 package com.yonghui.portal.util;
 
+import com.alibaba.fastjson.JSONObject;
 import com.yonghui.portal.model.global.Menu;
 import org.apache.log4j.Logger;
 
