@@ -15,7 +15,9 @@ import java.util.Map;
 public interface PortalProcedureService {
 	
 	PortalProcedure queryObject(Integer id);
-	
+
+	PortalProcedure queryObjectByProcode(String procode);
+
 	List<PortalProcedure> queryList(Map<String, Object> map);
 	
 	int queryTotal(Map<String, Object> map);
@@ -26,5 +28,5 @@ public interface PortalProcedureService {
 	
 	void delete(Integer id);
 	
-	void deleteBatch(Integer[] ids);
+	void deleteBatch(String[] procodes);
 }
