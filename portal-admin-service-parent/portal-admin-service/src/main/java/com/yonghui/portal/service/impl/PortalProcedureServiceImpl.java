@@ -19,6 +19,11 @@ public class PortalProcedureServiceImpl implements PortalProcedureService {
 	public PortalProcedure queryObject(Integer id){
 		return portalProcedureMapper.queryObject(id);
 	}
+
+	@Override
+	public PortalProcedure queryObjectByProcode(String procode){
+		return portalProcedureMapper.queryObjectByProcode(procode);
+	}
 	
 	@Override
 	public List<PortalProcedure> queryList(Map<String, Object> map){
@@ -46,8 +51,8 @@ public class PortalProcedureServiceImpl implements PortalProcedureService {
 	}
 	
 	@Override
-	public void deleteBatch(Integer[] ids){
-		portalProcedureMapper.deleteBatch(ids);
+	public void deleteBatch(String[] procodes){
+		portalProcedureMapper.deleteBatchByProcodes(procodes);
 	}
 	
 }
