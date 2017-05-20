@@ -94,13 +94,17 @@ public class LoginController {
      *
      * @param request
      */
-    @RequestMapping(value = "loginout", method = RequestMethod.POST)
-    public void loginout(HttpServletRequest request) {
-        // 从header中获取token
-        String token = request.getHeader("token");
-        // 如果header中不存在token，则从参数中获取token
-        if (StringUtils.isNumeric(token)) {
+    @RequestMapping(value = "/loginout", method = RequestMethod.POST)
+    public void loginout(HttpServletRequest request, String token) {
+            //先从header里面找，在找request，最后参数
+        if (StringUtils.isEmpty(token)) {
+            // 从header中获取token
+
+            token = request.getHeader("token");
+            if (StringUtils.isEmpty(token)) {
+            // 从参数中获取token
             token = request.getParameter("token");
+            }
         }
         if (!StringUtils.isEmpty(token)) {
             // 删除用token信息

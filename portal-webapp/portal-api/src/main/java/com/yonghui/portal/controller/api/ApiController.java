@@ -46,7 +46,6 @@ public class ApiController {
      * @param yongHuiReportCustomCode 报表编码,字段名唯一，且不允许修改
      * @return
      */
-    @IgnoreAuth
     @RequestMapping(value = "portal/custom")
     @ResponseBody
     public R portalCustom(HttpServletRequest req, HttpServletResponse response, String yongHuiReportCustomCode) {
