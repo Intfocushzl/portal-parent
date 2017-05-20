@@ -18,4 +18,5 @@ public interface PortalDataSourceMapper extends BaseMapper<PortalDataSource> {
      */
     PortalDataSource queryObjectByCode(@Param("code") String code);
 
+    void deleteBatchByCodes( String[] code);
 }

@@ -17,4 +17,5 @@ public interface PortalReportMapper extends BaseMapper<PortalReport> {
      */
     PortalReport queryObjectByCode(@Param("code") String code);
 
+    void deleteBatchByCodes(String[] codes);
 }

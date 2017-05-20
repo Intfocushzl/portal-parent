@@ -90,7 +90,7 @@
             <if test="disabled != null">`disabled` = #{disabled}, </if>
             <if test="version != null">`version` = #{version}</if>
         </set>
-        where id = #{id}
+        where code = #{codeOld}
 	</update>
 
     <!-- 根据key，更新value -->
@@ -114,4 +114,10 @@
         </foreach>
     </delete>
 
+    <delete id="deleteBatchByCodes">
+        delete from portal_data_source where code in
+        <foreach item="code" collection="array" open="(" separator="," close=")">
+            #{code}
+        </foreach>
+    </delete>
 </mapper>
