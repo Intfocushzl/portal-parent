@@ -1,6 +1,10 @@
 package com.yonghui.portal.model.horse;
 
-public class DataMapIndexAperture {
+import java.io.Serializable;
+
+public class DataMapIndexAperture implements Serializable {
+
+	private static final long serialVersionUID = 1L;
 
 	private Integer id;// 序列号
 	private String fprocess;// 一级流程

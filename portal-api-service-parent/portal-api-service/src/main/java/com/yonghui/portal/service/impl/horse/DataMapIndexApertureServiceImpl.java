@@ -1,11 +1,11 @@
 package com.yonghui.portal.service.impl.horse;
 
 import com.yonghui.portal.mapper.horse.DataMapIndexApertureMapper;
-import com.yonghui.portal.model.horse.DataMapIndexAperture;
 import com.yonghui.portal.service.horse.DataMapIndexApertureService;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by liuwei on 2017/5/7.
@@ -24,7 +24,7 @@ public class DataMapIndexApertureServiceImpl implements DataMapIndexApertureServ
         return  dataMapIndexApertureMapper.getthemelist();
     };
 
-    public List<DataMapIndexAperture> getDataMapIndexAperture(String theme, String index){
+    public List<Map<String, Object>> getDataMapIndexAperture(String theme, String index){
         return  dataMapIndexApertureMapper.getDataMapIndexAperture(theme,index);
     };
 

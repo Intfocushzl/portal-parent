@@ -1,9 +1,9 @@
 package com.yonghui.portal.mapper.horse;
 
-import com.yonghui.portal.model.horse.DataMapIndexAperture;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
+import java.util.Map;
 
 
 public interface DataMapIndexApertureMapper {
@@ -12,5 +12,5 @@ public interface DataMapIndexApertureMapper {
 
     List<String> getthemelist();
 
-    List<DataMapIndexAperture> getDataMapIndexAperture(@Param("theme") String theme, @Param("index") String index);
+    List<Map<String, Object>> getDataMapIndexAperture(@Param("theme") String theme, @Param("index") String index);
 }
