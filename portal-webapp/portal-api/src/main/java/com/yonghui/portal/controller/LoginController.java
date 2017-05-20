@@ -9,7 +9,7 @@ import com.yonghui.portal.service.global.UserService;
 import com.yonghui.portal.util.Md5Util;
 import com.yonghui.portal.util.R;
 import com.yonghui.portal.util.StringUtils;
-import com.yonghui.portal.util.redis.RedisBizUtil;
+import com.yonghui.portal.util.redis.RedisBizUtilApi;
 import com.yonghui.portal.util.redis.TokenUtil;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +34,7 @@ public class LoginController {
     @Reference
     private TokenApiService tokenApiService;
     @Autowired
-    private RedisBizUtil redisBizUtil;
+    private RedisBizUtilApi redisBizUtilApi;
     @Autowired
     private TokenUtil tokenUtil;
 
@@ -104,7 +104,7 @@ public class LoginController {
         }
         if (!StringUtils.isEmpty(token)) {
             // 删除用token信息
-            redisBizUtil.removeApiToken(token);
+            redisBizUtilApi.removeApiToken(token);
             tokenApiService.deleteByToken(token);
         }
     }

@@ -5,7 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.yonghui.portal.annotation.IgnoreAuth;
 import com.yonghui.portal.model.api.TokenApi;
 import com.yonghui.portal.service.global.UserService;
-import com.yonghui.portal.util.redis.RedisBizUtil;
+import com.yonghui.portal.util.redis.RedisBizUtilApi;
 import com.yonghui.portal.util.redis.TokenUtil;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +31,7 @@ public class AuthorizationInterceptor extends HandlerInterceptorAdapter {
     @Reference
     private UserService userService;
     @Autowired
-    private RedisBizUtil redisBizUtil;
+    private RedisBizUtilApi redisBizUtilApi;
     @Autowired
     private TokenUtil tokenUtil;
 
@@ -58,7 +58,7 @@ public class AuthorizationInterceptor extends HandlerInterceptorAdapter {
             return false;
         }
         // 从redis中查询token信息
-        String tokenJsonStr = redisBizUtil.getApiToken(token);
+        String tokenJsonStr = redisBizUtilApi.getApiToken(token);
         TokenApi tokenApi = null;
         if (StringUtils.isBlank(tokenJsonStr)) {
             return false;

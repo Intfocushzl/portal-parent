@@ -27,7 +27,7 @@ public class TokenUtil {
     @Reference
     private TokenApiService tokenApiService;
     @Autowired
-    private RedisBizUtil redisBizUtil;
+    private RedisBizUtilApi redisBizUtil;
 
     /**
      * 创建token

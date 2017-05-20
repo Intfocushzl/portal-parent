@@ -3,7 +3,7 @@ package com.yonghui.portal.service.impl;
 import com.jolbox.bonecp.BoneCP;
 import com.jolbox.bonecp.BoneCPConfig;
 import com.jolbox.bonecp.ConnectionHandle;
-import com.yonghui.portal.model.api.PortalDataSource;
+import com.yonghui.portal.model.report.PortalDataSource;
 import com.yonghui.portal.service.ApiDataBaseSqlService;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;

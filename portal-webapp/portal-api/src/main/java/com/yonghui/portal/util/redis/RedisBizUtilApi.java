@@ -8,8 +8,8 @@ import org.springframework.stereotype.Component;
  *
  * @author 张海 2017.05.13
  */
-@Component("redisBizUtil")
-public class RedisBizUtil {
+@Component("redisBizUtilApi")
+public class RedisBizUtilApi {
 
     @Autowired
     private RedisUtil redisUtil;
@@ -105,9 +105,21 @@ public class RedisBizUtil {
     }
 
 
-    //////////////////////////角色菜单基本信息设置////////////////////////////////
+    //////////////////////////报表信息////////////////////////////////
+    public String getPortalProcedure(String procode) {
+        return redisUtil.get(String.format("%s:report:procedure", KEY_PREFIX), procode);
+    }
 
+    public String getPortalExecuteSql(String sqlcode) {
+        return redisUtil.get(String.format("%s:report:executesql", KEY_PREFIX), sqlcode);
+    }
 
-    //json字符串应包括角色-菜单-api地址对应关系
+    public String getPortalReport(String code) {
+        return redisUtil.get(String.format("%s:report:info", KEY_PREFIX), code);
+    }
+
+    public String getPortalDataSource(String code) {
+        return redisUtil.get(String.format("%s:report:datasource", KEY_PREFIX), code);
+    }
 
 }

@@ -1,6 +1,6 @@
 package com.yonghui.portal.service;
 
-import com.yonghui.portal.model.api.PortalDataSource;
+import com.yonghui.portal.model.report.PortalDataSource;
 
 import java.sql.SQLException;
 import java.util.List;

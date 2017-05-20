@@ -436,7 +436,7 @@ public class StringUtils {
      *
      * @param args
      */
-    public static void main(String args[]) {
+    /*public static void main(String args[]) {
         // 测试封装存储过程参数
         String parameter1 = "parametersdate=2017-05-01@@holdname=@@reportlabel=2@@edate=2017-05-10";
         String proParameter = "reportLabel@@sDate@@eDate@@holdName@@classId@@areaId@@areaMans@@shopId@@para";
@@ -458,6 +458,6 @@ public class StringUtils {
         String parameter3 = "category=干";
         String sqlParameter3 = "category";
         System.out.println(getSqlByParameter(sql3, parameter3, sqlParameter3));
-    }
+    }*/
 
 }

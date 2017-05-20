@@ -1,5 +1,10 @@
 package com.yonghui.portal.service;
 
+import com.yonghui.portal.model.report.PortalDataSource;
+import com.yonghui.portal.model.report.PortalExecuteSql;
+import com.yonghui.portal.model.report.PortalProcedure;
+import com.yonghui.portal.model.report.PortalReport;
+
 import java.util.List;
 import java.util.Map;
 
@@ -11,12 +16,26 @@ import java.util.Map;
 public interface ApiService {
 
     /**
-     * JDBC 执行存储过程或者sql语句
+     * 通过存储过程获取数据
      *
-     * @param typeCode  报表编码
-     * @param parameter 请求参数 如：aa=AAA@@bb=CC@@dd=DD
+     * @param report
+     * @param portalPro
+     * @param portalDataSource
+     * @param parameter
      * @return
      */
-    List<Map<String, Object>> jdbcProListResultListMapByParam(String typeCode, String parameter);
+    List<Map<String, Object>> getListResultListMapByPro(PortalReport report, PortalProcedure portalPro, PortalDataSource portalDataSource, String parameter);
+
+    /**
+     * 通过sql获取数据
+     *
+     * @param report
+     * @param portalExecuteSql
+     * @param portalDataSource
+     * @param parameter
+     * @return
+     */
+    List<Map<String, Object>> getListResultListMapBySql(PortalReport report, PortalExecuteSql portalExecuteSql, PortalDataSource portalDataSource, String parameter);
+
 
 }
