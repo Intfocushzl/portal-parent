@@ -28,4 +28,8 @@ public interface PortalDataSourceService {
 	void delete(Integer id);
 	
 	void deleteBatch(Integer[] ids);
+
+    void deleteBatchByCodes(String[] codes);
+
+    PortalDataSource queryObjectByCode(String code);
 }

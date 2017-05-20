@@ -16,6 +16,8 @@ import java.util.Map;
 public interface PortalReportService {
 	
 	PortalReport queryObject(Integer id);
+
+	PortalReport queryObjectByCode(String code);
 	
 	List<PortalReport> queryList(Map<String, Object> map);
 	
@@ -28,4 +30,6 @@ public interface PortalReportService {
 	void delete(Integer id);
 	
 	void deleteBatch(Integer[] ids);
+
+	void deleteBatchByCodes(String[] codes);
 }
