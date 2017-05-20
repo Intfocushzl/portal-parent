@@ -2,7 +2,6 @@ package com.yonghui.portal.controller.api;
 
 import com.alibaba.dubbo.config.annotation.Reference;
 import com.alibaba.fastjson.JSONObject;
-import com.yonghui.portal.annotation.IgnoreAuth;
 import com.yonghui.portal.model.report.PortalDataSource;
 import com.yonghui.portal.model.report.PortalExecuteSql;
 import com.yonghui.portal.model.report.PortalProcedure;
@@ -61,7 +60,6 @@ public class ApiController {
      * @param response
      * @param yongHuiReportCustomCode
      */
-    @IgnoreAuth
     @RequestMapping(value = "exportExcel")
     public void exportExcel(HttpServletRequest req, HttpServletResponse response, String yongHuiReportCustomCode) {
         try {
