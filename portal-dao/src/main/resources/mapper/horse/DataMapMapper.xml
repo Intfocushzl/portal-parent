@@ -12,7 +12,7 @@
 	</select>
 
 	<select id="getDataMapIndexAperture" parameterType="Map"
-			resultType="com.yonghui.portal.model.horse.DataMapIndexAperture">
+			resultType="Map">
 		call mdm.query_mdm_index_aperture(#{theme},#{index})
 	</select>
 

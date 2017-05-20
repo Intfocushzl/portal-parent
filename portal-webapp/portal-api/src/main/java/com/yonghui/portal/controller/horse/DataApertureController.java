@@ -1,7 +1,6 @@
 package com.yonghui.portal.controller.horse;
 
 import com.alibaba.dubbo.config.annotation.Reference;
-import com.yonghui.portal.model.horse.DataMapIndexAperture;
 import com.yonghui.portal.service.horse.DataMapIndexApertureService;
 import com.yonghui.portal.util.R;
 import org.apache.log4j.Logger;
@@ -14,6 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 元数据统一api接口
@@ -83,7 +83,7 @@ public class DataApertureController {
                   String theme) {
         response.setHeader("Access-Control-Allow-Origin", "*");
         response.setContentType("text/html;charset=UTF-8");
-        List<DataMapIndexAperture> list = new ArrayList<DataMapIndexAperture>();
+        List<Map<String, Object>> list = null;
         try {
             list = dataMapIndexApertureService.getDataMapIndexAperture(theme, index);
             return R.success(list);

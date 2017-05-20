@@ -1,8 +1,7 @@
 package com.yonghui.portal.service.horse;
 
-import com.yonghui.portal.model.horse.DataMapIndexAperture;
-
 import java.util.List;
+import java.util.Map;
 
 
 public interface DataMapIndexApertureService {
@@ -11,6 +10,6 @@ public interface DataMapIndexApertureService {
 
     List<String> getthemelist();
 
-    List<DataMapIndexAperture> getDataMapIndexAperture(String theme, String index);
+    List<Map<String, Object>> getDataMapIndexAperture(String theme, String index);
 
 }
