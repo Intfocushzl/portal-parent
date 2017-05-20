@@ -2,7 +2,7 @@ package com.yonghui.portal.controller.report;
 
 import com.alibaba.fastjson.JSONObject;
 import com.yonghui.portal.controller.AbstractController;
-import com.yonghui.portal.model.api.PortalProcedure;
+import com.yonghui.portal.model.report.PortalProcedure;
 import com.yonghui.portal.service.PortalProcedureService;
 import com.yonghui.portal.util.PageUtils;
 import com.yonghui.portal.util.Query;

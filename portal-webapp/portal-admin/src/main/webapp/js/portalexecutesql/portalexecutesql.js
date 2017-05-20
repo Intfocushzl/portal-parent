@@ -4,8 +4,8 @@ $(function () {
         datatype: "json",                // 后台返回的数据格式
         // 列表标题及列表模型
         colModel: [
-            {label: 'id', name: 'id', index: 'id', width: 50, key: true },
-            {label: 'sql语句唯一编码', name: 'sqlcode', index: 'sqlcode', width: 80 }, 
+            {label: 'id', name: 'id', index: 'id', width: 50, hidden: true },
+            {label: 'sql语句唯一编码', name: 'sqlcode', index: 'sqlcode', width: 80 ,key: true},
             {label: '标题简介', name: 'title', index: 'title', width: 80 }, 
             {label: '执行语句', name: 'executeSql', index: 'execute_sql', width: 80 }, 
             {label: '数据源唯一编码', name: 'dataSourceCode', index: 'data_source_code', width: 80 }, 
@@ -53,8 +53,8 @@ var vm = new Vue({
             //vm.reload();
             $("#jqGrid").jqGrid('setGridParam', {
                 postData: {
-                    id: vm.portalExecuteSql.id,
-                    remark: vm.portalExecuteSql.remark
+                    sqlcode: vm.portalExecuteSql.sqlcode,
+                    title: vm.portalExecuteSql.title
                 },
                 page: 1
             }).trigger("reloadGrid");
@@ -65,14 +65,14 @@ var vm = new Vue({
             vm.portalExecuteSql = {};
         },
         update: function (event) {
-            var id = getSelectedRow();
-            if(id == null){
+            var sqlcode = getSelectedRow();
+            if(sqlcode == null){
                 return ;
             }
             vm.showList = false;
             vm.title = "修改";
 
-            vm.getInfo(id)
+            vm.getInfo(sqlcode)
         },
         saveOrUpdate: function (event) {
             var url = vm.portalExecuteSql.id == null ? "../portalexecutesql/save" : "../portalexecutesql/update";
@@ -92,8 +92,8 @@ var vm = new Vue({
             });
         },
         del: function (event) {
-            var ids = getSelectedRows();
-            if(ids == null){
+            var sqlcodes = getSelectedRows();
+            if(sqlcodes == null){
                 return ;
             }
 
@@ -101,7 +101,7 @@ var vm = new Vue({
                 $.ajax({
                     type: "POST",
                     url: "../portalexecutesql/delete",
-                    data: JSON.stringify(ids),
+                    data: JSON.stringify(sqlcodes),
                     success: function(r){
                         if(r.code == 0){
                             alert('操作成功', function(index){
@@ -114,9 +114,10 @@ var vm = new Vue({
                 });
             });
         },
-        getInfo: function(id){
-            $.get("../portalexecutesql/info/"+id, function(r){
+        getInfo: function(sqlcode){
+            $.get("../portalexecutesql/info/"+sqlcode, function(r){
                 vm.portalExecuteSql = r.portalExecuteSql;
+                vm.portalExecuteSql.sqlcodeOld = vm.portalExecuteSql.sqlcode;
             });
         },
         reload: function (event) {

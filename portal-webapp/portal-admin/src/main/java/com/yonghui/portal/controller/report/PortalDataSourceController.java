@@ -1,7 +1,7 @@
 package com.yonghui.portal.controller.report;
 
 import com.yonghui.portal.controller.AbstractController;
-import com.yonghui.portal.model.api.PortalDataSource;
+import com.yonghui.portal.model.report.PortalDataSource;
 import com.yonghui.portal.service.PortalDataSourceService;
 import com.yonghui.portal.util.PageUtils;
 import com.yonghui.portal.util.Query;

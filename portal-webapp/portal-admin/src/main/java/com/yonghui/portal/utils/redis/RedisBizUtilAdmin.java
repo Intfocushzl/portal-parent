@@ -42,9 +42,39 @@ public class RedisBizUtilAdmin {
         return redisUtil.hasKey(String.format("%s:report:procedure", KEY_PREFIX), procode);
     }
 
-    /*  *******************报表sql语句配置信息****************      */
-    public void setPortalSql(String sql, String value) {
-        redisUtil.put(String.format("%s:report:sql", KEY_PREFIX), sql, value);
+    /********************报表sql语句配置信息*****************/
+    public void setPortalExecuteSql(String sqlcodeOld, String sqlcode, String value) {
+        if (!StringUtils.isEmpty(sqlcodeOld) && !sqlcodeOld.equals(sqlcode)) {
+            redisUtil.remove(String.format("%s:report:executesql", KEY_PREFIX), sqlcodeOld);
+        }
+        redisUtil.put(String.format("%s:report:executesql", KEY_PREFIX), sqlcode, value);
     }
 
+    public String getPortalExecuteSql(String sqlcode) {
+        return redisUtil.get(String.format("%s:report:executesql", KEY_PREFIX), sqlcode);
+    }
+
+    public void removePortalExecuteSql(String sqlcode) {
+        redisUtil.remove(String.format("%s:report:executesql", KEY_PREFIX), sqlcode);
+    }
+
+    public boolean hasPortalExecuteSql(String sqlcode) {
+        return redisUtil.hasKey(String.format("%s:report:executesql", KEY_PREFIX), sqlcode);
+    }
+
+    /********************报表数据源配置信息*****************/
+    public void setPortalDataSource(String codeOld, String code, String value) {
+        if (!StringUtils.isEmpty(codeOld) && !codeOld.equals(code)) {
+            redisUtil.remove(String.format("%s:report:datasource", KEY_PREFIX), codeOld);
+        }
+        redisUtil.put(String.format("%s:report:datasource", KEY_PREFIX), code, value);
+    }
+
+    /********************报表置信息*****************/
+    public void setPortalReport(String codeOld, String code, String value) {
+        if (!StringUtils.isEmpty(codeOld) && !codeOld.equals(code)) {
+            redisUtil.remove(String.format("%s:report:info", KEY_PREFIX), codeOld);
+        }
+        redisUtil.put(String.format("%s:report:info", KEY_PREFIX), code, value);
+    }
 }

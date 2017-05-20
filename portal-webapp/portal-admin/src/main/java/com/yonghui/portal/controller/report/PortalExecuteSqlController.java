@@ -1,11 +1,13 @@
 package com.yonghui.portal.controller.report;
 
+import com.alibaba.fastjson.JSONObject;
 import com.yonghui.portal.controller.AbstractController;
-import com.yonghui.portal.model.api.PortalExecuteSql;
+import com.yonghui.portal.model.report.PortalExecuteSql;
 import com.yonghui.portal.service.PortalExecuteSqlService;
 import com.yonghui.portal.util.PageUtils;
-import com.yonghui.portal.util.R;
 import com.yonghui.portal.util.Query;
+import com.yonghui.portal.util.R;
+import com.yonghui.portal.utils.redis.RedisBizUtilAdmin;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -14,8 +16,6 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * 
- *
  * @author zhanghai
  * @email walk_hai@163.com
  * @date 2017-05-17 16:35:37
@@ -26,12 +26,15 @@ public class PortalExecuteSqlController extends AbstractController {
     @Autowired
     private PortalExecuteSqlService portalExecuteSqlService;
 
+    @Autowired
+    private RedisBizUtilAdmin redisBizUtilAdmin;
+
     /**
      * 列表
      */
     @RequestMapping("/list")
     @RequiresPermissions("portalexecutesql:list")
-    public R list(@RequestParam Map<String, Object> params){
+    public R list(@RequestParam Map<String, Object> params) {
         //查询列表数据
         Query query = new Query(params);
 
@@ -46,10 +49,10 @@ public class PortalExecuteSqlController extends AbstractController {
     /**
      * 信息
      */
-    @RequestMapping("/info/{id}")
+    @RequestMapping("/info/{sqlcode}")
     @RequiresPermissions("portalexecutesql:info")
-    public R info(@PathVariable("id") Integer id){
-        PortalExecuteSql portalExecuteSql = portalExecuteSqlService.queryObject(id);
+    public R info(@PathVariable("sqlcode") String sqlcode) {
+        PortalExecuteSql portalExecuteSql = portalExecuteSqlService.queryObjectBySqlcode(sqlcode);
         return R.success().put("portalExecuteSql", portalExecuteSql);
     }
 
@@ -58,8 +61,9 @@ public class PortalExecuteSqlController extends AbstractController {
      */
     @RequestMapping("/save")
     @RequiresPermissions("portalexecutesql:save")
-    public R save(@RequestBody PortalExecuteSql portalExecuteSql){
-		portalExecuteSqlService.save(portalExecuteSql);
+    public R save(@RequestBody PortalExecuteSql portalExecuteSql) {
+        portalExecuteSqlService.save(portalExecuteSql);
+        redisBizUtilAdmin.setPortalExecuteSql(portalExecuteSql.getSqlcodeOld(), portalExecuteSql.getSqlcode(), JSONObject.toJSONString(portalExecuteSql));
         return R.success();
     }
 
@@ -68,8 +72,9 @@ public class PortalExecuteSqlController extends AbstractController {
      */
     @RequestMapping("/update")
     @RequiresPermissions("portalexecutesql:update")
-    public R update(@RequestBody PortalExecuteSql portalExecuteSql){
-		portalExecuteSqlService.update(portalExecuteSql);
+    public R update(@RequestBody PortalExecuteSql portalExecuteSql) {
+        portalExecuteSqlService.update(portalExecuteSql);
+        redisBizUtilAdmin.setPortalExecuteSql(portalExecuteSql.getSqlcodeOld(), portalExecuteSql.getSqlcode(), JSONObject.toJSONString(portalExecuteSql));
         return R.success();
     }
 
@@ -78,8 +83,11 @@ public class PortalExecuteSqlController extends AbstractController {
      */
     @RequestMapping("/delete")
     @RequiresPermissions("portalexecutesql:delete")
-    public R delete(@RequestBody Integer[] ids){
-		portalExecuteSqlService.deleteBatch(ids);
+    public R delete(@RequestBody String[] sqlcodes) {
+        portalExecuteSqlService.deleteBatchBySqlcodes(sqlcodes);
+        for (String sqlcode : sqlcodes) {
+            redisBizUtilAdmin.removePortalExecuteSql(sqlcode);
+        }
         return R.success();
     }
 
