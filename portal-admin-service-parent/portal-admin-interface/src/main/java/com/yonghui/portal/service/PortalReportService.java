@@ -1,7 +1,7 @@
 package com.yonghui.portal.service;
 
 
-import com.yonghui.portal.model.api.PortalReport;
+import com.yonghui.portal.model.report.PortalReport;
 
 import java.util.List;
 import java.util.Map;
