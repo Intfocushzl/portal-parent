@@ -70,6 +70,18 @@ public class RedisBizUtilAdmin {
         redisUtil.put(String.format("%s:report:datasource", KEY_PREFIX), code, value);
     }
 
+    public String getPortalDataSource(String code) {
+        return redisUtil.get(String.format("%s:report:datasource", KEY_PREFIX), code);
+    }
+
+    public void removePortalDataSource(String code) {
+        redisUtil.remove(String.format("%s:report:datasource", KEY_PREFIX), code);
+    }
+
+    public boolean hasPortalDataSource(String code) {
+        return redisUtil.hasKey(String.format("%s:report:datasource", KEY_PREFIX), code);
+    }
+
     /********************报表置信息*****************/
     public void setPortalReport(String codeOld, String code, String value) {
         if (!StringUtils.isEmpty(codeOld) && !codeOld.equals(code)) {
@@ -77,4 +89,17 @@ public class RedisBizUtilAdmin {
         }
         redisUtil.put(String.format("%s:report:info", KEY_PREFIX), code, value);
     }
+
+    public String getPortalReport(String code) {
+        return redisUtil.get(String.format("%s:report:info", KEY_PREFIX), code);
+    }
+
+    public void removePortalReport(String code) {
+        redisUtil.remove(String.format("%s:report:info", KEY_PREFIX), code);
+    }
+
+    public boolean hasPortalReport(String code) {
+        return redisUtil.hasKey(String.format("%s:report:info", KEY_PREFIX), code);
+    }
+
 }
