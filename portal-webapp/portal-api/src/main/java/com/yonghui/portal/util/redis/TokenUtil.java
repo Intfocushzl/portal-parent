@@ -6,7 +6,6 @@ import com.yonghui.portal.model.api.TokenApi;
 import com.yonghui.portal.model.global.User;
 import com.yonghui.portal.service.TokenApiService;
 import com.yonghui.portal.util.RandomNumString;
-import com.yonghui.portal.util.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -30,44 +29,53 @@ public class TokenUtil {
     private RedisBizUtilApi redisBizUtil;
 
     /**
-     * 创建token
+     * 创建token，用户首次登陆或者上次token已失效，则返回新的token
+     * 用户已登陆并且token未失效，直接返回上次的token
      *
      * @param tokenApiLast
      * @return
      */
     public TokenApi createToken(TokenApi tokenApiLast, User user) {
-        //用户首次登陆设置tokenApi，其他情况是更新tokenApi（根据tokenApiLast是否为空来判断）
-       boolean isFirstFlag = true;
         if (tokenApiLast == null) {
-            tokenApiLast = new TokenApi();
-            tokenApiLast.setJobNumber(user.getJobNumber());
+            return getNewTokenApi(user);
         } else {
-            isFirstFlag = false;
-            // 先删除上次登陆保存的token
-            if (tokenApiLast != null && !StringUtils.isEmpty(tokenApiLast.getToken())) {
+            if (tokenApiLast.getExpireTime().getTime() < System.currentTimeMillis()) {
+                // token已失效，重新登录，先删除上次登陆保存的token
                 redisBizUtil.removeApiToken(tokenApiLast.getToken());
+                tokenApiService.deleteByJobNumber(user.getJobNumber());
+                return getNewTokenApi(user);
+            } else {
+                // token未失效，直接返回
+                return tokenApiLast;
             }
         }
+    }
+
+    /**
+     * 生成新的token
+     *
+     * @param user
+     * @return
+     */
+    private TokenApi getNewTokenApi(User user) {
+        TokenApi tokenApiNew = new TokenApi();
         // 生成60位长度token，返回给客户端，以后每次请求在header里面带上
         String token = RandomNumString.createToken(user.getJobNumber(), 60);
         // 将token，和用户信息存放到redis
         Date now = new Date();
         // 设置过期时间
         Date expireTime = new Date(now.getTime() + EXPIRE * 1000);
-        tokenApiLast.setUpdateTime(now);
-        tokenApiLast.setExpireTime(expireTime);
-        tokenApiLast.setToken(token);
-        // 保存用户登陆信息
-        redisBizUtil.setApiToken(token, JSONObject.toJSONString(tokenApiLast));
-        //保存用户信息到redis
+        tokenApiNew.setUpdateTime(now);
+        tokenApiNew.setExpireTime(expireTime);
+        tokenApiNew.setToken(token);
+        tokenApiNew.setJobNumber(user.getJobNumber());
+        // 保存用户token信息
+        redisBizUtil.setApiToken(token, JSONObject.toJSONString(tokenApiNew));
+        // 保存用户信息到redis
         redisBizUtil.setUserInfo(user.getJobNumber(), JSONObject.toJSONString(user));
-        //首次登陆时设置，否是更新
-        if(isFirstFlag){
-            tokenApiService.save(tokenApiLast);
-        }else{
-            tokenApiService.update(tokenApiLast);
-        }
-        return tokenApiLast;
+        tokenApiService.save(tokenApiNew);
+        // 返回新的token对象
+        return tokenApiNew;
     }
 
 }
