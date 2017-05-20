@@ -18,7 +18,12 @@ public class PortalReportServiceImpl implements PortalReportService {
 	public PortalReport queryObject(Integer id){
 		return portalReportMapper.queryObject(id);
 	}
-	
+
+	@Override
+	public PortalReport queryObjectByCode(String code) {
+		return portalReportMapper.queryObjectByCode(code);
+	}
+
 	@Override
 	public List<PortalReport> queryList(Map<String, Object> map){
 		return portalReportMapper.queryList(map);
@@ -48,5 +53,9 @@ public class PortalReportServiceImpl implements PortalReportService {
 	public void deleteBatch(Integer[] ids){
 		portalReportMapper.deleteBatch(ids);
 	}
-	
+
+	@Override
+	public void deleteBatchByCodes(String[] codes) {
+		portalReportMapper.deleteBatchByCodes(codes);
+	}
 }

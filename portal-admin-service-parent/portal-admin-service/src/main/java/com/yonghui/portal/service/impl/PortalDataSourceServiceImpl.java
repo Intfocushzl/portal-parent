@@ -48,5 +48,14 @@ public class PortalDataSourceServiceImpl implements PortalDataSourceService {
 	public void deleteBatch(Integer[] ids){
 		portalDataSourceMapper.deleteBatch(ids);
 	}
-	
+
+    @Override
+    public PortalDataSource queryObjectByCode(String code) {
+        return portalDataSourceMapper.queryObjectByCode(code);
+    }
+
+    @Override
+    public void deleteBatchByCodes(String[] codes) {
+        portalDataSourceMapper.deleteBatchByCodes(codes);
+    }
 }
