@@ -2,15 +2,15 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.yonghui.portal.mapper.api.PortalReportMapper">
 
-    <select id="queryObject" resultType="com.yonghui.portal.model.api.PortalReport">
+    <select id="queryObject" resultType="com.yonghui.portal.model.report.PortalReport">
 		select * from portal_report where id = #{id}
 	</select>
 
-    <select id="queryObjectByCode" resultType="com.yonghui.portal.model.api.PortalReport">
+    <select id="queryObjectByCode" resultType="com.yonghui.portal.model.report.PortalReport">
         select * from portal_report where code = #{code}
     </select>
 
-    <select id="queryList" parameterType="map" resultType="com.yonghui.portal.model.api.PortalReport">
+    <select id="queryList" parameterType="map" resultType="com.yonghui.portal.model.report.PortalReport">
         select * from portal_report
         <where>
             <if test="id != null and id !=''">
@@ -45,7 +45,7 @@
         </where>
     </select>
 
-    <insert id="save" parameterType="com.yonghui.portal.model.api.PortalReport">
+    <insert id="save" parameterType="com.yonghui.portal.model.report.PortalReport">
 		insert into portal_report
 		(
 			`id`,
@@ -78,7 +78,7 @@
 		)
 	</insert>
 
-    <update id="update" parameterType="com.yonghui.portal.model.api.PortalReport">
+    <update id="update" parameterType="com.yonghui.portal.model.report.PortalReport">
         update portal_report
         <set>
             <if test="code != null">`code` = #{code}, </if>

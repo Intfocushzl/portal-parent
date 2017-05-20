@@ -2,15 +2,15 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.yonghui.portal.mapper.api.PortalProcedureMapper">
 
-    <select id="queryObject" resultType="com.yonghui.portal.model.api.PortalProcedure">
+    <select id="queryObject" resultType="com.yonghui.portal.model.report.PortalProcedure">
 		select * from portal_procedure where id = #{id}
 	</select>
 
-    <select id="queryObjectByProcode" resultType="com.yonghui.portal.model.api.PortalProcedure">
+    <select id="queryObjectByProcode" resultType="com.yonghui.portal.model.report.PortalProcedure">
         select * from portal_procedure where procode = #{procode}
     </select>
 
-    <select id="queryList" parameterType="map" resultType="com.yonghui.portal.model.api.PortalProcedure">
+    <select id="queryList" parameterType="map" resultType="com.yonghui.portal.model.report.PortalProcedure">
         select * from portal_procedure
         <if test="offset != null and limit != null">
             limit #{offset}, #{limit}
@@ -21,7 +21,7 @@
         select count(*) from portal_procedure
     </select>
 
-    <insert id="save" parameterType="com.yonghui.portal.model.api.PortalProcedure">
+    <insert id="save" parameterType="com.yonghui.portal.model.report.PortalProcedure">
 		insert into portal_procedure
 		(
 			`id`,
@@ -58,7 +58,7 @@
 		)
 	</insert>
 
-    <update id="update" parameterType="com.yonghui.portal.model.api.PortalProcedure">
+    <update id="update" parameterType="com.yonghui.portal.model.report.PortalProcedure">
         update portal_procedure
         <set>
             <if test="procode != null">`procode` = #{procode}, </if>
@@ -75,7 +75,7 @@
             <if test="disabled != null">`disabled` = #{disabled}, </if>
             <if test="version != null">`version` = #{version}</if>
         </set>
-        where procode = #{procode}
+        where procode = #{procodeOld}
 	</update>
 
     <delete id="delete">

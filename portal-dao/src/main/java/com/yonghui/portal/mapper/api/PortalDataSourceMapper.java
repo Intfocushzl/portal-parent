@@ -1,7 +1,7 @@
 package com.yonghui.portal.mapper.api;
 
 import com.yonghui.portal.mapper.base.BaseMapper;
-import com.yonghui.portal.model.api.PortalDataSource;
+import com.yonghui.portal.model.report.PortalDataSource;
 import org.apache.ibatis.annotations.Param;
 
 /**

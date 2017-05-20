@@ -1,7 +1,7 @@
 package com.yonghui.portal.mapper.api;
 
 import com.yonghui.portal.mapper.base.BaseMapper;
-import com.yonghui.portal.model.api.PortalExecuteSql;
+import com.yonghui.portal.model.report.PortalExecuteSql;
 import org.apache.ibatis.annotations.Param;
 
 /**
@@ -17,5 +17,7 @@ public interface PortalExecuteSqlMapper extends BaseMapper<PortalExecuteSql> {
      * @return
      */
     PortalExecuteSql queryObjectBySqlcode(@Param("sqlcode") String sqlcode);
+
+    int deleteBatchBySqlcodes(String[] sqlcods);
 
 }
