@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.yonghui.portal.annotation.IgnoreAuth;
 import com.yonghui.portal.model.api.TokenApi;
 import com.yonghui.portal.service.global.UserService;
+import com.yonghui.portal.util.RRException;
 import com.yonghui.portal.util.redis.RedisBizUtilApi;
 import com.yonghui.portal.util.redis.TokenUtil;
 import org.apache.commons.lang.StringUtils;
@@ -53,20 +54,18 @@ public class AuthorizationInterceptor extends HandlerInterceptorAdapter {
         if (StringUtils.isBlank(token)) {
             token = request.getParameter("token");
         }
-        // token为空
         if (StringUtils.isBlank(token)) {
-            return false;
+            throw new RRException("token不能为空");
         }
         // 从redis中查询token信息
         String tokenJsonStr = redisBizUtilApi.getApiToken(token);
         TokenApi tokenApi = null;
         if (StringUtils.isBlank(tokenJsonStr)) {
-            return false;
+            throw new RRException("token不存在");
         } else {
             tokenApi = JSONObject.parseObject(tokenJsonStr, TokenApi.class);
             if (tokenApi == null || tokenApi.getExpireTime().getTime() < System.currentTimeMillis()) {
-                // token已失效，重新登录
-                return false;
+                throw new RRException("token已失效，重新登录");
             }
         }
         //设置账户到request里，后续根据jobNumber，获取用户信息
