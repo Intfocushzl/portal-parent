@@ -14,7 +14,7 @@
         select * from portal_execute_sql
         <where>
             <if test="sqlcode != null and sqlcode !=''">
-                and sqlcode = #{sqlcode}
+                and sqlcode like concat('%',#{sqlcode},'%')
             </if>
             <if test="title != null and title !=''">
                 and title like concat('%',#{title},'%')

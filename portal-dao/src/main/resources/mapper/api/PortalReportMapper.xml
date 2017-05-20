@@ -13,11 +13,11 @@
     <select id="queryList" parameterType="map" resultType="com.yonghui.portal.model.report.PortalReport">
         select * from portal_report
         <where>
-            <if test="id != null and id !=''">
-                and id = #{id}
+            <if test="code != null and code !=''">
+                and code like concat('%',#{code},'%')
             </if>
-            <if test="remark != null and remark !=''">
-                and remark like concat('%',#{remark},'%')
+            <if test="title != null and title !=''">
+                and title like concat('%',#{title},'%')
             </if>
         </where>
         <choose>

@@ -12,6 +12,22 @@
 
     <select id="queryList" parameterType="map" resultType="com.yonghui.portal.model.report.PortalProcedure">
         select * from portal_procedure
+        <where>
+            <if test="code != null and code !=''">
+                and code like concat('%',#{code},'%')
+            </if>
+            <if test="title != null and title !=''">
+                and title like concat('%',#{title},'%')
+            </if>
+        </where>
+        <choose>
+            <when test="sidx != null and sidx.trim() != ''">
+                order by ${sidx} ${order}
+            </when>
+            <otherwise>
+                order by id desc
+            </otherwise>
+        </choose>
         <if test="offset != null and limit != null">
             limit #{offset}, #{limit}
         </if>
