@@ -1,5 +1,6 @@
 package com.yonghui.portal.controller.report;
 
+import com.alibaba.fastjson.JSONObject;
 import com.yonghui.portal.controller.AbstractController;
 import com.yonghui.portal.model.report.PortalDataSource;
 import com.yonghui.portal.service.PortalDataSourceService;
@@ -49,10 +50,10 @@ public class PortalDataSourceController extends AbstractController {
     /**
      * 信息
      */
-    @RequestMapping("/info/{id}")
+    @RequestMapping("/info/{code}")
     @RequiresPermissions("portaldatasource:info")
-    public R info(@PathVariable("id") Integer id){
-        PortalDataSource portalDataSource = portalDataSourceService.queryObject(id);
+    public R info(@PathVariable("code") String code){
+        PortalDataSource portalDataSource = portalDataSourceService.queryObjectByCode(code);
         return R.success().put("portalDataSource", portalDataSource);
     }
 
@@ -63,6 +64,7 @@ public class PortalDataSourceController extends AbstractController {
     @RequiresPermissions("portaldatasource:save")
     public R save(@RequestBody PortalDataSource portalDataSource){
 		portalDataSourceService.save(portalDataSource);
+        redisBizUtilAdmin.setPortalDataSource(portalDataSource.getCodeOld(), portalDataSource.getCode(), JSONObject.toJSONString(portalDataSource));
         return R.success();
     }
 
@@ -73,16 +75,20 @@ public class PortalDataSourceController extends AbstractController {
     @RequiresPermissions("portaldatasource:update")
     public R update(@RequestBody PortalDataSource portalDataSource){
 		portalDataSourceService.update(portalDataSource);
+        redisBizUtilAdmin.setPortalDataSource(portalDataSource.getCodeOld(), portalDataSource.getCode(), JSONObject.toJSONString(portalDataSource));
         return R.success();
     }
 
     /**
-     * 修改
+     * 删除
      */
     @RequestMapping("/delete")
     @RequiresPermissions("portaldatasource:delete")
-    public R delete(@RequestBody Integer[] ids){
-		portalDataSourceService.deleteBatch(ids);
+    public R delete(@RequestBody String[] codes){
+        portalDataSourceService.deleteBatchByCodes(codes);
+        for (String c:codes) {
+            redisBizUtilAdmin.removePortalDataSource(c);
+        }
         return R.success();
     }
 

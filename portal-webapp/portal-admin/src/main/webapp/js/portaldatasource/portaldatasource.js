@@ -4,15 +4,15 @@ $(function () {
         datatype: "json",                // 后台返回的数据格式
         // 列表标题及列表模型
         colModel: [
-            {label: 'id', name: 'id', index: 'id', width: 50, key: true },
-            {label: '数据源唯一编码', name: 'code', index: 'code', width: 80 }, 
+            {label: 'id', name: 'id', index: 'id', width: 50 , hidden: true},
+            {label: '数据源唯一编码', name: 'code', index: 'code', width: 80 , key: true },
             {label: '标题简介', name: 'title', index: 'title', width: 80 }, 
             {label: '数据源连接地址,包含数据库名称', name: 'url', index: 'url', width: 80 }, 
             {label: '数据库类型驱动', name: 'jdbcDriver', index: 'jdbc_driver', width: 80 }, 
             {label: '用户名', name: 'user', index: 'user', width: 80 }, 
             {label: '用户密码', name: 'password', index: 'password', width: 80 }, 
-            {label: '连接池最小连接（指针度连接池）', name: 'minConnectionsPerPartition', index: 'min_connections_per_partition', width: 80 }, 
-            {label: '连接池最大连接（指针度连接池）', name: 'maxConnectionsPerPartition', index: 'max_connections_per_partition', width: 80 }, 
+            {label: '连接池最小连接', name: 'minConnectionsPerPartition', index: 'min_connections_per_partition', width: 80 },
+            {label: '连接池最大连接', name: 'maxConnectionsPerPartition', index: 'max_connections_per_partition', width: 80 },
             {label: '1,从连接池获取连接。2新建数据库连接（目前只有一个连接池，其他都为2）', name: 'connectionTag', index: 'connection_tag', width: 80 }, 
             {label: '创建时间', name: 'createTime', index: 'create_time', width: 80 }, 
         ],
@@ -57,8 +57,8 @@ var vm = new Vue({
             //vm.reload();
             $("#jqGrid").jqGrid('setGridParam', {
                 postData: {
-                    id: vm.portalDataSource.id,
-                    remark: vm.portalDataSource.remark
+                    code: vm.portalDataSource.code,
+                    title: vm.portalDataSource.title
                 },
                 page: 1
             }).trigger("reloadGrid");
@@ -69,14 +69,14 @@ var vm = new Vue({
             vm.portalDataSource = {};
         },
         update: function (event) {
-            var id = getSelectedRow();
-            if(id == null){
+            var code = getSelectedRow();
+            if(code == null){
                 return ;
             }
             vm.showList = false;
             vm.title = "修改";
 
-            vm.getInfo(id)
+            vm.getInfo(code)
         },
         saveOrUpdate: function (event) {
             var url = vm.portalDataSource.id == null ? "../portaldatasource/save" : "../portaldatasource/update";
@@ -96,8 +96,8 @@ var vm = new Vue({
             });
         },
         del: function (event) {
-            var ids = getSelectedRows();
-            if(ids == null){
+            var codes = getSelectedRows();
+            if(codes == null){
                 return ;
             }
 
@@ -105,7 +105,7 @@ var vm = new Vue({
                 $.ajax({
                     type: "POST",
                     url: "../portaldatasource/delete",
-                    data: JSON.stringify(ids),
+                    data: JSON.stringify(codes),
                     success: function(r){
                         if(r.code == 0){
                             alert('操作成功', function(index){
@@ -118,9 +118,10 @@ var vm = new Vue({
                 });
             });
         },
-        getInfo: function(id){
-            $.get("../portaldatasource/info/"+id, function(r){
+        getInfo: function(code){
+            $.get("../portaldatasource/info/"+code, function(r){
                 vm.portalDataSource = r.portalDataSource;
+                vm.portalDataSource.codeOld = vm.portalDataSource.code;
             });
         },
         reload: function (event) {

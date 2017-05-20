@@ -1,11 +1,13 @@
 package com.yonghui.portal.controller.report;
 
+import com.alibaba.fastjson.JSONObject;
 import com.yonghui.portal.controller.AbstractController;
 import com.yonghui.portal.model.report.PortalReport;
 import com.yonghui.portal.service.PortalReportService;
 import com.yonghui.portal.util.PageUtils;
 import com.yonghui.portal.util.Query;
 import com.yonghui.portal.util.R;
+import com.yonghui.portal.utils.redis.RedisBizUtilAdmin;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -25,6 +27,8 @@ import java.util.Map;
 public class PortalReportController extends AbstractController {
     @Autowired
     private PortalReportService portalReportService;
+    @Autowired
+    private RedisBizUtilAdmin redisBizUtilAdmin;
 
     /**
      * 列表
@@ -46,10 +50,10 @@ public class PortalReportController extends AbstractController {
     /**
      * 信息
      */
-    @RequestMapping("/info/{id}")
+    @RequestMapping("/info/{code}")
     @RequiresPermissions("portalreport:info")
-    public R info(@PathVariable("id") Integer id){
-        PortalReport portalReport = portalReportService.queryObject(id);
+    public R info(@PathVariable("code") String code){
+        PortalReport portalReport = portalReportService.queryObjectByCode(code);
         return R.success().put("portalReport", portalReport);
     }
 
@@ -60,6 +64,7 @@ public class PortalReportController extends AbstractController {
     @RequiresPermissions("portalreport:save")
     public R save(@RequestBody PortalReport portalReport){
 		portalReportService.save(portalReport);
+        redisBizUtilAdmin.setPortalReport(portalReport.getCodeOld(), portalReport.getCode(), JSONObject.toJSONString(portalReport));
         return R.success();
     }
 
@@ -70,16 +75,20 @@ public class PortalReportController extends AbstractController {
     @RequiresPermissions("portalreport:update")
     public R update(@RequestBody PortalReport portalReport){
 		portalReportService.update(portalReport);
+        redisBizUtilAdmin.setPortalReport(portalReport.getCodeOld(), portalReport.getCode(), JSONObject.toJSONString(portalReport));
         return R.success();
     }
 
     /**
-     * 修改
+     * 删除
      */
     @RequestMapping("/delete")
     @RequiresPermissions("portalreport:delete")
-    public R delete(@RequestBody Integer[] ids){
-		portalReportService.deleteBatch(ids);
+    public R delete(@RequestBody String[] codes){
+		portalReportService.deleteBatchByCodes(codes);
+        for (String c:codes) {
+            redisBizUtilAdmin.removePortalReport(c);
+        }
         return R.success();
     }
 
