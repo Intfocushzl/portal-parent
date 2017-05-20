@@ -92,19 +92,17 @@ public class ApiController {
      */
     private List<Map<String, Object>> jdbcProListResultListMapByParam(String yongHuiReportCustomCode, String parameter) {
         // 根据报表唯一编码查询报表基本信息
-        PortalReport report = getPortalReport(yongHuiReportCustomCode, parameter);
+        PortalReport report = getPortalReport(yongHuiReportCustomCode);
         List<Map<String, Object>> dataList = null;
         PortalDataSource portalDataSource = null;
-        // 根据执行编码获取存储过程或者SQL语句
-        String executeJson = redisBizUtilApi.getPortalProcedure(report.getExecuteCode());
         if (report.getExecuteType() == 1) {
             // 储存过程方式
-            PortalProcedure portalPro = getPortalProcedure(executeJson);
+            PortalProcedure portalPro = getPortalProcedure(report.getExecuteCode());
             portalDataSource = getPortalDataSource(portalPro.getDataSourceCode());
             dataList = apiService.getListResultListMapByPro(report, portalPro, portalDataSource, parameter);
         } else if (report.getExecuteType() == 2) {
             // sql语句方式
-            PortalExecuteSql portalExecuteSql = getPortalExecuteSql(executeJson);
+            PortalExecuteSql portalExecuteSql = getPortalExecuteSql(report.getExecuteCode());
             portalDataSource = getPortalDataSource(portalExecuteSql.getDataSourceCode());
             dataList = apiService.getListResultListMapBySql(report, portalExecuteSql, portalDataSource, parameter);
         }
@@ -115,10 +113,9 @@ public class ApiController {
      * 获取业务报表信息
      *
      * @param yongHuiReportCustomCode
-     * @param parameter
      * @return
      */
-    private PortalReport getPortalReport(String yongHuiReportCustomCode, String parameter) {
+    private PortalReport getPortalReport(String yongHuiReportCustomCode) {
         if (StringUtils.isEmpty(yongHuiReportCustomCode)) {
             throw new RRException("报表编码不能为空");
         }
@@ -136,10 +133,10 @@ public class ApiController {
     /**
      * 获取存储过程信息
      *
-     * @param executeJson
      * @return
      */
-    private PortalProcedure getPortalProcedure(String executeJson) {
+    private PortalProcedure getPortalProcedure(String executeCode) {
+        String executeJson = redisBizUtilApi.getPortalProcedure(executeCode);
         if (StringUtils.isEmpty(executeJson)) {
             throw new RRException("执行的存储过程不存在");
         }
@@ -153,10 +150,10 @@ public class ApiController {
     /**
      * 获取执行sqld的信息
      *
-     * @param executeJson
      * @return
      */
-    private PortalExecuteSql getPortalExecuteSql(String executeJson) {
+    private PortalExecuteSql getPortalExecuteSql(String executeCode) {
+        String executeJson = redisBizUtilApi.getPortalExecuteSql(executeCode);
         if (StringUtils.isEmpty(executeJson)) {
             throw new RRException("执行的SQL不存在");
         }
