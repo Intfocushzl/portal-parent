@@ -1,4 +1,4 @@
-package com.yonghui.portal.model.api;
+package com.yonghui.portal.model.report;
 
 import com.yonghui.portal.model.base.AuditAuto;
 
@@ -12,6 +12,7 @@ public class PortalDataSource extends AuditAuto {
     private String title;
     // 唯一编码
     private String code;
+    private String codeOld;
     // 连接类型 数据库驱动程序  com.mysql.jdbc.Driver
     private String jdbcDriver;
     // 连接地址 jdbc:mysql://localhost:3306/test
@@ -98,5 +99,13 @@ public class PortalDataSource extends AuditAuto {
 
     public void setConnectionTag(int connectionTag) {
         this.connectionTag = connectionTag;
+    }
+
+    public String getCodeOld() {
+        return codeOld;
+    }
+
+    public void setCodeOld(String codeOld) {
+        this.codeOld = codeOld;
     }
 }

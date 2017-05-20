@@ -1,4 +1,4 @@
-package com.yonghui.portal.model.api;
+package com.yonghui.portal.model.report;
 
 import com.yonghui.portal.model.base.AuditAuto;
 
@@ -11,6 +11,7 @@ public class PortalReport extends AuditAuto {
     private Long id;
     // 唯一编码
     private String code;
+    private String codeOld;
     // 标题
     private String title;
     // 执行类型 1,存储过程，2，select查询
@@ -58,5 +59,13 @@ public class PortalReport extends AuditAuto {
 
     public void setExecuteCode(String executeCode) {
         this.executeCode = executeCode;
+    }
+
+    public String getCodeOld() {
+        return codeOld;
+    }
+
+    public void setCodeOld(String codeOld) {
+        this.codeOld = codeOld;
     }
 }

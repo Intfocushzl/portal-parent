@@ -1,4 +1,4 @@
-package com.yonghui.portal.model.api;
+package com.yonghui.portal.model.report;
 
 import com.yonghui.portal.model.base.AuditAuto;
 
@@ -12,6 +12,7 @@ public class PortalExecuteSql extends AuditAuto {
     private String title;
     // sql语句唯一编码
     private String sqlcode;
+    private String sqlcodeOld;
     // 执行语句
     private String executeSql;
     // JDBC数据源编码
@@ -57,5 +58,13 @@ public class PortalExecuteSql extends AuditAuto {
 
     public void setExecuteSql(String executeSql) {
         this.executeSql = executeSql;
+    }
+
+    public String getSqlcodeOld() {
+        return sqlcodeOld;
+    }
+
+    public void setSqlcodeOld(String sqlcodeOld) {
+        this.sqlcodeOld = sqlcodeOld;
     }
 }

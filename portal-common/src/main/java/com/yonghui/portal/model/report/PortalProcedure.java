@@ -1,4 +1,4 @@
-package com.yonghui.portal.model.api;
+package com.yonghui.portal.model.report;
 
 import com.yonghui.portal.model.base.AuditAuto;
 
@@ -12,6 +12,7 @@ public class PortalProcedure extends AuditAuto {
     private String title;
     // 存储过程唯一编码
     private String procode;
+    private String procodeOld;
     // JDBC数据源编码
     private String dataSourceCode;
     // 存储过程名称
@@ -67,5 +68,13 @@ public class PortalProcedure extends AuditAuto {
 
     public void setDataSourceCode(String dataSourceCode) {
         this.dataSourceCode = dataSourceCode;
+    }
+
+    public String getProcodeOld() {
+        return procodeOld;
+    }
+
+    public void setProcodeOld(String procodeOld) {
+        this.procodeOld = procodeOld;
     }
 }
