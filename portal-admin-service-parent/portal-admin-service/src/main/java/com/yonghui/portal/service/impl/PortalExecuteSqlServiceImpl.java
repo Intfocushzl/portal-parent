@@ -1,7 +1,7 @@
 package com.yonghui.portal.service.impl;
 
 import com.yonghui.portal.mapper.api.PortalExecuteSqlMapper;
-import com.yonghui.portal.model.api.PortalExecuteSql;
+import com.yonghui.portal.model.report.PortalExecuteSql;
 import com.yonghui.portal.service.PortalExecuteSqlService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,6 +17,11 @@ public class PortalExecuteSqlServiceImpl implements PortalExecuteSqlService {
 	@Override
 	public PortalExecuteSql queryObject(Integer id){
 		return portalExecuteSqlMapper.queryObject(id);
+	}
+
+	@Override
+	public PortalExecuteSql queryObjectBySqlcode(String sqlcode){
+		return portalExecuteSqlMapper.queryObjectBySqlcode(sqlcode);
 	}
 	
 	@Override
@@ -45,8 +50,8 @@ public class PortalExecuteSqlServiceImpl implements PortalExecuteSqlService {
 	}
 	
 	@Override
-	public void deleteBatch(Integer[] ids){
-		portalExecuteSqlMapper.deleteBatch(ids);
+	public void deleteBatchBySqlcodes(String[] sqlcodes){
+		portalExecuteSqlMapper.deleteBatchBySqlcodes(sqlcodes);
 	}
 	
 }
