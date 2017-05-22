@@ -1,8 +1,8 @@
-package com.yonghui.portal.service.impl;
+package com.yonghui.portal.service.impl.report;
 
-import com.yonghui.portal.mapper.api.PortalProcedureMapper;
+import com.yonghui.portal.mapper.report.PortalProcedureMapper;
 import com.yonghui.portal.model.report.PortalProcedure;
-import com.yonghui.portal.service.PortalProcedureService;
+import com.yonghui.portal.service.report.PortalProcedureService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

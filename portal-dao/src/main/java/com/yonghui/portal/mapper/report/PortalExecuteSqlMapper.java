@@ -1,4 +1,4 @@
-package com.yonghui.portal.mapper.api;
+package com.yonghui.portal.mapper.report;
 
 import com.yonghui.portal.mapper.base.BaseMapper;
 import com.yonghui.portal.model.report.PortalExecuteSql;

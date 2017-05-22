@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.yonghui.portal.mapper.api.PortalExecuteSqlMapper">
+<mapper namespace="com.yonghui.portal.mapper.report.PortalExecuteSqlMapper">
 
     <select id="queryObject" resultType="com.yonghui.portal.model.report.PortalExecuteSql">
 		select * from portal_execute_sql where id = #{id}

@@ -22,6 +22,13 @@ public class ConstantsUtil {
         public static final String ERROR_MESSAGE = "请求数据出错!!";      //获取数据出错!
     }
 
+
+    //自定义错误消息
+    public abstract class ExceptionCode {
+        public static final int TO_LOGIN = -99;                // 跳转到登录
+        public static final int INTERNAL_ERROR = 500;          // 内部错误
+    }
+
 }
 
 

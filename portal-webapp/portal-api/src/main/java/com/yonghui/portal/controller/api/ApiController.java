@@ -2,6 +2,7 @@ package com.yonghui.portal.controller.api;
 
 import com.alibaba.dubbo.config.annotation.Reference;
 import com.alibaba.fastjson.JSONObject;
+import com.yonghui.portal.annotation.IgnoreAuth;
 import com.yonghui.portal.model.report.PortalDataSource;
 import com.yonghui.portal.model.report.PortalExecuteSql;
 import com.yonghui.portal.model.report.PortalProcedure;
@@ -45,6 +46,7 @@ public class ApiController {
      * @param yongHuiReportCustomCode 报表编码,字段名唯一，且不允许修改
      * @return
      */
+    @IgnoreAuth
     @RequestMapping(value = "portal/custom")
     @ResponseBody
     public R portalCustom(HttpServletRequest req, HttpServletResponse response, String yongHuiReportCustomCode) {

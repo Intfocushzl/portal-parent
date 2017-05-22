@@ -82,7 +82,7 @@ public class RedisBizUtilAdmin {
         return redisUtil.hasKey(String.format("%s:report:datasource", KEY_PREFIX), code);
     }
 
-    /********************报表置信息*****************/
+    /********************报表配置信息*****************/
     public void setPortalReport(String codeOld, String code, String value) {
         if (!StringUtils.isEmpty(codeOld) && !codeOld.equals(code)) {
             redisUtil.remove(String.format("%s:report:info", KEY_PREFIX), codeOld);
@@ -100,6 +100,26 @@ public class RedisBizUtilAdmin {
 
     public boolean hasPortalReport(String code) {
         return redisUtil.hasKey(String.format("%s:report:info", KEY_PREFIX), code);
+    }
+
+    /********************报表标题列配置信息*****************/
+    public void setReportColumns(String codeOld, String code, String value) {
+        if (!StringUtils.isEmpty(codeOld) && !codeOld.equals(code)) {
+            redisUtil.remove(String.format("%s:report:columns", KEY_PREFIX), codeOld);
+        }
+        redisUtil.put(String.format("%s:report:columns", KEY_PREFIX), code, value);
+    }
+
+    public String getReportColumns(String code) {
+        return redisUtil.get(String.format("%s:report:columns", KEY_PREFIX), code);
+    }
+
+    public void removeReportColumns(String code) {
+        redisUtil.remove(String.format("%s:report:columns", KEY_PREFIX), code);
+    }
+
+    public boolean hasReportColumns(String code) {
+        return redisUtil.hasKey(String.format("%s:report:columns", KEY_PREFIX), code);
     }
 
 }

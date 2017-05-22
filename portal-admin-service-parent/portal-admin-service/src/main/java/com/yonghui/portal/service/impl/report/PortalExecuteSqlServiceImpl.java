@@ -1,8 +1,8 @@
-package com.yonghui.portal.service.impl;
+package com.yonghui.portal.service.impl.report;
 
-import com.yonghui.portal.mapper.api.PortalExecuteSqlMapper;
+import com.yonghui.portal.mapper.report.PortalExecuteSqlMapper;
 import com.yonghui.portal.model.report.PortalExecuteSql;
-import com.yonghui.portal.service.PortalExecuteSqlService;
+import com.yonghui.portal.service.report.PortalExecuteSqlService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
