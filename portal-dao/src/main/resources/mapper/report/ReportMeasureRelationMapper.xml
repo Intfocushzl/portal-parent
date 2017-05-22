@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.yonghui.portal.mapper.report.ReportMeasureRelationMapper">
+
+    <!-- 可根据自己的需求，是否要使用 -->
+    <resultMap id="reportMeasureRelationMap" type="com.yonghui.portal.model.report.ReportMeasureRelation">
+        <result property="id" column="id"/>
+        <result property="reportcode" column="reportcode"/>
+        <result property="parentid" column="parentid"/>
+        <result property="isleaf" column="isleaf"/>
+        <result property="treecode" column="treecode"/>
+        <result property="sortid" column="sortid"/>
+        <result property="measureid" column="measureID"/>
+        <result property="measurename" column="measurename"/>
+        <result property="measurelab" column="measurelab"/>
+        <result property="themename" column="themename"/>
+        <result property="unittype" column="unittype"/>
+        <result property="remark" column="remark"/>
+        <result property="creater" column="creater"/>
+        <result property="createTime" column="create_time"/>
+        <result property="modifier" column="modifier"/>
+        <result property="modifyTime" column="modify_time"/>
+        <result property="disabled" column="disabled"/>
+        <result property="version" column="version"/>
+    </resultMap>
+
+    <select id="queryObject" resultType="com.yonghui.portal.model.report.ReportMeasureRelation">
+		select * from report_measure_relation where id = #{value}
+	</select>
+
+    <select id="queryList" resultType="com.yonghui.portal.model.report.ReportMeasureRelation">
+        select * from report_measure_relation
+        <where>
+            <if test="id != null and id !=''">
+                and id = #{id}
+            </if>
+            <if test="remark != null and remark !=''">
+                and remark like concat('%',#{remark},'%')
+            </if>
+        </where>
+        <choose>
+            <when test="sidx != null and sidx.trim() != ''">
+                order by ${sidx} ${order}
+            </when>
+            <otherwise>
+                order by id desc
+            </otherwise>
+        </choose>
+        <if test="offset != null and limit != null">
+            limit #{offset}, #{limit}
+        </if>
+    </select>
+
+    <select id="queryTotal" resultType="int">
+        select count(*) from report_measure_relation
+        <where>
+            <if test="id != null and id !=''">
+                and id = #{id}
+            </if>
+            <if test="remark != null and remark !=''">
+                and remark like concat('%',#{remark},'%')
+            </if>
+        </where>
+    </select>
+
+    <insert id="save" parameterType="com.yonghui.portal.model.report.ReportMeasureRelation" useGeneratedKeys="true"
+            keyProperty="id">
+		insert into report_measure_relation
+		(
+			`reportcode`, 
+			`parentid`, 
+			`isleaf`, 
+			`treecode`, 
+			`sortid`, 
+			`measureID`, 
+			`measurename`, 
+			`measurelab`, 
+			`themename`, 
+			`unittype`, 
+			`remark`,
+			`creater`, 
+			`create_time`, 
+			`modifier`, 
+			`modify_time`, 
+			`disabled`, 
+			`version`
+		)
+		values
+		(
+			#{reportcode}, 
+			#{parentid}, 
+			#{isleaf}, 
+			#{treecode}, 
+			#{sortid}, 
+			#{measureid}, 
+			#{measurename}, 
+			#{measurelab}, 
+			#{themename}, 
+			#{unittype}, 
+			#{remark},
+			#{creater}, 
+			#{createTime}, 
+			#{modifier}, 
+			NOW(), 
+			#{disabled}, 
+			#{version}
+		)
+	</insert>
+
+    <update id="update" parameterType="com.yonghui.portal.model.report.ReportMeasureRelation">
+        update report_measure_relation
+        <set>
+            <if test="reportcode != null">`reportcode` = #{reportcode},</if>
+            <if test="parentid != null">`parentid` = #{parentid},</if>
+            <if test="isleaf != null">`isleaf` = #{isleaf},</if>
+            <if test="treecode != null">`treecode` = #{treecode},</if>
+            <if test="sortid != null">`sortid` = #{sortid},</if>
+            <if test="measureid != null">`measureID` = #{measureid},</if>
+            <if test="measurename != null">`measurename` = #{measurename},</if>
+            <if test="measurelab != null">`measurelab` = #{measurelab},</if>
+            <if test="themename != null">`themename` = #{themename},</if>
+            <if test="unittype != null">`unittype` = #{unittype},</if>
+            <if test="remark != null">`remark` = #{remark},</if>
+            <if test="creater != null">`creater` = #{creater},</if>
+            <if test="createTime != null">`create_time` = #{createTime},</if>
+            <if test="modifier != null">`modifier` = #{modifier},</if>
+            `modify_time` = NOW(),
+            <if test="disabled != null">`disabled` = #{disabled},</if>
+            <if test="version != null">`version` = #{version}</if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <delete id="delete">
+		delete from report_measure_relation where id = #{value}
+	</delete>
+
+    <delete id="deleteBatch">
+        delete from report_measure_relation where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>
