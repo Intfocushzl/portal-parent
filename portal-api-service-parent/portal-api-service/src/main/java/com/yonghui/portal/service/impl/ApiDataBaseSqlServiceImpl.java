@@ -288,7 +288,7 @@ public class ApiDataBaseSqlServiceImpl implements ApiDataBaseSqlService {
                     //md.getColumCount() 返回所有字段的数目
                     //md.getColumName() 根据字段的索引值取得字段的名称
                     //md.getColumType() 根据字段的索引值取得字段的类型
-                    rowData.put(md.getColumnName(i), rs.getObject(i));
+                    rowData.put(md.getColumnLabel(i), rs.getObject(i));
                 }
                 reMapList.add(rowData);
             }
