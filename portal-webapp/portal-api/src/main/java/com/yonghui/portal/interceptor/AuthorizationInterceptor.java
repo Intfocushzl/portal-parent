@@ -4,8 +4,11 @@ import com.alibaba.dubbo.config.annotation.Reference;
 import com.alibaba.fastjson.JSONObject;
 import com.yonghui.portal.annotation.IgnoreAuth;
 import com.yonghui.portal.model.api.TokenApi;
+import com.yonghui.portal.model.sys.SysOperationLog;
 import com.yonghui.portal.service.global.UserService;
 import com.yonghui.portal.util.ConstantsUtil;
+import com.yonghui.portal.util.HttpContextUtils;
+import com.yonghui.portal.util.IPUtils;
 import com.yonghui.portal.util.RRException;
 import com.yonghui.portal.util.redis.RedisBizUtilApi;
 import com.yonghui.portal.util.redis.TokenUtil;
@@ -17,6 +20,7 @@ import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.Date;
 
 
 /**
@@ -29,6 +33,8 @@ import javax.servlet.http.HttpServletResponse;
 public class AuthorizationInterceptor extends HandlerInterceptorAdapter {
 
     public static final String LOGIN_USER_JOB_NUMBER = "LOGIN_USER_JOB_NUMBER";
+
+    public static final String LOGIN_USER_OPERATION_LOG= "LOGIN_USER_OPERATION_LOG";
 
     @Reference
     private UserService userService;
@@ -71,7 +77,16 @@ public class AuthorizationInterceptor extends HandlerInterceptorAdapter {
         }
         //设置账户到request里，后续根据jobNumber，获取用户信息
         request.setAttribute(LOGIN_USER_JOB_NUMBER, tokenApi.getJobNumber());
-
+        //设置用户操作日志对象
+        SysOperationLog log = new SysOperationLog();
+        log.setJobNumber(tokenApi.getJobNumber());
+        log.setStartTime(new Date());
+        //获取用户ip,url.参数
+        IPUtils iputil = new IPUtils();
+        log.setIp(iputil.getIpAddr(request));
+        log.setUrl(request.getRequestURL().toString());
+        log.setParameter(HttpContextUtils.getRequestParameter(request));
+        request.setAttribute(LOGIN_USER_OPERATION_LOG,log);
         return true;
     }
 

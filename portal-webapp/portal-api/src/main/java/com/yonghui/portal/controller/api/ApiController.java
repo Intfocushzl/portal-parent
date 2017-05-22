@@ -2,12 +2,13 @@ package com.yonghui.portal.controller.api;
 
 import com.alibaba.dubbo.config.annotation.Reference;
 import com.alibaba.fastjson.JSONObject;
-import com.yonghui.portal.annotation.IgnoreAuth;
 import com.yonghui.portal.model.report.PortalDataSource;
 import com.yonghui.portal.model.report.PortalExecuteSql;
 import com.yonghui.portal.model.report.PortalProcedure;
 import com.yonghui.portal.model.report.PortalReport;
+import com.yonghui.portal.model.sys.SysOperationLog;
 import com.yonghui.portal.service.ApiService;
+import com.yonghui.portal.service.sys.SysoperationLogService;
 import com.yonghui.portal.util.*;
 import com.yonghui.portal.util.redis.RedisBizUtilApi;
 import com.yonghui.portal.xss.SQLFilter;
@@ -21,8 +22,12 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
+
+import static com.yonghui.portal.interceptor.AuthorizationInterceptor.LOGIN_USER_OPERATION_LOG;
 
 /**
  * 报表存错过程报表统一入口
@@ -35,6 +40,8 @@ public class ApiController {
     Logger log = Logger.getLogger(this.getClass());
     @Reference
     private ApiService apiService;
+    @Reference
+    private SysoperationLogService sysoperationLogService;
     @Autowired
     private RedisBizUtilApi redisBizUtilApi;
 
@@ -46,12 +53,27 @@ public class ApiController {
      * @param yongHuiReportCustomCode 报表编码,字段名唯一，且不允许修改
      * @return
      */
-    @IgnoreAuth
     @RequestMapping(value = "portal/custom")
     @ResponseBody
     public R portalCustom(HttpServletRequest req, HttpServletResponse response, String yongHuiReportCustomCode) {
-        String parameter = HttpContextUtils.getRequestParameter(req);
-        return R.success(jdbcProListResultListMapByParam(SQLFilter.sqlInject(yongHuiReportCustomCode), SQLFilter.sqlInject(parameter)));
+        String parameter = null;
+        List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
+        try {
+            parameter = HttpContextUtils.getRequestParameter(req);
+            SysOperationLog log = (SysOperationLog) req.getAttribute(LOGIN_USER_OPERATION_LOG);
+            log.setEndTime(new Date());
+            //获取用户ip,url.参数
+            IPUtils iputil = new IPUtils();
+            log.setIp(iputil.getIpAddr(req));
+            log.setUrl(req.getRequestURL().toString());
+            log.setParameter(HttpContextUtils.getRequestParameter(req));
+            sysoperationLogService.SaveLog(log);
+            list = jdbcProListResultListMapByParam(SQLFilter.sqlInject(yongHuiReportCustomCode), SQLFilter.sqlInject(parameter));
+        } catch (Exception e) {
+            log.error("执行统一报表程序异常", e);
+            R.error();
+        }
+        return R.success(list);
     }
 
     /**
