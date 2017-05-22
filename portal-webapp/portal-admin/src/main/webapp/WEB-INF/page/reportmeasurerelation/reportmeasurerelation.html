@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    #parse("sys/header.html")
+</head>
+<body>
+<div id="rrapp" v-cloak>
+    <div v-show="showList">
+        <div id="queryDiv" class="queryDiv">
+            <div class="grid-btn">
+                <div class="form-group col-sm-2">
+                    <input type="text" class="form-control" v-model="reportMeasureRelation.id" @keyup.enter="query"
+                           placeholder="主键ID">
+                </div>
+                <div class="form-group col-sm-2">
+                    <input type="text" class="form-control" v-model="reportMeasureRelation.remark" @keyup.enter="query"
+                           placeholder="备注说明">
+                </div>
+                <a class="btn btn-primary" @click="query">查询</a>
+
+                #if($shiro.hasPermission("reportmeasurerelation:save"))
+                <a class="btn btn-primary" @click="add"><i class="fa fa-plus"></i>&nbsp;新增</a>
+                #end
+                #if($shiro.hasPermission("reportmeasurerelation:update"))
+                <a class="btn btn-primary" @click="update"><i class="fa fa-pencil-square-o"></i>&nbsp;修改</a>
+                #end
+                #if($shiro.hasPermission("reportmeasurerelation:delete"))
+                <a class="btn btn-primary" @click="del"><i class="fa fa-trash-o"></i>&nbsp;删除</a>
+                #end
+            </div>
+        </div>
+        <table id="jqGrid"></table>
+        <div id="jqGridPager"></div>
+    </div>
+
+    <div v-show="!showList" class="panel panel-default">
+        <div class="panel-heading">{{title}}</div>
+        <form class="form-horizontal">
+            <div class="form-group">
+                <div class="col-sm-2 control-label">报表唯一编码</div>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" v-model="reportMeasureRelation.reportcode"
+                           placeholder="报表唯一编码"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">父id</div>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" v-model="reportMeasureRelation.parentid" placeholder="父id"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">是否子节点，0不是，1是</div>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" v-model="reportMeasureRelation.isleaf"
+                           placeholder="是否子节点，0不是，1是"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">id层级</div>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" v-model="reportMeasureRelation.treecode"
+                           placeholder="id层级"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">排序</div>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" v-model="reportMeasureRelation.sortid" placeholder="排序"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">指标ID</div>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" v-model="reportMeasureRelation.measureid"
+                           placeholder="指标ID"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">指标名称</div>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" v-model="reportMeasureRelation.measurename"
+                           placeholder="指标名称"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">数据字段名</div>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" v-model="reportMeasureRelation.measurelab"
+                           placeholder="数据字段名"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">平台模块</div>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" v-model="reportMeasureRelation.themename"
+                           placeholder="平台模块"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">说明</div>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" v-model="reportMeasureRelation.remark" placeholder="说明"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label"></div>
+                <input type="button" class="btn btn-primary" @click="saveOrUpdate" value="确定"/>
+                &nbsp;&nbsp;<input type="button" class="btn btn-warning" @click="reload" value="返回"/>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script src="${rc.contextPath}/js/reportmeasurerelation/reportmeasurerelation.js?_${date.systemTime}"></script>
+</body>
+</html>
