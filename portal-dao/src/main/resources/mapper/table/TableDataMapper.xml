@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://www.mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yonghui.portal.mapper.table.TableDataMapper" >
+
+    <!--根据报表编码取出报表头信息-->
+    <select id="getTableTileByReportCode" parameterType="String" resultType="Map">
+        select * from  platform.report_measure_relation where reportcode=#{reportcode}
+    </select>
+
+</mapper>
