@@ -135,6 +135,9 @@ public class HorseImportExcelController {
                                 String shopname = shopnamemap.get("shopname");
                                 item.setShopname(shopname);
                             }
+                            if(!time.equals(item.getSdate())){
+                                throw new Exception("上传文件里日期不是上月");
+                            }
                         } else {
                             throw new Exception("填写的sapshopid有空值，请检查后再试");
                         }
@@ -279,6 +282,9 @@ public class HorseImportExcelController {
                                 String shopname = shopnamemap.get("shopname");
                                 item.setShopname(shopname);
                             }
+                            if(!time.equals(item.getSdate())){
+                                throw new Exception("上传文件里日期不是上月");
+                            }
                         } else {
                             throw new Exception("填写的sapshopid有空值，请检查后再试");
                         }
@@ -419,6 +425,9 @@ public class HorseImportExcelController {
                             } else {
                                 String shopname = shopnamemap.get("shopname");
                                 item.setShopname(shopname);
+                            }
+                            if(!time.equals(item.getSdate())){
+                                throw new Exception("上传文件里日期不是上月");
                             }
                         } else {
                             throw new Exception("填写的sapshopid有空值，请检查后再试");
