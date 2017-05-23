@@ -1,10 +1,10 @@
-package com.yonghui.portal.service.impl;
+package com.yonghui.portal.service.impl.data;
 
 import com.jolbox.bonecp.BoneCP;
 import com.jolbox.bonecp.BoneCPConfig;
 import com.jolbox.bonecp.ConnectionHandle;
 import com.yonghui.portal.model.report.PortalDataSource;
-import com.yonghui.portal.service.ApiDataBaseSqlService;
+import com.yonghui.portal.service.data.ApiDataBaseSqlService;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
 

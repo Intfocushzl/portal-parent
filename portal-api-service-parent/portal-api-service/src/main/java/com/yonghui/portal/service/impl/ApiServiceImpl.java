@@ -4,7 +4,7 @@ import com.yonghui.portal.model.report.PortalDataSource;
 import com.yonghui.portal.model.report.PortalExecuteSql;
 import com.yonghui.portal.model.report.PortalProcedure;
 import com.yonghui.portal.model.report.PortalReport;
-import com.yonghui.portal.service.ApiDataBaseSqlService;
+import com.yonghui.portal.service.data.ApiDataBaseSqlService;
 import com.yonghui.portal.service.ApiService;
 import com.yonghui.portal.util.StringUtils;
 import org.apache.log4j.Logger;

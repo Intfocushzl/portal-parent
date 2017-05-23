@@ -1,4 +1,4 @@
-package com.yonghui.portal.service;
+package com.yonghui.portal.service.data;
 
 import com.yonghui.portal.model.report.PortalDataSource;
 
