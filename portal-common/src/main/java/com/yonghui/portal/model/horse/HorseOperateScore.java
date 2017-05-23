@@ -1,6 +1,8 @@
 package com.yonghui.portal.model.horse;
 
-public class HorseOperateScore {
+public class HorseOperateScore implements java.io.Serializable{
+
+    private static final long serialVersionUID = 1L;
 
     // 月份
     private String sdate;

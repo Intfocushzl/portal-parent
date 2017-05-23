@@ -120,4 +120,11 @@
         </mvc:interceptor>
     </mvc:interceptors>
 
+    <bean id="multipartResolver"
+          class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+        <!-- 设置上传文件的最大尺寸为1MB -->
+        <property name="defaultEncoding" value="utf-8" />
+        <property name="maxUploadSize" value="504857600" />
+        <property name="maxInMemorySize" value="140960" />
+    </bean>
 </beans>

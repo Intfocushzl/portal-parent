@@ -1,6 +1,7 @@
 package com.yonghui.portal.controller.horse;
 
 import com.alibaba.dubbo.config.annotation.Reference;
+import com.yonghui.portal.annotation.IgnoreAuth;
 import com.yonghui.portal.model.horse.HorseImportAreaMans;
 import com.yonghui.portal.model.horse.HorseImportCash;
 import com.yonghui.portal.model.horse.HorseOperateScore;
@@ -59,6 +60,7 @@ public class HorseImportExcelController {
      * @param response
      * @throws Exception
      */
+    @IgnoreAuth
     @RequestMapping(value = "score", method = RequestMethod.POST)
     public R importscore(MultipartHttpServletRequest multipartRequest, HttpServletResponse response,
                          String user, String areamans) {
@@ -207,6 +209,7 @@ public class HorseImportExcelController {
      * @param response
      * @throws Exception
      */
+    @IgnoreAuth
     @RequestMapping(value = "humanscore", method = RequestMethod.POST)
     public R importhumanscore(MultipartHttpServletRequest multipartRequest,
                               HttpServletResponse response, String user, String areamans) {
@@ -354,6 +357,7 @@ public class HorseImportExcelController {
      * @param response
      * @throws Exception
      */
+    @IgnoreAuth
     @RequestMapping(value = "cash", method = RequestMethod.POST)
     public R importpaytruely(MultipartHttpServletRequest multipartRequest,
                              HttpServletResponse response, String user, String areamans) {

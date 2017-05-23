@@ -1,6 +1,8 @@
 package com.yonghui.portal.model.horse;
 
-public class HorseImportAreaMans {
+public class HorseImportAreaMans implements java.io.Serializable{
+
+	private static final long serialVersionUID = 1L;
 
 	// 店编
 	private String id;

@@ -1,6 +1,9 @@
 package com.yonghui.portal.model.horse;
 
-public class HorseImportCash {
+public class HorseImportCash implements java.io.Serializable{
+
+	private static final long serialVersionUID = 1L;
+
 	// 月份
 	private String sdate;
 
