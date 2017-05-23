@@ -72,7 +72,7 @@ public class ReportMeasureRelationController extends AbstractController {
     }
 
     /**
-     * 修改
+     * 删除
      */
     @RequestMapping("/delete")
     @RequiresPermissions("reportmeasurerelation:delete")
