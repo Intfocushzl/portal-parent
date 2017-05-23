@@ -31,6 +31,7 @@ import java.util.Map;
  * acquireIncrement:每次去拿数据库连接的时候一次性要拿几个，默认值：2
  * statementsCacheSize:缓存prepared statements的大小，默认值：0
  * releaseHelperThreads:每个分区释放链接助理进程的数量，默认值：3，除非你的一个数据库连接的时间内做了很多工作，不然过多的助理进程会影响你的性能
+ * <p>
  * 张海 2017.5.12
  */
 @Service
