@@ -1,4 +1,4 @@
-package com.yonghui.portal.service;
+package com.yonghui.portal.service.test;
 
 
 import org.apache.log4j.Logger;

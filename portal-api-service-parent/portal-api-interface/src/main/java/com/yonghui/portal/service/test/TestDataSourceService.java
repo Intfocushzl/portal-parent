@@ -1,4 +1,4 @@
-package com.yonghui.portal.service;
+package com.yonghui.portal.service.test;
 
 /**
  * 数据源切换测试

@@ -1,9 +1,9 @@
-package com.yonghui.portal.service.impl;
+package com.yonghui.portal.service.impl.test;
 
 import com.yonghui.portal.annotation.DataSource;
 import com.yonghui.portal.db.DataSourceConstants;
 import com.yonghui.portal.db.DataSourceContextHolder;
-import com.yonghui.portal.service.TestDataSourceService;
+import com.yonghui.portal.service.test.TestDataSourceService;
 import org.apache.log4j.Logger;
 
 /**
