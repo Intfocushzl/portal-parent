@@ -1,8 +1,7 @@
 package com.yonghui.portal;
 
 import com.alibaba.dubbo.container.Main;
-import com.yonghui.portal.service.TestApiService;
-import com.yonghui.portal.service.TestDataSourceService;
+import com.yonghui.portal.service.test.TestDataSourceService;
 import org.apache.log4j.Logger;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
@@ -16,9 +15,6 @@ public class ApiServerApplication {
 
     public static void main(String[] args) {
         ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("classpath:springMVC-servlet.xml");
-        // 接口测试
-        TestApiService testApiService = (TestApiService) context.getBean("apiService");
-        System.out.println(testApiService.hello("zhanghai"));
 
         // 接口测试、数据源测试
         TestDataSourceService testDataSourceService = (TestDataSourceService) context.getBean("dataSourceService");
