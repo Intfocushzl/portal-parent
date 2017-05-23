@@ -103,4 +103,8 @@
     <bean id="sysoperationLogService" class="com.yonghui.portal.service.impl.sys.SysoperationLogServiceImpl"/>
     <dubbo:service interface="com.yonghui.portal.service.sys.SysoperationLogService" ref="sysoperationLogService"
                    timeout="60000"/>
+
+    <!-- 生鲜商行报表  -->
+    <bean id="freshReportsService" class="com.yonghui.portal.service.impl.fresh.FreshReportsServiceImpl" />
+    <dubbo:service interface="com.yonghui.portal.service.fresh.FreshReportsService" ref="freshReportsService" timeout="60000"/>
 </beans>
