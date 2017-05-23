@@ -1,15 +1,13 @@
 package com.yonghui.portal.interceptor;
 
 import com.alibaba.dubbo.config.annotation.Reference;
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.yonghui.portal.annotation.IgnoreAuth;
 import com.yonghui.portal.model.api.TokenApi;
 import com.yonghui.portal.model.sys.SysOperationLog;
 import com.yonghui.portal.service.global.UserService;
-import com.yonghui.portal.util.ConstantsUtil;
-import com.yonghui.portal.util.HttpContextUtils;
-import com.yonghui.portal.util.IPUtils;
-import com.yonghui.portal.util.RRException;
+import com.yonghui.portal.util.*;
 import com.yonghui.portal.util.redis.RedisBizUtilApi;
 import com.yonghui.portal.util.redis.TokenUtil;
 import org.apache.commons.lang.StringUtils;
@@ -62,17 +60,20 @@ public class AuthorizationInterceptor extends HandlerInterceptorAdapter {
             token = request.getParameter("token");
         }
         if (StringUtils.isBlank(token)) {
-            throw new RRException("token不能为空,请尝试登录", ConstantsUtil.ExceptionCode.TO_LOGIN);
+            response.getWriter().write(JSON.toJSONString(ConstantsUtil.ExceptionCode.TO_LOGIN));
+            return false;
         }
         // 从redis中查询token信息
         String tokenJsonStr = redisBizUtilApi.getApiToken(token);
         TokenApi tokenApi = null;
         if (StringUtils.isBlank(tokenJsonStr)) {
-            throw new RRException("token不存在，请尝试登录", ConstantsUtil.ExceptionCode.TO_LOGIN);
+            response.getWriter().write(JSON.toJSONString(ConstantsUtil.ExceptionCode.TO_LOGIN));
+            return false;
         } else {
             tokenApi = JSONObject.parseObject(tokenJsonStr, TokenApi.class);
             if (tokenApi == null || tokenApi.getExpireTime().getTime() < System.currentTimeMillis()) {
-                throw new RRException("token已失效，重新登录", ConstantsUtil.ExceptionCode.TO_LOGIN);
+                response.getWriter().write(JSON.toJSONString(ConstantsUtil.ExceptionCode.TO_LOGIN));
+                return false;
             }
         }
         //设置账户到request里，后续根据jobNumber，获取用户信息
