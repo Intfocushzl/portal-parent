@@ -9,6 +9,13 @@ package com.yonghui.portal.util;
 
 public class ConstantsUtil {
 
+    //数据库连接
+    public abstract class DataSourceCode {
+        public static final String DATA_000001 = "DATA_000001";         //主mysql连接池
+        public static final String DATA_000002 = "DATA_000002";         //jdbc动态数据源
+        public static final String DATA_000003 = "DATA_000003";         //主hana连接池
+    }
+
     //通用的状态码
     public abstract class CommonCode {
         public static final int SUCCESS_CODE = 0;      //获取数据成功状态码

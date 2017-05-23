@@ -5,6 +5,7 @@ import com.jolbox.bonecp.BoneCPConfig;
 import com.jolbox.bonecp.ConnectionHandle;
 import com.yonghui.portal.model.report.PortalDataSource;
 import com.yonghui.portal.service.data.ApiDataBaseSqlService;
+import com.yonghui.portal.util.ConstantsUtil;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
 
@@ -44,10 +45,21 @@ public class ApiDataBaseSqlServiceImpl implements ApiDataBaseSqlService {
 
     private static ApiDataBaseSqlServiceImpl apiDataBaseSqlService = null;
 
-    private static final Object object = new Object();
-    private static final Object objectConn = new Object();
-    private static BoneCPConfig config;
-    private static BoneCP connectionPool;
+    /**
+     * Mysql连接池
+     */
+    private static final Object objectMysql = new Object();
+    private static final Object objectConnMysql = new Object();
+    private static BoneCPConfig configMysql;
+    private static BoneCP connectionPoolMysql;
+
+    /**
+     * Hana连接池
+     */
+    private static final Object objectHana = new Object();
+    private static final Object objectConnHana = new Object();
+    private static BoneCPConfig configHana;
+    private static BoneCP connectionPoolHana;
 
     /**
      * MySql
@@ -58,49 +70,45 @@ public class ApiDataBaseSqlServiceImpl implements ApiDataBaseSqlService {
      * @return
      */
     public static BoneCP getMySqlInstance(PortalDataSource portalDataSource) {
-        synchronized (object) {
-            if (connectionPool == null) {
+        synchronized (objectMysql) {
+            if (connectionPoolMysql == null) {
                 // 数据库连接池不存在,新建连接池
                 try {
-                    config = new BoneCPConfig();
+                    configMysql = new BoneCPConfig();
                     try {
                         Class.forName(portalDataSource.getJdbcDriver());// 加载Mysql数据驱动
                     } catch (ClassNotFoundException e) {
                         logger.error(e.getMessage(), e);
                     }
                     //数据库的JDBC URL
-                    config.setJdbcUrl(portalDataSource.getUrl());
+                    configMysql.setJdbcUrl(portalDataSource.getUrl());
                     //数据库用户名
-                    config.setUsername(portalDataSource.getUser());
+                    configMysql.setUsername(portalDataSource.getUser());
                     //数据库用户密码
-                    config.setPassword(portalDataSource.getPassword());
+                    configMysql.setPassword(portalDataSource.getPassword());
                     //数据库连接池的最小连接数
-                    config.setMinConnectionsPerPartition(portalDataSource.getMinConnectionsPerPartition());
+                    configMysql.setMinConnectionsPerPartition(portalDataSource.getMinConnectionsPerPartition());
                     //数据库连接池的最大连接数
-                    config.setMaxConnectionsPerPartition(portalDataSource.getMaxConnectionsPerPartition());
-                    //config.setConnectionTimeout(200, TimeUnit.SECONDS);
+                    configMysql.setMaxConnectionsPerPartition(portalDataSource.getMaxConnectionsPerPartition());
                     //设置分区  分区数为3 ，默认值2，最小1，推荐3-4，视应用而定
-                    config.setPartitionCount(4);
-                    //当连接池中的连接耗尽的时候 BoneCP一次同时获取的连接数 <!-- 每次去拿数据库连接的时候一次性要拿几个,默认值：2
-                    config.setAcquireIncrement(5);
-                    config.setStatementsCacheSize(0);
-                    config.setInitSQL("select 1");
-                    config.setConnectionTestStatement("");
-                    config.setCloseConnectionWatch(false);
-                    config.setLogStatementsEnabled(true);
-                    config.setLazyInit(false);
-                    config.setTransactionRecoveryEnabled(false);
+                    configMysql.setPartitionCount(4);
+                    //当连接池中的连接耗尽的时候 BoneCP一次同时获取的连接数  每次去拿数据库连接的时候一次性要拿几个,默认值：2
+                    configMysql.setAcquireIncrement(5);
+                    configMysql.setStatementsCacheSize(0);
+                    configMysql.setCloseConnectionWatch(false);
+                    configMysql.setLogStatementsEnabled(true);
+                    configMysql.setLazyInit(false);
+                    configMysql.setTransactionRecoveryEnabled(false);
                     //设置数据库连接池
-                    connectionPool = new BoneCP(config);
-                    logger.info("创建数据库连接池" + config.getJdbcUrl());
+                    connectionPoolMysql = new BoneCP(configMysql);
+                    logger.info("创建数据库连接池" + configMysql.getJdbcUrl());
                 } catch (SQLException e) {
                     logger.error("创建数据库连接池失败" + e.getMessage(), e);
                 }
             }
-            return connectionPool;
+            return connectionPoolMysql;
         }
     }
-
 
     /**
      * 通过BoneCP连接池获取 MySql数据库连接
@@ -108,7 +116,7 @@ public class ApiDataBaseSqlServiceImpl implements ApiDataBaseSqlService {
      * @return
      */
     private static ConnectionHandle getMySqlConnectionHandle(PortalDataSource portalDataSource) {
-        synchronized (objectConn) {
+        synchronized (objectConnMysql) {
             ConnectionHandle connectionHandle = null;
             try {
                 connectionHandle = (ConnectionHandle) getMySqlInstance(portalDataSource).getConnection();
@@ -130,46 +138,38 @@ public class ApiDataBaseSqlServiceImpl implements ApiDataBaseSqlService {
      * @return
      */
     public static BoneCP getHanaInstance(PortalDataSource portalDataSource) {
-        synchronized (object) {
-            if (connectionPool == null) {
+        synchronized (objectHana) {
+            if (connectionPoolHana == null) {
                 // 数据库连接池不存在,新建连接池
                 try {
-                    config = new BoneCPConfig();
+                    configHana = new BoneCPConfig();
                     try {
                         Class.forName(portalDataSource.getJdbcDriver());// 加载Mysql数据驱动
                     } catch (ClassNotFoundException e) {
                         logger.error(e.getMessage(), e);
                     }
                     //数据库的JDBC URL
-                    config.setJdbcUrl(portalDataSource.getUrl());
+                    configHana.setJdbcUrl(portalDataSource.getUrl());
                     //数据库用户名
-                    config.setUsername(portalDataSource.getUser());
+                    configHana.setUsername(portalDataSource.getUser());
                     //数据库用户密码
-                    config.setPassword(portalDataSource.getPassword());
+                    configHana.setPassword(portalDataSource.getPassword());
                     //数据库连接池的最小连接数
-                    config.setMinConnectionsPerPartition(portalDataSource.getMinConnectionsPerPartition());
+                    configHana.setMinConnectionsPerPartition(portalDataSource.getMinConnectionsPerPartition());
                     //数据库连接池的最大连接数
-                    config.setMaxConnectionsPerPartition(portalDataSource.getMaxConnectionsPerPartition());
-                    //config.setConnectionTimeout(200, TimeUnit.SECONDS);
+                    configHana.setMaxConnectionsPerPartition(portalDataSource.getMaxConnectionsPerPartition());
                     //设置分区  分区数为3 ，默认值2，最小1，推荐3-4，视应用而定
-                    config.setPartitionCount(4);
-                    //当连接池中的连接耗尽的时候 BoneCP一次同时获取的连接数 <!-- 每次去拿数据库连接的时候一次性要拿几个,默认值：2
-                    config.setAcquireIncrement(5);
-                    config.setStatementsCacheSize(0);
-                    config.setInitSQL("select 1");
-                    config.setConnectionTestStatement("");
-                    config.setCloseConnectionWatch(false);
-                    config.setLogStatementsEnabled(true);
-                    config.setLazyInit(false);
-                    config.setTransactionRecoveryEnabled(false);
+                    configHana.setPartitionCount(4);
+                    //当连接池中的连接耗尽的时候 BoneCP一次同时获取的连接数  每次去拿数据库连接的时候一次性要拿几个,默认值：2
+                    configHana.setAcquireIncrement(5);
                     //设置数据库连接池
-                    connectionPool = new BoneCP(config);
-                    logger.info("创建数据库连接池" + config.getJdbcUrl());
+                    connectionPoolHana = new BoneCP(configHana);
+                    logger.info("创建数据库连接池" + configHana.getJdbcUrl());
                 } catch (SQLException e) {
                     logger.error("创建数据库连接池失败" + e.getMessage(), e);
                 }
             }
-            return connectionPool;
+            return connectionPoolHana;
         }
     }
 
@@ -179,7 +179,7 @@ public class ApiDataBaseSqlServiceImpl implements ApiDataBaseSqlService {
      * @return
      */
     private static ConnectionHandle getHanaConnectionHandle(PortalDataSource portalDataSource) {
-        synchronized (objectConn) {
+        synchronized (objectConnHana) {
             ConnectionHandle connectionHandle = null;
             try {
                 connectionHandle = (ConnectionHandle) getHanaInstance(portalDataSource).getConnection();
@@ -217,12 +217,15 @@ public class ApiDataBaseSqlServiceImpl implements ApiDataBaseSqlService {
      * @return
      */
     private static Connection getConnection(PortalDataSource portalDataSource) {
-        if (portalDataSource.getConnectionTag() == 1) {
-            //从连接池中获取数据库连接
+        if (ConstantsUtil.DataSourceCode.DATA_000001.equals(portalDataSource.getCode())) {
+            //主mysql连接池
             return getMySqlConnectionHandle(portalDataSource);
-        } else if (portalDataSource.getConnectionTag() == 2) {
-            //新建数据库连接
+        } else if (ConstantsUtil.DataSourceCode.DATA_000002.equals(portalDataSource.getCode())) {
+            //jdbc动态数据源
             return getConnectionNew(portalDataSource);
+        } else if (ConstantsUtil.DataSourceCode.DATA_000003.equals(portalDataSource.getCode())) {
+            //主hana连接池
+            return getHanaConnectionHandle(portalDataSource);
         }
         return null;
     }

@@ -15,7 +15,7 @@ public class TestSapJDBC {
             System.exit(1);
         }
 
-        Connection con = DriverManager.getConnection("jdbc:sap://10.0.30.101:31015", "BRAVO", "Qwe12344");
+        Connection con = DriverManager.getConnection("jdbc:sap://10.0.30.101:31015?reconnect=true ", "BRAVO", "Qwe12344");
         Statement stmt = con.createStatement();
         ResultSet res = null;
         String sql = "select top 10 * from \"BRAVO\".\"DIM_CATEGORY\"";
