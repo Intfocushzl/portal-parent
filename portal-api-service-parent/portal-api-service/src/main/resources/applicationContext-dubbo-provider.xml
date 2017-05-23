@@ -99,4 +99,8 @@
     <dubbo:service interface="com.yonghui.portal.service.horse.DataMapIndexApertureService" ref="dataMapIndexApertureService"
                    timeout="60000"/>
 
+    <!-- 用户日志操作 -->
+    <bean id="sysoperationLogService" class="com.yonghui.portal.service.impl.sys.SysoperationLogServiceImpl"/>
+    <dubbo:service interface="com.yonghui.portal.service.sys.SysoperationLogService" ref="sysoperationLogService"
+                   timeout="60000"/>
 </beans>

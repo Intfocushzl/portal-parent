@@ -4,11 +4,11 @@ import com.alibaba.dubbo.config.annotation.Reference;
 import com.yonghui.portal.annotation.IgnoreAuth;
 import com.yonghui.portal.model.api.TokenApi;
 import com.yonghui.portal.model.global.User;
+import com.yonghui.portal.model.sys.SysOperationLog;
 import com.yonghui.portal.service.TokenApiService;
 import com.yonghui.portal.service.global.UserService;
-import com.yonghui.portal.util.Md5Util;
-import com.yonghui.portal.util.R;
-import com.yonghui.portal.util.StringUtils;
+import com.yonghui.portal.service.sys.SysoperationLogService;
+import com.yonghui.portal.util.*;
 import com.yonghui.portal.util.redis.RedisBizUtilApi;
 import com.yonghui.portal.util.redis.TokenUtil;
 import org.apache.log4j.Logger;
@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Date;
 
 /**
  * 测试用户登陆
@@ -33,6 +34,8 @@ public class LoginController {
     private UserService userService;
     @Reference
     private TokenApiService tokenApiService;
+    @Reference
+    private SysoperationLogService sysoperationLogService;
     @Autowired
     private RedisBizUtilApi redisBizUtilApi;
     @Autowired
@@ -50,6 +53,10 @@ public class LoginController {
     public R login(HttpServletRequest request, String password, String jobnumber) {
         try {
             if (jobnumber != null) {
+                //设置用户操作日志对象
+                SysOperationLog logInfo = new SysOperationLog();
+                logInfo.setJobNumber(jobnumber);
+                logInfo.setStartTime(new Date());
                 //根据jobnumber查询用户
                 User user = userService.getUserByJobNumber(jobnumber);
                 if (user == null) {
@@ -73,7 +80,14 @@ public class LoginController {
                     TokenApi tokenApiLast = tokenApiService.queryByJobNumber(user.getJobNumber());
                     TokenApi tokenApiNew = tokenUtil.createToken(tokenApiLast, user);
 
-
+                    logInfo.setRemark("login");
+                    //获取用户ip,url.参数
+                    IPUtils iputil = new IPUtils();
+                    logInfo.setIp(iputil.getIpAddr(request));
+                    logInfo.setUrl(request.getRequestURL().toString());
+                    logInfo.setParameter(HttpContextUtils.getRequestParameter(request));
+                    logInfo.setEndTime(new Date());
+                    sysoperationLogService.SaveLog(logInfo);
                     log.info("登陆日志：" + "门店号＝" + user.getStoreNumber() + "工号＝" + user.getJobNumber() + "姓名＝"
                             + user.getName() + "token＝" + tokenApiNew.getToken());
                     return R.success(tokenApiNew).put("user", user);

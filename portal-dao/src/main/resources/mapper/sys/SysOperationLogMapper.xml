@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.yonghui.portal.mapper.sys.SysOperationLogMapper">
+
+	<insert id="saveLog" parameterType="com.yonghui.portal.model.sys.SysOperationLog" useGeneratedKeys="true" keyProperty="id">
+		insert into sys_operation_log
+		(
+			`jobNumber`,
+			`url`,
+			`startTime`,
+			`endTime`,
+			`parameter`,
+			`ip`,
+			`remark`
+		)
+		values
+		(
+			#{jobNumber},
+			#{url},
+			#{startTime},
+			#{endTime},
+			#{parameter},
+			#{ip},
+			#{remark}
+		)
+	</insert>
+
+</mapper>
