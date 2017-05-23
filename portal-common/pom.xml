@@ -412,6 +412,13 @@
             <version>${commonpool-version}</version>
         </dependency>
 
+        <!-- sap hana -->
+        <dependency>
+            <groupId>com.yonghui.sap</groupId>
+            <artifactId>ngdbc</artifactId>
+            <version>1.0</version>
+        </dependency>
+
     </dependencies>
 
 </project>
