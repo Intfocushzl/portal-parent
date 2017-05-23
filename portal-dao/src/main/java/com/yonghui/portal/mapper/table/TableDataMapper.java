@@ -1,5 +1,7 @@
 package com.yonghui.portal.mapper.table;
 
+import com.yonghui.portal.model.table.TableTitle;
+
 import java.util.List;
 import java.util.Map;
 
@@ -9,4 +11,6 @@ import java.util.Map;
 public interface TableDataMapper {
     //根据报表编码取出标题信息
     List<Map<String,Object>> getTableTileByReportCode(String reportcode);
+
+    List<TableTitle> getTableTitle(String reportcode);
 }

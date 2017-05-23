@@ -104,6 +104,12 @@
     <dubbo:service interface="com.yonghui.portal.service.sys.SysoperationLogService" ref="sysoperationLogService"
                    timeout="60000"/>
 
+    <!-- 前端TABLE   api -->
+    <bean id="tableDataService" class="com.yonghui.portal.service.impl.table.TableDataServiceImpl"/>
+    <dubbo:service interface="com.yonghui.portal.service.table.TableDataService" ref="tableDataService"
+                   timeout="60000"/>
+
+
     <!-- 生鲜商行报表  -->
     <bean id="freshReportsService" class="com.yonghui.portal.service.impl.fresh.FreshReportsServiceImpl" />
     <dubbo:service interface="com.yonghui.portal.service.fresh.FreshReportsService" ref="freshReportsService" timeout="60000"/>

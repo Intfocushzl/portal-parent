@@ -1,7 +1,7 @@
 package com.yonghui.portal.util;
 
-import com.alibaba.fastjson.JSONObject;
 import com.yonghui.portal.model.global.Menu;
+import com.yonghui.portal.model.table.TableTitle;
 import org.apache.log4j.Logger;
 
 import java.util.ArrayList;
@@ -33,6 +33,26 @@ public class ListToTreeUtils<T> {
 //				node1.setState("closed");
                 nodeList.add(node1);
             }
+        }
+        return nodeList;
+    }
+
+    public List<TableTitle> listTreeTableTitle(List<TableTitle> list){
+        List<TableTitle> nodeList = new ArrayList<TableTitle>();
+        for (TableTitle tableTitle : list) {
+            boolean mark = false;
+            for (TableTitle tableTitleP: list) {
+                if (tableTitle.getParentid() != null && Long.valueOf(tableTitle.getParentid()).equals(tableTitleP.getId())){
+                    mark = true;
+                    if (tableTitleP.getChildren() == null)tableTitleP.setChildren(new ArrayList<TableTitle>());
+                    tableTitleP.getChildren().add(tableTitle);
+                    break;
+                }
+            }
+            if (!mark) {
+                nodeList.add(tableTitle);
+            }
+
         }
         return nodeList;
     }

@@ -1,5 +1,7 @@
 package com.yonghui.portal.service.table;
 
+import com.yonghui.portal.model.table.TableTitle;
+
 import java.util.List;
 import java.util.Map;
 
@@ -8,4 +10,6 @@ import java.util.Map;
  */
 public interface TableDataService {
     List<Map<String,Object>> getTableTileByReportCode(String reportcode);
+
+    List<TableTitle> getTableTitle(String reportcode);
 }

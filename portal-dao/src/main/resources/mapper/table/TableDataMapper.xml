@@ -1,10 +1,43 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://www.mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.yonghui.portal.mapper.table.TableDataMapper" >
+    <resultMap id="BaseResultMap" type="com.yonghui.portal.model.table.TableTitle" >
+        <id column="id" property="id" jdbcType="BIGINT" />
+        <result column="reportcode" property="reportcode" jdbcType="VARCHAR" />
+        <result column="parentid" property="parentid" jdbcType="VARCHAR" />
+        <result column="isleaf" property="isleaf" jdbcType="CHAR" />
+        <result column="treecode" property="treecode" jdbcType="VARCHAR" />
+        <result column="sortid" property="sortid" jdbcType="INTEGER" />
+        <result column="measureID" property="measureid" jdbcType="INTEGER" />
+        <result column="measurename" property="measurename" jdbcType="VARCHAR" />
+        <result column="measurelab" property="measurelab" jdbcType="VARCHAR" />
+        <result column="themename" property="themename" jdbcType="VARCHAR" />
+        <result column="unittype" property="unittype" jdbcType="VARCHAR" />
+        <result column="updatetime" property="updatetime" jdbcType="TIMESTAMP" />
+        <result column="remark" property="remark" jdbcType="VARCHAR" />
+        <result column="creater" property="creater" jdbcType="BIGINT" />
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="modifier" property="modifier" jdbcType="BIGINT" />
+        <result column="modify_time" property="modifyTime" jdbcType="TIMESTAMP" />
+        <result column="disabled" property="disabled" jdbcType="BIGINT" />
+        <result column="version" property="version" jdbcType="BIGINT" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        id, reportcode, parentid, isleaf, treecode, sortid, measureID, measurename, measurelab,
+        themename, unittype, updatetime, remark, creater, create_time, modifier, modify_time,
+        disabled, version
+    </sql>
 
     <!--根据报表编码取出报表头信息-->
     <select id="getTableTileByReportCode" parameterType="String" resultType="Map">
         select * from  platform.report_measure_relation where reportcode=#{reportcode}
+    </select>
+
+    <select id="getTableTitle" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select
+        <include refid="Base_Column_List" />
+        from platform.report_measure_relation
+        where reportcode=#{reportcode,jdbcType=VARCHAR}
     </select>
 
 </mapper>

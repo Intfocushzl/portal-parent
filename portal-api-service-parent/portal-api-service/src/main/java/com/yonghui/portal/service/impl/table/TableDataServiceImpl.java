@@ -1,6 +1,7 @@
 package com.yonghui.portal.service.impl.table;
 
 import com.yonghui.portal.mapper.table.TableDataMapper;
+import com.yonghui.portal.model.table.TableTitle;
 import com.yonghui.portal.service.table.TableDataService;
 import org.springframework.stereotype.Service;
 
@@ -18,5 +19,10 @@ public class TableDataServiceImpl implements TableDataService {
     @Override
     public List<Map<String, Object>> getTableTileByReportCode(String reportcode) {
         return tableDataMapper.getTableTileByReportCode(reportcode);
+    }
+
+    @Override
+    public List<TableTitle> getTableTitle(String reportcode) {
+        return tableDataMapper.getTableTitle(reportcode);
     }
 }
