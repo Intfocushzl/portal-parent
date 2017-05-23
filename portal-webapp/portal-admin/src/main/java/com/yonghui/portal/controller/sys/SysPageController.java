@@ -21,6 +21,17 @@ public class SysPageController {
         return "sys/" + url + ".html";
     }
 
+    @RequestMapping("platform/{url}.html")
+    public String platform(@PathVariable("url") String url) {
+        return "platform/" + url + ".html";
+    }
+
+    @RequestMapping("app/{url}.html")
+    public String app(@PathVariable("url") String url) {
+        return "app/" + url + ".html";
+    }
+
+
     /**
      * 通用页面
      *

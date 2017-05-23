@@ -1,47 +1,20 @@
-var baseUrl="..";
 $(function () {
     $("#jqGrid").jqGrid({
-        url: baseUrl+'/forfront/user/list',     // 请求后台json数据的url
+        url: '../app/groups/list',     // 请求后台json数据的url
         datatype: "json",                // 后台返回的数据格式
         // 列表标题及列表模型
         colModel: [
-            {label: '账号', name: 'account', index: 'account', width: 80 },
-            {label: '角色', name: 'roleId', index: 'roleId', width: 80 },
-            {label: '用户名', name: 'name', index: 'name', width: 80 },
-            {label: '备注', name: 'remark', index: 'remark', width: 80 },
-            {label: '用户ID', name: 'id', index: 'id', width: 50, key: true },
-            {label: '业态', name: 'type', index: 'type', width: 80 , formatter: function (value) {
-                if (value === 0) {
-                    return '平台';
-                }
-                if (value === 1) {
-                    return 'Bravo';
-                }
-                if (value === 2) {
-                    return '会员店';
-                }
-                if (value === 3) {
-                    return '其他';
-                }
-            }},
-            {label: '大区', name: 'largeArea', index: 'largeArea', width: 80 },
-            {label: '新大区', name: 'areaMans', index: 'areaMans', width: 80 },
-            {label: '省份', name: 'province', index: 'province', width: 80 },
-            {label: '城市', name: 'city', index: 'city', width: 80 },
-            {label: '员工号', name: 'jobNumber', index: 'jobNumber', width: 80 },
-            {label: '状态', name: 'status', index: 'status', width: 80, formatter: function (value) {
-                if (value === -1) {
-                    return '<span class="label label-warning">冻结</span>';
-                }
-                if (value === 1) {
-                    return '<span class="label label-success">激活</span>';
-                }
-            } },
-            {label: '门店', name: 'storeNumber', index: 'storeNumber', width: 80 },
-            {label: '商行', name: 'firm', index: 'firm', width: 80 },
-            {label: '创建时间', name: 'createTime', index: 'createTime', width: 80 }
+            {label: '群组ID', name: 'id', index: 'id', width: 50, key: true },
+            // {label: '', name: 'groupid', index: 'groupid', width: 80 },
+            {label: '门店ID', name: 'shopid', index: 'shopid', width: 80 },
+            {label: '群组名', name: 'groupName', index: 'group_name', width: 80 },
+            {label: '备注', name: 'memo', index: 'memo', width: 80 },
+            {label: '加载时间', name: 'loadTime', index: 'load_time', width: 80 },
+            {label: '创建人', name: 'createUser', index: 'create_user', width: 80 },
+            {label: '创建时间', name: 'createdAt', index: 'created_at', width: 80 },
+            {label: '更新人', name: 'updateUser', index: 'update_user', width: 80 },
+            {label: '更新时间', name: 'updatedAt', index: 'updated_at', width: 80 }
         ],
-
         viewrecords: true,
         height: 385,            // 表格高度
         rowNum: 50,             // 一页显示的行记录数
@@ -73,20 +46,21 @@ $(function () {
         }
     });
 });
+
 var vm = new Vue({
     el:'#rrapp',
     data:{
         showList: true,
         title: null,
-        user: {}
+        appGroups: {}
     },
     methods: {
         query: function () {
             //vm.reload();
             $("#jqGrid").jqGrid('setGridParam', {
                 postData: {
-                    jobNumber: vm.user.jobNumber,
-                    remark: vm.user.remark
+                    id: vm.appGroups.id,
+                    groupName: vm.appGroups.groupName
                 },
                 page: 1
             }).trigger("reloadGrid");
@@ -94,7 +68,7 @@ var vm = new Vue({
         add: function(){
             vm.showList = false;
             vm.title = "新增";
-            vm.user = {};
+            vm.appGroups = {};
         },
         update: function (event) {
             var id = getSelectedRow();
@@ -107,11 +81,11 @@ var vm = new Vue({
             vm.getInfo(id)
         },
         saveOrUpdate: function (event) {
-            var url = vm.user.id == null ? baseUrl+"/forfront/user/save" :  baseUrl+"/forfront/user/update";
+            var url = vm.appGroups.id == null ? "../app/groups/save" : "../app/groups/update";
             $.ajax({
                 type: "POST",
                 url: url,
-                data: JSON.stringify(vm.user),
+                data: JSON.stringify(vm.appGroups),
                 success: function(r){
                     if(r.code === 0){
                         alert('操作成功', function(index){
@@ -132,7 +106,7 @@ var vm = new Vue({
             confirm('确定要删除选中的记录？', function(){
                 $.ajax({
                     type: "POST",
-                    url: baseUrl+"/forfront/user/delete",
+                    url: "../app/groups/delete",
                     data: JSON.stringify(ids),
                     success: function(r){
                         if(r.code == 0){
@@ -147,8 +121,8 @@ var vm = new Vue({
             });
         },
         getInfo: function(id){
-            $.get(baseUrl+"/forfront/user/info/"+id, function(r){
-                vm.user = r.user;
+            $.get("../app/groups/info/"+id, function(r){
+                vm.appGroups = r.appGroups;
             });
         },
         reload: function (event) {

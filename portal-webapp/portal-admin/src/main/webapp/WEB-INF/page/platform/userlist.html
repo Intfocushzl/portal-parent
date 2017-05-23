@@ -13,11 +13,9 @@
                     <input type="text" class="form-control" v-model="user.jobNumber" @keyup.enter="query" placeholder="员工号">
                 </div>
                 <div class="form-group col-sm-2">
-                	<input type="text" class="form-control" v-model="user.remark" @keyup.enter="query" placeholder="备注说明">
+                	<input type="text" class="form-control" v-model="user.name" @keyup.enter="query" placeholder="用户名">
                 </div>
                 <a class="btn btn-primary" @click="query">查询</a>
-            </div>
-			<div class="grid-btn">
 				#if($shiro.hasPermission("user:save"))
 				<a class="btn btn-primary" @click="add"><i class="fa fa-plus"></i>&nbsp;新增</a>
 				#end
@@ -51,19 +49,32 @@
 			<div class="form-group">
 				<div class="col-sm-2 control-label">业态</div>
 				<div class="col-sm-10">
-					<input type="text" class="form-control" v-model="user.type" placeholder="0会员，1brova,2后台"/>
+					<!--<input type="text" class="form-control" v-model="user.type" placeholder="0-会员,1-Brova,2-后台,3-其他"/>-->
+					<select id="type" v-model="user.type" class="selectpicker form-control" data-live-search="true" title="请选择">
+						<option value="0">会员店</option>
+						<option value="1">Bravo</option>
+						<option value="2">后台</option>
+						<option value="3">其他</option>
+					</select>
 				</div>
 			</div>
 			<div class="form-group">
 				<div class="col-sm-2 control-label">角色</div>
 				<div class="col-sm-10">
-					<input type="text" class="form-control" v-model="user.roleId" placeholder="菜单权限"/>
+					<select id="roleId" v-model="user.roleId" class="selectpicker form-control" data-live-search="true" title="菜单权限">
+					</select>
 				</div>
 			</div>
 			<div class="form-group">
 				<div class="col-sm-2 control-label">大区</div>
 				<div class="col-sm-10">
-					<input type="text" class="form-control" v-model="user.largearea" placeholder="大区"/>
+					<input type="text" class="form-control" v-model="user.largeArea" placeholder="大区"/>
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="col-sm-2 control-label">片区</div>
+				<div class="col-sm-10">
+					<input type="text" class="form-control" v-model="user.areaMans" placeholder="片区"/>
 				</div>
 			</div>
 			<div class="form-group">
@@ -96,13 +107,13 @@
 					<input type="text" class="form-control"  v-model="user.remark" placeholder="请输入密码"/>
 				</div>
 			</div>
-			<div class="form-group">
+			<div v-if="user.id == null" class="form-group">
 				<div class="col-sm-2 control-label">密码</div>
 				<div class="col-sm-10">
 					<input type="text" class="form-control" id="addPass" v-model="user.pass" placeholder="请输入密码"/>
 				</div>
 			</div>
-			<div class="form-group">
+			<div  v-if="user.id == null" class="form-group">
 				<div class="col-sm-2 control-label">再次输入</div>
 				<div class="col-sm-10">
 					<input type="text" class="form-control" id="addPassAgain" placeholder="再次确认密码"/>

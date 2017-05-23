@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.yonghui.portal.mapper.app.AppGroupsMapper">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap id="appGroupsMap" type="com.yonghui.portal.model.app.AppGroups">
+        <result property="id" column="id"/>
+        <result property="groupName" column="group_name"/>
+        <result property="createUser" column="create_user"/>
+        <result property="updateUser" column="update_user"/>
+        <result property="memo" column="memo"/>
+        <result property="loadTime" column="load_time"/>
+        <result property="createdAt" column="created_at"/>
+        <result property="updatedAt" column="updated_at"/>
+        <result property="shopid" column="shopid"/>
+        <result property="groupid" column="groupid"/>
+    </resultMap>
+
+	<select id="queryObject" resultType="com.yonghui.portal.model.app.AppGroups">
+		select * from appauthority.sys_groups where id = #{value}
+	</select>
+
+	<select id="queryList" resultType="com.yonghui.portal.model.app.AppGroups">
+		select * from appauthority.sys_groups
+        <where>
+            <if test="id != null and id !=''">
+                and id = #{id}
+            </if>
+            <if test="groupName != null and groupName !=''">
+                and `group_name`  like concat('%',#{groupName},'%')
+            </if>
+        </where>
+        <choose>
+            <when test="sidx != null and sidx.trim() != ''">
+                order by ${sidx} ${order}
+            </when>
+			<otherwise>
+                order by id desc
+			</otherwise>
+        </choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="queryTotal" resultType="int">
+		select count(*) from appauthority.sys_groups
+        <where>
+            <if test="id != null and id !=''">
+                and id = #{id}
+            </if>
+            <if test="groupName != null and groupName !=''">
+                and `group_name`  like concat('%',#{groupName},'%')
+            </if>
+        </where>
+	</select>
+
+    <insert id="save" parameterType="com.yonghui.portal.model.app.AppGroups" useGeneratedKeys="true" keyProperty="id">
+		insert into appauthority.sys_groups
+		(
+			`group_name`, 
+			`create_user`, 
+			`memo`,
+			`load_time`, 
+			`created_at`, 
+			`shopid`,
+			`groupid`
+		)
+		values
+		(
+			#{groupName}, 
+			#{createUser},
+			#{memo},
+			#{loadTime}, 
+			now(),
+			#{shopid},
+			#{groupid}
+		)
+	</insert>
+
+    <update id="update" parameterType="com.yonghui.portal.model.app.AppGroups">
+        update appauthority.sys_groups
+        <set>
+			<if test="groupName != null">`group_name` = #{groupName}, </if>
+			<if test="updateUser != null">`update_user` = #{updateUser}, </if>
+			<if test="memo != null">`memo` = #{memo}, </if>
+			<if test="loadTime != null">`load_time` = #{loadTime}, </if>
+			<if test="shopid != null">`shopid` = #{shopid}, </if>
+			<if test="groupid != null">`groupid` = #{groupid}</if>
+			`updated_at` = now()
+        </set>
+        where id = #{id}
+    </update>
+	
+	<delete id="delete">
+		delete from appauthority.sys_groups where id = #{value}
+	</delete>
+	
+	<delete id="deleteBatch">
+		delete from appauthority.sys_groups where id in 
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+</mapper>
