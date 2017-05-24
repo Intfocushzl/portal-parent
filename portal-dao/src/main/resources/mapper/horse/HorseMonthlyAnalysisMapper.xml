@@ -9,4 +9,9 @@
 			saima.monthly_analysis_hz(#{sdate},#{sapshopid},#{groupid})
 	</select>
 
+
+	<select id="getShopHorseResultAscByList" resultType="com.yonghui.portal.model.horse.HorseSort">
+		call dw.query_theme_sm_analysis('bottom2',date_format(#{lkpDate},'%Y%m'),#{shopId},#{groupId},1)
+	</select>
+
 </mapper>
