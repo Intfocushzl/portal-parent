@@ -1,9 +1,6 @@
 package com.yonghui.portal.model.horse;
 
-import java.io.Serializable;
-
-public class HorseSort extends Horse implements Serializable{
-
+public class HorseSort implements java.io.Serializable{
 
 	private static final long serialVersionUID = 1L;
 
@@ -52,7 +49,7 @@ public class HorseSort extends Horse implements Serializable{
 	
 	private String calculateLogic; // 计算逻辑
 	private String dataSource; 	   // 取数来源	
-	
+
 	public double getCurrentMonthScore() {
 		return currentMonthScore;
 	}
