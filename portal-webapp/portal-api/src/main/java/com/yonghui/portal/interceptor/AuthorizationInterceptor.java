@@ -32,7 +32,7 @@ public class AuthorizationInterceptor extends HandlerInterceptorAdapter {
 
     public static final String LOGIN_USER_JOB_NUMBER = "LOGIN_USER_JOB_NUMBER";
 
-    public static final String LOGIN_USER_OPERATION_LOG= "LOGIN_USER_OPERATION_LOG";
+    public static final String LOGIN_USER_OPERATION_LOG = "LOGIN_USER_OPERATION_LOG";
 
     @Reference
     private UserService userService;
@@ -60,19 +60,22 @@ public class AuthorizationInterceptor extends HandlerInterceptorAdapter {
             token = request.getParameter("token");
         }
         if (StringUtils.isBlank(token)) {
-            response.getWriter().write(JSON.toJSONString(ConstantsUtil.ExceptionCode.TO_LOGIN));
+            response.setHeader("Content-type", "text/html;charset=UTF-8");
+            response.getWriter().write(JSON.toJSONString(R.error(ConstantsUtil.ExceptionCode.TO_LOGIN, "token不能为空,请尝试登录")));
             return false;
         }
         // 从redis中查询token信息
         String tokenJsonStr = redisBizUtilApi.getApiToken(token);
         TokenApi tokenApi = null;
         if (StringUtils.isBlank(tokenJsonStr)) {
-            response.getWriter().write(JSON.toJSONString(ConstantsUtil.ExceptionCode.TO_LOGIN));
+            response.setHeader("Content-type", "text/html;charset=UTF-8");
+            response.getWriter().write(JSON.toJSONString(R.error(ConstantsUtil.ExceptionCode.TO_LOGIN, "token不存在，请尝试登录")));
             return false;
         } else {
             tokenApi = JSONObject.parseObject(tokenJsonStr, TokenApi.class);
             if (tokenApi == null || tokenApi.getExpireTime().getTime() < System.currentTimeMillis()) {
-                response.getWriter().write(JSON.toJSONString(ConstantsUtil.ExceptionCode.TO_LOGIN));
+                response.setHeader("Content-type", "text/html;charset=UTF-8");
+                response.getWriter().write(JSON.toJSONString(R.error(ConstantsUtil.ExceptionCode.TO_LOGIN, "token已失效，重新登录")));
                 return false;
             }
         }
@@ -87,7 +90,7 @@ public class AuthorizationInterceptor extends HandlerInterceptorAdapter {
         log.setIp(iputil.getIpAddr(request));
         log.setUrl(request.getRequestURL().toString());
         log.setParameter(HttpContextUtils.getRequestParameter(request));
-        request.setAttribute(LOGIN_USER_OPERATION_LOG,log);
+        request.setAttribute(LOGIN_USER_OPERATION_LOG, log);
         return true;
     }
 
