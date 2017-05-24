@@ -5,11 +5,11 @@ $(function () {
         // 列表标题及列表模型
         colModel: [
             {label: 'id', name: 'id', index: 'id', width: 50, hidden: true },
-            {label: 'sql语句唯一编码', name: 'sqlcode', index: 'sqlcode', width: 80 ,key: true},
+            {label: '唯一编码', name: 'sqlcode', index: 'sqlcode', width: 80 ,key: true},
             {label: '标题简介', name: 'title', index: 'title', width: 80 }, 
             {label: '执行语句', name: 'executeSql', index: 'execute_sql', width: 80 }, 
             {label: '数据源唯一编码', name: 'dataSourceCode', index: 'data_source_code', width: 80 }, 
-            {label: '执行参数，格式如aa@@bb@@cc', name: 'parameter', index: 'parameter', width: 80 }, 
+            {label: '执行参数', name: 'parameter', index: 'parameter', width: 80 },
             {label: '创建时间', name: 'createTime', index: 'create_time', width: 80 }, 
         ],
         viewrecords: true,     // 是否显示行号，默认值是false，不显示
@@ -63,6 +63,7 @@ var vm = new Vue({
             vm.showList = false;
             vm.title = "新增";
             vm.portalExecuteSql = {};
+            vm.getDataSourceList();
         },
         update: function (event) {
             var sqlcode = getSelectedRow();
@@ -71,11 +72,28 @@ var vm = new Vue({
             }
             vm.showList = false;
             vm.title = "修改";
-
+            vm.getDataSourceList();
             vm.getInfo(sqlcode)
         },
         saveOrUpdate: function (event) {
+            var code = vm.portalExecuteSql.sqlcode;
+            var id = vm.portalExecuteSql.id;
             var url = vm.portalExecuteSql.id == null ? "../portalexecutesql/save" : "../portalexecutesql/update";
+            if(id == null){
+                $.get("../portalexecutesql/info/"+code,function(r){
+                    console.log(r);
+                    if(r.portalExecuteSql != null){
+                        alert("唯一编码已存在，请重新输入");
+                    }else{
+                        vm.addAndUpdate(url);
+                    }
+                })
+            }else{
+                vm.addAndUpdate(url);
+            }
+        },
+        addAndUpdate:function(url){
+            vm.portalExecuteSql.dataSourceCode  = $("#dataList").val();
             $.ajax({
                 type: "POST",
                 url: url,
@@ -84,7 +102,7 @@ var vm = new Vue({
                     if(r.code === 0){
                         alert('操作成功', function(index){
                             vm.reload();
-                     });
+                        });
                     }else{
                         alert(r.msg);
                     }
@@ -118,6 +136,14 @@ var vm = new Vue({
             $.get("../portalexecutesql/info/"+sqlcode, function(r){
                 vm.portalExecuteSql = r.portalExecuteSql;
                 vm.portalExecuteSql.sqlcodeOld = vm.portalExecuteSql.sqlcode;
+            });
+        },
+        getDataSourceList:function(){
+            $("#dataList").empty();
+            $.get("../portaldatasource/dataSourceList/", function(r){
+                for(var i = 0;i < r.dataSourceList.length;i++){
+                    $("#dataList").append("<option value='"+r.dataSourceList[i].code+"'>"+r.dataSourceList[i].title+"</option>");
+                }
             });
         },
         reload: function (event) {

@@ -5,15 +5,15 @@ $(function () {
         // 列表标题及列表模型
         colModel: [
             {label: 'id', name: 'id', index: 'id', width: 50, hidden: true},
-            {label: '报表唯一编码', name: 'code', index: 'code', width: 80, key: true},
+            {label: '唯一编码', name: 'code', index: 'code', width: 80, key: true},
             {label: '标题简介', name: 'title', index: 'title', width: 80},
             {
-                label: '执行sql的唯一编码，execute_type为1是对应存储过程编码，为2时对应select查询编码',
+                label: '执行唯一编码',
                 name: 'executeCode',
                 index: 'execute_code',
                 width: 80
             },
-            {label: '执行类型1存储过程，2select查询', name: 'executeType', index: 'execute_type', width: 80},
+            {label: '执行类型', name: 'executeType', index: 'execute_type', width: 80},
             {label: '创建时间', name: 'createTime', index: 'create_time', width: 80},
         ],
         viewrecords: true,     // 是否显示行号，默认值是false，不显示
@@ -79,7 +79,24 @@ var vm = new Vue({
             vm.getInfo(code)
         },
         saveOrUpdate: function (event) {
+            var code = vm.portalReport.code;
+            var id = vm.portalReport.id;
             var url = vm.portalReport.id == null ? "../portalreport/save" : "../portalreport/update";
+            if(id == null){
+                $.get("../portalreport/info/"+code,function(r) {
+                    console.log(r);
+                    if (r.portalReport != null) {
+                        alert("唯一编码已存在，请重新输入");
+                    }else{
+                        vm.addAndUpdate(url);
+                    }
+                })
+            }else{
+                vm.addAndUpdate(url);
+            }
+        },
+        addAndUpdate:function(url){
+            vm.portalReport.executeCode = $("#onlycode").val();
             $.ajax({
                 type: "POST",
                 url: url,
@@ -130,6 +147,37 @@ var vm = new Vue({
             $("#jqGrid").jqGrid('setGridParam', {
                 page: page
             }).trigger("reloadGrid");
+        },
+        onlycodeshow: function () {
+            var type = $("input[name='type']");
+            var typevalue = null;
+            for (var i = 0; i < type.length; i++) {
+                if (type[i].checked == true) {
+                    typevalue = type[i].value;
+                }
+            }
+            if (typevalue == 1) {
+                this.getProCode();
+            } else if (typevalue == 2) {
+                this.getSqlCode();
+            }
+        },
+        getSqlCode: function () {
+            $("#onlycode").empty();
+            $.get("../portalexecutesql/sqlList/", function (r) {
+                for(var i = 0;i < r.sqlList.length;i++){
+                    $("#onlycode").append("<option value='"+r.sqlList[i].sqlcode+"'>"+r.sqlList[i].sqlcode+"<==>"+r.sqlList[i].title+"</option>");
+                }
+            });
+        },
+        getProCode: function () {
+            $("#onlycode").empty();
+            $.get("../portalprocedure/proList/", function (r) {
+                for(var i = 0;i < r.proList.length;i++) {
+                    $("#onlycode").append("<option value='" + r.proList[i].procode + "'>" + r.proList[i].procode +"<==>"+ r.proList[i].title + "</option>");
+                }
+            });
         }
+
     }
 });

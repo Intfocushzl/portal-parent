@@ -12,6 +12,7 @@ import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -89,6 +90,15 @@ public class PortalExecuteSqlController extends AbstractController {
             redisBizUtilAdmin.removePortalExecuteSql(sqlcode);
         }
         return R.success();
+    }
+
+    //report配置中查询sqlcode
+    @RequestMapping("/sqlList")
+    @ResponseBody
+    public R sqlList() {
+        Map<String,Object> map = new HashMap<>();
+        List<PortalExecuteSql> portalExecuteSqlList = portalExecuteSqlService.queryList(map);
+        return R.success().put("sqlList", portalExecuteSqlList);
     }
 
 }

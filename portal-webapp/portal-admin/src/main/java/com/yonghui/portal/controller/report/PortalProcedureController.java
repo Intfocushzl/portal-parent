@@ -12,6 +12,7 @@ import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -88,6 +89,15 @@ public class PortalProcedureController extends AbstractController {
             redisBizUtilAdmin.removePortalProcedure(procode);
         }
         return R.success();
+    }
+
+    //report配置中查询procode
+    @RequestMapping("/proList")
+    @ResponseBody
+    public R proList() {
+        Map<String,Object> map = new HashMap<>();
+        List<PortalProcedure> portalExecuteProList = portalProcedureService.queryList(map);
+        return R.success().put("proList", portalExecuteProList);
     }
 
 }
