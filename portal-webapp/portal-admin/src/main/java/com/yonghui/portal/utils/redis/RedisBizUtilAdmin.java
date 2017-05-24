@@ -103,10 +103,7 @@ public class RedisBizUtilAdmin {
     }
 
     /********************报表标题列配置信息*****************/
-    public void setReportColumns(String codeOld, String code, String value) {
-        if (!StringUtils.isEmpty(codeOld) && !codeOld.equals(code)) {
-            redisUtil.remove(String.format("%s:report:columns", KEY_PREFIX), codeOld);
-        }
+    public void setReportColumns(String code, String value) {
         redisUtil.put(String.format("%s:report:columns", KEY_PREFIX), code, value);
     }
 

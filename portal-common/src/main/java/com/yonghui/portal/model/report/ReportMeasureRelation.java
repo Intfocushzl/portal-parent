@@ -2,6 +2,8 @@ package com.yonghui.portal.model.report;
 
 import com.yonghui.portal.model.base.AuditAuto;
 
+import java.util.List;
+
 /**
  * @author zhanghai
  * @email walk_hai@163.com
@@ -29,6 +31,8 @@ public class ReportMeasureRelation extends AuditAuto {
     private String themename;
     //
     private String unittype;
+
+    private List<ReportMeasureRelation> children;
 
     /**
      * 设置：报表唯一编码
@@ -170,4 +174,11 @@ public class ReportMeasureRelation extends AuditAuto {
         return unittype;
     }
 
+    public List<ReportMeasureRelation> getChildren() {
+        return children;
+    }
+
+    public void setChildren(List<ReportMeasureRelation> children) {
+        this.children = children;
+    }
 }

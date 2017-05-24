@@ -26,4 +26,5 @@ public interface ReportMeasureRelationService {
     void delete(Long id);
 
     void deleteBatch(Long[] ids);
+
 }
