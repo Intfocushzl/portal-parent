@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    #parse("sys/header.html")
+</head>
+<body>
+<div id="rrapp" v-cloak>
+    <div v-show="showList">
+        <div id="queryDiv" class="queryDiv">
+            <div class="grid-btn">
+                <div class="form-group col-sm-2">
+                    <input type="text" class="form-control" v-model="appMenu.menuId" @keyup.enter="query"
+                           placeholder="主键ID">
+                </div>
+                <div class="form-group col-sm-2">
+                    <input type="text" class="form-control" v-model="appMenu.name" @keyup.enter="query"
+                           placeholder="父菜单">
+                </div>
+                <div class="form-group col-sm-2">
+                    <input type="text" class="form-control" v-model="appMenu.subName" @keyup.enter="query"
+                           placeholder="子菜单">
+                </div>
+                <div class="form-group col-sm-2">
+                    <label class="radio-inline">
+                        <input type="radio" name="t" value="1" v-model="appMenu.type" checked="true"/> 仪表盘
+                    </label>
+                    <label class="radio-inline">
+                        <input type="radio" name="t" value="2" v-model="appMenu.type"/> 分析
+                    </label>
+                    <label class="radio-inline">
+                        <input type="radio" name="t" value="3" v-model="appMenu.type"/> 应用
+                    </label>
+                </div>
+                <a class="btn btn-primary" @click="query">查询</a>
+
+                #if($shiro.hasPermission("appmenu:save"))
+                <a class="btn btn-primary" @click="add"><i class="fa fa-plus"></i>&nbsp;新增</a>
+                #end
+                #if($shiro.hasPermission("appmenu:update"))
+                <a class="btn btn-primary" @click="update"><i class="fa fa-pencil-square-o"></i>&nbsp;修改</a>
+                #end
+                #if($shiro.hasPermission("appmenu:delete"))
+                <a class="btn btn-primary" @click="del"><i class="fa fa-trash-o"></i>&nbsp;删除</a>
+                #end
+            </div>
+        </div>
+        <table id="jqGrid"></table>
+        <div id="jqGridPager"></div>
+    </div>
+
+    <div v-show="!showList" class="panel panel-default">
+        <div class="panel-heading">{{title}}</div>
+        <form class="form-horizontal">
+            <div class="form-group">
+                <div class="col-sm-2 control-label">类型</div>
+                <div class="col-sm-10">
+                    <label class="radio-inline">
+                        <input type="radio" name="type" value="1" v-model="appMenu.type"/> 仪表盘
+                    </label>
+                    <label class="radio-inline">
+                        <input type="radio" name="type" value="2" v-model="appMenu.type"/> 分析
+                    </label>
+                    <label class="radio-inline">
+                        <input type="radio" name="type" value="3" v-model="appMenu.type"/> 应用
+                    </label>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">菜单ID</div>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" v-model="appMenu.menuId" placeholder=""/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">父菜单</div>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" v-model="appMenu.name" placeholder=""/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">子菜单</div>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" v-model="appMenu.subName" placeholder=""/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">URL</div>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" v-model="appMenu.url" placeholder=""/>
+                </div>
+            </div>
+            <!--<div class="form-group">-->
+                <!--<div class="col-sm-2 control-label"></div>-->
+                <!--<div class="col-sm-10">-->
+                    <!--<input type="text" class="form-control" v-model="appMenu.ownerDept" placeholder=""/>-->
+                <!--</div>-->
+            <!--</div>-->
+            <!--<div class="form-group">-->
+                <!--<div class="col-sm-2 control-label"></div>-->
+                <!--<div class="col-sm-10">-->
+                    <!--<input type="text" class="form-control" v-model="appMenu.computerDept" placeholder=""/>-->
+                <!--</div>-->
+            <!--</div>-->
+            <div v-if="appMenu.type == 1" class="form-group">
+                <div class="col-sm-2 control-label">盘面数据ID</div>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" v-model="appMenu.link" placeholder=""/>
+                </div>
+            </div>
+            <div v-if="appMenu.type == 1" class="form-group">
+                <div class="col-sm-2 control-label">盘面数据单位</div>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" v-model="appMenu.unit" placeholder=""/>
+                </div>
+            </div>
+            <!--<div v-if="appMenu.type == 1" class="form-group">-->
+                <!--<div class="col-sm-2 control-label"></div>-->
+                <!--<div class="col-sm-10">-->
+                    <!--<input type="text" class="form-control" v-model="appMenu.roleIds" placeholder=""/>-->
+                <!--</div>-->
+            <!--</div>-->
+            <div class="form-group">
+                <div class="col-sm-2 control-label">父菜单排序</div>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" v-model="appMenu.groupOrder" placeholder=""/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">子菜单排序</div>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" v-model="appMenu.itemOrder" placeholder=""/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">备注</div>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" v-model="appMenu.memo" placeholder=""/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label"></div>
+                <input type="button" class="btn btn-primary" @click="saveOrUpdate" value="确定"/>
+                &nbsp;&nbsp;<input type="button" class="btn btn-warning" @click="reload" value="返回"/>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script src="${rc.contextPath}/js/app/appmenus.js?_${date.systemTime}"></script>
+</body>
+</html>

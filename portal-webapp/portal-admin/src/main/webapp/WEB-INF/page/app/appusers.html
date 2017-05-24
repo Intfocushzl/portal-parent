@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title></title>
+    #parse("sys/header.html")
+</head>
+<body>
+<div id="rrapp" v-cloak>
+	<div v-show="showList">
+        <div id="queryDiv" class="queryDiv">
+            <div class="grid-btn">
+                <div class="form-group col-sm-2">
+                    <input type="text" class="form-control" v-model="appUsers.id" @keyup.enter="query" placeholder="用户ID">
+                </div>
+                <div class="form-group col-sm-2">
+                	<input type="text" class="form-control" v-model="appUsers.userName" @keyup.enter="query" placeholder="姓名">
+                </div>
+				<div class="form-group col-sm-2">
+					<input type="text" class="form-control" v-model="appUsers.userNum" @keyup.enter="query" placeholder="工号">
+				</div>
+                <a class="btn btn-primary" @click="query">查询</a>
+
+				#if($shiro.hasPermission("appusers:save"))
+				<a class="btn btn-primary" @click="add"><i class="fa fa-plus"></i>&nbsp;新增</a>
+				#end
+				#if($shiro.hasPermission("appusers:update"))
+				<a class="btn btn-primary" @click="update"><i class="fa fa-pencil-square-o"></i>&nbsp;修改</a>
+				#end
+				#if($shiro.hasPermission("appusers:delete"))
+				<a class="btn btn-primary" @click="del"><i class="fa fa-trash-o"></i>&nbsp;删除</a>
+				#end
+			</div>
+		</div>
+	    <table id="jqGrid"></table>
+	    <div id="jqGridPager"></div>
+    </div>
+    
+    <div v-show="!showList" class="panel panel-default">
+		<div class="panel-heading">{{title}}</div>
+		<form class="form-horizontal">
+			<div class="form-group">
+			   	<div class="col-sm-2 control-label">用户名</div>
+			   	<div class="col-sm-10">
+			        <input type="text" class="form-control" v-model="appUsers.userName" placeholder=""/>
+			    </div>
+			</div>
+			<div class="form-group">
+			   	<div class="col-sm-2 control-label">工号</div>
+			   	<div class="col-sm-10">
+			        <input type="text" class="form-control" v-model="appUsers.userNum" placeholder=""/>
+			    </div>
+			</div>
+			<div class="form-group">
+			   	<div class="col-sm-2 control-label">邮箱</div>
+			   	<div class="col-sm-10">
+			        <input type="text" class="form-control" v-model="appUsers.email" placeholder=""/>
+			    </div>
+			</div>
+			<div class="form-group">
+			   	<div class="col-sm-2 control-label">手机号</div>
+			   	<div class="col-sm-10">
+			        <input type="text" class="form-control" v-model="appUsers.mobile" placeholder=""/>
+			    </div>
+			</div>
+			<div class="form-group">
+			   	<div class="col-sm-2 control-label">电话</div>
+			   	<div class="col-sm-10">
+			        <input type="text" class="form-control" v-model="appUsers.tel" placeholder=""/>
+			    </div>
+			</div>
+			<div class="form-group">
+			   	<div class="col-sm-2 control-label">职位</div>
+			   	<div class="col-sm-10">
+			        <input type="text" class="form-control" v-model="appUsers.position" placeholder=""/>
+			    </div>
+			</div>
+			<div class="form-group">
+			   	<div class="col-sm-2 control-label">部门ID</div>
+			   	<div class="col-sm-10">
+			        <input type="text" class="form-control" v-model="appUsers.deptId" placeholder=""/>
+			    </div>
+			</div>
+			<div class="form-group">
+			   	<div class="col-sm-2 control-label">部门</div>
+			   	<div class="col-sm-10">
+			        <input type="text" class="form-control" v-model="appUsers.deptName" placeholder=""/>
+			    </div>
+			</div>
+			<div class="form-group">
+				<div class="col-sm-2 control-label">门店ID</div>
+				<div class="col-sm-10">
+					<input type="text" class="form-control" v-model="appUsers.storeIds" placeholder=""/>
+				</div>
+			</div>
+			<div class="form-group">
+			   	<div class="col-sm-2 control-label">备注</div>
+			   	<div class="col-sm-10">
+			        <input type="text" class="form-control" v-model="appUsers.memo" placeholder=""/>
+			    </div>
+			</div>
+
+			<div class="form-group">
+				<div class="col-sm-2 control-label"></div> 
+				<input type="button" class="btn btn-primary" @click="saveOrUpdate" value="确定"/>
+				&nbsp;&nbsp;<input type="button" class="btn btn-warning" @click="reload" value="返回"/>
+			</div>
+		</form>
+	</div>
+</div>
+
+<script src="${rc.contextPath}/js/app/appusers.js?_${date.systemTime}"></script>
+</body>
+</html>
