@@ -113,4 +113,9 @@
     <!-- 生鲜商行报表  -->
     <bean id="freshReportsService" class="com.yonghui.portal.service.impl.fresh.FreshReportsServiceImpl" />
     <dubbo:service interface="com.yonghui.portal.service.fresh.FreshReportsService" ref="freshReportsService" timeout="60000"/>
+
+    <!-- 赛马门店解读  -->
+    <bean id="horseMonthlyAnalysisService" class="com.yonghui.portal.service.impl.horse.HorseMonthlyAnalysisServiceImpl" />
+    <dubbo:service interface="com.yonghui.portal.service.horse.HorseMonthlyAnalysisService" ref="horseMonthlyAnalysisService" timeout="60000"/>
+
 </beans>
