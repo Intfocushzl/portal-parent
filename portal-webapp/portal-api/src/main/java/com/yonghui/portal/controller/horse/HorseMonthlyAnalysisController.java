@@ -3,6 +3,7 @@ package com.yonghui.portal.controller.horse;
 import com.alibaba.dubbo.config.annotation.Reference;
 import com.alibaba.fastjson.JSONObject;
 import com.github.abel533.echarts.Option;
+import com.github.abel533.echarts.data.PieData;
 import com.github.abel533.echarts.series.Pie;
 import com.yonghui.portal.service.horse.HorseMonthlyAnalysisService;
 import com.yonghui.portal.util.StringTools;
@@ -41,16 +42,15 @@ public class HorseMonthlyAnalysisController {
         Pie pie = new Pie("得分项分布");
         List<Map<String, Object>> list = horseMonthlyAnalysisService.totel(sdate, sapshopid, groupid);
         Map<String, Object> totel = list.get(0);
-      /*  pie.data(new PieData("15分-12分", totel.getFen15()));
-        pie.data(new PieData("12分-10分", totel.getFen12()));
-        pie.data(new PieData("10分-8分", totel.getFen10()));
-        pie.data(new PieData("8分-6分", totel.getFen6()));
-        pie.data(new PieData("6分-0分", totel.getFen8()));
-        pie.data(new PieData("0分", totel.getFen0()));*/
+        pie.data(new PieData("15分-12分", totel.get("fen15")));
+        pie.data(new PieData("12分-10分", totel.get("fen12")));
+        pie.data(new PieData("10分-8分", totel.get("fen10")));
+        pie.data(new PieData("8分-6分", totel.get("fen8")));
+        pie.data(new PieData("6分-0分", totel.get("fen6")));
+        pie.data(new PieData("0分", totel.get("fen0")));
         option.series(pie);
         try {
             String str = JSONObject.toJSONString(option);
-            log.info("json:" + str);
             StringTools.sWrite(response, str);
         } catch (IOException e) {
             e.printStackTrace();
