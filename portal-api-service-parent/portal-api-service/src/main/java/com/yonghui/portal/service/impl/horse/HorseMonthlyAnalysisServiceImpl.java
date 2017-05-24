@@ -1,6 +1,7 @@
 package com.yonghui.portal.service.impl.horse;
 
 import com.yonghui.portal.mapper.horse.HorseMonthlyAnalysisMapper;
+import com.yonghui.portal.model.horse.HorseSort;
 import com.yonghui.portal.service.horse.HorseMonthlyAnalysisService;
 
 import javax.annotation.Resource;
@@ -20,4 +21,11 @@ public class HorseMonthlyAnalysisServiceImpl implements HorseMonthlyAnalysisServ
     public List<Map<String, Object>> totel(String sdate, String sapshopid, String groupid) {
         return horseMonthlyAnalysisMapper.totel(sdate, sapshopid, groupid);
     }
+
+    @Override
+    public List<HorseSort> getShopHorseResultAscByList(String lkpDate, String shopId, String groupId) {
+        return horseMonthlyAnalysisMapper.getShopHorseResultAscByList(lkpDate,shopId,groupId);
+    }
+
+
 }
