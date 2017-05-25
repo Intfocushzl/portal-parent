@@ -2,6 +2,7 @@ package com.yonghui.portal.controller.api;
 
 import com.alibaba.dubbo.config.annotation.Reference;
 import com.alibaba.fastjson.JSONObject;
+import com.yonghui.portal.annotation.IgnoreAuth;
 import com.yonghui.portal.model.report.PortalDataSource;
 import com.yonghui.portal.model.report.PortalExecuteSql;
 import com.yonghui.portal.model.report.PortalProcedure;
@@ -84,12 +85,12 @@ public class ApiController {
      * @param response
      * @param yongHuiReportCustomCode
      */
+    @IgnoreAuth
     @RequestMapping(value = "exportExcel")
     public void exportExcel(HttpServletRequest req, HttpServletResponse response, String yongHuiReportCustomCode) {
         try {
             String parameter = HttpContextUtils.getRequestParameter(req);
-            if (!StringUtils.isEmpty(yongHuiReportCustomCode)) {
-                List<Map<String, Object>> dataList = jdbcProListResultListMapByParam(SQLFilter.sqlInject(yongHuiReportCustomCode), SQLFilter.sqlInject(parameter));
+            if (!StringUtils.isEmpty(yongHuiReportCustomCode)) {List<Map<String, Object>> dataList = jdbcProListResultListMapByParam(SQLFilter.sqlInject(yongHuiReportCustomCode), SQLFilter.sqlInject(parameter));
                 ApiExportExport export = new ApiExportExport();
                 //测试
                 String[] cellTitleName = {"sdate:日期", "flag:列名1", "abc:列名2", "title:说明", "sname:店名"};
