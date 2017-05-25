@@ -122,4 +122,13 @@ public class RedisBizUtilApi {
         return redisUtil.get(String.format("%s:report:datasource", KEY_PREFIX), code);
     }
 
+    /**
+     * 获取报表标题信息
+     * @param code
+     * @return
+     */
+    public String getReportColumns(String code) {
+        return redisUtil.get(String.format("%s:report:columns", KEY_PREFIX), code);
+    }
+
 }

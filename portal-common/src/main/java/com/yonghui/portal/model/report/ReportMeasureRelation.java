@@ -30,6 +30,10 @@ public class ReportMeasureRelation extends AuditAuto {
     private String themename;
     //
     private String unittype;
+    //标题每行列数
+    private int childrenCount = 0;
+    //节点层次（标题行数）
+    private int lineCount = 1;
 
     /**
      * 孩子节点列表
@@ -42,21 +46,24 @@ public class ReportMeasureRelation extends AuditAuto {
         if (getId() == 0 || getParentid() == -1) {
             // 根节点
             result = "{"
-                    + "msg : '报表标题'"
-                    + ", code : 0";
+                    + "content : '报表标题'"
+                    + ", childrenCount : '" + getChildrenCount() + "'";
         } else {
             // 标题
             result = "{"
                     + "id : '" + getId() + "'"
                     + ", parentid : '" + getParentid() + "'"
+                    + ", treecode : '" + getTreecode() + "'"
                     + ", sortid : '" + getSortid() + "'"
                     + ", measurelab : '" + getMeasurelab() + "'"
-                    + ", measurename : '" + getMeasurename() + "'";
+                    + ", measurename : '" + getMeasurename() + "'"
+                    + ", childrenCount : '" + getChildrenCount() + "'";
         }
         if (children != null && children.getSize() != 0) {
+            result += ", isleaf : false";
             result += ", children : " + children.toString();
         } else {
-            result += ", leaf : true";
+            result += ", isleaf : true";
         }
 
         return result + "}";
@@ -67,7 +74,8 @@ public class ReportMeasureRelation extends AuditAuto {
      */
     public void sortChildren() {
         if (children != null && children.getSize() != 0) {
-            children.sortChildren();
+            // 排序,同时保存最大节点层次数
+            setLineCount(children.sortChildren(getTreecode().split(".").length));
         }
     }
 
@@ -220,4 +228,27 @@ public class ReportMeasureRelation extends AuditAuto {
         return unittype;
     }
 
+    public Children getChildren() {
+        return children;
+    }
+
+    public void setChildren(Children children) {
+        this.children = children;
+    }
+
+    public int getLineCount() {
+        return lineCount;
+    }
+
+    public void setLineCount(int lineCount) {
+        this.lineCount = lineCount;
+    }
+
+    public int getChildrenCount() {
+        return childrenCount;
+    }
+
+    public void setChildrenCount(int childrenCount) {
+        this.childrenCount = childrenCount;
+    }
 }

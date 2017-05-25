@@ -2,10 +2,7 @@ package com.yonghui.portal.util.report.columns;
 
 import com.yonghui.portal.model.report.ReportMeasureRelation;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 /**
  * 报表标题-子列表类
@@ -13,6 +10,8 @@ import java.util.List;
  */
 public class Children {
     private List list = new ArrayList();
+    // 标题行数(层级数)
+    private int lineCount = 1;
 
     public int getSize() {
         return list.size();
@@ -34,8 +33,11 @@ public class Children {
         return result;
     }
 
-    // 孩子节点排序
-    public void sortChildren() {
+    // 孩子节点排序,同时记录最深层次
+    public int sortChildren(int treecodeLength) {
+        if (treecodeLength > lineCount) {
+            lineCount = treecodeLength;
+        }
         // 对本层节点进行排序
         // 可根据不同的排序属性，传入不同的比较器，这里传入ID比较器
         Collections.sort(list, new NodeIDComparator());
@@ -43,5 +45,6 @@ public class Children {
         for (Iterator it = list.iterator(); it.hasNext(); ) {
             ((ReportMeasureRelation) it.next()).sortChildren();
         }
+        return lineCount;
     }
 }

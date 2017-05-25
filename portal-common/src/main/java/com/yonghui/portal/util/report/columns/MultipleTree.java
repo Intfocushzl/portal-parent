@@ -32,7 +32,11 @@ public class MultipleTree {
         for (Iterator it = entrySet.iterator(); it.hasNext(); ) {
             ReportMeasureRelation node = (ReportMeasureRelation) ((Map.Entry) it.next()).getValue();
             if (node.getId() != -0L && node.getParentid() != -1L) {
-                ((ReportMeasureRelation) nodeList.get(node.getParentid())).addChild(node);
+                ReportMeasureRelation everyLast = ((ReportMeasureRelation) nodeList.get(node.getParentid()));
+                // 添加子节点
+                everyLast.addChild(node);
+                // 子节点个数计数
+                everyLast.setChildrenCount(everyLast.getChildrenCount() + 1);
             }
         }
         //System.out.println("输出无序的树形菜单的JSON字符串" + root.toString());

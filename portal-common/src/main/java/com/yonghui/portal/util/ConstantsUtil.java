@@ -20,7 +20,6 @@ public class ConstantsUtil {
     public abstract class CommonCode {
         public static final int SUCCESS_CODE = 0;      //获取数据成功状态码
         public static final int ERROR_CODE = 1;        //获取数据出错状态码
-
     }
 
     //通用的消息
@@ -29,11 +28,16 @@ public class ConstantsUtil {
         public static final String ERROR_MESSAGE = "请求数据出错!!";      //获取数据出错!
     }
 
-
     //自定义错误消息
     public abstract class ExceptionCode {
         public static final int TO_LOGIN = -99;                // 跳转到登录
         public static final int INTERNAL_ERROR = 500;          // 内部错误
+    }
+
+    //获取数据方式
+    public abstract class ExecuteType {
+        public static final int PROCEDURE = 1;     //存储过程
+        public static final int EXECUTESQL = 2;     //自定义sql
     }
 
 }
