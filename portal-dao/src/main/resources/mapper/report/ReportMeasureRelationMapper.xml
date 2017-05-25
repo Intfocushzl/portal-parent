@@ -55,6 +55,10 @@
         </if>
     </select>
 
+    <select id="queryListByReportCode" resultType="com.yonghui.portal.model.report.ReportMeasureRelation">
+        select * from report_measure_relation where reportcode = #{reportcode} order by sortid asc
+    </select>
+
     <select id="queryTotal" resultType="int">
         select count(*) from report_measure_relation
         <where>
