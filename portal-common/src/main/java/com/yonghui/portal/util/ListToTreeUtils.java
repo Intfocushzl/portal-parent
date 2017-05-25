@@ -1,7 +1,6 @@
 package com.yonghui.portal.util;
 
 import com.yonghui.portal.model.global.Menu;
-import com.yonghui.portal.model.report.ReportMeasureRelation;
 import com.yonghui.portal.model.table.TableTitle;
 import org.apache.log4j.Logger;
 
@@ -59,7 +58,7 @@ public class ListToTreeUtils<T> {
     }
 
     //表头信息
-    public List<ReportMeasureRelation> listTreeTableColumns(List<ReportMeasureRelation> list){
+    /*public List<ReportMeasureRelation> listTreeTableColumns(List<ReportMeasureRelation> list){
         List<ReportMeasureRelation> nodeList = new ArrayList<ReportMeasureRelation>();
         for (ReportMeasureRelation tableTitle : list) {
             boolean mark = false;
@@ -77,7 +76,7 @@ public class ListToTreeUtils<T> {
 
         }
         return nodeList;
-    }
+    }*/
 
 
 }
