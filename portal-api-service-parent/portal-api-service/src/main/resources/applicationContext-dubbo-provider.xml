@@ -118,4 +118,9 @@
     <bean id="horseMonthlyAnalysisService" class="com.yonghui.portal.service.impl.horse.HorseMonthlyAnalysisServiceImpl" />
     <dubbo:service interface="com.yonghui.portal.service.horse.HorseMonthlyAnalysisService" ref="horseMonthlyAnalysisService" timeout="60000"/>
 
+
+    <!-- 日销售概况图表  -->
+    <bean id="salesAnalysisService" class="com.yonghui.portal.service.impl.sales.SalesAnalysisServiceImpl" />
+    <dubbo:service interface="com.yonghui.portal.service.sales.SalesAnalysisService" ref="salesAnalysisService" timeout="60000"/>
+
 </beans>
