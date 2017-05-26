@@ -20,8 +20,13 @@ public class MultipleTree {
         HashMap nodeList = new HashMap();
         // 根节点
         ReportMeasureRelation root = new ReportMeasureRelation();
+        // 节点最大层级数
+        int zindex = 1;
+        int thisZindex = 1;
         root.setId(0L);
         root.setParentid(-1L);
+        root.setTreecode("0");
+        root.setLineCount(zindex);
         nodeList.put(root.getId(), root);
         // 根据结果集构造节点列表（存入散列表）
         for (ReportMeasureRelation node : dataList) {
@@ -37,6 +42,14 @@ public class MultipleTree {
                 everyLast.addChild(node);
                 // 子节点个数计数
                 everyLast.setChildrenCount(everyLast.getChildrenCount() + 1);
+            }
+            // 设置层级数
+            thisZindex = node.getTreecode().split("\\.").length;
+            node.setLineCount(thisZindex);
+            // 设置最大层级数
+            if (thisZindex > zindex) {
+                zindex = thisZindex;
+                root.setLineCount(thisZindex);
             }
         }
         //System.out.println("输出无序的树形菜单的JSON字符串" + root.toString());

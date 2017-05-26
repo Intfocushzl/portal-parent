@@ -47,12 +47,14 @@ public class ReportMeasureRelation extends AuditAuto {
             // 根节点
             result = "{"
                     + "content : '报表标题'"
+                    + ", lineCount : '" + getLineCount() + "'"
                     + ", childrenCount : '" + getChildrenCount() + "'";
         } else {
             // 标题
             result = "{"
                     + "id : '" + getId() + "'"
                     + ", parentid : '" + getParentid() + "'"
+                    + ", zindex : '" + getLineCount() + "'"
                     + ", treecode : '" + getTreecode() + "'"
                     + ", sortid : '" + getSortid() + "'"
                     + ", measurelab : '" + getMeasurelab() + "'"
@@ -74,8 +76,8 @@ public class ReportMeasureRelation extends AuditAuto {
      */
     public void sortChildren() {
         if (children != null && children.getSize() != 0) {
-            // 排序,同时保存最大节点层次数
-            setLineCount(children.sortChildren(getTreecode().split(".").length));
+            // 排序
+            children.sortChildren();
         }
     }
 
