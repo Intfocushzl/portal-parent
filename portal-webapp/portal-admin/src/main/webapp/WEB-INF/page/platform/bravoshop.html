@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>绿标门店</title>
+    #parse("sys/header.html")
+</head>
+<body>
+<div id="rrapp" v-cloak>
+    <div v-show="showList">
+        <div id="queryDiv" class="queryDiv">
+            <div class="grid-btn">
+                <!--<div class="form-group col-sm-2">-->
+                <!--<input type="text" class="form-control" v-model="bravoShop.areaname" @keyup.enter="query"-->
+                <!--placeholder="老大区">-->
+                <!--</div>-->
+                <!--<div class="form-group col-sm-2">-->
+                <!--<input type="text" class="form-control" v-model="bravoShop.areamans" @keyup.enter="query"-->
+                <!--placeholder="新大区">-->
+                <!--</div>-->
+                <!--<div class="form-group col-sm-2">-->
+                <!--<input type="text" class="form-control" v-model="bravoShop.shopid" @keyup.enter="query"-->
+                <!--placeholder="老店编">-->
+                <!--</div>-->
+                <!--<div class="form-group col-sm-2">-->
+                <!--<input type="text" class="form-control" v-model="bravoShop.sapShopid" @keyup.enter="query"-->
+                <!--placeholder="新店编">-->
+                <!--</div>-->
+                <!--<div class="form-group col-sm-2">-->
+                <!--<input type="text" class="form-control" v-model="bravoShop.sname" @keyup.enter="query"-->
+                <!--placeholder="门店名称">-->
+                <!--</div>-->
+                    <div class="form-group col-sm-2" >
+                        <select id="select" class="form-control">
+                            <option value="areaname">按老大区</option>
+                            <option value="areamans">按新大区</option>
+                            <option value="shopid">按老店编</option>
+                            <option value="sapShopid">按新店编</option>
+                            <option value="sname">按门店名</option>
+                        </select>
+                    </div>
+                    <div class="form-group col-sm-2">
+                        <input type="text" class="form-control" id="show" @keyup.enter="query"/>
+                    </div>
+                <a class="btn btn-primary" @click="query">查询</a>
+                #if($shiro.hasPermission("bravoshop:save"))
+                <a class="btn btn-primary" @click="add"><i class="fa fa-plus"></i>&nbsp;新增</a>
+                #end
+                #if($shiro.hasPermission("bravoshop:update"))
+                <a class="btn btn-primary" @click="update"><i class="fa fa-pencil-square-o"></i>&nbsp;修改</a>
+                #end
+                #if($shiro.hasPermission("bravoshop:delete"))
+                <a class="btn btn-primary" @click="del"><i class="fa fa-trash-o"></i>&nbsp;删除</a>
+                #end
+            </div>
+        </div>
+        <table id="jqGrid"></table>
+        <div id="jqGridPager"></div>
+    </div>
+
+    <div v-show="!showList" class="panel panel-default">
+        <div class="panel-heading">{{title}}</div>
+        <form class="form-horizontal">
+            <div class="form-group">
+                <div class="col-sm-2 control-label">新店编号</div>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" v-model="bravoShop.sapShopid" placeholder="新店编号"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">门店名称</div>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" v-model="bravoShop.sname" placeholder="门店名称"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">门店编码</div>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" v-model="bravoShop.shopno" placeholder="门店编码"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">是否开店</div>
+                <div class="col-sm-10">
+                    <select  class="form-control">
+                        <option value="1" v-model="bravoShop.congou">正常营业中</option>
+                        <option value="2" v-model="bravoShop.congou">闭店</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">开店日期</div>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" v-model="bravoShop.opendate" placeholder="开店日期"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">区域编码</div>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" v-model="bravoShop.sno" placeholder="区域编码"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">老大区ID</div>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" v-model="bravoShop.areaid" placeholder="区域ID"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">区老大区名称</div>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" v-model="bravoShop.areaname" placeholder="区域名称"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">新大区ID</div>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" v-model="bravoShop.area" placeholder="新大区ID"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">新大区名称</div>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" v-model="bravoShop.areamans" placeholder="新大区名称"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">业态编码</div>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" v-model="bravoShop.typeComm" placeholder="业态编码"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">业态</div>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" v-model="bravoShop.typename" placeholder="业态"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">省份</div>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" v-model="bravoShop.province" placeholder="省份"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">城市</div>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" v-model="bravoShop.city" placeholder="城市"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">店组编号</div>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" v-model="bravoShop.shopgroupid" placeholder="店组编号"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">店组名称</div>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" v-model="bravoShop.shopgroupname" placeholder="店组名称"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">更新时间</div>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" v-model="bravoShop.updatetime" placeholder="更新时间"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label"></div>
+                <input type="button" class="btn btn-primary" @click="saveOrUpdate" value="确定"/>
+                &nbsp;&nbsp;<input type="button" class="btn btn-warning" @click="reload" value="返回"/>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script src="${rc.contextPath}/js/platform/bravoshop.js?_${date.systemTime}"></script>
+</body>
+</html>

@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.yonghui.portal.mapper.app.AppUserRolesMapper">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap id="appUserRolesMap" type="com.yonghui.portal.model.app.AppUserRoles">
+        <result property="id" column="id"/>
+        <result property="userId" column="user_id"/>
+        <result property="roleId" column="role_id"/>
+        <result property="createUser" column="create_user"/>
+        <result property="updateUser" column="update_user"/>
+        <result property="memo" column="memo"/>
+        <result property="loadTime" column="load_time"/>
+        <result property="createdAt" column="created_at"/>
+        <result property="updatedAt" column="updated_at"/>
+    </resultMap>
+
+	<select id="queryObject" resultType="com.yonghui.portal.model.app.AppUserRoles">
+		select * from appauthority.sys_user_roles where id = #{value}
+	</select>
+
+	<select id="queryList" resultType="com.yonghui.portal.model.app.AppUserRoles">
+		select * from appauthority.sys_user_roles
+        <where>
+            <if test="userId != null and userId !=''">
+                and user_id = #{userId}
+            </if>
+        </where>
+        <choose>
+            <when test="sidx != null and sidx.trim() != ''">
+                order by ${sidx} ${order}
+            </when>
+			<otherwise>
+                order by user_id desc
+			</otherwise>
+        </choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="queryTotal" resultType="int">
+		select count(*) from appauthority.sys_user_roles
+        <where>
+            <if test="userId != null and userId !=''">
+                and user_id = #{userId}
+            </if>
+        </where>
+	</select>
+	<select id="queryRoleIdList" resultType="int">
+		select role_id from appauthority.sys_user_roles
+		where user_id = #{userId}
+	</select>
+    <insert id="save" parameterType="com.yonghui.portal.model.app.AppUserRoles" useGeneratedKeys="true" keyProperty="id">
+		insert into appauthority.sys_user_roles
+		(
+			`user_id`, 
+			`role_id`, 
+			`create_user`, 
+			`memo`,
+			`load_time`, 
+			`created_at`, 
+		)
+		values
+		(
+			#{userId}, 
+			#{roleId}, 
+			#{createUser}, 
+			#{memo},
+			#{loadTime}, 
+			now()
+		)
+	</insert>
+
+    <update id="update" parameterType="com.yonghui.portal.model.app.AppUserRoles">
+        update appauthority.sys_user_roles
+        <set>
+			<if test="roleId != null">`role_id` = #{roleId}, </if>
+			<if test="createUser != null">`create_user` = #{createUser}, </if>
+			<if test="updateUser != null">`update_user` = #{updateUser}, </if>
+			<if test="memo != null">`memo` = #{memo}, </if>
+			<if test="loadTime != null">`load_time` = #{loadTime}, </if>
+			<if test="createdAt != null">`created_at` = #{createdAt}, </if>
+			`updated_at` = now()
+        </set>
+        where `user_id` = #{userId}
+    </update>
+	
+	<delete id="delete">
+		delete from appauthority.sys_user_roles where where user_id =  #{value}
+	</delete>
+
+	<delete id="deleteBatch">
+		delete from appauthority.sys_user_roles where id in
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+</mapper>

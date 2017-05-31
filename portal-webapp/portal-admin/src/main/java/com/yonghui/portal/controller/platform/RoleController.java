@@ -52,14 +52,13 @@ public class RoleController extends AbstractController {
      * 角色列表
      */
     @RequestMapping("/select")
-    @RequiresPermissions("sys:role:select")
-    public R select(){
-        Map<String, Object> map = new HashMap<String, Object>();
+    @RequiresPermissions("forfront:role:select")
+    public R select(@RequestParam Map<String, Object> map){
 
-        //如果不是超级管理员，则只查询自己所拥有的角色列表
-        if(getUserId() != Constant.SUPER_ADMIN){
-            map.put("createUserId", getUserId());
-        }
+//        //如果不是超级管理员，则只查询自己所拥有的角色列表
+//        if(getUserId() != Constant.SUPER_ADMIN){
+//            map.put("createUserId", getUserId());
+//        }
         List<Role> list = roleService.queryList(map);
 
         return R.success().put("list", list);

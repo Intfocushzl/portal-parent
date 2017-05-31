@@ -79,7 +79,7 @@
 		where id = #{id,jdbcType=INTEGER}
 	</delete>
 	<insert id="insert" parameterType="com.yonghui.portal.model.global.User">
-		insert into platform.user_forfront (id, account, name,
+		insert into platform.user_forfront (id, account, `name`,
 		roleId, pass, jobNumber,
 		storeNumber, createTime)
 		values (#{id,jdbcType=INTEGER}, #{account,jdbcType=VARCHAR},
@@ -278,7 +278,7 @@
 	<select id="Login" resultMap="BaseResultMap">
 	select
 		u.*,r.name as roleName,r.type as roleType
-		from  platform.user_forfront as u join platform.role_forfront as r on r.id=u.roleId
+		from  platform.user_forfront as u join platform.role_forfront as r on r.roleId=u.roleId
 		 and u.jobNumber=#{jobNumber} and u.pass=#{pass}
 		<!-- select
 		<include refid="Login_Column_List" />
@@ -289,7 +289,7 @@
 	<select id="userManageList" parameterType="java.util.Map" resultMap="BaseResultMap">
 		select
 		u.*,r.name as roleName,r.type as roleType
-		from  platform.user_forfront as u join platform.role_forfont as r on r.id=u.roleId
+		from  platform.user_forfront as u join platform.role_forfont as r on r.roleId=u.roleId
 		where 1=1
 		<if test=" status != null  and status != 9 ">
 			 and (u.status=  #{status})
@@ -301,7 +301,7 @@
 			 and (u.account=#{keyWork} or	u.jobNumber=#{keyWork})
 		</if>
 		<if test="roleId != null and roleId != ''">
-			 and (r.ownerType in ( select ownerType from platform.role_forfont where id =  #{roleId,jdbcType =INTEGER}))
+			 and (r.ownerType in ( select ownerType from platform.role_forfont where roleId =  #{roleId,jdbcType =INTEGER}))
 		</if>
 		<if test="ownerType != null and ownerType != ''">
 			 and (r.ownerType=#{ownerType, jdbcType = INTEGER})
@@ -315,7 +315,7 @@
 	<select id="userManageListSize" parameterType="java.util.Map" resultType="Int">
 		select
 		count(1)
-		from  platform.user_forfront as u join platform.role_forfont as r on r.id=u.roleId
+		from  platform.user_forfront as u join platform.role_forfont as r on r.roleId=u.roleId
 		where 1=1
 		<if test=" status != null  and status != 9 ">
 			 and (u.status=  #{status})
@@ -324,7 +324,7 @@
 			 and (account=#{keyWork} or	jobNumber=#{keyWork})
 		</if>
 		<if test="roleId != null and roleId != ''">
-			 and (r.ownerType in ( select ownerType from platform.role_forfont where id =  #{roleId,jdbcType =INTEGER}))
+			 and (r.ownerType in ( select ownerType from platform.role_forfont where roleId =  #{roleId,jdbcType =INTEGER}))
 		</if>
 		<if test="ownerType != null and ownerType != ''">
 			 and (r.ownerType=#{ownerType, jdbcType = INTEGER})
@@ -341,10 +341,10 @@
 	<select id="changeGranUserManageList" parameterType="Map" resultMap="BaseResultMap">
 		select
 		u.*,
-		(select  r.name from platform.role_forfont as r where r.id=u.roleId )  as roleName,
-		(select  r.type from platform.role_forfont as r where r.id=u.roleId )  as roleType,
-		(select  r.name from platform.role_forfont as r where r.id=u.changeRoleId )  as changeRoleName,
-		(select  r.type from platform.role_forfont as r where r.id=u.roleId )  as changeType
+		(select  r.name from platform.role_forfont as r where r.roleId=u.roleId )  as roleName,
+		(select  r.type from platform.role_forfont as r where r.roleId=u.roleId )  as roleType,
+		(select  r.name from platform.role_forfont as r where r.roleId=u.changeRoleId )  as changeRoleName,
+		(select  r.type from platform.role_forfont as r where r.roleId=u.roleId )  as changeType
 		from  platform.user_forfront as u  where u.changeStatus=1 order by u.id desc limit #{page},#{total}
 	</select>
 	<select id="changeGranUserManageListSize" parameterType="Map" resultType="Int">
@@ -373,11 +373,17 @@
 	<select id="queryList" resultType="com.yonghui.portal.model.global.User">
 		select * from  platform.user_forfront
 		<where>
+			<if test="account != null and account !=''">
+				and account like concat('%',#{account},'%')
+			</if>
 			<if test="jobNumber != null and jobNumber !=''">
-				and jobNumber = #{jobNumber}
+				and jobNumber like concat('%',#{jobNumber},'%')
+			</if>
+			<if test="name != null and name !=''">
+				and `name` like concat('%',#{name},'%')
 			</if>
 			<if test="remark != null and remark !=''">
-				and remark like concat('%',#{remark},'%')
+				and `remark` like concat('%',#{remark},'%')
 			</if>
 		</where>
 		<choose>
@@ -396,11 +402,17 @@
 	<select id="queryTotal" resultType="int">
 		select count(*) from  platform.user_forfront
 		<where>
-			<if test="id != null and id !=''">
-				and id = #{id}
+			<if test="account != null and account !=''">
+				and account like concat('%',#{account},'%')
+			</if>
+			<if test="jobNumber != null and jobNumber !=''">
+				and jobNumber like concat('%',#{jobNumber},'%')
+			</if>
+			<if test="name != null and name !=''">
+				and `name` like concat('%',#{name},'%')
 			</if>
 			<if test="remark != null and remark !=''">
-				and remark like concat('%',#{remark},'%')
+				and `remark` like concat('%',#{remark},'%')
 			</if>
 		</where>
 	</select>

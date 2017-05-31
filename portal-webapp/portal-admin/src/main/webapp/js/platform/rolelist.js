@@ -4,7 +4,7 @@ $(function () {
         datatype: "json",                // 后台返回的数据格式
         // 列表标题及列表模型
         colModel: [
-            {label: '角色ID', name: 'id', index: 'id', width: 50, key: true},
+            {label: '角色ID', name: 'roleId', index: 'roleId', width: 50, key: true},
             {label: '角色名称', name: 'name', index: 'name', width: 80},
             {
                 label: '状态', name: 'status', index: 'status', width: 80, formatter: function (value) {
@@ -20,13 +20,13 @@ $(function () {
             {label: '更新时间', name: 'updatedAt', index: 'updated_at', width: 80},
             {label: '业态', name: 'type', index: 'type', width: 80, formatter: function (value) {
                 if (value === 0) {
-                    return '<span class="label label-success">平台</span>';
+                    return '<span class="label label-success">会员店</span>';
                 }
                 if (value === 1) {
                     return '<span class="label label-success">Bravo</span>';
                 }
                 if (value === 2) {
-                    return '<span class="label label-success">会员店</span>';
+                    return '<span class="label label-success">平台</span>';
                 }
                 if (value === 3) {
                     return '<span class="label label-success">其他</span>';
@@ -159,7 +159,7 @@ var vm = new Vue({
             }
             vm.role.menuIdList = menuIdList;
 
-            var url = vm.role.id == null ? "/admin/forfront/role/save" : "/admin/forfront/role/update";
+            var url = vm.role.roleId == null ? "/admin/forfront/role/save" : "/admin/forfront/role/update";
             $.ajax({
                 type: "POST",
                 url: url,
