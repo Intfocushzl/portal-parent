@@ -49,6 +49,22 @@ public class AppRolesController extends AbstractController {
     }
 
     /**
+     * 角色列表
+     */
+    @RequestMapping("/select")
+//    @RequiresPermissions("app:role:select")
+    public R select(@RequestParam Map<String, Object> map){
+
+//        //如果不是超级管理员，则只查询自己所拥有的角色列表
+//        if(getUserId() != Constant.SUPER_ADMIN){
+//            map.put("createUserId", getUserId());
+//        }
+        List<AppRoles> list = appRolesService.queryList(map);
+
+        return R.success().put("list", list);
+    }
+
+    /**
      * 信息
      */
     @RequestMapping("/info/{id}")

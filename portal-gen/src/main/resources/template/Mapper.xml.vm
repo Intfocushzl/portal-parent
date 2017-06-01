@@ -18,7 +18,7 @@
 		select * from ${tableName}
         <where>
             <if test="id != null and id !=''">
-                and id = #{id}
+                and id like concat('%',#{id},'%')
             </if>
             <if test="remark != null and remark !=''">
                 and remark like concat('%',#{remark},'%')

@@ -3,7 +3,6 @@ package com.yonghui.portal.service.impl.global;
 import com.yonghui.portal.mapper.global.RoleMapper;
 import com.yonghui.portal.model.global.Role;
 import com.yonghui.portal.service.global.RoleService;
-import com.yonghui.portal.util.RRException;
 import com.yonghui.portal.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -38,7 +37,7 @@ public class RoleServiceImpl implements RoleService {
         checkPrems(role);
 
         //保存角色与菜单关系
-        saveRoleMenu(role.getId(), role.getMenuIdList());
+        saveRoleMenu(role.getRoleId(), role.getMenuIdList());
     }
 
     @Override
@@ -49,7 +48,7 @@ public class RoleServiceImpl implements RoleService {
         checkPrems(role);
 
         //保存角色与菜单关系
-        updateRoleMenu(role.getId(), role.getMenuIdList());
+        updateRoleMenu(role.getRoleId(), role.getMenuIdList());
     }
 
     @Override
@@ -66,13 +65,13 @@ public class RoleServiceImpl implements RoleService {
     public List<Integer> queryMenuIdList(Integer id) {
         List<Integer> list=new ArrayList<>();
          Map<String,String> roleMenu=roleMapper.queryMenuIdList(id);
-        System.out.printf(""+roleMenu.get("menuId"));
         if (roleMenu==null){
             Map<String, Object> map = new HashMap<String, Object>();
             map.put("roleId", id);
             map.put("menuId", "");
             roleMapper.saveRoleMenu(map);
         }else {
+            System.out.printf(""+roleMenu.get("menuId"));
             String menuIds=roleMenu.get("menuId");
             if (StringUtils.areNotEmpty(menuIds)){
                 String[] strs=menuIds.split(",");

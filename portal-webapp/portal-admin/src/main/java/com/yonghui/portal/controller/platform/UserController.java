@@ -31,26 +31,6 @@ public class UserController extends AbstractController {
     @Reference
     private UserService userService;
 
-    /**
-     *
-     * */
-    @RequestMapping("getUserName")
-    @ResponseBody
-    @IgnoreAuth
-    public R getUserName(HttpServletRequest request, HttpServletResponse response, String userNum) {
-
-        response.setHeader("Access-Control-Allow-Origin", "*");
-        response.setContentType("text/html;charset=UTF-8");
-
-        Map<String, Object> map = null;
-        try {
-            log.info("getUserName" + userNum);
-            map = userService.getPersonnelMattersStatus(userNum);
-        } catch (Exception e) {
-            return R.error("查找用户名异常！");
-        }
-        return R.success(map);
-    }
 
     /**
      * 列表
