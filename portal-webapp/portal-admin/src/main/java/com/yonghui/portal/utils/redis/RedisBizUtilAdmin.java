@@ -119,4 +119,20 @@ public class RedisBizUtilAdmin {
         return redisUtil.hasKey(String.format("%s:report:columns", KEY_PREFIX), code);
     }
 
+    /********************角色菜单配置信息*****************/
+    public void setRoleMenu(Integer id, String value) {
+        redisUtil.put(String.format("%s:role:menu", KEY_PREFIX), id.toString(), value);
+    }
+
+    public String getRoleMenu(Integer id) {
+        return redisUtil.get(String.format("%s:role:menu", KEY_PREFIX), id.toString());
+    }
+
+    public void removeRoleMenu(Integer id) {
+        redisUtil.remove(String.format("%s:role:menu", KEY_PREFIX), id.toString());
+    }
+
+    public boolean hasRoleMenu(Integer id) {
+        return redisUtil.hasKey(String.format("%s:role:menu", KEY_PREFIX), id.toString());
+    }
 }

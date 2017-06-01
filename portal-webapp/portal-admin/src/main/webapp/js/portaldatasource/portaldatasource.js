@@ -8,13 +8,15 @@ $(function () {
             {label: '唯一编码', name: 'code', index: 'code', width: 80 , key: true },
             {label: '标题简介', name: 'title', index: 'title', width: 80 }, 
             {label: '连接地址', name: 'url', index: 'url', width: 80 },
-            {label: '类型驱动', name: 'jdbcDriver', index: 'jdbc_driver', width: 80 },
-            {label: '用户名', name: 'user', index: 'user', width: 80 }, 
-            {label: '用户密码', name: 'password', index: 'password', width: 80 }, 
+            {label: '类型驱动', name: 'jdbc_driver', index: 'jdbc_driver', width: 80 },
+            {label: '用户名', name: 'user', index: 'user', width: 80 },
+            {label: '创建人', name: 'username', index: 'username', width: 80 },
+            {label: '创建时间', name: 'create_time', index: 'create_time', width: 80 },
+            /* {label: '用户密码', name: 'password', index: 'password', width: 80 },
             {label: '连接池最小连接', name: 'minConnectionsPerPartition', index: 'min_connections_per_partition', width: 80 },
             {label: '连接池最大连接', name: 'maxConnectionsPerPartition', index: 'max_connections_per_partition', width: 80 },
             {label: '连接选项', name: 'connectionTag', index: 'connection_tag', width: 80 },
-            {label: '创建时间', name: 'createTime', index: 'create_time', width: 80 }, 
+             */
         ],
         viewrecords: true,     // 是否显示行号，默认值是false，不显示
         height: 385,            // 表格高度
@@ -67,6 +69,7 @@ var vm = new Vue({
             vm.showList = false;
             vm.title = "新增";
             vm.portalDataSource = {};
+            $("input[name='code']").removeAttr("readonly");
         },
         update: function (event) {
             var code = getSelectedRow();
@@ -76,7 +79,8 @@ var vm = new Vue({
             vm.showList = false;
             vm.title = "修改";
 
-            vm.getInfo(code)
+            vm.getInfo(code);
+            $("input[name='code']").attr("readonly","readonly");
         },
         saveOrUpdate: function (event) {
             var code = vm.portalDataSource.code;
