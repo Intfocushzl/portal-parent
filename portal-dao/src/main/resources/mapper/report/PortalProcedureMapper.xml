@@ -10,11 +10,11 @@
         select * from portal_procedure where procode = #{procode}
     </select>
 
-    <select id="queryList" parameterType="map" resultType="com.yonghui.portal.model.report.PortalProcedure">
-        select * from portal_procedure
+    <select id="queryList" parameterType="map" resultType="Map">
+        select a.procode,a.title,a.data_source_code,a.proname,a.prodb,a.creater,a.create_time,b.username from portal_procedure a LEFT JOIN sys_user b ON a.creater = b.user_id
         <where>
-            <if test="code != null and code !=''">
-                and code like concat('%',#{code},'%')
+            <if test="procode != null and procode !=''">
+                and procode like concat('%',#{procode},'%')
             </if>
             <if test="title != null and title !=''">
                 and title like concat('%',#{title},'%')

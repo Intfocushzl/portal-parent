@@ -7,10 +7,11 @@ $(function () {
             {label: 'id', name: 'id', index: 'id', width: 50, hidden: true },
             {label: '唯一编码', name: 'sqlcode', index: 'sqlcode', width: 80 ,key: true},
             {label: '标题简介', name: 'title', index: 'title', width: 80 }, 
-            {label: '执行语句', name: 'executeSql', index: 'execute_sql', width: 80 }, 
-            {label: '数据源唯一编码', name: 'dataSourceCode', index: 'data_source_code', width: 80 }, 
-            {label: '执行参数', name: 'parameter', index: 'parameter', width: 80 },
-            {label: '创建时间', name: 'createTime', index: 'create_time', width: 80 }, 
+           /* {label: '执行语句', name: 'executeSql', index: 'execute_sql', width: 80 }, */
+            {label: '数据源唯一编码', name: 'data_source_code', index: 'data_source_code', width: 80 },
+           /* {label: '执行参数', name: 'parameter', index: 'parameter', width: 80 },*/
+            {label: '创建人', name: 'username', index: 'username', width: 80 },
+            {label: '创建时间', name: 'create_time', index: 'create_time', width: 80 },
         ],
         viewrecords: true,     // 是否显示行号，默认值是false，不显示
         height: 385,            // 表格高度
@@ -64,6 +65,7 @@ var vm = new Vue({
             vm.title = "新增";
             vm.portalExecuteSql = {};
             vm.getDataSourceList();
+            $("input[name='sqlcode']").removeAttr("readonly");
         },
         update: function (event) {
             var sqlcode = getSelectedRow();
@@ -73,7 +75,8 @@ var vm = new Vue({
             vm.showList = false;
             vm.title = "修改";
             vm.getDataSourceList();
-            vm.getInfo(sqlcode)
+            vm.getInfo(sqlcode);
+            $("input[name='sqlcode']").attr("readonly","readonly");
         },
         saveOrUpdate: function (event) {
             var code = vm.portalExecuteSql.sqlcode;
@@ -142,7 +145,7 @@ var vm = new Vue({
             $("#dataList").empty();
             $.get("../portaldatasource/dataSourceList/", function(r){
                 for(var i = 0;i < r.dataSourceList.length;i++){
-                    $("#dataList").append("<option value='"+r.dataSourceList[i].code+"'>"+r.dataSourceList[i].title+"</option>");
+                    $("#dataList").append("<option value='"+r.dataSourceList[i].code+"'>"+r.dataSourceList[i].code+"<===>"+r.dataSourceList[i].title+"</option>");
                 }
             });
         },

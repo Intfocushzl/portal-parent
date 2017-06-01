@@ -9,12 +9,19 @@ $(function () {
             {label: '标题简介', name: 'title', index: 'title', width: 80},
             {
                 label: '执行唯一编码',
-                name: 'executeCode',
+                name: 'execute_code',
                 index: 'execute_code',
                 width: 80
             },
-            {label: '执行类型', name: 'executeType', index: 'execute_type', width: 80},
-            {label: '创建时间', name: 'createTime', index: 'create_time', width: 80},
+            {label: '执行类型', name: 'execute_type', index: 'execute_type', width: 80,formatter:function(type){
+                if(type==1){
+                    return '<span class="label label-success">存储</span>';
+                }else if(type==2){
+                    return '<span class="label label-success">sql</span>';
+                }
+            }},
+            {label: '创建人', name: 'username', index: 'username', width: 80 },
+            {label: '创建时间', name: 'create_time', index: 'create_time', width: 80},
         ],
         viewrecords: true,     // 是否显示行号，默认值是false，不显示
         height: 385,            // 表格高度
@@ -70,6 +77,7 @@ var vm = new Vue({
             vm.showList = false;
             vm.title = "新增";
             vm.portalReport = {};
+            $("input[name='code']").removeAttr("readonly");
         },
         update: function (event) {
             var code = getSelectedRow();
@@ -78,7 +86,8 @@ var vm = new Vue({
             }
             vm.showList = false;
             vm.title = "修改";
-            vm.getInfo(code)
+            vm.getInfo(code);
+            $("input[name='code']").attr("readonly","readonly");
         },
         saveOrUpdate: function () {
             var code = vm.portalReport.code;

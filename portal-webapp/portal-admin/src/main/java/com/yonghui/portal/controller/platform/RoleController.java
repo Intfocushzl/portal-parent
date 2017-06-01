@@ -1,20 +1,24 @@
 package com.yonghui.portal.controller.platform;
 
 import com.alibaba.dubbo.config.annotation.Reference;
+import com.alibaba.fastjson.JSONObject;
 import com.yonghui.portal.controller.AbstractController;
+import com.yonghui.portal.model.global.Menu;
 import com.yonghui.portal.model.global.Role;
-import com.yonghui.portal.service.global.MenuService;
 import com.yonghui.portal.service.global.RoleService;
+import com.yonghui.portal.service.global.UserMenuService;
+import com.yonghui.portal.util.ListToTreeUtils;
 import com.yonghui.portal.util.PageUtils;
 import com.yonghui.portal.util.Query;
 import com.yonghui.portal.util.R;
-import com.yonghui.portal.utils.Constant;
+import com.yonghui.portal.utils.redis.RedisBizUtilAdmin;
 import com.yonghui.portal.utils.validator.ValidatorUtils;
+import org.apache.log4j.Logger;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -28,8 +32,14 @@ import java.util.Map;
 @RestController
 @RequestMapping("/forfront/role")
 public class RoleController extends AbstractController {
+    Logger log = Logger.getLogger(this.getClass());
+
     @Reference
     private RoleService roleService;
+    @Autowired
+    private RedisBizUtilAdmin redisBizUtilAdmin;
+    @Autowired
+    private UserMenuService userMenuService;
 
     /**
      * 列表
@@ -85,8 +95,8 @@ public class RoleController extends AbstractController {
     @RequiresPermissions("role:save")
     public R save(@RequestBody Role role) {
         ValidatorUtils.validateEntity(role);
-
         roleService.save(role);
+        getRoleMenu(role);
         return R.success();
     }
 
@@ -98,17 +108,32 @@ public class RoleController extends AbstractController {
     public R update(@RequestBody Role role) {
         ValidatorUtils.validateEntity(role);
         roleService.update(role);
+        getRoleMenu(role);
         return R.success();
     }
 
     /**
-     * 修改
+     * 删除
      */
     @RequestMapping("/delete")
     @RequiresPermissions("role:delete")
     public R delete(@RequestBody Integer[] ids) {
         roleService.deleteBatch(ids);
+        for (Integer id:ids){
+            redisBizUtilAdmin.removeRoleMenu(id);
+        }
         return R.success();
+    }
+
+    public void getRoleMenu(Role role) {
+        List<Menu> menus = new ArrayList<Menu>();
+        List<Menu> menuList = new ArrayList<Menu>();
+        menuList = userMenuService.listRoleMenu(role.getMenuIdList());
+        menus = new ListToTreeUtils().listTreeMenu(menuList);
+        JSONObject json = new JSONObject();
+        json.put("data", menus);
+        log.info("角色菜单数据:" + menuList);
+        redisBizUtilAdmin.setRoleMenu(role.getRoleId(), json.toString());
     }
 
 }

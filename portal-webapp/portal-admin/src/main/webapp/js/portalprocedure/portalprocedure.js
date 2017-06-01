@@ -7,10 +7,12 @@ $(function () {
             {label: 'id', name: 'id', index: 'id', width: 50, hidden: true },
             {label: '编码', name: 'procode', index: 'procode', width: 80, key: true },
             {label: '标题', name: 'title', index: 'title', width: 80 },
-            {label: '数据源编码', name: 'dataSourceCode', index: 'data_source_code', width: 80 },
+            {label: '数据源编码', name: 'data_source_code', index: 'data_source_code', width: 80 },
             {label: '存储过程名', name: 'proname', index: 'proname', width: 80 },
-            {label: '执行参数', name: 'parameter', index: 'parameter', width: 80 },
-            {label: '数据库', name: 'prodb', index: 'prodb', width: 80 }
+            /*{label: '执行参数', name: 'parameter', index: 'parameter', width: 80 },*/
+            {label: '数据库', name: 'prodb', index: 'prodb', width: 80 },
+            {label: '创建人', name: 'username', index: 'username', width: 80 },
+            {label: '创建时间', name: 'create_time', index: 'create_time', width: 80 },
         ],
         viewrecords: true,     // 是否显示行号，默认值是false，不显示
         height: 385,            // 表格高度
@@ -54,7 +56,7 @@ var vm = new Vue({
             $("#jqGrid").jqGrid('setGridParam', {
                 postData: {
                     procode: vm.portalProcedure.procode,
-                    remark: vm.portalProcedure.remark
+                    title: vm.portalProcedure.title
                 },
                 page: 1
             }).trigger("reloadGrid");
@@ -64,6 +66,7 @@ var vm = new Vue({
             vm.title = "新增";
             vm.portalProcedure = {};
             vm.getDataSourceList();
+            $("input[name='code']").removeAttr("readonly");
         },
         update: function (event) {
             var procode = getSelectedRow();
@@ -75,6 +78,7 @@ var vm = new Vue({
 
             vm.getDataSourceList();
             vm.getInfo(procode);
+            $("input[name='code']").attr("readonly","readonly");
         },
         saveOrUpdate: function (event) {
             var code = vm.portalProcedure.procode;
@@ -144,7 +148,7 @@ var vm = new Vue({
             $("#dataList").empty();
             $.get("../portaldatasource/dataSourceList/", function(r){
                 for(var i = 0;i < r.dataSourceList.length;i++){
-                    $("#dataList").append("<option value='"+r.dataSourceList[i].code+"'>"+r.dataSourceList[i].title+"</option>");
+                    $("#dataList").append("<option value='"+r.dataSourceList[i].code+"'>"+r.dataSourceList[i].code+"<===>"+r.dataSourceList[i].title+"</option>");
                 }
             });
         },

@@ -7,6 +7,7 @@ import com.yonghui.portal.service.report.PortalProcedureService;
 import com.yonghui.portal.util.PageUtils;
 import com.yonghui.portal.util.Query;
 import com.yonghui.portal.util.R;
+import com.yonghui.portal.utils.ShiroUtils;
 import com.yonghui.portal.utils.redis.RedisBizUtilAdmin;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,6 +63,7 @@ public class PortalProcedureController extends AbstractController {
     @RequestMapping("/save")
     @RequiresPermissions("portalprocedure:save")
     public R save(@RequestBody PortalProcedure portalProcedure) {
+        portalProcedure.setCreater(ShiroUtils.getUserId());
         portalProcedureService.save(portalProcedure);
         redisBizUtilAdmin.setPortalProcedure(portalProcedure.getProcodeOld(), portalProcedure.getProcode(), JSONObject.toJSONString(portalProcedure));
         return R.success();
@@ -73,6 +75,7 @@ public class PortalProcedureController extends AbstractController {
     @RequestMapping("/update")
     @RequiresPermissions("portalprocedure:update")
     public R update(@RequestBody PortalProcedure portalProcedure) {
+        portalProcedure.setCreater(ShiroUtils.getUserId());
         portalProcedureService.update(portalProcedure);
         redisBizUtilAdmin.setPortalProcedure(portalProcedure.getProcodeOld(), portalProcedure.getProcode(), JSONObject.toJSONString(portalProcedure));
         return R.success();

@@ -10,12 +10,12 @@
         <div id="queryDiv" class="queryDiv">
             <div class="grid-btn">
                 <div class="form-group col-sm-2">
-                    <input type="text" class="form-control" v-model="portalProcedure.id" @keyup.enter="query"
-                           placeholder="主键ID">
+                    <input type="text" class="form-control" v-model="portalProcedure.procode" @keyup.enter="query"
+                           placeholder="唯一编码">
                 </div>
                 <div class="form-group col-sm-2">
-                    <input type="text" class="form-control" v-model="portalProcedure.remark" @keyup.enter="query"
-                           placeholder="备注说明">
+                    <input type="text" class="form-control" v-model="portalProcedure.title" @keyup.enter="query"
+                           placeholder="标题">
                 </div>
                 <a class="btn btn-primary" @click="query">查询</a>
 
@@ -40,7 +40,7 @@
             <div class="form-group">
                 <div class="col-sm-2 control-label">唯一编码</div>
                 <div class="col-sm-10">
-                    <input type="text" class="form-control" v-model="portalProcedure.procode"
+                    <input type="text" name="code" class="form-control" v-model="portalProcedure.procode"
                            placeholder="存储过程唯一编码(格式例：PRO_000001)"/>
                     <input type="hidden" v-model="portalProcedure.procodeOld" placeholder="存储过程唯一编码"/>
                 </div>
@@ -77,7 +77,7 @@
                 </div>
             </div>
             <div class="form-group">
-                <div class="col-sm-2 control-label">数据源</div>
+                <div class="col-sm-2 control-label">所在数据库</div>
                 <div class="col-sm-10">
                     <input type="text" class="form-control" v-model="portalProcedure.prodb" placeholder="数据源（所在库）"/>
                 </div>
