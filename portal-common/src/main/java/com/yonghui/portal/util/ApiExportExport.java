@@ -24,10 +24,12 @@ public class ApiExportExport {
     private HSSFSheet sheet = wb.createSheet("YongHui-数据");
     // 标题行
     private List<HSSFRow> rowTitles = new ArrayList<>();
-    // 标题行数
-    private int lineCount = 0;
     // 标题层级记录
     private Map<Integer, Integer> zindexMap = new HashMap<>();
+    // 当前标题层级（第n行）
+    private int zindex = 0;
+    // 报表数据标题列
+    private StringBuffer cellTitleSb = new StringBuffer();
 
     /**
      * 统一excel导出
@@ -39,9 +41,6 @@ public class ApiExportExport {
      * @throws Exception
      */
     public HSSFWorkbook export(List<Map<String, Object>> list, JSONObject jsonObject) throws Exception {
-        // 创建一行
-        HSSFRow rowTitle = sheet.createRow(0);
-        rowTitles.add(rowTitle);
         // 创建标题栏样式
         HSSFCellStyle styleTitle = wb.createCellStyle();
         styleTitle.setAlignment(HSSFCellStyle.ALIGN_CENTER);// 居中
@@ -54,10 +53,16 @@ public class ApiExportExport {
         // 在行上创建标题列
         HSSFCell cellTitle = null;
         int cellInde = 0;
+        // 创建标题行
+        int lineCount = Integer.parseInt(jsonObject.get("lineCount").toString());
+        for (int i = 0; i <= lineCount; i++) {
+            // 创建标题行
+            rowTitles.add(sheet.createRow(i));
+        }
         // 一级标题 数组
         JSONArray jsonArray = jsonObject.getJSONArray("children");
         // 遍历所有标题
-        rowTitles = treeTitleList(jsonArray);
+        treeTitleList(jsonArray);
 
         /*for (JSONObject json : jsonArray) {
             cellTitle = rowTitle.createCell(cellInde);
@@ -109,24 +114,30 @@ public class ApiExportExport {
 
 
     /**
-     * 递归解析标题树
+     * 解析标题树
      *
      * @param jsonArray
      * @return
      */
-    public List<HSSFRow> treeTitleList(JSONArray jsonArray) {
+    public void treeTitleList(JSONArray jsonArray) {
         for (int i = 0; i < jsonArray.size(); i++) {
             JSONObject job = jsonArray.getJSONObject(i);
-            System.out.println(job.get("treecode"));
+            // 当前行
+            zindex = Integer.parseInt(job.get("zindex").toString()) - 1;
+            /*columnCount = Integer.parseInt(job.get("zindex").toString()) - 1;
+
+            if (true == Boolean.parseBoolean(job.get("isleaf").toString())) {
+                cellTitleSb.append(job.get("measurelab"));
+            }`
+            if (job.get("zindex")){
+
+            }*/
+                System.out.println(job.get("treecode"));
             if (false == Boolean.parseBoolean(job.get("isleaf").toString())) {
-                lineCount = lineCount + 1;
-                HSSFRow rowTitle = sheet.createRow(lineCount);
-                rowTitles.add(rowTitle);
                 JSONArray c_jsonArray = job.getJSONArray("children");
                 treeTitleList(c_jsonArray);
             }
         }
-        return rowTitles;
     }
 
 }

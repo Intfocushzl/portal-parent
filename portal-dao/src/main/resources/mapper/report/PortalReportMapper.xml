@@ -53,6 +53,11 @@
 			`title`,
 			`execute_code`,
 			`execute_type`,
+			`report_headers_console`,
+			`report_headers_format_console`,
+			`report_hot_data`,
+			`report_merged_cell_info_collection`,
+			`report_outer_html`,
 			`remark`,
 			`creater`,
 			`create_time`,
@@ -68,6 +73,11 @@
 			#{title},
 			#{executeCode},
 			#{executeType},
+			#{reportHeadersConsole},
+			#{reportHeadersFormatConsole},
+			#{reportHotData},
+			#{reportMergedCellInfoCollection},
+			#{reportOuterHtml},
 			#{remark},
 			#{creater},
 			#{createTime},
@@ -81,20 +91,29 @@
     <update id="update" parameterType="com.yonghui.portal.model.report.PortalReport">
         update portal_report
         <set>
-            <if test="code != null">`code` = #{code}, </if>
-            <if test="title != null">`title` = #{title}, </if>
-            <if test="executeCode != null">`execute_code` = #{executeCode}, </if>
-            <if test="executeType != null">`execute_type` = #{executeType}, </if>
-            <if test="remark != null">`remark` = #{remark}, </if>
-            <if test="creater != null">`creater` = #{creater}, </if>
-            <if test="createTime != null">`create_time` = #{createTime}, </if>
-            <if test="modifier != null">`modifier` = #{modifier}, </if>
+            <if test="code != null">`code` = #{code},</if>
+            <if test="title != null">`title` = #{title},</if>
+            <if test="executeCode != null">`execute_code` = #{executeCode},</if>
+            <if test="executeType != null">`execute_type` = #{executeType},</if>
+            <if test="reportHeadersConsole != null">`report_headers_console` = #{reportHeadersConsole},</if>
+            <if test="reportHeadersFormatConsole != null">`report_headers_format_console` =
+                #{reportHeadersFormatConsole},
+            </if>
+            <if test="reportHotData != null">`report_hot_data` = #{reportHotData},</if>
+            <if test="reportMergedCellInfoCollection != null">`report_merged_cell_info_collection` =
+                #{reportMergedCellInfoCollection},
+            </if>
+            <if test="reportOuterHtml != null">`report_outer_html` = #{reportOuterHtml},</if>
+            <if test="remark != null">`remark` = #{remark},</if>
+            <if test="creater != null">`creater` = #{creater},</if>
+            <if test="createTime != null">`create_time` = #{createTime},</if>
+            <if test="modifier != null">`modifier` = #{modifier},</if>
             `modify_time` = NOW(),
-            <if test="disabled != null">`disabled` = #{disabled}, </if>
+            <if test="disabled != null">`disabled` = #{disabled},</if>
             <if test="version != null">`version` = #{version}</if>
         </set>
         where code = #{codeOld}
-	</update>
+    </update>
 
     <!-- 批量删除 -->
     <delete id="deleteBatch" parameterType="int">

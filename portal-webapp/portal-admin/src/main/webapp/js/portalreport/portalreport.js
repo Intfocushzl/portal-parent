@@ -45,11 +45,14 @@ $(function () {
     });
 });
 
+
 var vm = new Vue({
     el: '#rrapp',
     data: {
         showList: true,
         title: null,
+        selectOption: null,
+        executeCodeOld: null,
         portalReport: {}
     },
     methods: {
@@ -75,27 +78,26 @@ var vm = new Vue({
             }
             vm.showList = false;
             vm.title = "修改";
-
             vm.getInfo(code)
         },
-        saveOrUpdate: function (event) {
+        saveOrUpdate: function () {
             var code = vm.portalReport.code;
             var id = vm.portalReport.id;
             var url = vm.portalReport.id == null ? "../portalreport/save" : "../portalreport/update";
-            if(id == null){
-                $.get("../portalreport/info/"+code,function(r) {
+            if (id == null) {
+                $.get("../portalreport/info/" + code, function (r) {
                     console.log(r);
                     if (r.portalReport != null) {
                         alert("唯一编码已存在，请重新输入");
-                    }else{
+                    } else {
                         vm.addAndUpdate(url);
                     }
                 })
-            }else{
+            } else {
                 vm.addAndUpdate(url);
             }
         },
-        addAndUpdate:function(url){
+        addAndUpdate: function (url) {
             vm.portalReport.executeCode = $("#onlycode").val();
             $.ajax({
                 type: "POST",
@@ -139,6 +141,30 @@ var vm = new Vue({
             $.get("../portalreport/info/" + code, function (r) {
                 vm.portalReport = r.portalReport;
                 vm.portalReport.codeOld = vm.portalReport.code;
+                vm.executeCodeOld = vm.portalReport.executeCode;
+                if (vm.portalReport.executeType == 1) {
+                    vm.getProCode(vm.executeCodeOld);
+                } else if (vm.portalReport.executeType == 2) {
+                    vm.getSqlCode(vm.executeCodeOld);
+                }
+
+                // 清除单元格格式
+                getMergeDataClear();
+                // 延迟加载1秒
+                clearTimeout(autosaveNotification);
+                autosaveNotification = setTimeout(function () {
+
+                }, 1000);
+                var reportHotDataArr = eval(vm.portalReport.reportHotData);
+                // 渲染合并单元格
+                var mergedCellInfoCollectionJsonArray = eval('(' + vm.portalReport.reportMergedCellInfoCollection + ')');
+                for (var i in mergedCellInfoCollectionJsonArray) {
+                    hot.mergeCells.mergedCellInfoCollection.push(mergedCellInfoCollectionJsonArray[i]);
+                }
+                // 加载hansontable数据
+                hot.loadData(reportHotDataArr);
+                // 渲染表格
+                hot.render();
             });
         },
         reload: function (event) {
@@ -157,24 +183,34 @@ var vm = new Vue({
                 }
             }
             if (typevalue == 1) {
-                this.getProCode();
+                this.getProCode(vm.executeCodeOld);
             } else if (typevalue == 2) {
-                this.getSqlCode();
+                this.getSqlCode(vm.executeCodeOld);
             }
         },
-        getSqlCode: function () {
+        getSqlCode: function (executeCodeOld) {
             $("#onlycode").empty();
             $.get("../portalexecutesql/sqlList/", function (r) {
-                for(var i = 0;i < r.sqlList.length;i++){
-                    $("#onlycode").append("<option value='"+r.sqlList[i].sqlcode+"'>"+r.sqlList[i].sqlcode+"<==>"+r.sqlList[i].title+"</option>");
+                for (var i = 0; i < r.sqlList.length; i++) {
+                    vm.selectOption = "<option value='" + r.sqlList[i].sqlcode + "'";
+                    if (executeCodeOld == r.sqlList[i].sqlcode) {
+                        vm.selectOption = vm.selectOption + " selected = 'selected'";
+                    }
+                    vm.selectOption = vm.selectOption + " >" + r.sqlList[i].sqlcode + "<==>" + r.sqlList[i].title + "</option>";
+                    $("#onlycode").append(vm.selectOption);
                 }
             });
         },
-        getProCode: function () {
+        getProCode: function (executeCodeOld) {
             $("#onlycode").empty();
             $.get("../portalprocedure/proList/", function (r) {
-                for(var i = 0;i < r.proList.length;i++) {
-                    $("#onlycode").append("<option value='" + r.proList[i].procode + "'>" + r.proList[i].procode +"<==>"+ r.proList[i].title + "</option>");
+                for (var i = 0; i < r.proList.length; i++) {
+                    vm.selectOption = "<option value='" + r.proList[i].procode + "'";
+                    if (executeCodeOld == r.proList[i].procode) {
+                        vm.selectOption = vm.selectOption + " selected = 'selected'";
+                    }
+                    vm.selectOption = vm.selectOption + " >" + r.proList[i].procode + "<==>" + r.proList[i].title + "</option>";
+                    $("#onlycode").append(vm.selectOption);
                 }
             });
         }
