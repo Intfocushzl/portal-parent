@@ -23,7 +23,7 @@ var
 hot = new Handsontable(reportHeadersContainer, {
     //data: getData(),    // 初始化数据
     startRows: 1,		        // 初始行数
-    startCols: 4,	            // 初始列数
+    startCols: 1,	            // 初始列数
     //rowHeaders: true,	        // 显示行标题
     //colHeaders: true,	        // 显示列标题
     minSpareRows: 0,	        // 行数不足，自动扩展N行
@@ -60,7 +60,7 @@ hot = new Handsontable(reportHeadersContainer, {
 // 初始化数据
 function getData() {
     return [
-        ["", "", "", ""]
+        [""]
     ];
 }
 
