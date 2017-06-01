@@ -18,7 +18,8 @@ $(function () {
             },
             {label: '创建时间', name: 'createdAt', index: 'created_at', width: 80},
             {label: '更新时间', name: 'updatedAt', index: 'updated_at', width: 80},
-            {label: '业态', name: 'type', index: 'type', width: 80, formatter: function (value) {
+            {
+                label: '业态', name: 'type', index: 'type', width: 80, formatter: function (value) {
                 if (value === 0) {
                     return '<span class="label label-success">会员店</span>';
                 }
@@ -92,6 +93,7 @@ var vm = new Vue({
         },
         showList: true,
         title: null,
+        roleList: {},
         role: {}
     },
     methods: {
@@ -103,7 +105,7 @@ var vm = new Vue({
             vm.title = "新增";
             vm.role = {};
             vm.getMenuTree(null);
-
+            vm.getRoleList();
         },
         update: function () {
             var roleId = getSelectedRow();
@@ -150,6 +152,12 @@ var vm = new Vue({
                 }
             });
         },
+        getRoleList: function () {
+            $.get("/admin/forfront/role/select", function (r) {
+                vm.roleList = r.list;
+                console.log(vm.roleList);
+            });
+        },
         saveOrUpdate: function (event) {
             //获取选择的菜单
             var nodes = ztree.getCheckedNodes(true);
@@ -159,7 +167,7 @@ var vm = new Vue({
             }
             vm.role.menuIdList = menuIdList;
 
-            var url = vm.role.roleId == null ? "/admin/forfront/role/save" : "/admin/forfront/role/update";
+            var url = vm.role.id == null ? "/admin/forfront/role/save" : "/admin/forfront/role/update";
             $.ajax({
                 type: "POST",
                 url: url,
