@@ -85,7 +85,7 @@ public class LoginController {
                     IPUtils iputil = new IPUtils();
                     logInfo.setIp(iputil.getIpAddr(request));
                     logInfo.setUrl(request.getRequestURL().toString());
-                    logInfo.setParameter(HttpContextUtils.getRequestParameter(request));
+                    logInfo.setParameter(HttpContextUtils.getParameterForLog(request));
                     logInfo.setEndTime(new Date());
                     sysoperationLogService.SaveLog(logInfo);
                     log.info("登陆日志：" + "门店号＝" + user.getStoreNumber() + "工号＝" + user.getJobNumber() + "姓名＝"

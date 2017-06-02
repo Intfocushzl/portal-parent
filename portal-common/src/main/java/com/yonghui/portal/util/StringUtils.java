@@ -431,6 +431,42 @@ public class StringUtils {
         return sql;
     }
 
+
+    /**
+     * 拼装请求路由报表参数
+     */
+    public static String getRouteParameter(String parameter, String dataBaseParameter) {
+        if (StringUtils.isEmpty(dataBaseParameter)) {
+            return null;
+        }
+        // 组装参数
+        String[] arr = parameter.split("@@");
+        String[] arrPro = dataBaseParameter.split("@@");
+        StringBuffer sb = new StringBuffer();
+        boolean tag = false;
+        for (String pro : arrPro) {
+            tag = false;
+            for (String p : arr) {
+                if (pro.equals(p.split("=")[0])) {
+                    tag = true;
+                    if (p.split("=").length == 1) {
+                        sb.append(pro+"="+"&");
+                    } else if (StringUtils.isEmpty(p.split("=")[1])) {
+                        sb.append(pro+"="+"&");
+                    } else if (!StringUtils.isEmpty(p.split("=")[1])) {
+                        sb.append(pro+"="+p.split("=")[1] + "&");
+                    }
+                    break;
+                }
+            }
+            if (!tag) {
+                sb.append(pro+"="+"&");
+            }
+        }
+        String str = sb.toString();
+        return str.substring(0, str.length() - 1);
+    }
+
     /**
      * 测试封装 存储过程参数，sql语句参数
      *

@@ -8,22 +8,6 @@ import java.util.Map;
 
 public interface UserService {
 
-    User queryObject(Integer id);
-
-    List<User> queryList(Map<String, Object> map);
-
-    int queryTotal(Map<String, Object> map);
-
-    void save(User user);
-
-    void update(User user);
-
-    void delete(Integer id);
-
-    void deleteBatch(Integer[] ids);
-
-
-
     int deleteByPrimaryKey(Integer id) throws Exception;
 
     int insert(User record) throws Exception;

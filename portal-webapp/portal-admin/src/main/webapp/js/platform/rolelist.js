@@ -105,7 +105,6 @@ var vm = new Vue({
             vm.title = "新增";
             vm.role = {};
             vm.getMenuTree(null);
-            vm.getRoleList();
         },
         update: function () {
             var roleId = getSelectedRow();
@@ -155,10 +154,17 @@ var vm = new Vue({
         getRoleList: function () {
             $.get("/admin/forfront/role/select", function (r) {
                 vm.roleList = r.list;
-                console.log(vm.roleList);
             });
         },
         saveOrUpdate: function (event) {
+            if (vm.role.id == null) {
+                for (var i = 0; i < vm.roleList.length; i++) {
+                    if ($('#roleId').val() == (vm.roleList[i].roleId)) {
+                        alert("角色唯一编码已存在");
+                        return;
+                    }
+                }
+            }
             //获取选择的菜单
             var nodes = ztree.getCheckedNodes(true);
             var menuIdList = new Array();
@@ -203,5 +209,17 @@ var vm = new Vue({
                 page: page
             }).trigger("reloadGrid");
         }
+    }
+});
+
+vm.getRoleList();
+
+$('#roleId').bind('input propertychange', function () {
+    for (var i = 0; i < vm.roleList.length; i++) {
+        if ($('#roleId').val() == (vm.roleList[i].roleId)) {
+            $('#roleId').css("color", "red");
+            break;
+        }
+        $('#roleId').css("color", "black");
     }
 });

@@ -1,6 +1,5 @@
 package com.yonghui.portal.controller.platform;
 
-import com.alibaba.dubbo.config.annotation.Reference;
 import com.alibaba.fastjson.JSONObject;
 import com.yonghui.portal.controller.AbstractController;
 import com.yonghui.portal.model.global.Menu;
@@ -34,7 +33,7 @@ import java.util.Map;
 public class RoleController extends AbstractController {
     Logger log = Logger.getLogger(this.getClass());
 
-    @Reference
+    @Autowired
     private RoleService roleService;
     @Autowired
     private RedisBizUtilAdmin redisBizUtilAdmin;

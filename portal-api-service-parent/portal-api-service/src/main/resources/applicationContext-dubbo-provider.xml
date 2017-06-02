@@ -36,95 +36,95 @@
     <!-- 多数据源测试 -->
     <bean id="testDataSourceService" class="com.yonghui.portal.service.impl.test.TestDataSourceServiceImpl"/>
     <dubbo:service interface="com.yonghui.portal.service.test.TestDataSourceService" ref="testDataSourceService"
-                   timeout="300000"/>
+                   timeout="600000"/>
     <!-- 报表储存过程统一入口服务 -->
     <bean id="apiService" class="com.yonghui.portal.service.impl.ApiServiceImpl"/>
-    <dubbo:service interface="com.yonghui.portal.service.ApiService" ref="apiService" timeout="300000"/>
+    <dubbo:service interface="com.yonghui.portal.service.ApiService" ref="apiService" timeout="600000"/>
 
     <!--存储过程管理  -->
     <bean id="cProMeterdataInformationService"
           class="com.yonghui.portal.service.impl.CProMeterdataInformationServiceImpl"/>
     <dubbo:service interface="com.yonghui.portal.service.CProMeterdataInformationService"
-                   ref="cProMeterdataInformationService" timeout="300000"/>
+                   ref="cProMeterdataInformationService" timeout="600000"/>
 
     <!--菜单管理 、 门店大区课组公共接口  -->
     <bean id="menuService" class="com.yonghui.portal.service.impl.global.MenuServiceImpl"/>
-    <dubbo:service interface="com.yonghui.portal.service.global.MenuService" ref="menuService" timeout="300000"/>
+    <dubbo:service interface="com.yonghui.portal.service.global.MenuService" ref="menuService" timeout="600000"/>
 
     <!--首页公告、实时销售  -->
     <bean id="noticelService" class="com.yonghui.portal.service.impl.global.NoticelServiceImpl"/>
-    <dubbo:service interface="com.yonghui.portal.service.NoticeService" ref="noticelService" timeout="300000"/>
+    <dubbo:service interface="com.yonghui.portal.service.NoticeService" ref="noticelService" timeout="600000"/>
 
     <!-- 登录，用户相关操作-->
     <bean id="userService" class="com.yonghui.portal.service.impl.global.UserServiceImpl"/>
-    <dubbo:service interface="com.yonghui.portal.service.global.UserService" ref="userService" timeout="300000"/>
+    <dubbo:service interface="com.yonghui.portal.service.global.UserService" ref="userService" timeout="600000"/>
 
     <!-- token持久化-->
     <bean id="tokenApiService" class="com.yonghui.portal.service.impl.TokenApiServiceImpl"/>
-    <dubbo:service interface="com.yonghui.portal.service.TokenApiService" ref="tokenApiService" timeout="300000"/>
+    <dubbo:service interface="com.yonghui.portal.service.TokenApiService" ref="tokenApiService" timeout="600000"/>
 
     <!-- 用户菜单数据-->
     <bean id="userAuthMenuService" class="com.yonghui.portal.service.impl.sys.UserAuthMenuServiceImpl"/>
     <dubbo:service interface="com.yonghui.portal.service.sys.UserAuthMenuService" ref="userAuthMenuService"
-                   timeout="300000"/>
+                   timeout="600000"/>
 
     <!-- 用户权限数据R_M mapping-->
     <bean id="userAuthRoleMenuService" class="com.yonghui.portal.service.impl.sys.UserAuthRoleMenuServiceImpl"/>
     <dubbo:service interface="com.yonghui.portal.service.sys.UserAuthRoleMenuService" ref="userAuthRoleMenuService"
-                   timeout="300000"/>
+                   timeout="600000"/>
 
     <!-- 用户角色数据-->
     <bean id="roleService" class="com.yonghui.portal.service.impl.global.RoleServiceImpl"/>
-    <dubbo:service interface="com.yonghui.portal.service.global.RoleService" ref="roleService" timeout="300000"/>
+    <dubbo:service interface="com.yonghui.portal.service.global.RoleService" ref="roleService" timeout="600000"/>
 
     <!-- 天天赛马 -->
     <bean id="everyDayHorseRacingService" class="com.yonghui.portal.service.impl.horse.EveryDayHorseRacingServiceImpl"/>
     <dubbo:service interface="com.yonghui.portal.service.horse.EveryDayHorseRacingService"
                    ref="everyDayHorseRacingService"
-                   timeout="300000"/>
+                   timeout="600000"/>
 
     <!-- 赛马数据导入 -->
     <bean id="horseImportExcelService" class="com.yonghui.portal.service.impl.horse.HorseImportExcelServiceImpl"/>
     <dubbo:service interface="com.yonghui.portal.service.horse.HorseImportExcelService" ref="horseImportExcelService"
-                   timeout="300000"/>
+                   timeout="600000"/>
 
     <bean id="horseStoreWarningService" class="com.yonghui.portal.service.impl.horse.HorseStoreWarningServiceImpl"/>
     <dubbo:service interface="com.yonghui.portal.service.horse.HorseStoreWarningService" ref="horseStoreWarningService"
-                   timeout="300000"/>
+                   timeout="600000"/>
 
     <!-- 数据统一口径 -->
     <bean id="dataMapIndexApertureService"
           class="com.yonghui.portal.service.impl.horse.DataMapIndexApertureServiceImpl"/>
     <dubbo:service interface="com.yonghui.portal.service.horse.DataMapIndexApertureService"
                    ref="dataMapIndexApertureService"
-                   timeout="300000"/>
+                   timeout="600000"/>
 
     <!-- 用户日志操作 -->
     <bean id="sysoperationLogService" class="com.yonghui.portal.service.impl.sys.SysoperationLogServiceImpl"/>
     <dubbo:service interface="com.yonghui.portal.service.sys.SysoperationLogService" ref="sysoperationLogService"
-                   timeout="300000"/>
+                   timeout="600000"/>
 
     <!-- 前端TABLE   api -->
     <bean id="tableDataService" class="com.yonghui.portal.service.impl.table.TableDataServiceImpl"/>
     <dubbo:service interface="com.yonghui.portal.service.table.TableDataService" ref="tableDataService"
-                   timeout="300000"/>
+                   timeout="600000"/>
 
 
     <!-- 生鲜商行报表  -->
     <bean id="freshReportsService" class="com.yonghui.portal.service.impl.fresh.FreshReportsServiceImpl"/>
     <dubbo:service interface="com.yonghui.portal.service.fresh.FreshReportsService" ref="freshReportsService"
-                   timeout="300000"/>
+                   timeout="600000"/>
 
     <!-- 赛马门店解读  -->
     <bean id="horseMonthlyAnalysisService"
           class="com.yonghui.portal.service.impl.horse.HorseMonthlyAnalysisServiceImpl"/>
     <dubbo:service interface="com.yonghui.portal.service.horse.HorseMonthlyAnalysisService"
-                   ref="horseMonthlyAnalysisService" timeout="300000"/>
+                   ref="horseMonthlyAnalysisService" timeout="600000"/>
 
 
     <!-- 日销售概况图表  -->
     <bean id="salesAnalysisService" class="com.yonghui.portal.service.impl.sales.SalesAnalysisServiceImpl"/>
     <dubbo:service interface="com.yonghui.portal.service.sales.SalesAnalysisService" ref="salesAnalysisService"
-                   timeout="300000"/>
+                   timeout="600000"/>
 
 </beans>

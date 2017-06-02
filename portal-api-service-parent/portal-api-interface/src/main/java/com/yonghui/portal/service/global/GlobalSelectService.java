@@ -1,38 +1,13 @@
 package com.yonghui.portal.service.global;
 
-import com.yonghui.portal.model.global.Menu;
-import com.yonghui.portal.model.global.RoleMenu;
-
 import java.util.List;
 import java.util.Map;
 
 /**
- * Created by xrr on 2017/5/8.
+ * Created by xrr on 2017/6/2.
+ * 公共下拉框查询接口
  */
-public interface MenuService {
-
-    //获取角色对应的菜单id
-    RoleMenu getUserRoleId(Integer roleId) throws Exception;
-
-    List<Menu> listMenu() throws Exception;
-
-    List<Menu> listRoleMenu(List<Integer> list) throws Exception;
-
-    Menu queryObject(Integer id);
-
-    List<Menu> queryList(Map<String, Object> map);
-
-    List<Menu> queryUserList(Long userId);
-
-    int queryTotal(Map<String, Object> map);
-
-    void save(Menu menu);
-
-    void update(Menu menu);
-
-    void delete(Integer id);
-
-    void deleteBatch(Integer[] ids);
+public interface GlobalSelectService {
 
     List<Map<String, Object>> getNewAreaMansList();
 
@@ -58,4 +33,5 @@ public interface MenuService {
     List<Map<String, Object>> broveStoreLittleIdListByFinance(List<Integer> list);
 
     List<Map<String, Object>> secondClusterList(String district, String province, String areaName);
+
 }

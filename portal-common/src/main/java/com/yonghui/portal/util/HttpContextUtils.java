@@ -36,4 +36,27 @@ public class HttpContextUtils {
         return str.substring(0, str.length() - 2);
     }
 
+    /**
+     * 记录日志用，获取请求里面的全部参数
+     * @param request
+     * @return
+     */
+    public static String getParameterForLog(HttpServletRequest request) {
+        Map params = request.getParameterMap();
+        Iterator it = params.keySet().iterator();
+        StringBuffer sb = new StringBuffer();
+        while (it.hasNext()) {
+            String paramName = (String) it.next();
+            String paramValue = request.getParameter(paramName);
+            //处理得到的参数名与值
+                sb.append(paramName + "=" + paramValue + "@@");
+        }
+
+        String str = sb.toString();
+        if (StringUtils.isEmpty(str)) {
+            return null;
+        }
+        return str.substring(0, str.length() - 2);
+    }
+
 }
