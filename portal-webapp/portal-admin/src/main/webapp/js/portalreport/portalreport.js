@@ -13,14 +13,16 @@ $(function () {
                 index: 'execute_code',
                 width: 80
             },
-            {label: '执行类型', name: 'execute_type', index: 'execute_type', width: 80,formatter:function(type){
-                if(type==1){
+            {
+                label: '执行类型', name: 'execute_type', index: 'execute_type', width: 80, formatter: function (type) {
+                if (type == 1) {
                     return '<span class="label label-success">存储</span>';
-                }else if(type==2){
+                } else if (type == 2) {
                     return '<span class="label label-success">sql</span>';
                 }
-            }},
-            {label: '创建人', name: 'username', index: 'username', width: 80 },
+            }
+            },
+            {label: '创建人', name: 'username', index: 'username', width: 80},
             {label: '创建时间', name: 'create_time', index: 'create_time', width: 80},
         ],
         viewrecords: true,     // 是否显示行号，默认值是false，不显示
@@ -50,8 +52,33 @@ $(function () {
             $("#jqGrid").jqGrid('setGridHeight', getWinH());
         }
     });
+
+    $("#dialog-form").dialog({
+        autoOpen: false,
+        height: 500,
+        width: 550,
+        modal: true,
+        buttons: {
+            "确定": function () {
+                $(this).dialog("close");
+            },
+            "取消": function () {
+                $(this).dialog("close");
+            }
+        },
+        close: function () {
+        }
+    });
 });
 
+// 显示字段属性框
+function showialogForm(event) {
+    $("#dialog-form").dialog("open");
+    $(".validateTips").html("报表标题字段<br>至少选择一项");
+    vm.getCindexAperture();
+    vm.getReportDimIndex();
+    vm.getCindexRefer();
+}
 
 var vm = new Vue({
     el: '#rrapp',
@@ -87,7 +114,9 @@ var vm = new Vue({
             vm.showList = false;
             vm.title = "修改";
             vm.getInfo(code);
-            $("input[name='code']").attr("readonly","readonly");
+            $("input[name='code']").attr("readonly", "readonly");
+            /*// 根据单元格选中值默认选中
+             vm.bindIcon(vm.portalReport.xxxx);*/
         },
         saveOrUpdate: function () {
             var code = vm.portalReport.code;
@@ -222,6 +251,42 @@ var vm = new Vue({
                     $("#onlycode").append(vm.selectOption);
                 }
             });
+        },
+        getCindexAperture: function () {
+            $("#cIndexAperture").empty();
+            $.get("../cindexaperture/listOpt/", function (r) {
+                for (var i = 0; i < r.data.length; i++) {
+                    vm.selectOption = "<option value='" + r.data[i].fieldname + "' style='text-align: left;padding-right: 20px' >" + r.data[i].fieldname + "|" + r.data[i].indexname + "</option>";
+                    $("#cIndexAperture").append(vm.selectOption);
+                }
+            });
+        },
+        getReportDimIndex: function () {
+            $("#reportDimIndex").empty();
+            $.get("../reportdimindex/listOpt/", function (r) {
+                for (var i = 0; i < r.data.length; i++) {
+                    vm.selectOption = "<option value='" + r.data[i].dimlab + "' style='text-align: left;padding-right: 20px' >" + r.data[i].dimlab + "|" + r.data[i].dimname + "</option>";
+                    $("#reportDimIndex").append(vm.selectOption);
+                }
+            });
+        },
+        getCindexRefer: function () {
+            $("#cIndexRefer").empty();
+            $.get("../cindexrefer/listOpt/", function (r) {
+                for (var i = 0; i < r.data.length; i++) {
+                    vm.selectOption = "<option value='" + r.data[i].referchar + "' style='text-align: left;padding-right: 20px' >" + r.data[i].referchar + "|" + r.data[i].def + "</option>";
+                    $("#cIndexRefer").append(vm.selectOption);
+                }
+            });
+        },
+        bindCindexAperture: function (cIndexAperture) {
+            $('#cIndexAperture').selectpicker('val', icon);
+        },
+        bindReportDimIndex: function (icon) {
+            $('#reportDimIndex').selectpicker('val', reportDimIndex);
+        },
+        bindCindexRefer: function (icon) {
+            $('#cIndexRefer').selectpicker('val', cIndexRefer);
         }
 
     }
