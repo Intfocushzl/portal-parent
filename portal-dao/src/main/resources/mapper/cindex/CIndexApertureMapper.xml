@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.yonghui.portal.mapper.cindex.CIndexApertureMapper">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap id="cIndexApertureMap" type="com.yonghui.portal.model.cindex.CIndexAperture">
+        <result property="id" column="id"/>
+        <result property="fprocess" column="fprocess"/>
+        <result property="sprocess" column="sprocess"/>
+        <result property="theme" column="theme"/>
+        <result property="fieldname" column="fieldname"/>
+        <result property="indexname" column="indexname"/>
+        <result property="fristdef" column="fristdef"/>
+        <result property="bravodef" column="bravodef"/>
+        <result property="otherdef" column="otherdef"/>
+        <result property="measure" column="measure"/>
+        <result property="ds" column="ds"/>
+        <result property="tablename" column="tablename"/>
+        <result property="cman" column="cman"/>
+        <result property="cmanphone" column="cmanphone"/>
+        <result property="cmanemail" column="cmanemail"/>
+        <result property="platform" column="platform"/>
+        <result property="connectioninfo" column="connectioninfo"/>
+        <result property="database" column="database"/>
+        <result property="sql" column="sql"/>
+        <result property="createdBy" column="created_by"/>
+        <result property="cindexname" column="cindexname"/>
+        <result property="ctablename" column="ctablename"/>
+        <result property="bloodrelation" column="bloodrelation"/>
+    </resultMap>
+
+	<select id="queryObject" resultType="com.yonghui.portal.model.cindex.CIndexAperture">
+		select * from c_index_aperture where id = #{value}
+	</select>
+
+	<select id="queryList" resultType="com.yonghui.portal.model.cindex.CIndexAperture">
+		select * from c_index_aperture
+        <where>
+            <if test="id != null and id !=''">
+                and id like concat('%',#{id},'%')
+            </if>
+            <if test="remark != null and remark !=''">
+                and remark like concat('%',#{remark},'%')
+            </if>
+        </where>
+        <choose>
+            <when test="sidx != null and sidx.trim() != ''">
+                order by ${sidx} ${order}
+            </when>
+			<otherwise>
+                order by id desc
+			</otherwise>
+        </choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+
+	<select id="queryListOpt" resultType="com.yonghui.portal.model.cindex.CIndexAperture">
+		select * from c_index_aperture
+	</select>
+	
+ 	<select id="queryTotal" resultType="int">
+		select count(*) from c_index_aperture
+        <where>
+            <if test="id != null and id !=''">
+                and id = #{id}
+            </if>
+            <if test="remark != null and remark !=''">
+                and remark like concat('%',#{remark},'%')
+            </if>
+        </where>
+	</select>
+
+    <insert id="save" parameterType="com.yonghui.portal.model.cindex.CIndexAperture" useGeneratedKeys="true" keyProperty="id">
+		insert into c_index_aperture
+		(
+			`fprocess`, 
+			`sprocess`, 
+			`theme`, 
+			`fieldname`, 
+			`indexname`, 
+			`fristdef`, 
+			`bravodef`, 
+			`otherdef`, 
+			`measure`, 
+			`ds`, 
+			`tablename`, 
+			`cman`, 
+			`cmanphone`, 
+			`cmanemail`, 
+			`platform`, 
+			`connectioninfo`, 
+			`database`, 
+			`sql`, 
+			`created_by`, 
+			`cindexname`, 
+			`ctablename`, 
+			`bloodrelation`
+		)
+		values
+		(
+			#{fprocess}, 
+			#{sprocess}, 
+			#{theme}, 
+			#{fieldname}, 
+			#{indexname}, 
+			#{fristdef}, 
+			#{bravodef}, 
+			#{otherdef}, 
+			#{measure}, 
+			#{ds}, 
+			#{tablename}, 
+			#{cman}, 
+			#{cmanphone}, 
+			#{cmanemail}, 
+			#{platform}, 
+			#{connectioninfo}, 
+			#{database}, 
+			#{sql}, 
+			#{createdBy}, 
+			#{cindexname}, 
+			#{ctablename}, 
+			#{bloodrelation}
+		)
+	</insert>
+
+    <update id="update" parameterType="com.yonghui.portal.model.cindex.CIndexAperture">
+        update c_index_aperture
+        <set>
+			<if test="fprocess != null">`fprocess` = #{fprocess}, </if>
+			<if test="sprocess != null">`sprocess` = #{sprocess}, </if>
+			<if test="theme != null">`theme` = #{theme}, </if>
+			<if test="fieldname != null">`fieldname` = #{fieldname}, </if>
+			<if test="indexname != null">`indexname` = #{indexname}, </if>
+			<if test="fristdef != null">`fristdef` = #{fristdef}, </if>
+			<if test="bravodef != null">`bravodef` = #{bravodef}, </if>
+			<if test="otherdef != null">`otherdef` = #{otherdef}, </if>
+			<if test="measure != null">`measure` = #{measure}, </if>
+			<if test="ds != null">`ds` = #{ds}, </if>
+			<if test="tablename != null">`tablename` = #{tablename}, </if>
+			<if test="cman != null">`cman` = #{cman}, </if>
+			<if test="cmanphone != null">`cmanphone` = #{cmanphone}, </if>
+			<if test="cmanemail != null">`cmanemail` = #{cmanemail}, </if>
+			<if test="platform != null">`platform` = #{platform}, </if>
+			<if test="connectioninfo != null">`connectioninfo` = #{connectioninfo}, </if>
+			<if test="database != null">`database` = #{database}, </if>
+			<if test="sql != null">`sql` = #{sql}, </if>
+			<if test="createdBy != null">`created_by` = #{createdBy}, </if>
+			<if test="cindexname != null">`cindexname` = #{cindexname}, </if>
+			<if test="ctablename != null">`ctablename` = #{ctablename}, </if>
+			<if test="bloodrelation != null">`bloodrelation` = #{bloodrelation}</if>
+        </set>
+        where id = #{id}
+    </update>
+	
+	<delete id="delete">
+		delete from c_index_aperture where id = #{value}
+	</delete>
+	
+	<delete id="deleteBatch">
+		delete from c_index_aperture where id in 
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+</mapper>

@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.yonghui.portal.mapper.cindex.CIndexReferMapper">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap id="cIndexReferMap" type="com.yonghui.portal.model.cindex.CIndexRefer">
+        <result property="id" column="id"/>
+        <result property="refername" column="refername"/>
+        <result property="referchar" column="referchar"/>
+        <result property="def" column="def"/>
+        <result property="updatetime" column="updatetime"/>
+    </resultMap>
+
+	<select id="queryObject" resultType="com.yonghui.portal.model.cindex.CIndexRefer">
+		select * from c_index_refer where id = #{value}
+	</select>
+
+	<select id="queryList" resultType="com.yonghui.portal.model.cindex.CIndexRefer">
+		select * from c_index_refer
+        <where>
+            <if test="id != null and id !=''">
+                and id like concat('%',#{id},'%')
+            </if>
+            <if test="remark != null and remark !=''">
+                and remark like concat('%',#{remark},'%')
+            </if>
+        </where>
+        <choose>
+            <when test="sidx != null and sidx.trim() != ''">
+                order by ${sidx} ${order}
+            </when>
+			<otherwise>
+                order by id desc
+			</otherwise>
+        </choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+
+	<select id="queryListOpt" resultType="com.yonghui.portal.model.cindex.CIndexRefer">
+		select * from c_index_refer
+	</select>
+	
+ 	<select id="queryTotal" resultType="int">
+		select count(*) from c_index_refer
+        <where>
+            <if test="id != null and id !=''">
+                and id = #{id}
+            </if>
+            <if test="remark != null and remark !=''">
+                and remark like concat('%',#{remark},'%')
+            </if>
+        </where>
+	</select>
+
+    <insert id="save" parameterType="com.yonghui.portal.model.cindex.CIndexRefer" useGeneratedKeys="true" keyProperty="id">
+		insert into c_index_refer
+		(
+			`refername`, 
+			`referchar`, 
+			`def`, 
+			`updatetime`
+		)
+		values
+		(
+			#{refername}, 
+			#{referchar}, 
+			#{def}, 
+			#{updatetime}
+		)
+	</insert>
+
+    <update id="update" parameterType="com.yonghui.portal.model.cindex.CIndexRefer">
+        update c_index_refer
+        <set>
+			<if test="refername != null">`refername` = #{refername}, </if>
+			<if test="referchar != null">`referchar` = #{referchar}, </if>
+			<if test="def != null">`def` = #{def}, </if>
+			<if test="updatetime != null">`updatetime` = #{updatetime}</if>
+        </set>
+        where id = #{id}
+    </update>
+	
+	<delete id="delete">
+		delete from c_index_refer where id = #{value}
+	</delete>
+	
+	<delete id="deleteBatch">
+		delete from c_index_refer where id in 
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+</mapper>
