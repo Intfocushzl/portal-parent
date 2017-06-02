@@ -2,83 +2,83 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.yonghui.portal.mapper.global.UserMapper">
 
-	<!-- 可根据自己的需求，是否要使用 -->
-	<resultMap id="BaseResultMap" type="com.yonghui.portal.model.global.User">
-		<id column="id" property="id" jdbcType="INTEGER" />
-		<result column="account" property="account" jdbcType="VARCHAR" />
-		<result column="name" property="name" jdbcType="VARCHAR" />
-		<result column="email" property="email" jdbcType="VARCHAR" />
-		<result column="mobile" property="mobile" jdbcType="VARCHAR" />
-		<result column="roleId" property="roleId" jdbcType="INTEGER" />
-		<result column="groupId" property="groupId" jdbcType="INTEGER" />
-		<result column="jobNumber" property="jobNumber" jdbcType="VARCHAR" />
-		<result column="storeNumber" property="storeNumber" jdbcType="VARCHAR" />
-		<result column="createTime" property="createTime" jdbcType="TIMESTAMP" />
-		<result column="status" property="status" jdbcType="INTEGER" />
-		<result column="type" property="type" jdbcType="INTEGER" />
-		<result column="firm" property="firm" jdbcType="VARCHAR" />
-		<result column="largeArea" property="largeArea" jdbcType="VARCHAR" />
-		<result column="province" property="province" jdbcType="VARCHAR" />
-		<result column="city" property="city" jdbcType="VARCHAR" />
-		<result column="roleName" property="roleName" jdbcType="VARCHAR" />
-		<result column="roleType" property="roleType" jdbcType="INTEGER" />
-		<result column="changeRoleId" property="changeRoleId" jdbcType="INTEGER" />
-		<result column="changeType" property="changeType" jdbcType="INTEGER" />
-		<result column="changeLargeArea" property="changeLargeArea" jdbcType="VARCHAR" />
-		<result column="changeProvince" property="changeProvince" jdbcType="VARCHAR" />
-		<result column="changeCity" property="changeCity" jdbcType="VARCHAR" />
-		<result column="changeFirm" property="changeFirm" jdbcType="VARCHAR" />
-		<result column="changeStatus" property="changeStatus" jdbcType="INTEGER" />
-		<result column="changeRoleName" property="changeRoleName" jdbcType="VARCHAR" />
-		<result column="remark" property="remark" jdbcType="VARCHAR" />
-		<result column="changeTime" property="changeTime" jdbcType="TIMESTAMP" />
-        <result column="rold" property="rold" jdbcType="VARCHAR" />
-        <result column="areaMans" property="areaMans" jdbcType="TIMESTAMP" />
-        <result column="changeAreaMans" property="changeAreaMans" jdbcType="VARCHAR" />
-	</resultMap>
-	<sql id="Base_Column_List">
+    <!-- 可根据自己的需求，是否要使用 -->
+    <resultMap id="BaseResultMap" type="com.yonghui.portal.model.global.User">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="account" property="account" jdbcType="VARCHAR"/>
+        <result column="name" property="name" jdbcType="VARCHAR"/>
+        <result column="email" property="email" jdbcType="VARCHAR"/>
+        <result column="mobile" property="mobile" jdbcType="VARCHAR"/>
+        <result column="roleId" property="roleId" jdbcType="INTEGER"/>
+        <result column="groupId" property="groupId" jdbcType="INTEGER"/>
+        <result column="jobNumber" property="jobNumber" jdbcType="VARCHAR"/>
+        <result column="storeNumber" property="storeNumber" jdbcType="VARCHAR"/>
+        <result column="createTime" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="status" property="status" jdbcType="INTEGER"/>
+        <result column="type" property="type" jdbcType="INTEGER"/>
+        <result column="firm" property="firm" jdbcType="VARCHAR"/>
+        <result column="largeArea" property="largeArea" jdbcType="VARCHAR"/>
+        <result column="province" property="province" jdbcType="VARCHAR"/>
+        <result column="city" property="city" jdbcType="VARCHAR"/>
+        <result column="roleName" property="roleName" jdbcType="VARCHAR"/>
+        <result column="roleType" property="roleType" jdbcType="INTEGER"/>
+        <result column="changeRoleId" property="changeRoleId" jdbcType="INTEGER"/>
+        <result column="changeType" property="changeType" jdbcType="INTEGER"/>
+        <result column="changeLargeArea" property="changeLargeArea" jdbcType="VARCHAR"/>
+        <result column="changeProvince" property="changeProvince" jdbcType="VARCHAR"/>
+        <result column="changeCity" property="changeCity" jdbcType="VARCHAR"/>
+        <result column="changeFirm" property="changeFirm" jdbcType="VARCHAR"/>
+        <result column="changeStatus" property="changeStatus" jdbcType="INTEGER"/>
+        <result column="changeRoleName" property="changeRoleName" jdbcType="VARCHAR"/>
+        <result column="remark" property="remark" jdbcType="VARCHAR"/>
+        <result column="changeTime" property="changeTime" jdbcType="TIMESTAMP"/>
+        <result column="rold" property="rold" jdbcType="VARCHAR"/>
+        <result column="areaMans" property="areaMans" jdbcType="TIMESTAMP"/>
+        <result column="changeAreaMans" property="changeAreaMans" jdbcType="VARCHAR"/>
+    </resultMap>
+    <sql id="Base_Column_List">
 		id, account, `name`,email, roleId, pass, jobNumber, storeNumber,
 		createTime,status,type,firm,largeArea,province,city,changeRoleId, changeType, changeLargeArea,
     changeProvince, changeCity, changeFirm, changeStatus,changeStoreNumber,remark,changeTime,rold,areaMans,changeAreaMans
 	</sql>
 
-	<sql id="Login_Column_List">
+    <sql id="Login_Column_List">
 		id, account, `name`, roleId, jobNumber, storeNumber, createTime,type,firm,largeArea,province,city,remark
 	</sql>
 
 
-	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
-		parameterType="java.lang.Integer">
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap"
+            parameterType="java.lang.Integer">
 
-		select
-		u.*,r.name as roleName,r.type as roleType
-		from  platform.user_forfront as u join platform.role_forfont as r on r.id=u.roleId  and u.status=1
-		where u.id = #{id,jdbcType=INTEGER}
-	<!-- 	select
-		<include refid="Base_Column_List" />
-		from  platform.user_forfront
-		where id = #{id,jdbcType=INTEGER}  -->
-	</select>
-	<select id="getUserByJobNumber" resultMap="BaseResultMap">
-		select
-		<include refid="Base_Column_List" />
-		from  platform.user_forfront
-		where jobNumber = #{jobNumber}
-	</select>
+        select
+        u.*,r.name as roleName,r.type as roleType
+        from platform.user_forfront as u join platform.role_forfont as r on r.id=u.roleId and u.status=1
+        where u.id = #{id,jdbcType=INTEGER}
+        <!-- 	select
+            <include refid="Base_Column_List" />
+            from  platform.user_forfront
+            where id = #{id,jdbcType=INTEGER}  -->
+    </select>
+    <select id="getUserByJobNumber" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from platform.user_forfront
+        where jobNumber = #{jobNumber}
+    </select>
 
 
-	<select id="getUserById" resultType="com.yonghui.portal.model.global.User">
+    <select id="getUserById" resultType="com.yonghui.portal.model.global.User">
 		select
 		*
 		from  platform.user_forfront
 		where id = #{id,jdbcType=INTEGER}
 	</select>
 
-	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
 		delete from  platform.user_forfront
 		where id = #{id,jdbcType=INTEGER}
 	</delete>
-	<insert id="insert" parameterType="com.yonghui.portal.model.global.User">
+    <insert id="insert" parameterType="com.yonghui.portal.model.global.User">
 		insert into platform.user_forfront (id, account, `name`,
 		roleId, pass, jobNumber,
 		storeNumber, createTime)
@@ -87,183 +87,184 @@
 		#{roleId,jdbcType=INTEGER}, #{pass,jdbcType=VARCHAR}, #{jobNumber,jdbcType=VARCHAR},
 		#{storeNumber,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP})
 	</insert>
-	<insert id="insertSelective" parameterType="com.yonghui.portal.model.global.User">
-		insert into platform.user_forfront
-		<trim prefix="(" suffix=")" suffixOverrides=",">
-			<if test="id != null">
-				id,
-			</if>
-			<if test="account != null">
-				account,
-			</if>
-			<if test="name != null">
+    <insert id="insertSelective" parameterType="com.yonghui.portal.model.global.User">
+        insert into platform.user_forfront
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="account != null">
+                account,
+            </if>
+            <if test="name != null">
                 `name`,
-			</if>
-			<if test="roleId != null">
-				roleId,
-			</if>
-			<if test="pass != null">
-				pass,
-			</if>
-			<if test="jobNumber != null">
-				jobNumber,
-			</if>
-			<if test="storeNumber != null">
-				storeNumber,
-			</if>
-			<if test="createTime != null">
-				createTime,
-			</if>
-			<if test="status != null">
-				status,
-			</if>
-			<if test="type != null">
+            </if>
+            <if test="roleId != null">
+                roleId,
+            </if>
+            <if test="pass != null">
+                pass,
+            </if>
+            <if test="jobNumber != null">
+                jobNumber,
+            </if>
+            <if test="storeNumber != null">
+                storeNumber,
+            </if>
+            <if test="status != null">
+                status,
+            </if>
+            <if test="type != null">
                 `type`,
-			</if>
-			<if test="firm != null">
-				firm,
-			</if>
-			<if test="largeArea != null">
-				largeArea,
-			</if>
-			<if test="province != null">
-				province,
-			</if>
-			<if test="city != null">
-				city,
-			</if>
-			<if test="remark != null">
-				remark,
-			</if>
+            </if>
+            <if test="firm != null">
+                firm,
+            </if>
+            <if test="largeArea != null">
+                largeArea,
+            </if>
+            <if test="areaMans != null">
+                areaMans,
+            </if>
+            <if test="province != null">
+                province,
+            </if>
+            <if test="city != null">
+                city,
+            </if>
+            <if test="remark != null">
+                remark,
+            </if>
+            createTime
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=INTEGER},
+            </if>
+            <if test="account != null">
+                #{account,jdbcType=VARCHAR},
+            </if>
+            <if test="name != null">
+                #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="roleId != null">
+                #{roleId,jdbcType=INTEGER},
+            </if>
+            <if test="pass != null">
+                #{pass,jdbcType=VARCHAR},
+            </if>
+            <if test="jobNumber != null">
+                #{jobNumber,jdbcType=VARCHAR},
+            </if>
+            <if test="storeNumber != null">
+                #{storeNumber,jdbcType=VARCHAR},
+            </if>
+            <if test="status != null">
+                #{status,jdbcType=INTEGER},
+            </if>
+            <if test="type != null">
+                #{type},
+            </if>
+            <if test="firm != null">
+                #{firm},
+            </if>
+            <if test="largeArea != null">
+                #{largeArea},
+            </if>
+            <if test="areaMans != null">
+                #{areaMans},
+            </if>
+            <if test="province != null">
+                #{province},
+            </if>
+            <if test="city != null">
+                #{city},
+            </if>
+            <if test="remark != null">
+                #{remark},
+            </if>
+            now()
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.yonghui.portal.model.global.User">
+        update platform.user_forfront
+        <set>
+            <!-- <if test="account != null">
+                account = #{account,jdbcType=VARCHAR},
+            </if> -->
 
-		</trim>
-		<trim prefix="values (" suffix=")" suffixOverrides=",">
-			<if test="id != null">
-				#{id,jdbcType=INTEGER},
-			</if>
-			<if test="account != null">
-				#{account,jdbcType=VARCHAR},
-			</if>
-			<if test="name != null">
-				#{name,jdbcType=VARCHAR},
-			</if>
-			<if test="roleId != null">
-				#{roleId,jdbcType=INTEGER},
-			</if>
-			<if test="pass != null">
-				#{pass,jdbcType=VARCHAR},
-			</if>
-			<if test="jobNumber != null">
-				#{jobNumber,jdbcType=VARCHAR},
-			</if>
-			<if test="storeNumber != null">
-				#{storeNumber,jdbcType=VARCHAR},
-			</if>
-			<if test="createTime != null">
-				#{createTime,jdbcType=TIMESTAMP},
-			</if>
-			<if test="status != null">
-				#{status,jdbcType=INTEGER},
-			</if>
-			<if test="type != null">
-				#{type},
-			</if>
-			<if test="firm != null">
-				#{firm},
-			</if>
-			<if test="largeArea != null">
-				#{largeArea},
-			</if>
-			<if test="province != null">
-				#{province},
-			</if>
-			<if test="city != null">
-				#{city},
-			</if>
-			<if test="remark != null">
-				#{remark},
-			</if>
-		</trim>
-	</insert>
-	<update id="updateByPrimaryKeySelective" parameterType="com.yonghui.portal.model.global.User">
-		update platform.user_forfront
-		<set>
-			<!-- <if test="account != null">
-				account = #{account,jdbcType=VARCHAR},
-			</if> -->
 
-
-			<if test="email != null">
-				email = #{email,jdbcType=VARCHAR},
-			</if>
-			<if test="name != null">
+            <if test="email != null">
+                email = #{email,jdbcType=VARCHAR},
+            </if>
+            <if test="name != null">
                 `name` = #{name,jdbcType=VARCHAR},
-			</if>
-			<if test="roleId != null">
-				roleId = #{roleId,jdbcType=INTEGER},
-			</if>
-			<if test="pass != null">
-				pass = #{pass,jdbcType=VARCHAR},
-			</if>
-			<!-- <if test="jobNumber != null">
-				jobNumber = #{jobNumber,jdbcType=VARCHAR},
-			</if> -->
-			<if test="type != null">
+            </if>
+            <if test="roleId != null">
+                roleId = #{roleId,jdbcType=INTEGER},
+            </if>
+            <if test="pass != null">
+                pass = #{pass,jdbcType=VARCHAR},
+            </if>
+            <!-- <if test="jobNumber != null">
+                jobNumber = #{jobNumber,jdbcType=VARCHAR},
+            </if> -->
+            <if test="type != null">
                 `type`=#{type},
-			</if>
-			<if test="storeNumber != null">
-				storeNumber = #{storeNumber,jdbcType=VARCHAR},
-			</if>
-			<if test="createTime != null">
-				createTime = #{createTime,jdbcType=TIMESTAMP},
-			</if>
-			<if test="status != null">
-				status = #{status,jdbcType=INTEGER},
-			</if>
-			<if test="largeArea != null">
-				largeArea=#{largeArea},
-			</if>
-			<if test="province != null">
-				province=#{province},
-			</if>
-			<if test="city != null">
-				city=#{city},
-			</if>
-			<if test="firm != null">
-				firm=#{firm},
-			</if>
-			<if test="changeRoleId != null">
-				changeRoleId = #{changeRoleId,jdbcType=INTEGER},
-			</if>
-			 <if test="changeType != null" >
-		        changeType = #{changeType,jdbcType=INTEGER},
-		      </if>
-		      <if test="changeLargeArea != null" >
-		        changeLargeArea = #{changeLargeArea,jdbcType=VARCHAR},
-		      </if>
-		      <if test="changeProvince != null" >
-		        changeProvince = #{changeProvince,jdbcType=VARCHAR},
-		      </if>
-		      <if test="changeCity != null" >
-		        changeCity = #{changeCity,jdbcType=VARCHAR},
-		      </if>
-		      <if test="changeFirm != null" >
-		        changeFirm = #{changeFirm,jdbcType=VARCHAR},
-		      </if>
-		      <if test="changeStatus != null" >
-		        changeStatus = #{changeStatus,jdbcType=INTEGER},
-		      </if>
-		      <if test="changeStoreNumber != null" >
-		        changeStoreNumber = #{changeStoreNumber,jdbcType=VARCHAR},
-		      </if>
-		      <if test="remark != null">
-				remark=#{remark},
-			</if>
-			changeTime=now(),
-		</set>
-		where id = #{id,jdbcType=INTEGER}
-	</update>
-	<update id="updateByPrimaryKey" parameterType="com.yonghui.portal.model.global.User">
+            </if>
+            <if test="storeNumber != null">
+                storeNumber = #{storeNumber,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null">
+                createTime = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="status != null">
+                status = #{status,jdbcType=INTEGER},
+            </if>
+            <if test="largeArea != null">
+                largeArea=#{largeArea},
+            </if>
+            <if test="province != null">
+                province=#{province},
+            </if>
+            <if test="city != null">
+                city=#{city},
+            </if>
+            <if test="firm != null">
+                firm=#{firm},
+            </if>
+            <if test="changeRoleId != null">
+                changeRoleId = #{changeRoleId,jdbcType=INTEGER},
+            </if>
+            <if test="changeType != null">
+                changeType = #{changeType,jdbcType=INTEGER},
+            </if>
+            <if test="changeLargeArea != null">
+                changeLargeArea = #{changeLargeArea,jdbcType=VARCHAR},
+            </if>
+            <if test="changeProvince != null">
+                changeProvince = #{changeProvince,jdbcType=VARCHAR},
+            </if>
+            <if test="changeCity != null">
+                changeCity = #{changeCity,jdbcType=VARCHAR},
+            </if>
+            <if test="changeFirm != null">
+                changeFirm = #{changeFirm,jdbcType=VARCHAR},
+            </if>
+            <if test="changeStatus != null">
+                changeStatus = #{changeStatus,jdbcType=INTEGER},
+            </if>
+            <if test="changeStoreNumber != null">
+                changeStoreNumber = #{changeStoreNumber,jdbcType=VARCHAR},
+            </if>
+            <if test="remark != null">
+                remark=#{remark},
+            </if>
+            changeTime=now(),
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.yonghui.portal.model.global.User">
 		update platform.user_forfront
 		set account = #{account,jdbcType=VARCHAR},
 		`name` = #{name,jdbcType=VARCHAR},
@@ -275,70 +276,72 @@
 		where id = #{id,jdbcType=INTEGER}
 	</update>
 
-	<select id="Login" resultMap="BaseResultMap">
-	select
-		u.*,r.name as roleName,r.type as roleType
-		from  platform.user_forfront as u join platform.role_forfront as r on r.roleId=u.roleId
-		 and u.jobNumber=#{jobNumber} and u.pass=#{pass}
-		<!-- select
-		<include refid="Login_Column_List" />
-		from  platform.user_forfront where jobNumber=#{jobNumber} and pass=#{pass} and status=1 -->
-	</select>
+    <select id="Login" resultMap="BaseResultMap">
+        select
+        u.*,r.name as roleName,r.type as roleType
+        from platform.user_forfront as u join platform.role_forfront as r on r.roleId=u.roleId
+        and u.jobNumber=#{jobNumber} and u.pass=#{pass}
+        <!-- select
+        <include refid="Login_Column_List" />
+        from  platform.user_forfront where jobNumber=#{jobNumber} and pass=#{pass} and status=1 -->
+    </select>
 
 
-	<select id="userManageList" parameterType="java.util.Map" resultMap="BaseResultMap">
-		select
-		u.*,r.name as roleName,r.type as roleType
-		from  platform.user_forfront as u join platform.role_forfont as r on r.roleId=u.roleId
-		where 1=1
-		<if test=" status != null  and status != 9 ">
-			 and (u.status=  #{status})
-		</if>
-		<if test=" userType != null  ">
-			 and (u.`type`=  #{userType})
-		</if>
-		<if test="keyWork != null and keyWork != ''">
-			 and (u.account=#{keyWork} or	u.jobNumber=#{keyWork})
-		</if>
-		<if test="roleId != null and roleId != ''">
-			 and (r.ownerType in ( select ownerType from platform.role_forfont where roleId =  #{roleId,jdbcType =INTEGER}))
-		</if>
-		<if test="ownerType != null and ownerType != ''">
-			 and (r.ownerType=#{ownerType, jdbcType = INTEGER})
-		</if>
+    <select id="userManageList" parameterType="java.util.Map" resultMap="BaseResultMap">
+        select
+        u.*,r.name as roleName,r.type as roleType
+        from platform.user_forfront as u join platform.role_forfont as r on r.roleId=u.roleId
+        where 1=1
+        <if test=" status != null  and status != 9 ">
+            and (u.status= #{status})
+        </if>
+        <if test=" userType != null  ">
+            and (u.`type`= #{userType})
+        </if>
+        <if test="keyWork != null and keyWork != ''">
+            and (u.account=#{keyWork} or u.jobNumber=#{keyWork})
+        </if>
+        <if test="roleId != null and roleId != ''">
+            and (r.ownerType in ( select ownerType from platform.role_forfont where roleId =
+            #{roleId,jdbcType =INTEGER}))
+        </if>
+        <if test="ownerType != null and ownerType != ''">
+            and (r.ownerType=#{ownerType, jdbcType = INTEGER})
+        </if>
 
-		<if test="keyWorkName != null and keyWorkName != ''">
-			 and u.name=#{keyWorkName}
-		</if>
-		 order by u.id desc limit #{page},#{total}
-	</select>
-	<select id="userManageListSize" parameterType="java.util.Map" resultType="Int">
-		select
-		count(1)
-		from  platform.user_forfront as u join platform.role_forfont as r on r.roleId=u.roleId
-		where 1=1
-		<if test=" status != null  and status != 9 ">
-			 and (u.status=  #{status})
-		</if>
-		<if test="keyWork != null and keyWork != ''">
-			 and (account=#{keyWork} or	jobNumber=#{keyWork})
-		</if>
-		<if test="roleId != null and roleId != ''">
-			 and (r.ownerType in ( select ownerType from platform.role_forfont where roleId =  #{roleId,jdbcType =INTEGER}))
-		</if>
-		<if test="ownerType != null and ownerType != ''">
-			 and (r.ownerType=#{ownerType, jdbcType = INTEGER})
-		</if>
+        <if test="keyWorkName != null and keyWorkName != ''">
+            and u.name=#{keyWorkName}
+        </if>
+        order by u.id desc limit #{page},#{total}
+    </select>
+    <select id="userManageListSize" parameterType="java.util.Map" resultType="Int">
+        select
+        count(1)
+        from platform.user_forfront as u join platform.role_forfont as r on r.roleId=u.roleId
+        where 1=1
+        <if test=" status != null  and status != 9 ">
+            and (u.status= #{status})
+        </if>
+        <if test="keyWork != null and keyWork != ''">
+            and (account=#{keyWork} or jobNumber=#{keyWork})
+        </if>
+        <if test="roleId != null and roleId != ''">
+            and (r.ownerType in ( select ownerType from platform.role_forfont where roleId =
+            #{roleId,jdbcType =INTEGER}))
+        </if>
+        <if test="ownerType != null and ownerType != ''">
+            and (r.ownerType=#{ownerType, jdbcType = INTEGER})
+        </if>
 
-		<if test=" userType != null and userType != '' ">
-			 and (u.`type`= #{userType , jdbcType = INTEGER})
-		</if>
-		<if test="keyWorkName != null and keyWorkName != ''">
-			 and u.name=#{keyWorkName}
-		</if>
-	</select>
+        <if test=" userType != null and userType != '' ">
+            and (u.`type`= #{userType , jdbcType = INTEGER})
+        </if>
+        <if test="keyWorkName != null and keyWorkName != ''">
+            and u.name=#{keyWorkName}
+        </if>
+    </select>
 
-	<select id="changeGranUserManageList" parameterType="Map" resultMap="BaseResultMap">
+    <select id="changeGranUserManageList" parameterType="Map" resultMap="BaseResultMap">
 		select
 		u.*,
 		(select  r.name from platform.role_forfont as r where r.roleId=u.roleId )  as roleName,
@@ -347,18 +350,18 @@
 		(select  r.type from platform.role_forfont as r where r.roleId=u.roleId )  as changeType
 		from  platform.user_forfront as u  where u.changeStatus=1 order by u.id desc limit #{page},#{total}
 	</select>
-	<select id="changeGranUserManageListSize" parameterType="Map" resultType="Int">
+    <select id="changeGranUserManageListSize" parameterType="Map" resultType="Int">
 		select
 		count(1)
 		from  platform.user_forfront where changeStatus=1
 	</select>
 
-	<select id="getPersonnelMattersStatus" resultType="Map">
+    <select id="getPersonnelMattersStatus" resultType="Map">
 		select employeeNo as employee_no,employeeName as employee_name from hr.d_hana_hr_employee where employeeNo=#{jobNumber}  ORDER BY lkpDate DESC LIMIT 1
 	</select>
 
 
-	<select id="getBrowesReportByList">
+    <select id="getBrowesReportByList">
 		select count(1) ,menuName from platform.report_browse_log
 		where browseUserId=#{userId}
 		and browseDate=date_format(now(), '%Y-%m-%d')
@@ -366,58 +369,58 @@
 	</select>
 
 
-	<select id="queryObject" resultType="com.yonghui.portal.model.global.User">
+    <select id="queryObject" resultType="com.yonghui.portal.model.global.User">
 		select * from  platform.user_forfront where id = #{value}
 	</select>
 
-	<select id="queryList" resultType="com.yonghui.portal.model.global.User">
-		select * from  platform.user_forfront
-		<where>
-			<if test="account != null and account !=''">
-				and account like concat('%',#{account},'%')
-			</if>
-			<if test="jobNumber != null and jobNumber !=''">
-				and jobNumber like concat('%',#{jobNumber},'%')
-			</if>
-			<if test="name != null and name !=''">
-				and `name` like concat('%',#{name},'%')
-			</if>
-			<if test="remark != null and remark !=''">
-				and `remark` like concat('%',#{remark},'%')
-			</if>
-		</where>
-		<choose>
-			<when test="sidx != null and sidx.trim() != ''">
-				order by ${sidx} ${order}
-			</when>
-			<otherwise>
-				order by id  asc
-			</otherwise>
-		</choose>
-		<if test="offset != null and limit != null">
-			limit #{offset}, #{limit}
-		</if>
-	</select>
+    <select id="queryList" resultType="com.yonghui.portal.model.global.User">
+        select * from platform.user_forfront
+        <where>
+            <if test="account != null and account !=''">
+                and account like concat('%',#{account},'%')
+            </if>
+            <if test="jobNumber != null and jobNumber !=''">
+                and jobNumber like concat('%',#{jobNumber},'%')
+            </if>
+            <if test="name != null and name !=''">
+                and `name` like concat('%',#{name},'%')
+            </if>
+            <if test="remark != null and remark !=''">
+                and `remark` like concat('%',#{remark},'%')
+            </if>
+        </where>
+        <choose>
+            <when test="sidx != null and sidx.trim() != ''">
+                order by ${sidx} ${order}
+            </when>
+            <otherwise>
+                order by id asc
+            </otherwise>
+        </choose>
+        <if test="offset != null and limit != null">
+            limit #{offset}, #{limit}
+        </if>
+    </select>
 
-	<select id="queryTotal" resultType="int">
-		select count(*) from  platform.user_forfront
-		<where>
-			<if test="account != null and account !=''">
-				and account like concat('%',#{account},'%')
-			</if>
-			<if test="jobNumber != null and jobNumber !=''">
-				and jobNumber like concat('%',#{jobNumber},'%')
-			</if>
-			<if test="name != null and name !=''">
-				and `name` like concat('%',#{name},'%')
-			</if>
-			<if test="remark != null and remark !=''">
-				and `remark` like concat('%',#{remark},'%')
-			</if>
-		</where>
-	</select>
+    <select id="queryTotal" resultType="int">
+        select count(*) from platform.user_forfront
+        <where>
+            <if test="account != null and account !=''">
+                and account like concat('%',#{account},'%')
+            </if>
+            <if test="jobNumber != null and jobNumber !=''">
+                and jobNumber like concat('%',#{jobNumber},'%')
+            </if>
+            <if test="name != null and name !=''">
+                and `name` like concat('%',#{name},'%')
+            </if>
+            <if test="remark != null and remark !=''">
+                and `remark` like concat('%',#{remark},'%')
+            </if>
+        </where>
+    </select>
 
-	<insert id="save" parameterType="com.yonghui.portal.model.global.User" useGeneratedKeys="true" keyProperty="id">
+    <insert id="save" parameterType="com.yonghui.portal.model.global.User" useGeneratedKeys="true" keyProperty="id">
 		insert into  platform.user_forfront
 		(
 		`account`,
@@ -484,49 +487,49 @@
 		)
 	</insert>
 
-	<update id="update" parameterType="com.yonghui.portal.model.global.User">
-		update  platform.user_forfront
-		<set>
-			<if test="account != null">`account` = #{account}, </if>
-			<if test="name != null">`name` = #{name}, </if>
-			<if test="email != null">`email` = #{email}, </if>
-			<if test="roleId != null">`roleId` = #{roleId}, </if>
-			<if test="pass != null">`pass` = #{pass}, </if>
-			<if test="jobNumber != null">`jobNumber` = #{jobNumber}, </if>
-			<if test="status != null">`status` = #{status}, </if>
-			<if test="updatedAt != null">`updated_at` =  NOW(), </if>
-			<if test="type != null">`type` = #{type}, </if>
-			<if test="largeArea != null">`largeArea` = #{largeArea}, </if>
-			<if test="province != null">`province` = #{province}, </if>
-			<if test="city != null">`city` = #{city}, </if>
-			<if test="firm != null">`firm` = #{firm}, </if>
-			<if test="storeNumber != null">`storeNumber` = #{storeNumber}, </if>
-			<if test="changeRoleId != null">`changeRoleId` = #{changeRoleId}, </if>
-			<if test="changeType != null">`changeType` = #{changeType}, </if>
-			<if test="changeLargeArea != null">`changeLargeArea` = #{changeLargeArea}, </if>
-			<if test="changeProvince != null">`changeProvince` = #{changeProvince}, </if>
-			<if test="changeCity != null">`changeCity` = #{changeCity}, </if>
-			<if test="changeFirm != null">`changeFirm` = #{changeFirm}, </if>
-			<if test="changeStatus != null">`changeStatus` = #{changeStatus}, </if>
-			<if test="changeStoreNumber != null">`changeStoreNumber` = #{changeStoreNumber}, </if>
-			<if test="changeTime != null">`changeTime` = #{changeTime}, </if>
-			<if test="remark!= null">`remark` = #{remark}, </if>
-			<if test="areaMans != null">`areaMans` = #{areaMans}, </if>
-			<if test="changeAreaMans != null">`changeAreaMans` = #{changeAreaMans}, </if>
-			<if test="rold != null">`rold` = #{rold}, </if>
-		</set>
-		where id = #{id}
-	</update>
+    <update id="update" parameterType="com.yonghui.portal.model.global.User">
+        update platform.user_forfront
+        <set>
+            <if test="account != null">`account` = #{account},</if>
+            <if test="name != null">`name` = #{name},</if>
+            <if test="email != null">`email` = #{email},</if>
+            <if test="roleId != null">`roleId` = #{roleId},</if>
+            <if test="pass != null">`pass` = #{pass},</if>
+            <if test="jobNumber != null">`jobNumber` = #{jobNumber},</if>
+            <if test="status != null">`status` = #{status},</if>
+            <if test="updatedAt != null">`updated_at` = NOW(),</if>
+            <if test="type != null">`type` = #{type},</if>
+            <if test="largeArea != null">`largeArea` = #{largeArea},</if>
+            <if test="province != null">`province` = #{province},</if>
+            <if test="city != null">`city` = #{city},</if>
+            <if test="firm != null">`firm` = #{firm},</if>
+            <if test="storeNumber != null">`storeNumber` = #{storeNumber},</if>
+            <if test="changeRoleId != null">`changeRoleId` = #{changeRoleId},</if>
+            <if test="changeType != null">`changeType` = #{changeType},</if>
+            <if test="changeLargeArea != null">`changeLargeArea` = #{changeLargeArea},</if>
+            <if test="changeProvince != null">`changeProvince` = #{changeProvince},</if>
+            <if test="changeCity != null">`changeCity` = #{changeCity},</if>
+            <if test="changeFirm != null">`changeFirm` = #{changeFirm},</if>
+            <if test="changeStatus != null">`changeStatus` = #{changeStatus},</if>
+            <if test="changeStoreNumber != null">`changeStoreNumber` = #{changeStoreNumber},</if>
+            <if test="changeTime != null">`changeTime` = #{changeTime},</if>
+            <if test="remark!= null">`remark` = #{remark},</if>
+            <if test="areaMans != null">`areaMans` = #{areaMans},</if>
+            <if test="changeAreaMans != null">`changeAreaMans` = #{changeAreaMans},</if>
+            <if test="rold != null">`rold` = #{rold},</if>
+        </set>
+        where id = #{id}
+    </update>
 
-	<delete id="delete">
+    <delete id="delete">
 		delete from  platform.user_forfront where id = #{value}
 	</delete>
 
-	<delete id="deleteBatch">
-		delete from  platform.user_forfront where id in
-		<foreach item="id" collection="array" open="(" separator="," close=")">
-			#{id}
-		</foreach>
-	</delete>
+    <delete id="deleteBatch">
+        delete from platform.user_forfront where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
 
 </mapper>

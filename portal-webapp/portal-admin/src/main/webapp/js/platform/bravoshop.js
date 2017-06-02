@@ -8,7 +8,15 @@ $(function () {
             {label: '新店编号', name: 'sapShopid', index: 'SAP_ShopID', width: 80 }, 
             {label: '门店名称', name: 'sname', index: 'SName', width: 80 }, 
             {label: '门店编码', name: 'shopno', index: 'ShopNo', width: 80 }, 
-            {label: '是否开店', name: 'congou', index: 'Congou', width: 80 }, 
+            {label: '是否开店', name: 'congou', index: 'Congou', width: 80 , formatter: function (value) {
+                if (value === 1) {
+                    return '<span class="label label-success">正常营业中</span>';
+                }
+                if (value === 2) {
+                    return '<span class="label label-danger">关店</span>';
+                }
+            }
+            },
             {label: '开店日期', name: 'opendate', index: 'OpenDate', width: 80 },
             {label: '区域编码', name: 'sno', index: 'sNo', width: 80 }, 
             {label: '老大区ID', name: 'areaid', index: 'AreaID', width: 80 },
