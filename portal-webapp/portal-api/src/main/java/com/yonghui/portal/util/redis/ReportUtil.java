@@ -2,17 +2,17 @@ package com.yonghui.portal.util.redis;
 
 import com.alibaba.dubbo.config.annotation.Reference;
 import com.alibaba.fastjson.JSONObject;
-import com.yonghui.portal.model.report.PortalDataSource;
-import com.yonghui.portal.model.report.PortalExecuteSql;
-import com.yonghui.portal.model.report.PortalProcedure;
-import com.yonghui.portal.model.report.PortalReport;
+import com.yonghui.portal.model.report.*;
 import com.yonghui.portal.service.ApiService;
 import com.yonghui.portal.util.ConstantsUtil;
+import com.yonghui.portal.util.Md5Util;
 import com.yonghui.portal.util.RRException;
 import com.yonghui.portal.util.StringUtils;
+import com.yonghui.portal.util.report.columns.HttpMethodUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -150,6 +150,105 @@ public class ReportUtil {
             throw new RRException("数据源" + dataSourceCode + "不存在");
         }
         return portalDataSource;
+    }
+
+    /**
+     * 获取路由业务报表信息
+     *
+     * @param yongHuiReportCustomCode
+     * @return
+     */
+    public PortalRouteReport getPortalRouteReport(String yongHuiReportCustomCode) {
+        if (StringUtils.isEmpty(yongHuiReportCustomCode)) {
+            throw new RRException("报表编码不能为空");
+        }
+        String reportJson = redisBizUtilApi.getPortalRouteReport(yongHuiReportCustomCode);
+        if (StringUtils.isEmpty(reportJson)) {
+            throw new RRException("报表编码 " + yongHuiReportCustomCode + "无效");
+        }
+        PortalRouteReport report = JSONObject.parseObject(reportJson, PortalRouteReport.class);
+        if (report == null || StringUtils.isEmpty(report.getCode())) {
+            throw new RRException("报表编码:" + yongHuiReportCustomCode + "无效，或未指定ExecuteCode");
+        }
+        return report;
+    }
+
+
+    /**
+     * 获取路由报表数据
+     *
+     * @param yongHuiReportCustomCode
+     * @param parameter
+     * @return
+     */
+    public String routeResultByParam(String yongHuiReportCustomCode, String parameter, String url, String key) {
+        Map<String, Object> map = new HashMap<String, Object>();
+        if (StringUtils.isEmpty(yongHuiReportCustomCode) || StringUtils.isEmpty(url)) {
+            throw new RRException("报表编码或者请求url不能为空");
+        }
+        // 根据报表唯一编码查询报表基本信息
+        PortalRouteReport report = getPortalRouteReport(yongHuiReportCustomCode);
+        String result = null;
+        String routeParameter = StringUtils.getRouteParameter(parameter, report.getParameter());
+        StringBuffer sb = new StringBuffer();
+        String[] arr = routeParameter.split("&");
+        for (String p : arr) {
+            if (p.split("=").length == 1) {
+                map.put(p.split("=")[0], "");
+                sb.append("");
+            } else if (StringUtils.isEmpty(p.split("=")[1])) {
+                map.put(p.split("=")[0], "");
+                sb.append("");
+            } else if (!StringUtils.isEmpty(p.split("=")[1])) {
+                map.put(p.split("=")[0], p.split("=")[1]);
+                sb.append(p.split("=")[1]);
+            }
+        }
+        //请求参数加密（key + parameter + key）
+        Md5Util util = new Md5Util();
+        String sign = util.getMd5("MD5", 0, null, key + sb + key);
+        map.put("sign", sign);
+        HttpMethodUtil httpUtil = new HttpMethodUtil();
+        try {
+            result = httpUtil.getPostResult(url, map);
+        } catch (Exception e) {
+            throw new RRException("调用外部系统出错：" + yongHuiReportCustomCode + "异常信息为：" + e.getMessage());
+        }
+        return result;
+    }
+
+    /**
+     * 根据url和参数直接调用外部接口（临时提供app扫码接口，接口标准未统一）
+     *
+     * @param parameter
+     * @param url
+     * @return
+     */
+    public String qRResultByParam(String parameter, String url, String type) {
+        if (StringUtils.isEmpty(parameter) || StringUtils.isEmpty(url)) {
+            throw new RRException("报表参数或者请求url不能为空");
+        }
+        Map<String, Object> map = new HashMap<String, Object>();
+        //处理参数
+        String routeParameter = StringUtils.getRouteParameter(parameter, parameter);
+        String[] arr = routeParameter.split("&");
+        for (String p : arr) {
+            if (p.split("=").length == 1) {
+                map.put(p.split("=")[0], "");
+            } else if (StringUtils.isEmpty(p.split("=")[1])) {
+                map.put(p.split("=")[0], "");
+            } else if (!StringUtils.isEmpty(p.split("=")[1])) {
+                map.put(p.split("=")[0], p.split("=")[1]);
+            }
+        }
+        if (type.equals("1")) {
+            url = url + "1?shopId=" + map.get("shopID") + "&barcodeId=" + map.get("barcode");
+        } else if (type.equals("2")) {
+            url = url + "2?shopId=" + map.get("shopID") + "&barcodeId=" + map.get("barcode");
+        }
+        HttpMethodUtil httpUtil = new HttpMethodUtil();
+        String result = httpUtil.getGetResult(url, new HashMap<String,Object>());
+        return result;
     }
 
 }

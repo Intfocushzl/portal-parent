@@ -52,20 +52,21 @@ public class ApiController {
     public R portalCustom(HttpServletRequest req, HttpServletResponse response, String yongHuiReportCustomCode) {
         String parameter = null;
         List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
+        SysOperationLog log = (SysOperationLog) req.getAttribute(LOGIN_USER_OPERATION_LOG);
         try {
             parameter = HttpContextUtils.getRequestParameter(req);
-            SysOperationLog log = (SysOperationLog) req.getAttribute(LOGIN_USER_OPERATION_LOG);
-            log.setEndTime(new Date());
             //获取用户ip,url.参数
             IPUtils iputil = new IPUtils();
             log.setIp(iputil.getIpAddr(req));
             log.setUrl(req.getRequestURL().toString());
-            log.setParameter(HttpContextUtils.getRequestParameter(req));
-            sysoperationLogService.SaveLog(log);
+            log.setParameter(HttpContextUtils.getParameterForLog(req));
             list = reportUtil.jdbcProListResultListMapByParam(SQLFilter.sqlInject(yongHuiReportCustomCode), SQLFilter.sqlInject(parameter));
+            log.setEndTime(new Date());
+            sysoperationLogService.SaveLog(log);
         } catch (Exception e) {
             R.error("执行统一报表程序异常");
         }
+
         return R.success(list);
     }
 
