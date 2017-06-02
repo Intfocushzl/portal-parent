@@ -1,4 +1,4 @@
-package com.yonghui.portal.service;
+package com.yonghui.portal.service.global;
 
 import com.yonghui.portal.model.global.Notice;
 import com.yonghui.portal.util.Page;

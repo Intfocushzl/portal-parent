@@ -2,7 +2,7 @@ package com.yonghui.portal.controller.global;
 
 import com.alibaba.dubbo.config.annotation.Reference;
 import com.yonghui.portal.model.global.User;
-import com.yonghui.portal.service.global.MenuService;
+import com.yonghui.portal.service.global.GlobalSelectService;
 import com.yonghui.portal.util.R;
 import org.apache.log4j.Logger;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,6 +17,7 @@ import java.util.Map;
 
 /**
  * Created by xrr on 2017/5/8.
+ * 公共下拉框查询接口
  */
 @RestController
 @RequestMapping(value="menu")
@@ -25,14 +26,14 @@ public class MenuController {
     Logger log=Logger.getLogger(this.getClass());
 
     @Reference
-    private MenuService menuService;
+    private GlobalSelectService globalSelectService;
 
     //获取新大区（区总教练）-- 不根据用户权限
     @RequestMapping("getNewAreaMansListByNotUser")
     @ResponseBody
     public R getNewAreaMansListByNotUser(HttpServletResponse response) {
 
-        List<Map<String, Object>> list = menuService.getNewAreaMansList();
+        List<Map<String, Object>> list = globalSelectService.getNewAreaMansList();
         if(list.size()>0){
             return R.success(list);
         }else{
@@ -49,9 +50,9 @@ public class MenuController {
         User user = (User) session.getAttribute("user");
 
         if (user.getLargeArea() == null || user.getLargeArea().equals("ALL")) {
-            list = menuService.getNewAreaMansList();
+            list = globalSelectService.getNewAreaMansList();
         }
-        list = menuService.getNewAreaMansListByUser(user.getLargeArea());
+        list = globalSelectService.getNewAreaMansListByUser(user.getLargeArea());
         if(list.size()>0){
             return R.success(list);
         }else{
@@ -64,7 +65,7 @@ public class MenuController {
     @ResponseBody
     public R getNewStoreListByDistrictNotUser(HttpSession session, HttpServletResponse response,
                                                                       String district) {
-        List<Map<String, Object>> list = menuService.getNewStoreListByDistrictNotUser(district);
+        List<Map<String, Object>> list = globalSelectService.getNewStoreListByDistrictNotUser(district);
         if(list.size() > 0){
             return R.success(list);
         }else{
@@ -76,7 +77,7 @@ public class MenuController {
     @RequestMapping("getLargeAreaList")
     @ResponseBody
     public R getLargeAreaList(HttpServletResponse response) {
-        List<Map<String, Object>> list = menuService.getLargeAreaList();
+        List<Map<String, Object>> list = globalSelectService.getLargeAreaList();
         if(list.size() > 0){
             return R.success(list);
         }else{
@@ -92,9 +93,9 @@ public class MenuController {
         User user = (User) session.getAttribute("user");
 
         if (user.getLargeArea() == null || user.getLargeArea().equals("ALL")) {
-            list =  menuService.getLargeAreaList();
+            list =  globalSelectService.getLargeAreaList();
         }else{
-            list =  menuService.getLargeAreaListByUser(user.getLargeArea());
+            list =  globalSelectService.getLargeAreaListByUser(user.getLargeArea());
         }
         if(list.size() > 0){
             return R.success(list);
@@ -107,7 +108,7 @@ public class MenuController {
     @RequestMapping("getStoreListByDistrictNotUser")
     @ResponseBody
     public R getStoreListByDistrictNotUser(HttpServletResponse response, String district) {
-        List<Map<String, Object>> list =  menuService.getStoreListByDistrict(district, null);
+        List<Map<String, Object>> list =  globalSelectService.getStoreListByDistrict(district, null);
         if(list.size() > 0){
             return R.success(list);
         }else{
@@ -133,7 +134,7 @@ public class MenuController {
                 slist = null;
             }
         }
-        List<Map<String, Object>> list = menuService.getStoreListByDistrict(district, slist);
+        List<Map<String, Object>> list = globalSelectService.getStoreListByDistrict(district, slist);
         if(list.size() > 0){
             return R.success(list);
         }else{
@@ -165,7 +166,7 @@ public class MenuController {
         } else {
             slist = null;
         }
-        List<Map<String, Object>> list = menuService.broveStoreLittleIdList(slist);
+        List<Map<String, Object>> list = globalSelectService.broveStoreLittleIdList(slist);
 
         if(list.size() > 0){
             return R.success(list);
@@ -178,7 +179,7 @@ public class MenuController {
     @RequestMapping("getFifthRotation")
     @ResponseBody
     public R getFifthRotation(HttpServletResponse response) {
-        List<Map<String, Object>> list = menuService.getFifthRotation();
+        List<Map<String, Object>> list = globalSelectService.getFifthRotation();
 
         if(list.size() > 0){
             return R.success(list);
@@ -209,7 +210,7 @@ public class MenuController {
             slist = null;
         }
 
-        List<Map<String, Object>> list = menuService.broveStoreLittleIdNotTwoOneOneList(slist);
+        List<Map<String, Object>> list = globalSelectService.broveStoreLittleIdNotTwoOneOneList(slist);
 
         if(list.size() > 0){
             return R.success(list);
@@ -240,7 +241,7 @@ public class MenuController {
         } else {
             slist = null;
         }
-        List<Map<String, Object>> list = menuService.broveStoreLittleIdListByFinance(slist);
+        List<Map<String, Object>> list = globalSelectService.broveStoreLittleIdListByFinance(slist);
         if(list.size() > 0){
             return R.success(list);
         }else{
@@ -254,7 +255,7 @@ public class MenuController {
     @ResponseBody
     public R broveList(HttpServletResponse response, String district, String province,String areaName) {
 
-        List<Map<String, Object>> list = menuService.secondClusterList(district, province, areaName);
+        List<Map<String, Object>> list = globalSelectService.secondClusterList(district, province, areaName);
 
         if(list.size() > 0){
             return R.success(list);

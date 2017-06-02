@@ -11,7 +11,7 @@ import com.github.abel533.echarts.data.LineData;
 import com.github.abel533.echarts.series.Line;
 import com.yonghui.portal.model.global.Notice;
 import com.yonghui.portal.model.global.User;
-import com.yonghui.portal.service.NoticeService;
+import com.yonghui.portal.service.global.NoticeService;
 import com.yonghui.portal.util.R;
 import org.apache.log4j.Logger;
 import org.springframework.ui.Model;

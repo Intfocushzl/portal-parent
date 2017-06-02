@@ -48,12 +48,12 @@
                    ref="cProMeterdataInformationService" timeout="600000"/>
 
     <!--菜单管理 、 门店大区课组公共接口  -->
-    <bean id="menuService" class="com.yonghui.portal.service.impl.global.MenuServiceImpl"/>
-    <dubbo:service interface="com.yonghui.portal.service.global.MenuService" ref="menuService" timeout="600000"/>
+    <bean id="globalSelectService" class="com.yonghui.portal.service.impl.global.GlobalSelectServiceImpl"/>
+    <dubbo:service interface="com.yonghui.portal.service.global.GlobalSelectService" ref="globalSelectService" timeout="600000"/>
 
     <!--首页公告、实时销售  -->
-    <bean id="noticelService" class="com.yonghui.portal.service.impl.global.NoticelServiceImpl"/>
-    <dubbo:service interface="com.yonghui.portal.service.NoticeService" ref="noticelService" timeout="600000"/>
+    <bean id="noticelService" class="com.yonghui.portal.service.impl.global.NoticeServiceImpl"/>
+    <dubbo:service interface="com.yonghui.portal.service.global.NoticeService" ref="noticelService" timeout="600000"/>
 
     <!-- 登录，用户相关操作-->
     <bean id="userService" class="com.yonghui.portal.service.impl.global.UserServiceImpl"/>
@@ -72,10 +72,6 @@
     <bean id="userAuthRoleMenuService" class="com.yonghui.portal.service.impl.sys.UserAuthRoleMenuServiceImpl"/>
     <dubbo:service interface="com.yonghui.portal.service.sys.UserAuthRoleMenuService" ref="userAuthRoleMenuService"
                    timeout="600000"/>
-
-    <!-- 用户角色数据-->
-    <bean id="roleService" class="com.yonghui.portal.service.impl.global.RoleServiceImpl"/>
-    <dubbo:service interface="com.yonghui.portal.service.global.RoleService" ref="roleService" timeout="600000"/>
 
     <!-- 天天赛马 -->
     <bean id="everyDayHorseRacingService" class="com.yonghui.portal.service.impl.horse.EveryDayHorseRacingServiceImpl"/>
