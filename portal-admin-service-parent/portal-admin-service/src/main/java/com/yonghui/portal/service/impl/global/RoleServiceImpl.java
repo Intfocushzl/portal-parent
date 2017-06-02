@@ -5,12 +5,14 @@ import com.yonghui.portal.model.global.Role;
 import com.yonghui.portal.service.global.RoleService;
 import com.yonghui.portal.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@Service
 public class RoleServiceImpl implements RoleService {
     @Autowired
     private RoleMapper roleMapper;

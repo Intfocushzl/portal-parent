@@ -5,6 +5,7 @@ import com.yonghui.portal.model.global.Menu;
 import com.yonghui.portal.model.global.RoleMenu;
 import com.yonghui.portal.service.global.MenuService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Map;
@@ -12,6 +13,7 @@ import java.util.Map;
 /**
  * Created by xrr on 2017/5/8.
  */
+@Service
 public class MenuServiceImpl implements MenuService {
 
     @Autowired

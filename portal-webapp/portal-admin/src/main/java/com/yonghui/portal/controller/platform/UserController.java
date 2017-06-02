@@ -1,15 +1,15 @@
 package com.yonghui.portal.controller.platform;
 
-import com.alibaba.dubbo.config.annotation.Reference;
 import com.yonghui.portal.annotation.IgnoreAuth;
 import com.yonghui.portal.controller.AbstractController;
 import com.yonghui.portal.model.global.User;
-import com.yonghui.portal.service.global.UserService;
+import com.yonghui.portal.service.global.UserAdminService;
 import com.yonghui.portal.util.PageUtils;
 import com.yonghui.portal.util.Query;
 import com.yonghui.portal.util.R;
 import org.apache.log4j.Logger;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -28,8 +28,8 @@ public class UserController extends AbstractController {
 
     Logger log = Logger.getLogger(this.getClass());
 
-    @Reference
-    private UserService userService;
+    @Autowired
+    private UserAdminService userAdminService;
 
 
     /**
@@ -46,8 +46,8 @@ public class UserController extends AbstractController {
         //查询列表数据
         Query query = new Query(params);
 
-        List<User> userList = userService.queryList(query);
-        int total = userService.queryTotal(query);
+        List<User> userList = userAdminService.queryList(query);
+        int total = userAdminService.queryTotal(query);
 
         PageUtils pageUtil = new PageUtils(userList, total, query.getLimit(), query.getPage());
 
@@ -64,7 +64,7 @@ public class UserController extends AbstractController {
     public R info(HttpServletResponse response, @PathVariable("id") Integer id) {
         response.setHeader("Access-Control-Allow-Origin", "*");
         response.setContentType("text/html;charset=UTF-8");
-        User user = userService.queryObject(id);
+        User user = userAdminService.queryObject(id);
         return R.success().put("user", user);
     }
 
@@ -78,7 +78,7 @@ public class UserController extends AbstractController {
     public R save(HttpServletResponse response, HttpServletRequest request, @RequestBody User user) {
         response.addHeader("Access-Control-Allow-Origin", "*");
         response.setContentType("text/html;charset=UTF-8");
-        userService.save(user);
+        userAdminService.save(user);
         return R.success();
     }
 
@@ -92,7 +92,7 @@ public class UserController extends AbstractController {
     public R update(HttpServletResponse response, @RequestBody User user) {
         response.addHeader("Access-Control-Allow-Origin", "*");
         response.setContentType("text/html;charset=UTF-8");
-        userService.update(user);
+        userAdminService.update(user);
         return R.success();
     }
 
@@ -106,7 +106,7 @@ public class UserController extends AbstractController {
     public R delete(HttpServletResponse response, @RequestBody Integer[] ids) {
         response.addHeader("Access-Control-Allow-Origin", "*");
         response.setContentType("text/html;charset=UTF-8");
-        userService.deleteBatch(ids);
+        userAdminService.deleteBatch(ids);
         return R.success();
     }
 
