@@ -2,7 +2,7 @@ $(function () {
     $("#dialog-form").dialog({
         autoOpen: false,
         height: 400,
-        width: 600,
+        width: 780,
         modal: true,
         buttons: {
             "确定": function () {
