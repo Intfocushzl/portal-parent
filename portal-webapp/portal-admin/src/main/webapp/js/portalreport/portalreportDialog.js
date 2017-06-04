@@ -45,6 +45,7 @@ $(function () {
                 // 更新当前行的，source：行或列对象
                 source = hot.getSourceDataAtRow(tdRow);
                 // 设置新值到一个单元格
+                //indexValue = indexValue + "<input type='hidden' class='class_" + tdRow + "_" + tdCol + "' id='id_" + tdRow + "_" + tdCol + "' value='" + indexValue + "'/>";
                 hot.setDataAtCell(tdRow, tdCol, indexValue, source);
                 $(this).dialog("close");
             },
