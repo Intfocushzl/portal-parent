@@ -230,6 +230,7 @@ var vm = new Vue({
         },
         getCindexAperture: function () {
             $.get("../cindexaperture/listOpt/", function (r) {
+                $("#cIndexAperture").append("<option value='' style='text-align: left;padding-right: 20px' >请选择</option>");
                 for (var i = 0; i < r.data.length; i++) {
                     vm.selectOption = "<option class='" + r.data[i].fieldname + "' value='" + r.data[i].fieldname + "' style='text-align: left;padding-right: 20px' >" + r.data[i].fieldname + "|" + r.data[i].indexname + "</option>";
                     $("#cIndexAperture").append(vm.selectOption);
@@ -241,6 +242,7 @@ var vm = new Vue({
         },
         getReportDimIndex: function () {
             $.get("../reportdimindex/listOpt/", function (r) {
+                $("#reportDimIndex").append("<option value='' style='text-align: left;padding-right: 20px' >请选择</option>");
                 for (var i = 0; i < r.data.length; i++) {
                     vm.selectOption = "<option class='" + r.data[i].dimlab + "' value='" + r.data[i].dimlab + "' style='text-align: left;padding-right: 20px' >" + r.data[i].dimlab + "|" + r.data[i].dimname + "</option>";
                     $("#reportDimIndex").append(vm.selectOption);
@@ -252,6 +254,7 @@ var vm = new Vue({
         },
         getCindexRefer: function () {
             $.get("../cindexrefer/listOpt/", function (r) {
+                $("#cIndexRefer").append("<option value='' style='text-align: left;padding-right: 20px' >请选择</option>");
                 for (var i = 0; i < r.data.length; i++) {
                     vm.selectOption = "<option class='" + r.data[i].referchar + "' value='" + r.data[i].referchar + "' style='text-align: left;padding-right: 20px' >" + r.data[i].referchar + "|" + r.data[i].def + "</option>";
                     $("#cIndexRefer").append(vm.selectOption);

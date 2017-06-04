@@ -1,4 +1,9 @@
 $(function () {
+    var indexValue,
+        cIndexAperture = $("#cIndexAperture"),
+        reportDimIndex = $("#reportDimIndex"),
+        cIndexRefer = $("#cIndexRefer");
+
     $("#dialog-form").dialog({
         autoOpen: false,
         height: 400,
@@ -6,6 +11,30 @@ $(function () {
         modal: true,
         buttons: {
             "确定": function () {
+                //alert(cIndexAperture.val());
+                //alert(reportDimIndex.val());
+                //alert(cIndexRefer.val());
+                indexValue = "";
+                if (getStringValue(cIndexAperture.val()) != "") {
+                    indexValue = cIndexAperture.val();
+                }
+                if (getStringValue(reportDimIndex.val()) != "") {
+                    if (getStringValue(cIndexAperture.val()) != "") {
+                        indexValue = indexValue + "_";
+                    }
+                    indexValue = indexValue + reportDimIndex.val();
+                }
+                if (getStringValue(cIndexRefer.val()) != "") {
+                    if (getStringValue(cIndexAperture.val()) != "" || getStringValue(reportDimIndex.val()) != "") {
+                        indexValue = indexValue + "_";
+                    }
+                    indexValue = indexValue + cIndexRefer.val();
+                }
+                if (getStringValue(indexValue) == '') {
+                    alert("至少选择一项！");
+                    return;
+                }
+                alert(indexValue);
                 $(this).dialog("close");
             },
             "取消": function () {
