@@ -1,14 +1,15 @@
+var tdText,
+    tdTextOld,
+    tdHtml,
+    tdHtmlOld,
+    tdCol,
+    tdRow;
+
 $(function () {
     var indexValue,
         cIndexAperture = $("#cIndexAperture"),
         reportDimIndex = $("#reportDimIndex"),
         cIndexRefer = $("#cIndexRefer");
-    var tdText,
-        tdTextOld,
-        tdHtml,
-        tdHtmlOld,
-        tdCol,
-        tdRow;
 
     $("#dialog-form").dialog({
         autoOpen: false,
@@ -40,7 +41,10 @@ $(function () {
                     alert("至少选择一项！");
                     return;
                 }
-                alert(indexValue);
+                // 更新当前行的，source：行或列对象
+                source = hot.getSourceDataAtRow(tdRow);
+                // 设置新值到一个单元格
+                hot.setDataAtCell(tdRow, tdCol, indexValue, source);
                 $(this).dialog("close");
             },
             "取消": function () {

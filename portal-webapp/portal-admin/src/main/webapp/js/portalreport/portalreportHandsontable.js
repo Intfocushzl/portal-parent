@@ -8,6 +8,7 @@ var
     saveOrUpdate = this_$('saveOrUpdate'),	    // 保存数据
     addBtn = this_$('addBtn'),
     hot,
+    source,                // 根据行号获取data source中的该行数据
     reportHeadersConsole = $('#reportHeadersConsole'),
     reportHeadersFormatConsole = $('#reportHeadersFormatConsole'),
     reportOuterHtml = $('#reportOuterHtml'),
@@ -84,7 +85,6 @@ function getMergeDataClear() {
 // 合并单元格
 function optMerge() {
     // 合并单元格数组
-    var source;                // 根据行号获取data source中的该行数据
     mergedCellInfoCollectionArr = hot.mergeCells.mergedCellInfoCollection;
     mergedCellInfoCollectionArrLength = mergedCellInfoCollectionArr.length;
     var countCols = hot.countCols();     // 总列数
