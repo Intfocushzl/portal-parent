@@ -7109,7 +7109,7 @@
           if (activeEditor) {
             activeEditor.enableFullEditMode();
           }
-          showialogForm(event);
+          showialogForm(event, coords, elem);
         }
       }
       instance.view.wt.update('onCellDblClick', onDblClick);

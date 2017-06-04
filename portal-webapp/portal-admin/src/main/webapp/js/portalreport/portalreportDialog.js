@@ -3,6 +3,12 @@ $(function () {
         cIndexAperture = $("#cIndexAperture"),
         reportDimIndex = $("#reportDimIndex"),
         cIndexRefer = $("#cIndexRefer");
+    var tdText,
+        tdTextOld,
+        tdHtml,
+        tdHtmlOld,
+        tdCol,
+        tdRow;
 
     $("#dialog-form").dialog({
         autoOpen: false,
@@ -52,7 +58,11 @@ $(function () {
 });
 
 // 显示字段属性框
-function showialogForm(event) {
+function showialogForm(event, coords, elem) {
+    tdCol = coords.col;
+    tdRow = coords.row;
+    tdTextOld = elem.innerText;
+    tdHtmlOld = elem.innerHTML;
     $("#dialog-form").dialog("open");
     $(".validateTips").html("至少选择一项");
 }
