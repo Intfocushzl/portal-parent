@@ -11,6 +11,7 @@ $(function () {
         reportDimIndex = $("#reportDimIndex"),
         cIndexRefer = $("#cIndexRefer");
 
+    // 属性设置框
     $("#dialog-form").dialog({
         autoOpen: false,
         height: 400,

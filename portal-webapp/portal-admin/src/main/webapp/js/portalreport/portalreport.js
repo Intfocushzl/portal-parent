@@ -229,8 +229,9 @@ var vm = new Vue({
             });
         },
         getCindexAperture: function () {
+            // 属性定义
             $.get("../cindexaperture/listOpt/", function (r) {
-                $("#cIndexAperture").append("<option value='' style='text-align: left;padding-right: 20px' >请选择</option>");
+                $("#cIndexAperture").append("<option value='' style='text-align: left;padding-right: 20px' >空-请选择</option>");
                 for (var i = 0; i < r.data.length; i++) {
                     vm.selectOption = "<option class='" + r.data[i].fieldname + "' value='" + r.data[i].fieldname + "' style='text-align: left;padding-right: 20px' >" + r.data[i].fieldname + "|" + r.data[i].indexname + "</option>";
                     $("#cIndexAperture").append(vm.selectOption);
@@ -241,8 +242,9 @@ var vm = new Vue({
             });
         },
         getReportDimIndex: function () {
+            // 维度定义
             $.get("../reportdimindex/listOpt/", function (r) {
-                $("#reportDimIndex").append("<option value='' style='text-align: left;padding-right: 20px' >请选择</option>");
+                $("#reportDimIndex").append("<option value='' style='text-align: left;padding-right: 20px' >空-请选择</option>");
                 for (var i = 0; i < r.data.length; i++) {
                     vm.selectOption = "<option class='" + r.data[i].dimlab + "' value='" + r.data[i].dimlab + "' style='text-align: left;padding-right: 20px' >" + r.data[i].dimlab + "|" + r.data[i].dimname + "</option>";
                     $("#reportDimIndex").append(vm.selectOption);
@@ -253,8 +255,9 @@ var vm = new Vue({
             });
         },
         getCindexRefer: function () {
+            // 指标定义
             $.get("../cindexrefer/listOpt/", function (r) {
-                $("#cIndexRefer").append("<option value='' style='text-align: left;padding-right: 20px' >请选择</option>");
+                $("#cIndexRefer").append("<option value='' style='text-align: left;padding-right: 20px' >空-请选择</option>");
                 for (var i = 0; i < r.data.length; i++) {
                     vm.selectOption = "<option class='" + r.data[i].referchar + "' value='" + r.data[i].referchar + "' style='text-align: left;padding-right: 20px' >" + r.data[i].referchar + "|" + r.data[i].def + "</option>";
                     $("#cIndexRefer").append(vm.selectOption);
@@ -264,14 +267,16 @@ var vm = new Vue({
                 $('#cIndexRefer').selectpicker('render');
             });
         },
-
         bindCindexAperture: function (cIndexAperture) {
+            // 设置属性值
             $('#cIndexAperture').selectpicker('val', cIndexAperture);
         },
         bindReportDimIndex: function (reportDimIndex) {
+            // 设置维度值
             $('#reportDimIndex').selectpicker('val', reportDimIndex);
         },
         bindCindexRefer: function (cIndexRefer) {
+            // 设置指标值
             $('#cIndexRefer').selectpicker('val', cIndexRefer);
         }
 
