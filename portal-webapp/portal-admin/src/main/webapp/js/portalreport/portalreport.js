@@ -52,33 +52,7 @@ $(function () {
             $("#jqGrid").jqGrid('setGridHeight', getWinH());
         }
     });
-
-    $("#dialog-form").dialog({
-        autoOpen: false,
-        height: 500,
-        width: 550,
-        modal: true,
-        buttons: {
-            "确定": function () {
-                $(this).dialog("close");
-            },
-            "取消": function () {
-                $(this).dialog("close");
-            }
-        },
-        close: function () {
-        }
-    });
 });
-
-// 显示字段属性框
-function showialogForm(event) {
-    $("#dialog-form").dialog("open");
-    $(".validateTips").html("报表标题字段<br>至少选择一项");
-    vm.getCindexAperture();
-    vm.getReportDimIndex();
-    vm.getCindexRefer();
-}
 
 var vm = new Vue({
     el: '#rrapp',
@@ -253,39 +227,46 @@ var vm = new Vue({
             });
         },
         getCindexAperture: function () {
-            $("#cIndexAperture").empty();
             $.get("../cindexaperture/listOpt/", function (r) {
                 for (var i = 0; i < r.data.length; i++) {
-                    vm.selectOption = "<option value='" + r.data[i].fieldname + "' style='text-align: left;padding-right: 20px' >" + r.data[i].fieldname + "|" + r.data[i].indexname + "</option>";
+                    vm.selectOption = "<option class='" + r.data[i].fieldname + "' value='" + r.data[i].fieldname + "' style='text-align: left;padding-right: 20px' >" + r.data[i].fieldname + "|" + r.data[i].indexname + "</option>";
                     $("#cIndexAperture").append(vm.selectOption);
                 }
+                // refresh刷新和render渲染操作，必不可少
+                $('#cIndexAperture').selectpicker('refresh');
+                $('#cIndexAperture').selectpicker('render');
             });
         },
         getReportDimIndex: function () {
-            $("#reportDimIndex").empty();
             $.get("../reportdimindex/listOpt/", function (r) {
                 for (var i = 0; i < r.data.length; i++) {
-                    vm.selectOption = "<option value='" + r.data[i].dimlab + "' style='text-align: left;padding-right: 20px' >" + r.data[i].dimlab + "|" + r.data[i].dimname + "</option>";
+                    vm.selectOption = "<option class='" + r.data[i].dimlab + "' value='" + r.data[i].dimlab + "' style='text-align: left;padding-right: 20px' >" + r.data[i].dimlab + "|" + r.data[i].dimname + "</option>";
                     $("#reportDimIndex").append(vm.selectOption);
                 }
+                // refresh刷新和render渲染操作，必不可少
+                $('#reportDimIndex').selectpicker('refresh');
+                $('#reportDimIndex').selectpicker('render');
             });
         },
         getCindexRefer: function () {
-            $("#cIndexRefer").empty();
             $.get("../cindexrefer/listOpt/", function (r) {
                 for (var i = 0; i < r.data.length; i++) {
-                    vm.selectOption = "<option value='" + r.data[i].referchar + "' style='text-align: left;padding-right: 20px' >" + r.data[i].referchar + "|" + r.data[i].def + "</option>";
+                    vm.selectOption = "<option class='" + r.data[i].referchar + "' value='" + r.data[i].referchar + "' style='text-align: left;padding-right: 20px' >" + r.data[i].referchar + "|" + r.data[i].def + "</option>";
                     $("#cIndexRefer").append(vm.selectOption);
                 }
+                // refresh刷新和render渲染操作，必不可少
+                $('#cIndexRefer').selectpicker('refresh');
+                $('#cIndexRefer').selectpicker('render');
             });
         },
+
         bindCindexAperture: function (cIndexAperture) {
-            $('#cIndexAperture').selectpicker('val', icon);
+            $('#cIndexAperture').selectpicker('val', cIndexAperture);
         },
-        bindReportDimIndex: function (icon) {
+        bindReportDimIndex: function (reportDimIndex) {
             $('#reportDimIndex').selectpicker('val', reportDimIndex);
         },
-        bindCindexRefer: function (icon) {
+        bindCindexRefer: function (cIndexRefer) {
             $('#cIndexRefer').selectpicker('val', cIndexRefer);
         }
 

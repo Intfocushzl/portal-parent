@@ -34,6 +34,9 @@
         .handsontable .ht_clone_left {
             z-index: -2 !important;
         }
+        .dropdown-menu .inner{
+            max-height: 100px !important;
+        }
     </style>
 </head>
 <body>
@@ -66,31 +69,12 @@
     </div>
 
     <!-- 基础数据信息 -->
-    #parse("portalreport/portalreport-basic.html")
-</div>
-
-<div id="dialog-form" title="字段属性">
-    <p class="validateTips"></p>
-    <form>
-        <fieldset>
-            <label for="cIndexAperture">属性定义</label>
-            <select id="cIndexAperture" class="selectpicker form-control" data-live-search="true" title="属性定义">
-
-            </select>
-            <label for="reportDimIndex">维度定义</label>
-            <select id="reportDimIndex" class="selectpicker form-control" data-live-search="true" title="维度定义">
-
-            </select>
-            <label for="cIndexRefer">指标定义</label>
-            <select id="cIndexRefer" class="selectpicker form-control" data-live-search="true" title="指标定义">
-
-            </select>
-        </fieldset>
-    </form>
+    #parse("portalreport/portalreport_basic.html")
 </div>
 
 <script src="${rc.contextPath}/js/portalreport/portalreport.js?_${date.systemTime}"></script>
 <script src="${rc.contextPath}/js/portalreport/portalreportHandsontable.js?_${date.systemTime}"></script>
+<script src="${rc.contextPath}/js/portalreport/portalreportDialog.js?_${date.systemTime}"></script>
 
 </body>
 </html>
