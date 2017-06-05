@@ -3,10 +3,13 @@ var tdText,
     tdHtml,
     tdHtmlOld,
     tdCol,
-    tdRow;
+    tdRow,
+    tdElem;
 
 $(function () {
     var indexValue,
+        indexName,
+        selectedText,
         cIndexAperture = $("#cIndexAperture"),
         reportDimIndex = $("#reportDimIndex"),
         cIndexRefer = $("#cIndexRefer");
@@ -23,30 +26,55 @@ $(function () {
                 //alert(reportDimIndex.val());
                 //alert(cIndexRefer.val());
                 indexValue = "";
+                indexName = "";
+                selectedText = "";
                 if (getStringValue(cIndexAperture.val()) != "") {
                     indexValue = cIndexAperture.val();
+                    selectedText = cIndexAperture.find("option:selected").text().split(":")[1];
+                    indexName = selectedText;
                 }
                 if (getStringValue(reportDimIndex.val()) != "") {
                     if (getStringValue(cIndexAperture.val()) != "") {
                         indexValue = indexValue + "_";
+                        indexName = indexName + "_";
                     }
                     indexValue = indexValue + reportDimIndex.val();
+                    selectedText = reportDimIndex.find("option:selected").text().split(":")[1];
+                    indexName = indexName + selectedText;
                 }
                 if (getStringValue(cIndexRefer.val()) != "") {
                     if (getStringValue(cIndexAperture.val()) != "" || getStringValue(reportDimIndex.val()) != "") {
                         indexValue = indexValue + "_";
+                        indexName = indexName + "_";
                     }
                     indexValue = indexValue + cIndexRefer.val();
+                    selectedText = cIndexRefer.find("option:selected").text().split(":")[1];
+                    indexName = indexName + selectedText;
                 }
                 if (getStringValue(indexValue) == '') {
                     alert("至少选择一项！");
                     return;
                 }
+
+                // 封装json
+                var rowCol = tdRow + "_" + tdCol;
+                var rowColJson = {};
+                rowColJson["row"] = tdRow;
+                rowColJson["rowSpan"] = tdElem.rowSpan;
+                rowColJson["col"] = tdCol;
+                rowColJson["colSpan"] = tdElem.colSpan;
+                rowColJson["indexValue"] = indexValue;
+                rowColJson["indexName"] = indexName;
+                rowColJson["name"] = selectedText;
+                createJson(rowCol, rowColJson);
+                alert(JSON.stringify(vm.headersFormat));
+
                 // 更新当前行的，source：行或列对象
                 source = hot.getSourceDataAtRow(tdRow);
                 // 设置新值到一个单元格
-                //indexValue = indexValue + "<input type='hidden' class='class_" + tdRow + "_" + tdCol + "' id='id_" + tdRow + "_" + tdCol + "' value='" + indexValue + "'/>";
-                hot.setDataAtCell(tdRow, tdCol, indexValue, source);
+                hot.setDataAtCell(tdRow, tdCol, selectedText, source);
+
+                // 关闭窗口
                 $(this).dialog("close");
             },
             "取消": function () {
@@ -67,8 +95,22 @@ $(function () {
 function showialogForm(event, coords, elem) {
     tdCol = coords.col;
     tdRow = coords.row;
+    tdElem = elem;
     tdTextOld = elem.innerText;
     tdHtmlOld = elem.innerHTML;
     $("#dialog-form").dialog("open");
     $(".validateTips").html("至少选择一项");
+}
+
+// 参数：prop = 属性，val = 值
+function createJson(prop, val) {
+    // 如果 val 被忽略
+    if (typeof val === "undefined") {
+        // 删除属性
+        delete vm.headersFormat[prop];
+    }
+    else {
+        // 添加 或 修改
+        vm.headersFormat[prop] = val;
+    }
 }
