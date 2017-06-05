@@ -135,4 +135,9 @@ public class RedisBizUtilApi {
         return redisUtil.get(String.format("%s:report:columns", KEY_PREFIX), code);
     }
 
+    //菜单信息
+    public String getRoleMenu(Integer roleId){
+        return redisUtil.get(String.format("%s:role:menu",KEY_PREFIX),roleId.toString());
+    }
+
 }
