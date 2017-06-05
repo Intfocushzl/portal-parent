@@ -36,13 +36,18 @@ public class AppQrCodeApiController {
 
     public static final String TOKEN = "yhappQKXYfkjqn8Yq6ojACkwXRnt35322896dfd9419f9d2c4080b064d89a";
 
-    public static final String URL = "http://10.0.12.15:32128/api/v1/businessman/search/scene";
+    public static final String URL = "http://10.0.12.15:32128/api/v1/businessman/search/scene2";
 
+    /**
+     * 查我们自己的dws库  非实时数据  门店实时销售、实时库存、销售相关的数据
+     *调用外部接口  实时数据
+     * @return
+     */
     @IgnoreAuth
     @RequestMapping(value = "qrCode", method = RequestMethod.GET)
     @ResponseBody
     public R portalCustom(HttpServletRequest req, HttpServletResponse response, String yongHuiReportCustomCode,
-                          String sign, String shopID, String barcode, String type) {
+                          String sign, String shopID, String barcode) {
         String parameter = null;
         String result = null;
         List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
@@ -55,9 +60,10 @@ public class AppQrCodeApiController {
             }
             //调用自己库查数据
             parameter = HttpContextUtils.getRequestParameter(req);
-            list = reportUtil.jdbcProListResultListMapByParam(SQLFilter.sqlInject(yongHuiReportCustomCode), SQLFilter.sqlInject(parameter));
+            //注意此处code  admin配置的是98  为了给app扫码统一code（REP_000043）
+            list = reportUtil.jdbcProListResultListMapByParam(SQLFilter.sqlInject("REP_000043"), SQLFilter.sqlInject(parameter));
             //调用外部接口获取数据
-            result = reportUtil.qRResultByParam(parameter, URL, type);
+            result = reportUtil.qRResultByParam(parameter, URL);
         } catch (Exception e) {
             R.error("执行APP报表存储过程报表异常");
         }

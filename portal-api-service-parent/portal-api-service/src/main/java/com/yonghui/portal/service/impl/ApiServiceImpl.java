@@ -39,7 +39,11 @@ public class ApiServiceImpl implements ApiService {
         if (!StringUtils.isEmpty(portalPro.getProdb())) {
             sb.append(portalPro.getProdb() + ".");
         }
-        sb.append(portalPro.getProname() + " (" + proParameter + ")}");
+        if(proParameter == null){
+            sb.append(portalPro.getProname() + " ()}");
+        }else{
+            sb.append(portalPro.getProname() + " (" + proParameter + ")}");
+        }
         log.info("请求的参数：parameter" + parameter);
         log.info("执行的存储过程:" + sb.toString());
         return apiDataBaseSqlService.queryCallPro(sb.toString(), portalDataSource);

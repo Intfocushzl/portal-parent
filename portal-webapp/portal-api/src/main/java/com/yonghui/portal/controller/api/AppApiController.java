@@ -69,8 +69,9 @@ public class AppApiController {
             log.setUrl(req.getRequestURL().toString());
             log.setParameter(HttpContextUtils.getParameterForLog(req));
             log.setRemark("App");
-            sysoperationLogService.SaveLog(log);
             list = reportUtil.jdbcProListResultListMapByParam(SQLFilter.sqlInject(yongHuiReportCustomCode), SQLFilter.sqlInject(parameter));
+            log.setEndTime(new Date());
+            sysoperationLogService.SaveLog(log);
         } catch (Exception e) {
             R.error("执行APP报表存储过程报表异常");
         }

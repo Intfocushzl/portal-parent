@@ -1,22 +1,16 @@
 package com.yonghui.portal.controller.sys;
 
-import com.alibaba.dubbo.config.annotation.Reference;
-import com.yonghui.portal.annotation.IgnoreAuth;
-import com.yonghui.portal.model.global.Menu;
-import com.yonghui.portal.model.global.RoleMenu;
-import com.yonghui.portal.service.sys.UserAuthMenuService;
-import com.yonghui.portal.service.sys.UserAuthRoleMenuService;
-import com.yonghui.portal.util.ListToTreeUtils;
-import com.yonghui.portal.util.R;
+import com.alibaba.fastjson.JSONObject;
+import com.yonghui.portal.util.StringUtils;
+import com.yonghui.portal.util.redis.RedisBizUtilApi;
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * 用户权限菜单控制类
@@ -28,17 +22,31 @@ public class UserAuthMenuConntroller {
 
     Logger log = Logger.getLogger(this.getClass());
 
-    @Reference
+    /*@Reference
     private UserAuthMenuService userAuthMenuService;
     @Reference
-    private UserAuthRoleMenuService userAuthRoleMenuService;
+    private UserAuthRoleMenuService userAuthRoleMenuService;*/
+    @Autowired
+    private RedisBizUtilApi redisBizUtilApi;
 
     // 查看用户菜单
     @RequestMapping("listRoleMenu")
     @ResponseBody
-    //@IgnoreAuth
-    public R listRoleMenu(HttpServletRequest request, Integer roleId, HttpServletResponse reseponse) {
-        try {
+    public JSONObject listRoleMenu(HttpServletRequest request, Integer roleId, HttpServletResponse reseponse) {
+
+        String menuJson = redisBizUtilApi.getRoleMenu(roleId);
+        JSONObject json = new JSONObject();
+        if(StringUtils.isEmpty(menuJson)){
+            json.put("msg","请求成功，该角色没有菜单");
+            json.put("code","0");
+            json.put("date",null);
+        }else{
+            json = JSONObject.parseObject(menuJson);
+            json.put("msg","请求成功");
+            json.put("code","0");
+        }
+        return json;
+        /*try {
             String str;
             List<Menu> menus = new ArrayList<>();
             if (roleId != null) {
@@ -64,7 +72,7 @@ public class UserAuthMenuConntroller {
         } catch (Exception e) {
             log.error("角色菜单异常", e);
             return R.error("获取角色菜单异常");
-        }
+        }*/
 
     }
 }

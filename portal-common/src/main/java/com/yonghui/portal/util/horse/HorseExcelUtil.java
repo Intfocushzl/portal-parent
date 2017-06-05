@@ -102,7 +102,7 @@ public class HorseExcelUtil {
         // 得到Excel的行数
         int totalRows = sheet.getLastRowNum();// 所有行
         // 得到Excel的最大的一列(前提是有行数)
-        if (totalRows >= 2 && sheet.getRow(0) != null) {
+        if (totalRows >= 1 && sheet.getRow(0) != null) {
             this.totalCells = sheet.getRow(0).getPhysicalNumberOfCells();
         } else {
             throw new Exception("请按照模板填写数据后上传");

@@ -224,7 +224,7 @@ public class ReportUtil {
      * @param url
      * @return
      */
-    public String qRResultByParam(String parameter, String url, String type) {
+    public String qRResultByParam(String parameter, String url) {
         if (StringUtils.isEmpty(parameter) || StringUtils.isEmpty(url)) {
             throw new RRException("报表参数或者请求url不能为空");
         }
@@ -241,11 +241,7 @@ public class ReportUtil {
                 map.put(p.split("=")[0], p.split("=")[1]);
             }
         }
-        if (type.equals("1")) {
-            url = url + "1?shopId=" + map.get("shopID") + "&barcodeId=" + map.get("barcode");
-        } else if (type.equals("2")) {
-            url = url + "2?shopId=" + map.get("shopID") + "&barcodeId=" + map.get("barcode");
-        }
+            url = url + "?shopId=" + map.get("shopID") + "&barcodeId=" + map.get("barcode");
         HttpMethodUtil httpUtil = new HttpMethodUtil();
         String result = httpUtil.getGetResult(url, new HashMap<String,Object>());
         return result;
