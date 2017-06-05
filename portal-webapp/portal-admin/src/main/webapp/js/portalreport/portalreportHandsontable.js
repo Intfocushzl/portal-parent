@@ -97,7 +97,6 @@ function optMerge() {
     table_tbody = $(".htCore").find("tbody");
     table_tbody_tr;
     table_tbody_tr_td;
-    var headersFormat = "";
 
     // 设置合并单元内的值相同
     if (mergedCellInfoCollectionArrLength > 0) {
@@ -132,13 +131,6 @@ function optMerge() {
     var getDataAtRow = hot.getDataAtRow(countRows - 1);
     reportHeadersConsole.innerText = JSON.stringify(getDataAtRow);
     vm.portalReport.reportHeadersConsole = JSON.stringify(getDataAtRow);
-    // 按照格式拼接
-    for (var i = 0; i < getDataAtRow.length; i++) {
-        headersFormat = headersFormat + "reportMeasureName:" + getDataAtRow[i] + "@@reportMeasureLab:" + getDataAtRow[i] + "|";
-    }
-    headersFormat = headersFormat.substring(0, headersFormat.length - 1);
-    reportHeadersFormatConsole.innerText = headersFormat;
-    vm.portalReport.reportHeadersFormatConsole = headersFormat;
 }
 
 // 新增
@@ -166,6 +158,8 @@ Handsontable.Dom.addEvent(saveOrUpdate, 'click', function () {
     reportOuterHtml.innerText = encodeURI($(".ht_master .handsontable table").prop("outerHTML"));
     //reportOuterHtml.innerText = encodeURI($(".htCore").prop("outerHTML"));
     vm.portalReport.reportOuterHtml = encodeURI($(".htCore").prop("outerHTML"));
+    // 设置格式化数据
+    vm.portalReport.reportHeadersFormatConsole = JSON.stringify(vm.headersFormat);
     // 保存或更新
     vm.saveOrUpdate();
 });

@@ -59,6 +59,7 @@ var vm = new Vue({
     data: {
         showList: true,
         title: null,
+        headersFormat: {},
         selectOption: null,
         executeCodeOld: null,
         portalReport: {}
@@ -179,6 +180,11 @@ var vm = new Vue({
                 hot.loadData(reportHotDataArr);
                 // 渲染表格
                 hot.render();
+
+                // 设置只读
+                vm.cellReadOnly();
+                // 初始化格式数据
+                vm.headersFormat = {};
             });
         },
         reload: function (event) {
@@ -233,7 +239,7 @@ var vm = new Vue({
             $.get("../cindexaperture/listOpt/", function (r) {
                 $("#cIndexAperture").append("<option value='' style='text-align: left;padding-right: 20px' >空-请选择</option>");
                 for (var i = 0; i < r.data.length; i++) {
-                    vm.selectOption = "<option class='" + r.data[i].fieldname + "' value='" + r.data[i].fieldname + "' style='text-align: left;padding-right: 20px' >" + r.data[i].fieldname + "|" + r.data[i].indexname + "</option>";
+                    vm.selectOption = "<option class='" + r.data[i].fieldname + "' value='" + r.data[i].fieldname + "' style='text-align: left;padding-right: 20px' >" + r.data[i].fieldname + ":" + r.data[i].indexname + "</option>";
                     $("#cIndexAperture").append(vm.selectOption);
                 }
                 // refresh刷新和render渲染操作，必不可少
@@ -246,7 +252,7 @@ var vm = new Vue({
             $.get("../reportdimindex/listOpt/", function (r) {
                 $("#reportDimIndex").append("<option value='' style='text-align: left;padding-right: 20px' >空-请选择</option>");
                 for (var i = 0; i < r.data.length; i++) {
-                    vm.selectOption = "<option class='" + r.data[i].dimlab + "' value='" + r.data[i].dimlab + "' style='text-align: left;padding-right: 20px' >" + r.data[i].dimlab + "|" + r.data[i].dimname + "</option>";
+                    vm.selectOption = "<option class='" + r.data[i].dimlab + "' value='" + r.data[i].dimlab + "' style='text-align: left;padding-right: 20px' >" + r.data[i].dimlab + ":" + r.data[i].dimname + "</option>";
                     $("#reportDimIndex").append(vm.selectOption);
                 }
                 // refresh刷新和render渲染操作，必不可少
@@ -259,7 +265,7 @@ var vm = new Vue({
             $.get("../cindexrefer/listOpt/", function (r) {
                 $("#cIndexRefer").append("<option value='' style='text-align: left;padding-right: 20px' >空-请选择</option>");
                 for (var i = 0; i < r.data.length; i++) {
-                    vm.selectOption = "<option class='" + r.data[i].referchar + "' value='" + r.data[i].referchar + "' style='text-align: left;padding-right: 20px' >" + r.data[i].referchar + "|" + r.data[i].def + "</option>";
+                    vm.selectOption = "<option class='" + r.data[i].referchar + "' value='" + r.data[i].referchar + "' style='text-align: left;padding-right: 20px' >" + r.data[i].referchar + ":" + r.data[i].refername + "</option>";
                     $("#cIndexRefer").append(vm.selectOption);
                 }
                 // refresh刷新和render渲染操作，必不可少
@@ -278,6 +284,13 @@ var vm = new Vue({
         bindCindexRefer: function (cIndexRefer) {
             // 设置指标值
             $('#cIndexRefer').selectpicker('val', cIndexRefer);
+        },
+        cellReadOnly: function () {
+            for (var i = 0; i < hot.countRows(); i++) {
+                for (var k = 0; k < hot.countCols(); k++) {
+                    hot.getCellMeta(i, k).readOnly = true;
+                }
+            }
         }
 
     }
