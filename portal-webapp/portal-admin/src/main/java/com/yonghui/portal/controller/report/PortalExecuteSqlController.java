@@ -104,4 +104,14 @@ public class PortalExecuteSqlController extends AbstractController {
         return R.success().put("sqlList", portalExecuteSqlList);
     }
 
+    //一键缓存
+    @RequestMapping("/addRedis")
+    public R addRedis(@RequestBody String[] codes){
+        for (String code:codes){
+            PortalExecuteSql portalExecuteSql = portalExecuteSqlService.queryObjectBySqlcode(code);
+            redisBizUtilAdmin.setPortalExecuteSql(code, code, JSONObject.toJSONString(portalExecuteSql));
+        }
+        return R.success();
+    }
+
 }

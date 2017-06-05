@@ -103,4 +103,14 @@ public class PortalProcedureController extends AbstractController {
         return R.success().put("proList", portalExecuteProList);
     }
 
+    //一键缓存
+    @RequestMapping("/addRedis")
+    public R addRedis(@RequestBody String[] codes) {
+        for (String code : codes) {
+            PortalProcedure portalProcedure = portalProcedureService.queryObjectByProcode(code);
+            redisBizUtilAdmin.setPortalProcedure(code, code, JSONObject.toJSONString(portalProcedure));
+        }
+        return R.success();
+    }
+
 }
