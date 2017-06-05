@@ -59,7 +59,9 @@ var vm = new Vue({
     data: {
         showList: true,
         title: null,
-        headersFormat: {},
+        headersFormatOld: {},
+        headersFormatUpdate: {},
+        headersFormatNew: {},
         selectOption: null,
         executeCodeOld: null,
         portalReport: {}
@@ -184,7 +186,8 @@ var vm = new Vue({
                 // 设置只读
                 vm.cellReadOnly();
                 // 初始化格式数据
-                vm.headersFormat = {};
+                vm.headersFormatOld = JSON.parse(vm.portalReport.reportHeadersFormatConsole);
+                vm.headersFormatUpdate = {};
             });
         },
         reload: function (event) {

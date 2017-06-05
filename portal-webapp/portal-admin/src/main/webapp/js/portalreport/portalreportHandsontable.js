@@ -5,6 +5,7 @@ var
     autosaveNotification,
     // 不适用jquery选择器
     reportHeadersContainer = this_$('reportHeadersContainer'),
+    reportConsole = this_$('reportConsole'),
     saveOrUpdate = this_$('saveOrUpdate'),	    // 保存数据
     addBtn = this_$('addBtn'),
     hot,
@@ -18,8 +19,9 @@ var
     mergedCellInfoCollectionArrLength,
     table_tbody = $(".htCore").find("tbody"),
     table_tbody_tr,
-    table_tbody_tr_td;
-
+    table_tbody_tr_td,
+    countCols,      // 总列数
+    countRows;      // 总行数
 
 hot = new Handsontable(reportHeadersContainer, {
     //data: getData(),    // 初始化数据
@@ -32,7 +34,7 @@ hot = new Handsontable(reportHeadersContainer, {
     contextMenu: ["row_above", "row_below", "col_left", "col_right", "remove_row", "remove_col", "mergeCells"],
     mergeCells: true,	        // 合并单元功能,将mergeCells选项设置为true或数组。
     //mergeCells: getMergeData(),
-    // 使用onChange调跟踪表中更改,source：行或列对象
+    // 1个或多个单元格的值被改变后调用,source：行或列对象
     afterChange: function (change, source) {
         /*if (source === 'loadData') {
          //alert(source);
@@ -46,15 +48,35 @@ hot = new Handsontable(reportHeadersContainer, {
             var thisCellValue = table_tbody_tr_td.text();
             //var thisCellValue = change[0][3];
             //alert("当前值" + thisCellValue);
-            if (thisCellValue == null || thisCellValue == undefined || thisCellValue == '') {
-                alert("内容不得为空");
-                return;
-            }
+            /*if (thisCellValue == null || thisCellValue == undefined || thisCellValue == '') {
+             alert("内容不得为空");
+             return;
+             }*/
             // 检查当前值是否正确
             /*ajax('json/save.json', 'GET', JSON.stringify({data: change}), function (data) {
              reportHeadersConsole.innerText = '检查当前值是否正确存...';
              });*/
         }
+    },
+    // afterSelection (r: Number, c: Number, r2: Number, c2: Number)：当一个或多个单元格被选中后调用
+    //其中，r：选中的单元格起始行，r2：选中单元格的终止行,c：选中的单元格的起始列，c2：选中的单元格的终止列
+    //选中单元格鼠标抬起后调用
+    afterSelectionEnd: function (r, c, r2, c2) {
+        var rowCol = r + "_" + c;
+        var indexName,
+            indexValue;
+        if (vm.headersFormatUpdate[rowCol] != null && vm.headersFormatUpdate[rowCol] != undefined && vm.headersFormatUpdate[rowCol] != "") {
+            indexName = vm.headersFormatUpdate[rowCol].indexName;
+            indexValue = vm.headersFormatUpdate[rowCol].indexValue;
+        } else if (vm.headersFormatNew[rowCol] != null && vm.headersFormatNew[rowCol] != undefined && vm.headersFormatNew[rowCol] != "") {
+            indexName = vm.headersFormatNew[rowCol].indexName;
+            indexValue = vm.headersFormatNew[rowCol].indexValue;
+        } else if (vm.headersFormatOld[rowCol] != null && vm.headersFormatOld[rowCol] != undefined && vm.headersFormatOld[rowCol] != "") {
+            indexName = vm.headersFormatOld[rowCol].indexName;
+            indexValue = vm.headersFormatOld[rowCol].indexValue;
+        }
+        //alert(indexValue + indexName);
+        reportConsole.innerText = indexValue + ' ' + indexName;
     }
 });
 
@@ -87,8 +109,8 @@ function optMerge() {
     // 合并单元格数组
     mergedCellInfoCollectionArr = hot.mergeCells.mergedCellInfoCollection;
     mergedCellInfoCollectionArrLength = mergedCellInfoCollectionArr.length;
-    var countCols = hot.countCols();     // 总列数
-    var countRows = hot.countRows();     // 总行数
+    countCols = hot.countCols();     // 总列数
+    countRows = hot.countRows();     // 总行数
     var mergedCellRow = 0;		            // 当前合并单元起始行
     var mergedCellCol = 0;		            // 当前合并单元起始列
     var mergedCellRowspan = 0;	            // 当前合并单元格跨行
@@ -111,9 +133,9 @@ function optMerge() {
             table_tbody_tr_td = table_tbody_tr.find("td:eq(" + mergedCellCol + ")");
             mergedCellValue = table_tbody_tr_td.text();
 
-            // 获取第 mergedCellRow + mergedCellRowspan 行
+            // 获取第 n 行
             for (var row_j = mergedCellRow; row_j < (mergedCellRow + mergedCellRowspan); row_j++) {
-                // 获取第 mergedCellRow + mergedCellColspan 列
+                // 获取第 n 列
                 for (var col_i = mergedCellCol; col_i < (mergedCellCol + mergedCellColspan); col_i++) {
                     //table_tbody_tr = table_tbody.find("tr:eq(" + row_j + ")");
                     //table_tbody_tr_td = table_tbody_tr.find("td:eq(" + col_i + ")");
@@ -131,6 +153,68 @@ function optMerge() {
     var getDataAtRow = hot.getDataAtRow(countRows - 1);
     reportHeadersConsole.innerText = JSON.stringify(getDataAtRow);
     vm.portalReport.reportHeadersConsole = JSON.stringify(getDataAtRow);
+}
+
+// 格式化数据
+function getDataJson(headersFormatUpdate) {
+    countRows = hot.countRows();     // 总行数
+    countCols = hot.countCols();     // 总列数
+    createJsonForSave("countRows", countRows);
+    createJsonForSave("countCols", countCols);
+
+    var cellObj;
+    var styleDisplay;
+    table_tbody = $(".htCore").find("tbody");
+    table_tbody_tr;
+    table_tbody_tr_td;
+
+    for (var row_j = 0; row_j < countRows; row_j++) {
+        for (var col_i = 0; col_i < countCols; col_i++) {
+            table_tbody_tr = table_tbody.find("tr:eq(" + row_j + ")");
+            table_tbody_tr_td = table_tbody_tr.find("td:eq(" + col_i + ")");
+            //table_tbody_tr_td.html(value);
+            styleDisplay = table_tbody_tr_td[0].style.display;
+            // 不处理 none隐藏的td
+            if (styleDisplay == "") {
+                // getCell(row.col,topmost):根据行列索引，获取一个被渲染的单元格，如果该单元格未被渲染则返回null
+                // 其中，row,col分别为行索引和列索引，topmost为表示是否是最上层，其值为true/false
+                cellObj = hot.getCell(row_j, col_i, true);
+                // 封装json
+                var rowCol = row_j + "_" + col_i;
+                var rowColJson = {};
+                rowColJson["row"] = row_j;
+                rowColJson["col"] = col_i;
+                rowColJson["rowSpan"] = cellObj.rowSpan;
+                rowColJson["colSpan"] = cellObj.colSpan;
+                rowColJson["name"] = cellObj.innerText;
+                if (vm.headersFormatUpdate[rowCol] != null && vm.headersFormatUpdate[rowCol] != undefined && vm.headersFormatUpdate[rowCol] != "") {
+                    rowColJson["indexName"] = vm.headersFormatUpdate[rowCol].indexName;
+                    rowColJson["indexValue"] = vm.headersFormatUpdate[rowCol].indexValue;
+                } else if (vm.headersFormatOld[rowCol] != null && vm.headersFormatOld[rowCol] != undefined && vm.headersFormatOld[rowCol] != "") {
+                    rowColJson["indexName"] = vm.headersFormatOld[rowCol].indexName;
+                    rowColJson["indexValue"] = vm.headersFormatOld[rowCol].indexValue;
+                }
+                createJsonForSave(rowCol, rowColJson);
+            }
+        }
+    }
+
+    reportHeadersFormatConsole.innerText = JSON.stringify(vm.headersFormatNew);
+    vm.portalReport.reportHeadersFormatConsole = JSON.stringify(vm.headersFormatNew);
+}
+
+
+// 参数：prop = 属性，val = 值
+function createJsonForSave(prop, val) {
+    // 如果 val 被忽略
+    if (typeof val === "undefined") {
+        // 删除属性
+        delete vm.headersFormatNew[prop];
+    }
+    else {
+        // 添加 或 修改
+        vm.headersFormatNew[prop] = val;
+    }
 }
 
 // 新增
@@ -153,13 +237,13 @@ Handsontable.Dom.addEvent(saveOrUpdate, 'click', function () {
     // 设置合并单元格数据
     reportMergedCellInfoCollection.innerText = JSON.stringify(hot.mergeCells.mergedCellInfoCollection);
     vm.portalReport.reportMergedCellInfoCollection = JSON.stringify(hot.mergeCells.mergedCellInfoCollection);
-    // 设置HTML
+    // 设置TABLE的HTML
     // encodeURI() 函数不转义：;/?:@&=+$,# (使用 encodeURIComponent 对这些字符进行编码),decodeURI 方法返回一个字符串值
     reportOuterHtml.innerText = encodeURI($(".ht_master .handsontable table").prop("outerHTML"));
     //reportOuterHtml.innerText = encodeURI($(".htCore").prop("outerHTML"));
     vm.portalReport.reportOuterHtml = encodeURI($(".htCore").prop("outerHTML"));
     // 设置格式化数据
-    vm.portalReport.reportHeadersFormatConsole = JSON.stringify(vm.headersFormat);
+    getDataJson(vm.headersFormatUpdate);
     // 保存或更新
     vm.saveOrUpdate();
 });

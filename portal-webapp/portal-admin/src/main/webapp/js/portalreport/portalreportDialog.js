@@ -60,14 +60,15 @@ $(function () {
                 var rowCol = tdRow + "_" + tdCol;
                 var rowColJson = {};
                 rowColJson["row"] = tdRow;
-                rowColJson["rowSpan"] = tdElem.rowSpan;
                 rowColJson["col"] = tdCol;
+                rowColJson["rowSpan"] = tdElem.rowSpan;
                 rowColJson["colSpan"] = tdElem.colSpan;
-                rowColJson["indexValue"] = indexValue;
-                rowColJson["indexName"] = indexName;
                 rowColJson["name"] = selectedText;
-                createJson(rowCol, rowColJson);
-                alert(JSON.stringify(vm.headersFormat));
+                rowColJson["indexName"] = indexName;
+                rowColJson["indexValue"] = indexValue;
+
+                createJsonForEdit(rowCol, rowColJson);
+                //alert(JSON.stringify(vm.headersFormatUpdate));
 
                 // 更新当前行的，source：行或列对象
                 source = hot.getSourceDataAtRow(tdRow);
@@ -103,14 +104,14 @@ function showialogForm(event, coords, elem) {
 }
 
 // 参数：prop = 属性，val = 值
-function createJson(prop, val) {
+function createJsonForEdit(prop, val) {
     // 如果 val 被忽略
     if (typeof val === "undefined") {
         // 删除属性
-        delete vm.headersFormat[prop];
+        delete vm.headersFormatUpdate[prop];
     }
     else {
         // 添加 或 修改
-        vm.headersFormat[prop] = val;
+        vm.headersFormatUpdate[prop] = val;
     }
 }
