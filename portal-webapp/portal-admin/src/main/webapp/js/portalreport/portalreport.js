@@ -93,9 +93,9 @@ var vm = new Vue({
             vm.getInfo(code);
             $("input[name='code']").attr("readonly", "readonly");
             // 根据单元格选中值默认选中
-            vm.bindCindexAperture("Profit");
+            /*vm.bindCindexAperture("Profit");
             vm.bindReportDimIndex("tm");
-            vm.bindCindexRefer("tb");
+            vm.bindCindexRefer("tb");*/
         },
         saveOrUpdate: function () {
             var code = vm.portalReport.code;

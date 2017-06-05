@@ -1,8 +1,4 @@
-var tdText,
-    tdTextOld,
-    tdHtml,
-    tdHtmlOld,
-    tdCol,
+var tdCol,
     tdRow,
     tdElem;
 
@@ -97,8 +93,6 @@ function showialogForm(event, coords, elem) {
     tdCol = coords.col;
     tdRow = coords.row;
     tdElem = elem;
-    tdTextOld = elem.innerText;
-    tdHtmlOld = elem.innerHTML;
     $("#dialog-form").dialog("open");
     $(".validateTips").html("至少选择一项");
 }
