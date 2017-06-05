@@ -60,7 +60,7 @@ $(function () {
                 var rowCol = tdRow + "_" + tdCol;
                 var rowColJson = {};
                 rowColJson["row"] = tdRow;
-                rowColJson["rowSpan"] = rowSpan;
+                rowColJson["rowSpan"] = tdElem.rowSpan;
                 rowColJson["col"] = tdCol;
                 rowColJson["colSpan"] = tdElem.colSpan;
                 rowColJson["indexValue"] = indexValue;
