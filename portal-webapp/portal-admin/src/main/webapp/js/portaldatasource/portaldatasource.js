@@ -149,6 +149,28 @@ var vm = new Vue({
             $("#jqGrid").jqGrid('setGridParam',{
                 page:page
             }).trigger("reloadGrid");
-        }
+        },
+        addRedis: function (event) {
+            var codes = getSelectedRows();
+            if(codes == null){
+                return ;
+            }
+            $.ajax({
+                type:"POST",
+                url:"../portaldatasource/addRedis",
+                data: JSON.stringify(codes),
+                success: function(r){
+                    if(r.code == 0){
+                        alert('操作成功', function(index){
+                            $("#jqGrid").trigger("reloadGrid");
+                        });
+                    }else{
+                        alert(r.msg);
+                    }
+                }
+            });
+        },
+
+
     }
 });

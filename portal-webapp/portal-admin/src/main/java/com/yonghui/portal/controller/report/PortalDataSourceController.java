@@ -104,5 +104,14 @@ public class PortalDataSourceController extends AbstractController {
         return R.success().put("dataSourceList",portalDataSourceList);
     }
 
+    //一键缓存
+    @RequestMapping("/addRedis")
+    public R addRedis(@RequestBody String[] codes){
+        for (String code:codes) {
+            PortalDataSource portalDataSource = portalDataSourceService.queryObjectByCode(code);
+            redisBizUtilAdmin.setPortalDataSource(code, code, JSONObject.toJSONString(portalDataSource));
+        }
+        return R.success();
+    }
 
 }
