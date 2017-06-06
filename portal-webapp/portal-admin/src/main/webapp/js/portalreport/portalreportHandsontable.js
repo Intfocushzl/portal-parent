@@ -133,9 +133,9 @@ function optMerge() {
     }
 
     // 获取最后一行所有单元格的值
-    var getDataAtRow = hot.getDataAtRow(countRows - 1);
-    reportHeadersConsole.innerText = JSON.stringify(getDataAtRow);
-    vm.portalReport.reportHeadersConsole = JSON.stringify(getDataAtRow);
+    /*var getDataAtRow = hot.getDataAtRow(countRows - 1);
+     reportHeadersConsole.innerText = JSON.stringify(getDataAtRow);
+     vm.portalReport.reportHeadersConsole = JSON.stringify(getDataAtRow);*/
 }
 
 // 格式化数据
@@ -203,6 +203,19 @@ function getDataHtml() {
     }
 }
 
+// 获取最后一行数据
+function getLastHeader() {
+    countRows = hot.countRows();     // 总行数
+    countCols = hot.countCols();     // 总列数
+    var row_id = countRows - 1;
+
+    var lastRowHeaders = "";
+    for (var col_i = 0; col_i < countCols; col_i++) {
+        lastRowHeaders = lastRowHeaders + hot.getDataAtCell(row_id, col_i).split(":")[2] + ",";
+    }
+    vm.portalReport.reportHeadersConsole = lastRowHeaders.substr(0, lastRowHeaders.length - 1);
+}
+
 // 参数：prop = 属性，val = 值
 function createJsonForSave(prop, val) {
     // 如果 val 被忽略
@@ -233,21 +246,30 @@ Handsontable.Dom.addEvent(saveOrUpdate, 'click', function () {
     reportOuterHtml.innerText = encodeURI($(".ht_master .handsontable table").prop("outerHTML"));
     //reportOuterHtml.innerText = encodeURI($(".htCore").prop("outerHTML"));
     vm.portalReport.reportOuterHtml = encodeURI($(".htCore").prop("outerHTML"));
+
     // 延迟加载1秒
     clearTimeout(autosaveNotification);
     autosaveNotification = setTimeout(function () {
 
     }, 1000);
+
     // 保存table后再渲染表格
     hot.render();
+
     // 处理合并单元格
     optMerge();
+
     // 设置表格数据
     reportHotData.innerText = JSON.stringify(hot.getData());
     vm.portalReport.reportHotData = JSON.stringify(hot.getData());
+
     // 设置合并单元格数据
     reportMergedCellInfoCollection.innerText = JSON.stringify(hot.mergeCells.mergedCellInfoCollection);
     vm.portalReport.reportMergedCellInfoCollection = JSON.stringify(hot.mergeCells.mergedCellInfoCollection);
+
+    // 获取最后一行数据
+    getLastHeader();
+    
     // 设置格式化数据
     getDataJson();
     // 保存或更新
