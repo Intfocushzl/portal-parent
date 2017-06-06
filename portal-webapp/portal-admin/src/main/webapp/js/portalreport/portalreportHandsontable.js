@@ -49,34 +49,17 @@ hot = new Handsontable(reportHeadersContainer, {
             //var thisCellValue = change[0][3];
             //alert("当前值" + thisCellValue);
             /*if (thisCellValue == null || thisCellValue == undefined || thisCellValue == '') {
-             alert("内容不得为空");
-             return;
-             }*/
-            // 检查当前值是否正确
-            /*ajax('json/save.json', 'GET', JSON.stringify({data: change}), function (data) {
-             reportHeadersConsole.innerText = '检查当前值是否正确存...';
-             });*/
+                alert("内容不得为空");
+                return;
+            }*/
         }
     },
     // afterSelection (r: Number, c: Number, r2: Number, c2: Number)：当一个或多个单元格被选中后调用
     //其中，r：选中的单元格起始行，r2：选中单元格的终止行,c：选中的单元格的起始列，c2：选中的单元格的终止列
     //选中单元格鼠标抬起后调用
     afterSelectionEnd: function (r, c, r2, c2) {
-        var rowCol = r + "_" + c;
-        var indexName,
-            indexValue;
-        if (vm.headersFormatUpdate[rowCol] != null && vm.headersFormatUpdate[rowCol] != undefined && vm.headersFormatUpdate[rowCol] != "") {
-            indexName = vm.headersFormatUpdate[rowCol].indexName;
-            indexValue = vm.headersFormatUpdate[rowCol].indexValue;
-        } else if (vm.headersFormatNew[rowCol] != null && vm.headersFormatNew[rowCol] != undefined && vm.headersFormatNew[rowCol] != "") {
-            indexName = vm.headersFormatNew[rowCol].indexName;
-            indexValue = vm.headersFormatNew[rowCol].indexValue;
-        } else if (vm.headersFormatOld[rowCol] != null && vm.headersFormatOld[rowCol] != undefined && vm.headersFormatOld[rowCol] != "") {
-            indexName = vm.headersFormatOld[rowCol].indexName;
-            indexValue = vm.headersFormatOld[rowCol].indexValue;
-        }
-        //alert(indexValue + indexName);
-        reportConsole.innerText = indexValue + ' ' + indexName;
+        //getDataAtCell(row,col):根据行列索引获取单元格的值
+        reportConsole.innerText = hot.getDataAtCell(r, c);
     }
 });
 
@@ -156,7 +139,7 @@ function optMerge() {
 }
 
 // 格式化数据
-function getDataJson(headersFormatUpdate) {
+function getDataJson() {
     countRows = hot.countRows();     // 总行数
     countCols = hot.countCols();     // 总列数
     createJsonForSave("countRows", countRows);
@@ -186,14 +169,11 @@ function getDataJson(headersFormatUpdate) {
                 rowColJson["col"] = col_i;
                 rowColJson["rowSpan"] = cellObj.rowSpan;
                 rowColJson["colSpan"] = cellObj.colSpan;
-                rowColJson["name"] = cellObj.innerText;
-                if (vm.headersFormatUpdate[rowCol] != null && vm.headersFormatUpdate[rowCol] != undefined && vm.headersFormatUpdate[rowCol] != "") {
-                    rowColJson["indexName"] = vm.headersFormatUpdate[rowCol].indexName;
-                    rowColJson["indexValue"] = vm.headersFormatUpdate[rowCol].indexValue;
-                } else if (vm.headersFormatOld[rowCol] != null && vm.headersFormatOld[rowCol] != undefined && vm.headersFormatOld[rowCol] != "") {
-                    rowColJson["indexName"] = vm.headersFormatOld[rowCol].indexName;
-                    rowColJson["indexValue"] = vm.headersFormatOld[rowCol].indexValue;
-                }
+                rowColJson["indexText"] = cellObj.innerText;
+                rowColJson["indexValue"] = cellObj.innerText.split(":")[0];
+                rowColJson["indexNameAppend"] = cellObj.innerText.split(":")[1];
+                rowColJson["indexName"] = cellObj.innerText.split(":")[2];
+                rowColJson["indexDef"] = cellObj.innerText.split(":")[3];
                 createJsonForSave(rowCol, rowColJson);
             }
         }
@@ -243,7 +223,7 @@ Handsontable.Dom.addEvent(saveOrUpdate, 'click', function () {
     //reportOuterHtml.innerText = encodeURI($(".htCore").prop("outerHTML"));
     vm.portalReport.reportOuterHtml = encodeURI($(".htCore").prop("outerHTML"));
     // 设置格式化数据
-    getDataJson(vm.headersFormatUpdate);
+    getDataJson();
     // 保存或更新
     vm.saveOrUpdate();
 });

@@ -4,8 +4,11 @@ var tdCol,
 
 $(function () {
     var indexValue,
+        indexNameAppend,
         indexName,
+        indexDef,
         selectedText,
+        tdText,
         cIndexAperture = $("#cIndexAperture"),
         reportDimIndex = $("#reportDimIndex"),
         cIndexRefer = $("#cIndexRefer");
@@ -18,58 +21,50 @@ $(function () {
         modal: true,
         buttons: {
             "确定": function () {
-                //alert(cIndexAperture.val());
-                //alert(reportDimIndex.val());
-                //alert(cIndexRefer.val());
                 indexValue = "";
+                indexNameAppend = "";
                 indexName = "";
+                indexDef = "";
                 selectedText = "";
+                tdText = "";
                 if (getStringValue(cIndexAperture.val()) != "") {
-                    indexValue = cIndexAperture.val();
-                    selectedText = cIndexAperture.find("option:selected").text().split(":")[1];
-                    indexName = selectedText;
+                    indexValue = cIndexAperture.val().split(":")[0];
+                    indexName = cIndexAperture.val().split(":")[1];
+                    indexNameAppend = indexName;
+                    indexDef = cIndexAperture.val().split(":")[2];
+                    //selectedText = cIndexAperture.find("option:selected").text().split(":")[1];
+                    //indexName = selectedText;
                 }
                 if (getStringValue(reportDimIndex.val()) != "") {
                     if (getStringValue(cIndexAperture.val()) != "") {
                         indexValue = indexValue + "_";
-                        indexName = indexName + "_";
+                        indexNameAppend = indexNameAppend + "_";
                     }
-                    indexValue = indexValue + reportDimIndex.val();
-                    selectedText = reportDimIndex.find("option:selected").text().split(":")[1];
-                    indexName = indexName + selectedText;
+                    indexValue = indexValue + reportDimIndex.val().split(":")[0];
+                    indexName = reportDimIndex.val().split(":")[1];
+                    indexNameAppend = indexNameAppend + indexName;
+                    indexDef = reportDimIndex.val().split(":")[2];
                 }
                 if (getStringValue(cIndexRefer.val()) != "") {
                     if (getStringValue(cIndexAperture.val()) != "" || getStringValue(reportDimIndex.val()) != "") {
                         indexValue = indexValue + "_";
-                        indexName = indexName + "_";
+                        indexNameAppend = indexNameAppend + "_";
                     }
                     indexValue = indexValue + cIndexRefer.val();
-                    selectedText = cIndexRefer.find("option:selected").text().split(":")[1];
-                    indexName = indexName + selectedText;
+                    indexName = cIndexRefer.val().split(":")[1];
+                    indexNameAppend = indexNameAppend + indexName;
+                    indexDef = cIndexRefer.val().split(":")[2];
                 }
                 if (getStringValue(indexValue) == '') {
                     alert("至少选择一项！");
                     return;
                 }
 
-                // 封装json
-                var rowCol = tdRow + "_" + tdCol;
-                var rowColJson = {};
-                rowColJson["row"] = tdRow;
-                rowColJson["col"] = tdCol;
-                rowColJson["rowSpan"] = tdElem.rowSpan;
-                rowColJson["colSpan"] = tdElem.colSpan;
-                rowColJson["name"] = selectedText;
-                rowColJson["indexName"] = indexName;
-                rowColJson["indexValue"] = indexValue;
-
-                createJsonForEdit(rowCol, rowColJson);
-                //alert(JSON.stringify(vm.headersFormatUpdate));
-
                 // 更新当前行的，source：行或列对象
                 source = hot.getSourceDataAtRow(tdRow);
                 // 设置新值到一个单元格
-                hot.setDataAtCell(tdRow, tdCol, selectedText, source);
+                tdText = indexValue + ":" + indexNameAppend + ":" + indexName + ":" + indexDef;
+                hot.setDataAtCell(tdRow, tdCol, tdText, source);
 
                 // 关闭窗口
                 $(this).dialog("close");
@@ -95,17 +90,4 @@ function showialogForm(event, coords, elem) {
     tdElem = elem;
     $("#dialog-form").dialog("open");
     $(".validateTips").html("至少选择一项");
-}
-
-// 参数：prop = 属性，val = 值
-function createJsonForEdit(prop, val) {
-    // 如果 val 被忽略
-    if (typeof val === "undefined") {
-        // 删除属性
-        delete vm.headersFormatUpdate[prop];
-    }
-    else {
-        // 添加 或 修改
-        vm.headersFormatUpdate[prop] = val;
-    }
 }

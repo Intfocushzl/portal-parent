@@ -59,8 +59,6 @@ var vm = new Vue({
     data: {
         showList: true,
         title: null,
-        headersFormatOld: {},
-        headersFormatUpdate: {},
         headersFormatNew: {},
         selectOption: null,
         executeCodeOld: null,
@@ -94,8 +92,8 @@ var vm = new Vue({
             $("input[name='code']").attr("readonly", "readonly");
             // 根据单元格选中值默认选中
             /*vm.bindCindexAperture("Profit");
-            vm.bindReportDimIndex("tm");
-            vm.bindCindexRefer("tb");*/
+             vm.bindReportDimIndex("tm");
+             vm.bindCindexRefer("tb");*/
         },
         saveOrUpdate: function () {
             var code = vm.portalReport.code;
@@ -185,9 +183,6 @@ var vm = new Vue({
 
                 // 设置只读
                 vm.cellReadOnly();
-                // 初始化格式数据
-                vm.headersFormatOld = JSON.parse(vm.portalReport.reportHeadersFormatConsole);
-                vm.headersFormatUpdate = {};
             });
         },
         reload: function (event) {
@@ -242,7 +237,7 @@ var vm = new Vue({
             $.get("../cindexaperture/listOpt/", function (r) {
                 $("#cIndexAperture").append("<option value='' style='text-align: left;padding-right: 20px' >空-请选择</option>");
                 for (var i = 0; i < r.data.length; i++) {
-                    vm.selectOption = "<option class='" + r.data[i].fieldname + "' value='" + r.data[i].fieldname + "' style='text-align: left;padding-right: 20px' >" + r.data[i].fieldname + ":" + r.data[i].indexname + "</option>";
+                    vm.selectOption = "<option class='" + r.data[i].fieldname + "' value='" + r.data[i].fieldname + ":" + r.data[i].indexname + ":" + r.data[i].indexname + "' style='text-align: left;padding-right: 20px' >" + r.data[i].fieldname + ":" + r.data[i].indexname + "</option>";
                     $("#cIndexAperture").append(vm.selectOption);
                 }
                 // refresh刷新和render渲染操作，必不可少
@@ -255,7 +250,7 @@ var vm = new Vue({
             $.get("../reportdimindex/listOpt/", function (r) {
                 $("#reportDimIndex").append("<option value='' style='text-align: left;padding-right: 20px' >空-请选择</option>");
                 for (var i = 0; i < r.data.length; i++) {
-                    vm.selectOption = "<option class='" + r.data[i].dimlab + "' value='" + r.data[i].dimlab + "' style='text-align: left;padding-right: 20px' >" + r.data[i].dimlab + ":" + r.data[i].dimname + "</option>";
+                    vm.selectOption = "<option class='" + r.data[i].dimlab + "' value='" + r.data[i].dimlab + ":" + r.data[i].dimname + ":" + r.data[i].dimname + "' style='text-align: left;padding-right: 20px' >" + r.data[i].dimlab + ":" + r.data[i].dimname + "</option>";
                     $("#reportDimIndex").append(vm.selectOption);
                 }
                 // refresh刷新和render渲染操作，必不可少
@@ -268,25 +263,13 @@ var vm = new Vue({
             $.get("../cindexrefer/listOpt/", function (r) {
                 $("#cIndexRefer").append("<option value='' style='text-align: left;padding-right: 20px' >空-请选择</option>");
                 for (var i = 0; i < r.data.length; i++) {
-                    vm.selectOption = "<option class='" + r.data[i].referchar + "' value='" + r.data[i].referchar + "' style='text-align: left;padding-right: 20px' >" + r.data[i].referchar + ":" + r.data[i].refername + "</option>";
+                    vm.selectOption = "<option class='" + r.data[i].referchar + "' value='" + r.data[i].referchar + ":" + r.data[i].refername + ":" + r.data[i].def + "' style='text-align: left;padding-right: 20px' >" + r.data[i].referchar + ":" + r.data[i].refername + "</option>";
                     $("#cIndexRefer").append(vm.selectOption);
                 }
                 // refresh刷新和render渲染操作，必不可少
                 $('#cIndexRefer').selectpicker('refresh');
                 $('#cIndexRefer').selectpicker('render');
             });
-        },
-        bindCindexAperture: function (cIndexAperture) {
-            // 设置属性值
-            $('#cIndexAperture').selectpicker('val', cIndexAperture);
-        },
-        bindReportDimIndex: function (reportDimIndex) {
-            // 设置维度值
-            $('#reportDimIndex').selectpicker('val', reportDimIndex);
-        },
-        bindCindexRefer: function (cIndexRefer) {
-            // 设置指标值
-            $('#cIndexRefer').selectpicker('val', cIndexRefer);
         },
         cellReadOnly: function () {
             for (var i = 0; i < hot.countRows(); i++) {
