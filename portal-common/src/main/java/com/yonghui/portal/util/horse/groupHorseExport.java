@@ -43,7 +43,15 @@ public class groupHorseExport {
         int cellInde = 0;
 
         cellTitle = rowTitle.createCell(++cellInde);
-        cellTitle.setCellValue("集群/省区标记");
+        cellTitle.setCellValue("区域");
+        cellTitle.setCellStyle(styleTitle);
+
+        cellTitle = rowTitle.createCell(++cellInde);
+        cellTitle.setCellValue("省区");
+        cellTitle.setCellStyle(styleTitle);
+
+        cellTitle = rowTitle.createCell(++cellInde);
+        cellTitle.setCellValue("店编");
         cellTitle.setCellStyle(styleTitle);
 
         cellTitle = rowTitle.createCell(++cellInde);
@@ -59,7 +67,7 @@ public class groupHorseExport {
         cellTitle.setCellStyle(styleTitle);
 
         cellTitle = rowTitle.createCell(++cellInde);
-        cellTitle.setCellValue("销售同比成长率");
+        cellTitle.setCellValue("损耗额");
         cellTitle.setCellStyle(styleTitle);
 
         cellTitle = rowTitle.createCell(++cellInde);
@@ -71,19 +79,11 @@ public class groupHorseExport {
         cellTitle.setCellStyle(styleTitle);
 
         cellTitle = rowTitle.createCell(++cellInde);
-        cellTitle.setCellValue("综合毛利额同比成长率");
-        cellTitle.setCellStyle(styleTitle);
-
-        cellTitle = rowTitle.createCell(++cellInde);
         cellTitle.setCellValue("客流");
         cellTitle.setCellStyle(styleTitle);
 
         cellTitle = rowTitle.createCell(++cellInde);
         cellTitle.setCellValue("客流同比");
-        cellTitle.setCellStyle(styleTitle);
-
-        cellTitle = rowTitle.createCell(++cellInde);
-        cellTitle.setCellValue("客流同比成长率");
         cellTitle.setCellStyle(styleTitle);
 
         cellTitle = rowTitle.createCell(++cellInde);
@@ -95,19 +95,7 @@ public class groupHorseExport {
         cellTitle.setCellStyle(styleTitle);
 
         cellTitle = rowTitle.createCell(++cellInde);
-        cellTitle.setCellValue("周转天数");
-        cellTitle.setCellStyle(styleTitle);
-
-        cellTitle = rowTitle.createCell(++cellInde);
-        cellTitle.setCellValue("损耗额");
-        cellTitle.setCellStyle(styleTitle);
-
-        cellTitle = rowTitle.createCell(++cellInde);
-        cellTitle.setCellValue("生鲜销售额");
-        cellTitle.setCellStyle(styleTitle);
-
-        cellTitle = rowTitle.createCell(++cellInde);
-        cellTitle.setCellValue("损耗率");
+        cellTitle.setCellValue("数据启用标记");
         cellTitle.setCellStyle(styleTitle);
 
         HSSFCellStyle styleCenter = wb.createCellStyle();
@@ -123,7 +111,15 @@ public class groupHorseExport {
             cell.setCellStyle(styleCenter);
 
             cell = row.createCell(++cellInde);
-            cell.setCellValue(formatObjToStr(map.get("clusterflag")));
+            cell.setCellValue(formatObjToStr(map.get("areaname")));
+            cell.setCellStyle(styleCenter);
+
+            cell = row.createCell(++cellInde);
+            cell.setCellValue(formatObjToStr(map.get("province")));
+            cell.setCellStyle(styleCenter);
+
+            cell = row.createCell(++cellInde);
+            cell.setCellValue(formatObjToStr(map.get("sapshopid")));
             cell.setCellStyle(styleCenter);
 
             cell = row.createCell(++cellInde);
@@ -139,7 +135,7 @@ public class groupHorseExport {
             cell.setCellStyle(styleCenter);
 
             cell = row.createCell(++cellInde);
-            cell.setCellValue(formatObjToStr(map.get("saletblv")));
+            cell.setCellValue(formatObjToStr(map.get("lost")));
             cell.setCellStyle(styleCenter);
 
             cell = row.createCell(++cellInde);
@@ -151,19 +147,11 @@ public class groupHorseExport {
             cell.setCellStyle(styleCenter);
 
             cell = row.createCell(++cellInde);
-            cell.setCellValue(formatObjToStr(map.get("profittblv")));
-            cell.setCellStyle(styleCenter);
-
-            cell = row.createCell(++cellInde);
             cell.setCellValue(formatObjToStr(map.get("kl")));
             cell.setCellStyle(styleCenter);
 
             cell = row.createCell(++cellInde);
             cell.setCellValue(formatObjToStr(map.get("kltb")));
-            cell.setCellStyle(styleCenter);
-
-            cell = row.createCell(++cellInde);
-            cell.setCellValue(formatObjToStr(map.get("kltblv")));
             cell.setCellStyle(styleCenter);
 
             cell = row.createCell(++cellInde);
@@ -175,20 +163,9 @@ public class groupHorseExport {
             cell.setCellStyle(styleCenter);
 
             cell = row.createCell(++cellInde);
-            cell.setCellValue(formatObjToStr(map.get("zzts")));
+            cell.setCellValue(formatObjToStr(map.get("sflag")));
             cell.setCellStyle(styleCenter);
 
-            cell = row.createCell(++cellInde);
-            cell.setCellValue(formatObjToStr(map.get("lost")));
-            cell.setCellStyle(styleCenter);
-
-            cell = row.createCell(++cellInde);
-            cell.setCellValue(formatObjToStr(map.get("salefresh")));
-            cell.setCellStyle(styleCenter);
-
-            cell = row.createCell(++cellInde);
-            cell.setCellValue(formatObjToStr(map.get("lostlv")));
-            cell.setCellStyle(styleCenter);
         }
         return wb;
     }

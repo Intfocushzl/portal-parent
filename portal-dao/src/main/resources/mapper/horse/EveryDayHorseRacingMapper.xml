@@ -160,7 +160,7 @@
 
     <!--商行赛马指标明细下载-->
     <select id="groupHorse" resultType="Map" parameterType="Map">
-        select * from saima.data_basic_group_hz
+        select * from saima.data_basic_group
     </select>
 
 </mapper>
