@@ -81,7 +81,7 @@ public class AppQrCodeApiController {
             //注意此处code  admin配置的是98  为了给app扫码统一code（REP_000043）
             list = reportUtil.jdbcProListResultListMapByParam(SQLFilter.sqlInject("REP_000043"),newParamStr);
             //调用外部接口获取数据
-            result = reportUtil.qRResultByParam(parameter, URL);
+            result = reportUtil.qRResultByParam(SQLFilter.sqlInject(newParamStr), URL);
             log.setEndTime(new Date());
             log.setRemark("app@@qrCode");
             sysoperationLogService.SaveLog(log);

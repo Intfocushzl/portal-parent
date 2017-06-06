@@ -886,9 +886,10 @@ public class HorseImportExcelController {
                         throw new Exception("填写的数据含有空值");
                     }
                     // 判断是否全部是数字
-                    boolean isNum = StringUtils.isNumeric(cell.getStringCellValue().trim());
-                    if (!isNum) {
-                        throw new Exception("表格中有非数字的数据");
+                    try {
+                        isNumber(cell.getStringCellValue().trim());
+                    } catch (Exception e) {
+                        throw new Exception("填写的数据含有非法字符");
                     }
                     if (c == 0) {
                         if (cell.getStringCellValue().trim().length() != 6) {
@@ -958,5 +959,9 @@ public class HorseImportExcelController {
             result = year + "0" + month;
         }
         return result;
+    }
+
+    public  Double isNumber(String str) {
+        return Double.parseDouble(str);
     }
 }
