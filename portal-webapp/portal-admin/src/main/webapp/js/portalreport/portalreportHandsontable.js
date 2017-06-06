@@ -49,9 +49,9 @@ hot = new Handsontable(reportHeadersContainer, {
             //var thisCellValue = change[0][3];
             //alert("当前值" + thisCellValue);
             /*if (thisCellValue == null || thisCellValue == undefined || thisCellValue == '') {
-                alert("内容不得为空");
-                return;
-            }*/
+             alert("内容不得为空");
+             return;
+             }*/
         }
     },
     // afterSelection (r: Number, c: Number, r2: Number, c2: Number)：当一个或多个单元格被选中后调用
@@ -66,7 +66,7 @@ hot = new Handsontable(reportHeadersContainer, {
 // 初始化数据
 function getData() {
     return [
-        [""]
+        ["", "", "", "", "", ""]
     ];
 }
 
