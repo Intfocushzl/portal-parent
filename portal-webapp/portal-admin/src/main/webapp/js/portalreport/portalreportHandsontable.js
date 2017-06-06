@@ -25,7 +25,7 @@ var
 
 hot = new Handsontable(reportHeadersContainer, {
     //data: getData(),    // 初始化数据
-    startRows: 1,		        // 初始行数
+    startRows: 6,		        // 初始行数
     startCols: 1,	            // 初始列数
     //rowHeaders: true,	        // 显示行标题
     //colHeaders: true,	        // 显示列标题
