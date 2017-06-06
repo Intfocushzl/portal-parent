@@ -207,10 +207,9 @@ public class ReportUtil {
         //请求参数加密（key + parameter + key）
         Md5Util util = new Md5Util();
         String sign = util.getMd5("MD5", 0, null, key + sb + key);
-        map.put("sign", sign);
         HttpMethodUtil httpUtil = new HttpMethodUtil();
         try {
-            result = httpUtil.getPostResult(url, map);
+            result = httpUtil.getGetResult(url, map);
         } catch (Exception e) {
             throw new RRException("调用外部系统出错：" + yongHuiReportCustomCode + "异常信息为：" + e.getMessage());
         }

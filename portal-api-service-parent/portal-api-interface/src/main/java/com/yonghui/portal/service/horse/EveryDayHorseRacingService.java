@@ -17,4 +17,7 @@ public interface EveryDayHorseRacingService {
 	
 	public List<EveryDayHorseRacingNew> shopHorse(Map<String, Object> map);
 
+	//商行赛马指标明细下载
+	public List<Map<String, Object>> groupHorse();
+
 }
