@@ -30,6 +30,10 @@ public class PortalReport extends AuditAuto {
     //表格HTML
     private String reportOuterHtml;
 
+    private int reportHeadersCountRows;
+
+    private int reportHeadersCountCols;
+
     @Override
     public Long getId() {
         return id;
@@ -148,5 +152,21 @@ public class PortalReport extends AuditAuto {
      */
     public String getReportOuterHtml() {
         return reportOuterHtml;
+    }
+
+    public int getReportHeadersCountRows() {
+        return reportHeadersCountRows;
+    }
+
+    public void setReportHeadersCountRows(int reportHeadersCountRows) {
+        this.reportHeadersCountRows = reportHeadersCountRows;
+    }
+
+    public int getReportHeadersCountCols() {
+        return reportHeadersCountCols;
+    }
+
+    public void setReportHeadersCountCols(int reportHeadersCountCols) {
+        this.reportHeadersCountCols = reportHeadersCountCols;
     }
 }

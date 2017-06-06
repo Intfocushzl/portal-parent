@@ -54,6 +54,8 @@
 			`title`,
 			`execute_code`,
 			`execute_type`,
+			`report_headers_count_rows`,
+			`report_headers_count_cols`,
 			`report_headers_console`,
 			`report_headers_format_console`,
 			`report_hot_data`,
@@ -74,6 +76,8 @@
 			#{title},
 			#{executeCode},
 			#{executeType},
+			#{reportHeadersCountRows},
+			#{reportHeadersCountCols},
 			#{reportHeadersConsole},
 			#{reportHeadersFormatConsole},
 			#{reportHotData},
@@ -96,6 +100,8 @@
             <if test="title != null">`title` = #{title},</if>
             <if test="executeCode != null">`execute_code` = #{executeCode},</if>
             <if test="executeType != null">`execute_type` = #{executeType},</if>
+            <if test="reportHeadersCountRows != null">`report_headers_count_rows` = #{reportHeadersCountRows},</if>
+            <if test="reportHeadersCountCols != null">`report_headers_count_cols` = #{reportHeadersCountCols},</if>
             <if test="reportHeadersConsole != null">`report_headers_console` = #{reportHeadersConsole},</if>
             <if test="reportHeadersFormatConsole != null">`report_headers_format_console` =
                 #{reportHeadersFormatConsole},

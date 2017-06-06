@@ -142,8 +142,6 @@ function optMerge() {
 function getDataJson() {
     countRows = hot.countRows();     // 总行数
     countCols = hot.countCols();     // 总列数
-    createJsonForSave("countRows", countRows);
-    createJsonForSave("countCols", countCols);
 
     var cellObj;
     var styleDisplay;
@@ -207,6 +205,9 @@ function getDataHtml() {
 function getLastHeader() {
     countRows = hot.countRows();     // 总行数
     countCols = hot.countCols();     // 总列数
+    vm.portalReport.reportHeadersCountRows = countRows;
+    vm.portalReport.reportHeadersCountCols = countCols;
+
     var row_id = countRows - 1;
 
     var lastRowHeaders = "";
@@ -269,7 +270,7 @@ Handsontable.Dom.addEvent(saveOrUpdate, 'click', function () {
 
     // 获取最后一行数据
     getLastHeader();
-    
+
     // 设置格式化数据
     getDataJson();
     // 保存或更新
