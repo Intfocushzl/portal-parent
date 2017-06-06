@@ -50,7 +50,7 @@ $(function () {
                         indexValue = indexValue + "_";
                         indexNameAppend = indexNameAppend + "_";
                     }
-                    indexValue = indexValue + cIndexRefer.val();
+                    indexValue = indexValue + cIndexRefer.val().split(":")[0]
                     indexName = cIndexRefer.val().split(":")[1];
                     indexNameAppend = indexNameAppend + indexName;
                     indexDef = cIndexRefer.val().split(":")[2];
@@ -65,6 +65,9 @@ $(function () {
                 // 设置新值到一个单元格
                 tdText = indexValue + ":" + indexNameAppend + ":" + indexName + ":" + indexDef;
                 hot.setDataAtCell(tdRow, tdCol, tdText, source);
+
+                // 只显示名称
+                getDataHtml();
 
                 // 关闭窗口
                 $(this).dialog("close");

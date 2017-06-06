@@ -184,6 +184,25 @@ function getDataJson() {
 }
 
 
+// 格式化html数据
+function getDataHtml() {
+    countRows = hot.countRows();     // 总行数
+    countCols = hot.countCols();     // 总列数
+    table_tbody = $(".htCore").find("tbody");
+    table_tbody_tr;
+    table_tbody_tr_td;
+    var indexName;
+
+    for (var row_j = 0; row_j < countRows; row_j++) {
+        for (var col_i = 0; col_i < countCols; col_i++) {
+            table_tbody_tr = table_tbody.find("tr:eq(" + row_j + ")");
+            table_tbody_tr_td = table_tbody_tr.find("td:eq(" + col_i + ")");
+            indexName = hot.getDataAtCell(row_j, col_i).split(":")[2];
+            table_tbody_tr_td.html(indexName);
+        }
+    }
+}
+
 // 参数：prop = 属性，val = 值
 function createJsonForSave(prop, val) {
     // 如果 val 被忽略
@@ -209,6 +228,18 @@ Handsontable.Dom.addEvent(addBtn, 'click', function () {
 
 // 保存所有单元格的数据
 Handsontable.Dom.addEvent(saveOrUpdate, 'click', function () {
+    // 先设置TABLE的HTML
+    // encodeURI() 函数不转义：;/?:@&=+$,# (使用 encodeURIComponent 对这些字符进行编码),decodeURI 方法返回一个字符串值
+    reportOuterHtml.innerText = encodeURI($(".ht_master .handsontable table").prop("outerHTML"));
+    //reportOuterHtml.innerText = encodeURI($(".htCore").prop("outerHTML"));
+    vm.portalReport.reportOuterHtml = encodeURI($(".htCore").prop("outerHTML"));
+    // 延迟加载1秒
+    clearTimeout(autosaveNotification);
+    autosaveNotification = setTimeout(function () {
+
+    }, 1000);
+    // 保存table后再渲染表格
+    hot.render();
     // 处理合并单元格
     optMerge();
     // 设置表格数据
@@ -217,11 +248,6 @@ Handsontable.Dom.addEvent(saveOrUpdate, 'click', function () {
     // 设置合并单元格数据
     reportMergedCellInfoCollection.innerText = JSON.stringify(hot.mergeCells.mergedCellInfoCollection);
     vm.portalReport.reportMergedCellInfoCollection = JSON.stringify(hot.mergeCells.mergedCellInfoCollection);
-    // 设置TABLE的HTML
-    // encodeURI() 函数不转义：;/?:@&=+$,# (使用 encodeURIComponent 对这些字符进行编码),decodeURI 方法返回一个字符串值
-    reportOuterHtml.innerText = encodeURI($(".ht_master .handsontable table").prop("outerHTML"));
-    //reportOuterHtml.innerText = encodeURI($(".htCore").prop("outerHTML"));
-    vm.portalReport.reportOuterHtml = encodeURI($(".htCore").prop("outerHTML"));
     // 设置格式化数据
     getDataJson();
     // 保存或更新

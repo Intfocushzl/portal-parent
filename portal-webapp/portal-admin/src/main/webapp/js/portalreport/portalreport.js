@@ -183,6 +183,8 @@ var vm = new Vue({
 
                 // 设置只读
                 vm.cellReadOnly();
+                // 只显示名称
+                getDataHtml();
             });
         },
         reload: function (event) {
