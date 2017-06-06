@@ -82,7 +82,7 @@ public class ReportUtil {
      * @param yongHuiReportCustomCode
      * @return
      */
-    private PortalReport getPortalReport(String yongHuiReportCustomCode) {
+    public PortalReport getPortalReport(String yongHuiReportCustomCode) {
         if (StringUtils.isEmpty(yongHuiReportCustomCode)) {
             throw new RRException("报表编码不能为空");
         }

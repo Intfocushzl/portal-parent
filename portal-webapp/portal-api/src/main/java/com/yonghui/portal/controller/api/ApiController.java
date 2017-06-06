@@ -3,6 +3,7 @@ package com.yonghui.portal.controller.api;
 import com.alibaba.dubbo.config.annotation.Reference;
 import com.alibaba.fastjson.JSONObject;
 import com.yonghui.portal.annotation.IgnoreAuth;
+import com.yonghui.portal.model.report.PortalReport;
 import com.yonghui.portal.model.sys.SysOperationLog;
 import com.yonghui.portal.service.sys.SysoperationLogService;
 import com.yonghui.portal.util.*;
@@ -26,7 +27,7 @@ import java.util.Map;
 import static com.yonghui.portal.interceptor.AuthorizationInterceptor.LOGIN_USER_OPERATION_LOG;
 
 /**
- * 报表存错过程报表统一入口
+ * 报表表统一入口
  * 张海 2017.05.11
  */
 @RestController
@@ -108,11 +109,16 @@ public class ApiController {
      * @param response
      * @param yongHuiReportCustomCode
      */
-    @IgnoreAuth
-    @RequestMapping(value = "columns")
-    public R columns(HttpServletRequest req, HttpServletResponse response, String yongHuiReportCustomCode) {
-        JSONObject jsonObject = reportUtil.getReportColumns(yongHuiReportCustomCode);
-        return R.success(jsonObject);
+    @RequestMapping(value = "headers")
+    public R headers(HttpServletRequest req, HttpServletResponse response, String yongHuiReportCustomCode) {
+        PortalReport report = reportUtil.getPortalReport(yongHuiReportCustomCode);
+        
+        report.setReportHotData(GzipUtils.ungzip(report.getReportHotData()));
+        report.setReportHeadersFormatConsole(GzipUtils.ungzip(report.getReportHeadersFormatConsole()));
+        report.setReportOuterHtml(GzipUtils.ungzip(report.getReportOuterHtml()));
+
+        JSONObject jsonHeadersFormatConsol = JSONObject.parseObject(report.getReportHeadersFormatConsole());
+        return R.success().put("yongHuiReportCustomCode", report.getCode()).put("headers", report.getReportHeadersConsole()).put("headersFormat", jsonHeadersFormatConsol).put("outerHtml", report.getReportOuterHtml());
     }
 
 }
