@@ -21,36 +21,6 @@ public class NoticeServiceImpl implements NoticeService {
 	@Autowired
 	private StHydTotalRealTimeMapper stHydTotalRealTimeMapper;
 
-	@Override
-	public Page<Notice> noticeList(Map<String, Object> map) {
-		Page<Notice> pa = new Page<Notice>();
-		List<Notice> rows = noticeMapper.list(map);
-		long total = noticeMapper.total(map);
-		pa.setRows(rows);
-		pa.setTotal(total);
-		return pa;
-	}
-
-	@Override
-	public void delete(int id) {
-		noticeMapper.delete(id);
-	}
-
-	@Override
-	public void delByIdHide(int id) {
-		noticeMapper.delByIdHide(id);
-	}
-
-	@Override
-	public int addByIdHide(int id) {
-		return noticeMapper.addByIdHide(id);
-	}
-
-	@Override
-	@Transactional(rollbackFor = { Exception.class })
-	public Long addNotice(Notice notice) {
-		return  noticeMapper.add(notice);
-	}
 
 	@Override
 	public List<Notice> getNewList() {
@@ -60,11 +30,6 @@ public class NoticeServiceImpl implements NoticeService {
 	@Override
 	public Notice showDetail(int id) {
 		return noticeMapper.showDetail(id);
-	}
-
-	@Override
-	public void update(Map<String, Object> sqlPram) {
-		noticeMapper.update(sqlPram);
 	}
 
 
