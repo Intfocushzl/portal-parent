@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.yonghui.portal.controller.AbstractController;
 import com.yonghui.portal.model.report.PortalReport;
 import com.yonghui.portal.service.report.PortalReportService;
+import com.yonghui.portal.util.GzipUtils;
 import com.yonghui.portal.util.PageUtils;
 import com.yonghui.portal.util.Query;
 import com.yonghui.portal.util.R;
@@ -65,7 +66,11 @@ public class PortalReportController extends AbstractController {
     @RequiresPermissions("portalreport:save")
     public R save(@RequestBody PortalReport portalReport){
         portalReport.setCreater(ShiroUtils.getUserId());
+
 		portalReportService.save(portalReport);
+        portalReport.setReportHotData(GzipUtils.gzip(portalReport.getReportHotData()));
+        portalReport.setReportHeadersFormatConsole(GzipUtils.gzip(portalReport.getReportHeadersFormatConsole()));
+        portalReport.setReportOuterHtml(GzipUtils.gzip(portalReport.getReportOuterHtml()));
         redisBizUtilAdmin.setPortalReport(portalReport.getCodeOld(), portalReport.getCode(), JSONObject.toJSONString(portalReport));
         return R.success();
     }
@@ -77,7 +82,11 @@ public class PortalReportController extends AbstractController {
     @RequiresPermissions("portalreport:update")
     public R update(@RequestBody PortalReport portalReport){
         portalReport.setCreater(ShiroUtils.getUserId());
+
 		portalReportService.update(portalReport);
+        portalReport.setReportHotData(GzipUtils.gzip(portalReport.getReportHotData()));
+        portalReport.setReportHeadersFormatConsole(GzipUtils.gzip(portalReport.getReportHeadersFormatConsole()));
+        portalReport.setReportOuterHtml(GzipUtils.gzip(portalReport.getReportOuterHtml()));
         redisBizUtilAdmin.setPortalReport(portalReport.getCodeOld(), portalReport.getCode(), JSONObject.toJSONString(portalReport));
         return R.success();
     }
