@@ -7,7 +7,7 @@ import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
 /**
- * <p> Description:压缩工具类 </p>
+ * 压缩工具类
  *
  * @author zhanghai
  */
