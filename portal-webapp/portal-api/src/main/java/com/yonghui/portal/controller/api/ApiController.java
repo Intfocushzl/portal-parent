@@ -112,13 +112,13 @@ public class ApiController {
     @RequestMapping(value = "headers")
     public R headers(HttpServletRequest req, HttpServletResponse response, String yongHuiReportCustomCode) {
         PortalReport report = reportUtil.getPortalReport(yongHuiReportCustomCode);
-        
+
         report.setReportHotData(GzipUtils.ungzip(report.getReportHotData()));
         report.setReportHeadersFormatConsole(GzipUtils.ungzip(report.getReportHeadersFormatConsole()));
         report.setReportOuterHtml(GzipUtils.ungzip(report.getReportOuterHtml()));
 
         JSONObject jsonHeadersFormatConsol = JSONObject.parseObject(report.getReportHeadersFormatConsole());
-        return R.success().put("yongHuiReportCustomCode", report.getCode()).put("headers", report.getReportHeadersConsole()).put("headersFormat", jsonHeadersFormatConsol).put("outerHtml", report.getReportOuterHtml());
+        return R.success().put("countRows", report.getReportHeadersCountRows()).put("countCols", report.getReportHeadersCountCols()).put("yongHuiReportCustomCode", report.getCode()).put("headers", report.getReportHeadersConsole()).put("headersFormat", jsonHeadersFormatConsol).put("outerHtml", report.getReportOuterHtml());
     }
 
 }
