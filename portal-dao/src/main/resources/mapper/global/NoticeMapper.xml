@@ -2,103 +2,9 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://www.mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.yonghui.portal.mapper.global.NoticeMapper">
 
-	<sql id="insertColumns">
-		<if test="title != null">
-			title,
-		</if>
-		<if test="introduction != null">
-			introduction,
-		</if>
-		<if test="content != null">
-			content,
-		</if>
-		<if test="userid != null">
-			userid,
-		</if>
-		<if test="updatetime != null">
-			updatetime,
-		</if>
-		<if test="position != null">
-			position,
-		</if>
-		<if test="ishide != null">
-			ishide,
-		</if>
-		createtime,
-	</sql>
-
-	<sql id="insertParams">
-
-		<if test="title != null">
-			#{title},
-		</if>
-		<if test="introduction != null">
-			#{introduction},
-		</if>
-		<if test="content != null">
-			#{content},
-		</if>
-		<if test="userid != null">
-			#{userid},
-		</if>
-		<if test="createtime != null">
-			#{createtime},
-		</if>
-		<if test="position != null">
-			#{position},
-		</if>
-		<if test="ishide != null">
-			#{ishide},
-		</if>
-		now(),
-	</sql>
-
-	<select id="list" parameterType="Map" resultType="com.yonghui.portal.model.global.Notice">
-		SELECT * FROM dws.notice
-		<where>
-			1=1
-			<if test=" null != title and '' != title ">
-				and title like "%"#{title}"%"
-			</if>
-		</where>
-		order by createtime desc
-		limit #{page},#{rows}
-	</select>
-
-	<select id="total" parameterType="Map" resultType="Long">
-		select count(1) from dws.notice
-		<where>
-			1=1
-			<if test=" null != title and '' != title ">
-				and title like "%"#{title}"%"
-			</if>
-		</where>
-	</select>
-	<delete id="delete">
-		delete from dws.notice where id=#{id}
-	</delete>
-
-	<update id="delByIdHide">
-		update dws.notice set ishide=0 where id=#{id}
-	</update>
-
-	<update id="addByIdHide">
-		update dws.notice set ishide=1 where id=#{id}
-	</update>
-
-	<insert id="add" useGeneratedKeys="true" keyProperty="id"
-		parameterType="com.yonghui.portal.model.global.Notice">
-		insert into dws.notice
-		<trim prefix=" ( " suffix=" ) " suffixOverrides=",">
-			<include refid="insertColumns"></include>
-		</trim>
-		<trim prefix=" values ( " suffix=" )" suffixOverrides=",">
-			<include refid="insertParams"></include>
-		</trim>
-	</insert>
 
 	<select id="getNewList" resultType="com.yonghui.portal.model.global.Notice">
-		SELECT * FROM dws.notice as n
+		SELECT * FROM platform.notice as n
 		where
 		n.ishide=0 order by n.createtime DESC
 		limit 0,6
@@ -106,25 +12,94 @@
 
 	<select id="showDetail" parameterType="int"
 		resultType="com.yonghui.portal.mapper.global.NoticeMapper">
-		SELECT * FROM dws.notice as n where id=#{id}
+		SELECT * FROM platform.notice as n where id=#{id}
 	</select>
 
-	<update id="update" parameterType="java.util.Map">
-		update dws.notice
-		<set>
-			<if test="title != null">
-				title = #{title},
-			</if>
-			<if test="introduction != null">
-				introduction = #{introduction},
-			</if>
-			<if test="content != null">
-				content = #{content},
-			</if>
-			<if test="position != null">
-				position = #{position},
-			</if>
-		</set>
-		where id = #{id}
-	</update>
+
+    <select id="queryObject" resultType="com.yonghui.portal.model.global.Notice">
+        select * from platform.notice where id = #{value}
+    </select>
+
+    <select id="queryList" resultType="com.yonghui.portal.model.global.Notice">
+        select * from platform.notice
+        <where>
+            <if test="id != null and id !=''">
+                and id like concat('%',#{id},'%')
+            </if>
+            <if test="remark != null and remark !=''">
+                and remark like concat('%',#{remark},'%')
+            </if>
+        </where>
+        <choose>
+            <when test="sidx != null and sidx.trim() != ''">
+                order by ${sidx} ${order}
+            </when>
+            <otherwise>
+                order by id desc
+            </otherwise>
+        </choose>
+        <if test="offset != null and limit != null">
+            limit #{offset}, #{limit}
+        </if>
+    </select>
+
+    <select id="queryTotal" resultType="int">
+        select count(*) from platform.notice
+        <where>
+            <if test="id != null and id !=''">
+                and id = #{id}
+            </if>
+            <if test="remark != null and remark !=''">
+                and remark like concat('%',#{remark},'%')
+            </if>
+        </where>
+    </select>
+
+    <insert id="save" parameterType="com.yonghui.portal.model.global.Notice" useGeneratedKeys="true" keyProperty="id">
+        insert into platform.notice
+        (
+        `title`,
+        `introduction`,
+        `content`,
+        `userid`,
+        `createtime`,
+        `position`,
+        `ishide`
+        )
+        values
+        (
+        #{title},
+        #{introduction},
+        #{content},
+        #{userid},
+        now(),
+        #{position},
+        #{ishide}
+        )
+    </insert>
+
+    <update id="update" parameterType="com.yonghui.portal.model.global.Notice">
+        update platform.notice
+        <set>
+            <if test="title != null">`title` = #{title}, </if>
+            <if test="introduction != null">`introduction` = #{introduction}, </if>
+            <if test="content != null">`content` = #{content}, </if>
+            <if test="position != null">`position` = #{position}, </if>
+            <if test="ishide != null">`ishide` = #{ishide},</if>
+            `updatetime` = now()
+        </set>
+        where id = #{id}
+    </update>
+
+    <delete id="delete">
+        delete from platform.notice where id = #{value}
+    </delete>
+
+    <delete id="deleteBatch">
+        delete from platform.notice where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
 </mapper>

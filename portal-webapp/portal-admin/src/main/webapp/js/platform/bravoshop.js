@@ -10,10 +10,10 @@ $(function () {
             {label: '门店编码', name: 'shopno', index: 'ShopNo', width: 80 }, 
             {label: '是否开店', name: 'congou', index: 'Congou', width: 80 , formatter: function (value) {
                 if (value === 1) {
-                    return '<span class="label label-success">正常营业中</span>';
+                    return '<span class="label label-success" >正常营业中</span>';
                 }
                 if (value === 2) {
-                    return '<span class="label label-danger">关店</span>';
+                    return '<span class="label label-danger" >关店</span>';
                 }
             }
             },

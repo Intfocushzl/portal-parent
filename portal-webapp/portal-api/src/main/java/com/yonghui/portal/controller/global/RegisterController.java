@@ -6,9 +6,9 @@ import com.yonghui.portal.model.global.User;
 import com.yonghui.portal.service.global.UserService;
 import com.yonghui.portal.util.Md5Util;
 import com.yonghui.portal.util.R;
-import org.apache.commons.collections.map.HashedMap;
 import org.apache.log4j.Logger;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -55,7 +55,7 @@ public class RegisterController {
     /**
      * 注册
      */
-    @RequestMapping("reg")
+    @RequestMapping(value = "reg",method = RequestMethod.POST)
     public R reg(HttpSession session, HttpServletRequest request, User user, int district) {
         try {
             if (null != userService.getUserByJobNumber(user.getJobNumber())) {
@@ -87,17 +87,41 @@ public class RegisterController {
             if (res == 1) {
                 //TODO: 2017/06/01 调用APP端的注册接口
                 return R.success().setMsg("注册成功");
-            }else {
+            } else {
                 return R.error(0, "注册异常");
             }
 
         } catch (Exception e) {
             log.error("注册异常", e);
-            return  R.error(0, "注册异常");
+            return R.error(0, "注册异常");
+        }
+    }
+
+    @RequestMapping(value = "updatePassword",method = RequestMethod.POST)
+    private R updatePassword(HttpSession session, HttpServletRequest request,String jobNumber, String password) {
+        int res = userService.updatePasswordByJobNumber(jobNumber,password);
+
+        if (res == 1) {
+            //TODO: 2017/06/01 调用APP端的修改密码接口
+            return R.success().setMsg("修改密码成功");
+        } else {
+            return R.error(0, "修改密码异常");
         }
     }
 
 
+    @RequestMapping(value = "resetPassword",method = RequestMethod.POST)
+    private R resetPassword(String jobNumber) {
+       String password = Md5Util.getMd5("MD5", 0, null, "");
+        int res = userService.updatePasswordByJobNumber(jobNumber,password);
+
+        if (res == 1) {
+            //TODO: 2017/06/05 调用APP端的注册接口
+            return R.success().setMsg("重置密码成功");
+        } else {
+            return R.error(0, "重置密码异常");
+        }
+    }
 
 }
 

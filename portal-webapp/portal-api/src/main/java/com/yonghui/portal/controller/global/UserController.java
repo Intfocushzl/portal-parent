@@ -7,6 +7,7 @@ import com.yonghui.portal.util.Md5Util;
 import com.yonghui.portal.util.R;
 import org.apache.log4j.Logger;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
@@ -121,4 +122,18 @@ public class UserController {
             return R.error(0, "注册异常");
         }
     }
+
+    @RequestMapping(value = "updatePassword", method = RequestMethod.POST)
+    private R updatePassword(HttpSession session, HttpServletRequest request,
+                             String jobNumber,
+                             String password) {
+        int res = userService.updatePasswordByJobNumber(jobNumber, password);
+
+        if (res == 1) {
+            return R.success().setMsg("修改密码成功");
+        } else {
+            return R.error(0, "修改密码异常");
+        }
+    }
+
 }
