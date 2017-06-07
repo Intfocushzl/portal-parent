@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.yonghui.portal.mapper.businessman.BusinessmanNoticeLogMapper">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap id="businessmanNoticeLogMap" type="com.yonghui.portal.model.businessman.BusinessmanNoticeLog">
+        <result property="id" column="id"/>
+        <result property="noticeId" column="notice_id"/>
+        <result property="remark" column="REMARK"/>
+        <result property="creater" column="CREATER"/>
+        <result property="createTime" column="CREATE_TIME"/>
+    </resultMap>
+
+	<select id="queryObject" resultType="com.yonghui.portal.model.businessman.BusinessmanNoticeLog">
+		select * from businessman_notice_log where id = #{value}
+	</select>
+
+	<select id="queryList" resultType="com.yonghui.portal.model.businessman.BusinessmanNoticeLog">
+		select * from businessman_notice_log
+        <where>
+            <if test="id != null and id !=''">
+                and id like concat('%',#{id},'%')
+            </if>
+            <if test="remark != null and remark !=''">
+                and remark like concat('%',#{remark},'%')
+            </if>
+        </where>
+        <choose>
+            <when test="sidx != null and sidx.trim() != ''">
+                order by ${sidx} ${order}
+            </when>
+			<otherwise>
+                order by id desc
+			</otherwise>
+        </choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="queryTotal" resultType="int">
+		select count(*) from businessman_notice_log
+        <where>
+            <if test="id != null and id !=''">
+                and id = #{id}
+            </if>
+            <if test="remark != null and remark !=''">
+                and remark like concat('%',#{remark},'%')
+            </if>
+        </where>
+	</select>
+
+    <insert id="save" parameterType="com.yonghui.portal.model.businessman.BusinessmanNoticeLog" useGeneratedKeys="true" keyProperty="id">
+		insert into businessman_notice_log
+		(
+			`notice_id`, 
+			`REMARK`, 
+			`CREATER`, 
+			`CREATE_TIME`
+		)
+		values
+		(
+			#{noticeId}, 
+			#{remark}, 
+			#{creater}, 
+			#{createTime}
+		)
+	</insert>
+
+    <update id="update" parameterType="com.yonghui.portal.model.businessman.BusinessmanNoticeLog">
+        update businessman_notice_log
+        <set>
+			<if test="noticeId != null">`notice_id` = #{noticeId}, </if>
+			<if test="remark != null">`REMARK` = #{remark}, </if>
+			<if test="creater != null">`CREATER` = #{creater}, </if>
+			<if test="createTime != null">`CREATE_TIME` = #{createTime}</if>
+        </set>
+        where id = #{id}
+    </update>
+	
+	<delete id="delete">
+		delete from businessman_notice_log where id = #{value}
+	</delete>
+	
+	<delete id="deleteBatch">
+		delete from businessman_notice_log where id in 
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+</mapper>
