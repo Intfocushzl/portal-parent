@@ -104,4 +104,13 @@ public class PortalReportController extends AbstractController {
         return R.success();
     }
 
+    @RequestMapping("/addRedis")
+    public R addRedis(@RequestBody String[] codes){
+        for (String code: codes) {
+            PortalReport portalReport = portalReportService.queryObjectByCode(code);
+            redisBizUtilAdmin.setPortalReport(code,code,JSONObject.toJSONString(portalReport));
+        }
+        return R.success();
+    }
+
 }

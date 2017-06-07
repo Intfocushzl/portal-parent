@@ -194,6 +194,26 @@ var vm = new Vue({
                 page: page
             }).trigger("reloadGrid");
         },
+        addRedis: function(){
+            var codes = getSelectedRows();
+            if(codes == null){
+                return ;
+            }
+            $.ajax({
+                type:"POST",
+                url:"../portalreport/addRedis",
+                data: JSON.stringify(codes),
+                success: function(r){
+                    if(r.code == 0){
+                        alert('操作成功', function(index){
+                            $("#jqGrid").trigger("reloadGrid");
+                        });
+                    }else{
+                        alert(r.msg);
+                    }
+                }
+            });
+        },
         onlycodeshow: function () {
             var type = $("input[name='type']");
             var typevalue = null;
@@ -219,6 +239,9 @@ var vm = new Vue({
                     vm.selectOption = vm.selectOption + " >" + r.sqlList[i].sqlcode + "<==>" + r.sqlList[i].title + "</option>";
                     $("#onlycode").append(vm.selectOption);
                 }
+                // refresh刷新和render渲染操作，必不可少
+                $('#onlycode').selectpicker('refresh');
+                $('#onlycode').selectpicker('render');
             });
         },
         getProCode: function (executeCodeOld) {
@@ -232,6 +255,9 @@ var vm = new Vue({
                     vm.selectOption = vm.selectOption + " >" + r.proList[i].procode + "<==>" + r.proList[i].title + "</option>";
                     $("#onlycode").append(vm.selectOption);
                 }
+                // refresh刷新和render渲染操作，必不可少
+                $('#onlycode').selectpicker('refresh');
+                $('#onlycode').selectpicker('render');
             });
         },
         getCindexAperture: function () {
