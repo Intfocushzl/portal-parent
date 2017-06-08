@@ -1,7 +1,11 @@
 package com.yonghui.portal.controller.business;
 
 import com.alibaba.dubbo.config.annotation.Reference;
+import com.yonghui.portal.annotation.OpenAuth;
+import com.yonghui.portal.service.business.ApiActicleService;
 import com.yonghui.portal.service.sys.SysoperationLogService;
+import com.yonghui.portal.util.ApiQuery;
+import com.yonghui.portal.util.PageUtils;
 import com.yonghui.portal.util.R;
 import com.yonghui.portal.util.redis.ReportUtil;
 import org.apache.log4j.Logger;
@@ -13,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -28,9 +33,11 @@ public class ApiActicleController {
     private SysoperationLogService sysoperationLogService;
     @Autowired
     private ReportUtil reportUtil;
+    @Reference
+    private ApiActicleService apiActicleService;
 
     /**
-     * 获取文章信息信息
+     * 获取文章信息
      *
      * @param req
      * @param response
@@ -40,4 +47,24 @@ public class ApiActicleController {
         return R.success();
     }
 
+    /**
+     * 获取文章信息列表
+     *
+     * @param req
+     * @param response
+     */
+    @OpenAuth
+    @RequestMapping(value = "acticleList", method = RequestMethod.GET)
+    public R acticleList(HttpServletRequest req, HttpServletResponse response, @RequestParam Map<String, Object> params) {
+        PageUtils pageUtil = null;
+        try {
+            ApiQuery query = new ApiQuery(params);
+            List<Map<String, Object>> acticleList = apiActicleService.acticleList(query);
+            int total = apiActicleService.queryTotal(query);
+            pageUtil = new PageUtils(acticleList, total, query.getLimit(), query.getPage());
+        } catch (Exception e) {
+            R.error("获取文章信息失败");
+        }
+        return R.success().put("page", pageUtil);
+    }
 }

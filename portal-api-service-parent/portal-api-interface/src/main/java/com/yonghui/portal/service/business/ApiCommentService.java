@@ -16,5 +16,6 @@ public interface ApiCommentService {
 	
 	void save(BusinessmanComment businessmanComment);
 
-//	void save(Map<String, Object> map);
+    List<Map<String, Object>> commentList(Map<String, Object> params);
+
 }

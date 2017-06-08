@@ -15,5 +15,6 @@ import java.util.Map;
  */
 public interface BusinessmanCommentMapper extends BaseMapper<BusinessmanComment> {
 
-    public List<Map<String,Object>> commentList(Map<String, Object> map);
+    public List<Map<String,Object>> commentList(Map<String, Object> params);
+
 }
