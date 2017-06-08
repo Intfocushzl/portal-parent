@@ -34,20 +34,11 @@ public class ApiCommentServiceImpl implements ApiCommentService {
 	public void save(BusinessmanComment businessmanComment){
 		businessmanCommentMapper.save(businessmanComment);
 	}
-	
-	@Override
-	public void update(BusinessmanComment businessmanComment){
-		businessmanCommentMapper.update(businessmanComment);
-	}
-	
-	@Override
-	public void delete(Long id){
-		businessmanCommentMapper.delete(id);
-	}
-	
-	@Override
-	public void deleteBatch(Long[] ids){
-		businessmanCommentMapper.deleteBatch(ids);
-	}
+
+	@Autowired
+    List<Map<String,Object>> commentList(Map<String, Object> map){
+        return businessmanCommentMapper.commentList(map);
+    }
+
 	
 }
