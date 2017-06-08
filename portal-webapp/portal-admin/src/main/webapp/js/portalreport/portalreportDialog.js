@@ -70,7 +70,6 @@ $(function () {
                 hot.render();
                 // 只显示名称
                 getDataHtml();
-
                 // 关闭窗口
                 $(this).dialog("close");
             },

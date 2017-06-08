@@ -194,7 +194,6 @@ function getDataJson() {
     vm.portalReport.reportHeadersFormatConsole = JSON.stringify(vm.headersFormatNew);
 }
 
-
 // 格式化html数据
 function getDataHtml() {
     // 设置只读

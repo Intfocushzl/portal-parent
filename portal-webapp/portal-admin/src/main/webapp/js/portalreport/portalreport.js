@@ -191,21 +191,21 @@ var vm = new Vue({
                 page: page
             }).trigger("reloadGrid");
         },
-        addRedis: function(){
+        addRedis: function () {
             var codes = getSelectedRows();
-            if(codes == null){
-                return ;
+            if (codes == null) {
+                return;
             }
             $.ajax({
-                type:"POST",
-                url:"../portalreport/addRedis",
+                type: "POST",
+                url: "../portalreport/addRedis",
                 data: JSON.stringify(codes),
-                success: function(r){
-                    if(r.code == 0){
-                        alert('操作成功', function(index){
+                success: function (r) {
+                    if (r.code == 0) {
+                        alert('操作成功', function (index) {
                             $("#jqGrid").trigger("reloadGrid");
                         });
-                    }else{
+                    } else {
                         alert(r.msg);
                     }
                 }
