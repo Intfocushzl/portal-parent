@@ -66,6 +66,8 @@ $(function () {
                 tdText = indexValue + ":" + indexNameAppend + ":" + indexName + ":" + indexDef;
                 hot.setDataAtCell(tdRow, tdCol, tdText, source);
 
+                // 渲染表格
+                hot.render();
                 // 只显示名称
                 getDataHtml();
 

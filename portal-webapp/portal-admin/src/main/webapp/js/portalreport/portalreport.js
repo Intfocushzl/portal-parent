@@ -180,9 +180,6 @@ var vm = new Vue({
                 hot.loadData(reportHotDataArr);
                 // 渲染表格
                 hot.render();
-
-                // 设置只读
-                vm.cellReadOnly();
                 // 只显示名称
                 getDataHtml();
             });
