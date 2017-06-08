@@ -49,7 +49,6 @@ public class ApiCommentController {
             Query query = new Query(params);
             List<BusinessmanComment> portalDataSourceList = apiCommentService.queryList(query);
             int total = apiCommentService.queryTotal(query);
-
              pageUtil = new PageUtils(portalDataSourceList, total, query.getLimit(), query.getPage());
         } catch (Exception e) {
             e.printStackTrace();
@@ -58,12 +57,12 @@ public class ApiCommentController {
     }
 
     /**
-     *
+     *保存评论
      */
     @RequestMapping(value = "saveComment" , method = RequestMethod.GET)
     public R saveComment(HttpServletRequest req, HttpServletResponse response , @RequestParam Map<String, Object> params) {
         try {
-
+         //   apiCommentService.save(params);
         } catch (Exception e) {
             e.printStackTrace();
         }

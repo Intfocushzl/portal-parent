@@ -15,4 +15,6 @@ public interface ApiCommentService {
 	int queryTotal(Map<String, Object> map);
 	
 	void save(BusinessmanComment businessmanComment);
+
+//	void save(Map<String, Object> map);
 }

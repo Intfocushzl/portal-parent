@@ -10,7 +10,6 @@ import java.util.List;
 import java.util.Map;
 
 
-@Service("businessmanCommentService")
 public class ApiCommentServiceImpl implements ApiCommentService {
 	@Autowired
 	private BusinessmanCommentMapper businessmanCommentMapper;
