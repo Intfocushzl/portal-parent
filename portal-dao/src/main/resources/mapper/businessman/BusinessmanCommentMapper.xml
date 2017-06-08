@@ -18,28 +18,35 @@
         <result property="version" column="VERSION"/>
     </resultMap>
 
+	<resultMap id="commentMap" type="com.yonghui.portal.model.businessman.BusinessmanComment">
+		<result property="id" column="id"/>
+		<result property="userId" column="user_id"/>
+		<result property="acticleId" column="acticle_id"/>
+		<result property="content" column="content"/>
+	</resultMap>
+
 	<select id="queryObject" resultType="com.yonghui.portal.model.businessman.BusinessmanComment">
 		select * from businessman_comment where id = #{value}
 	</select>
 
-	<select id="queryList" resultType="com.yonghui.portal.model.businessman.BusinessmanComment">
+	<select id="commentList" resultType="commentMap">
 		select * from businessman_comment
-        <where>
-            <if test="id != null and id !=''">
-                and id like concat('%',#{id},'%')
-            </if>
-            <if test="remark != null and remark !=''">
-                and remark like concat('%',#{remark},'%')
-            </if>
-        </where>
-        <choose>
-            <when test="sidx != null and sidx.trim() != ''">
-                order by ${sidx} ${order}
-            </when>
+		<where>
+			<if test="id != null and id !=''">
+				and id like concat('%',#{id},'%')
+			</if>
+			<if test="remark != null and remark !=''">
+				and remark like concat('%',#{remark},'%')
+			</if>
+		</where>
+		<choose>
+			<when test="sidx != null and sidx.trim() != ''">
+				order by ${sidx} ${order}
+			</when>
 			<otherwise>
-                order by id desc
+				order by id desc
 			</otherwise>
-        </choose>
+		</choose>
 		<if test="offset != null and limit != null">
 			limit #{offset}, #{limit}
 		</if>
@@ -114,4 +121,33 @@
 		</foreach>
 	</delete>
 
+
+	<select id="commentList"  resultType="commentMap" parameterType="Map">
+		select * from businessman_comment
+		<where>
+			<if test="id != null and id !=''">
+				and id like concat('%',#{id},'%')
+			</if>
+			<if test="userId != null and userId !=''">
+				and user_id like concat('%',#{userId},'%')
+			</if>
+			<if test="acticleId != null and acticleId !=''">
+				and acticle_id like concat('%',#{acticleId},'%')
+			</if>
+			<if test="remark != null and remark !=''">
+				and remark like concat('%',#{remark},'%')
+			</if>
+		</where>
+		<choose>
+			<when test="sidx != null and sidx.trim() != ''">
+				order by ${sidx} ${order}
+			</when>
+			<otherwise>
+				order by id desc
+			</otherwise>
+		</choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
 </mapper>

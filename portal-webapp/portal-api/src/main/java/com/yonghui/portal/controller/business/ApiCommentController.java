@@ -11,6 +11,7 @@ import com.yonghui.portal.util.redis.ReportUtil;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -21,7 +22,7 @@ import java.util.Map;
 
 /**
  * 用户评论信息
- * 张海 2017.06.07
+ * 张海 2017.06.07 modify by liuwei
  */
 @RestController
 @RequestMapping("/api/business")
@@ -41,17 +42,31 @@ public class ApiCommentController {
      * @param req
      * @param response
      */
-    @RequestMapping(value = "commentList")
-    public R comment(HttpServletRequest req, HttpServletResponse response,@RequestParam Map<String, Object> params) {
-        //查询列表数据
-        Query query = new Query(params);
+    @RequestMapping(value = "commentList" , method = RequestMethod.GET)
+    public R commentList(HttpServletRequest req, HttpServletResponse response , @RequestParam Map<String, Object> params) {
+        PageUtils pageUtil = null ;
+        try {
+            Query query = new Query(params);
+            List<BusinessmanComment> portalDataSourceList = apiCommentService.queryList(query);
+            int total = apiCommentService.queryTotal(query);
 
-        List<BusinessmanComment> portalDataSourceList = apiCommentService.queryList(query);
-        int total = apiCommentService.queryTotal(query);
-
-        PageUtils pageUtil = new PageUtils(portalDataSourceList, total, query.getLimit(), query.getPage());
-
+             pageUtil = new PageUtils(portalDataSourceList, total, query.getLimit(), query.getPage());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return R.success().put("page", pageUtil);
     }
 
+    /**
+     *
+     */
+    @RequestMapping(value = "saveComment" , method = RequestMethod.GET)
+    public R saveComment(HttpServletRequest req, HttpServletResponse response , @RequestParam Map<String, Object> params) {
+        try {
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return R.success();
+    }
 }

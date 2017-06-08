@@ -123,4 +123,9 @@
     <dubbo:service interface="com.yonghui.portal.service.sales.SalesAnalysisService" ref="salesAnalysisService"
                    timeout="300000"/>
 
+    <!-- 生意人评论  -->
+    <bean id="apiCommentService" class="com.yonghui.portal.service.impl.business.ApiCommentServiceImpl"/>
+    <dubbo:service interface="com.yonghui.portal.service.business.ApiCommentService" ref="apiCommentService"
+                   timeout="300000"/>
+
 </beans>
