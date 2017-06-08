@@ -7,14 +7,17 @@ import com.yonghui.portal.util.redis.ReportUtil;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.Map;
 
 /**
  * 文章
- * 张海 2017.06.07
+ * 张海 2017.06.07  modify by liuwei
  */
 @RestController
 @RequestMapping("/api/business")
@@ -32,8 +35,8 @@ public class ApiActicleController {
      * @param req
      * @param response
      */
-    @RequestMapping(value = "acticle")
-    public R acticle(HttpServletRequest req, HttpServletResponse response) {
+    @RequestMapping(value = "acticle" , method = RequestMethod.GET)
+    public R acticle(HttpServletRequest req, HttpServletResponse response , @RequestParam Map<String, Object> params) {
         return R.success();
     }
 
