@@ -60,6 +60,11 @@ hot = new Handsontable(reportHeadersContainer, {
     afterSelectionEnd: function (r, c, r2, c2) {
         //getDataAtCell(row,col):根据行列索引获取单元格的值
         reportConsole.innerText = hot.getDataAtCell(r, c);
+    },
+    // 渲染表格后被调用 isForced：当其值为true表示是通过改变配置或数据引起的渲染，当值为false时表示通过滚动或移动、选中引起的渲染
+    afterRender: function (isForced) {
+        // 设置只读
+        vm.cellReadOnly();
     }
 });
 
@@ -168,10 +173,18 @@ function getDataJson() {
                 rowColJson["rowSpan"] = cellObj.rowSpan;
                 rowColJson["colSpan"] = cellObj.colSpan;
                 rowColJson["indexText"] = cellObj.innerText;
-                rowColJson["indexValue"] = cellObj.innerText.split(":")[0];
-                rowColJson["indexNameAppend"] = cellObj.innerText.split(":")[1];
-                rowColJson["indexName"] = cellObj.innerText.split(":")[2];
-                rowColJson["indexDef"] = cellObj.innerText.split(":")[3];
+                var cellValue = cellObj.innerText;
+                if (getStringValue(cellValue) != "") {
+                    rowColJson["indexValue"] = cellValue.split(":")[0];
+                    rowColJson["indexNameAppend"] = cellValue.split(":")[1];
+                    rowColJson["indexName"] = cellValue.split(":")[2];
+                    rowColJson["indexDef"] = cellValue.split(":")[3];
+                } else {
+                    rowColJson["indexValue"] = "";
+                    rowColJson["indexNameAppend"] = "";
+                    rowColJson["indexName"] = "";
+                    rowColJson["indexDef"] = "";
+                }
                 createJsonForSave(rowCol, rowColJson);
             }
         }
@@ -181,9 +194,11 @@ function getDataJson() {
     vm.portalReport.reportHeadersFormatConsole = JSON.stringify(vm.headersFormatNew);
 }
 
-
 // 格式化html数据
 function getDataHtml() {
+    // 设置只读
+    vm.cellReadOnly();
+
     countRows = hot.countRows();     // 总行数
     countCols = hot.countCols();     // 总列数
     table_tbody = $(".htCore").find("tbody");
@@ -195,8 +210,13 @@ function getDataHtml() {
         for (var col_i = 0; col_i < countCols; col_i++) {
             table_tbody_tr = table_tbody.find("tr:eq(" + row_j + ")");
             table_tbody_tr_td = table_tbody_tr.find("td:eq(" + col_i + ")");
-            indexName = hot.getDataAtCell(row_j, col_i).split(":")[2];
-            table_tbody_tr_td.html(indexName);
+            var td_value = hot.getDataAtCell(row_j, col_i);
+            if (getStringValue(td_value) != "") {
+                indexName = td_value.split(":")[2];
+                table_tbody_tr_td.html(indexName);
+            } else {
+                table_tbody_tr_td.html("");
+            }
         }
     }
 }
@@ -212,7 +232,12 @@ function getLastHeader() {
 
     var lastRowHeaders = "";
     for (var col_i = 0; col_i < countCols; col_i++) {
-        lastRowHeaders = lastRowHeaders + hot.getDataAtCell(row_id, col_i).split(":")[2] + ",";
+        var lastValue = hot.getDataAtCell(row_id, col_i);
+        if (getStringValue(lastValue) != "") {
+            lastRowHeaders = lastRowHeaders + lastValue.split(":")[2] + ",";
+        } else {
+            lastRowHeaders = lastRowHeaders + ",";
+        }
     }
     vm.portalReport.reportHeadersConsole = lastRowHeaders.substr(0, lastRowHeaders.length - 1);
 }
@@ -242,6 +267,7 @@ Handsontable.Dom.addEvent(addBtn, 'click', function () {
 
 // 保存所有单元格的数据
 Handsontable.Dom.addEvent(saveOrUpdate, 'click', function () {
+    getDataHtml();
     // 先设置TABLE的HTML
     // encodeURI() 函数不转义：;/?:@&=+$,# (使用 encodeURIComponent 对这些字符进行编码),decodeURI 方法返回一个字符串值
     reportOuterHtml.innerText = encodeURI($(".ht_master .handsontable table").prop("outerHTML"));
