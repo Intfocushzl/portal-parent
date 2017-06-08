@@ -1,6 +1,7 @@
 package com.yonghui.portal.controller.api;
 
 import com.alibaba.dubbo.config.annotation.Reference;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.yonghui.portal.annotation.IgnoreAuth;
 import com.yonghui.portal.model.sys.SysOperationLog;
@@ -17,13 +18,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * APP扫码接口
+ * 单独的业务逻辑 只针对app扫码
  * liuwei 2017.06.01
  */
 @RestController
@@ -44,7 +43,8 @@ public class AppQrCodeApiController {
 
     /**
      * 查我们自己的dws库  非实时数据  门店实时销售、实时库存、销售相关的数据
-     *调用外部接口  实时数据
+     * 调用外部接口  实时数据
+     *
      * @return
      */
     @IgnoreAuth
@@ -54,6 +54,7 @@ public class AppQrCodeApiController {
                           String sign, String shopID, String barcode) {
         String parameter = null;
         String result = null;
+        JSONObject jsonObject = null;
         List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
         List<Map<String, Object>> shopIdList = new ArrayList<Map<String, Object>>();
         try {
@@ -74,20 +75,40 @@ public class AppQrCodeApiController {
             shopIdList = reportUtil.jdbcProListResultListMapByParam(SQLFilter.sqlInject("REP_000045"), SQLFilter.sqlInject(parameter));
             //将查出来的门店结果，拼接成参数
             StringBuffer newParam = new StringBuffer();
-            for(Map<String, Object> item : shopIdList){
-                newParam.append("'"+item.get("shopId")+"',");
+            for (Map<String, Object> item : shopIdList) {
+                newParam.append("'" + item.get("shopId") + "',");
             }
-            String newParamStr = "shopID="+newParam.toString().substring(1,newParam.toString().length()-2)+"@@barcode="+barcode;
+            String newParamStr = "shopID=" + newParam.toString().substring(1, newParam.toString().length() - 2) + "@@barcode=" + barcode;
             //注意此处code  admin配置的是98  为了给app扫码统一code（REP_000043）
-            list = reportUtil.jdbcProListResultListMapByParam(SQLFilter.sqlInject("REP_000043"),newParamStr);
+            list = reportUtil.jdbcProListResultListMapByParam(SQLFilter.sqlInject("REP_000043"), newParamStr);
             //调用外部接口获取数据
             result = reportUtil.qRResultByParam(SQLFilter.sqlInject(newParamStr), URL);
+            if (!StringUtils.isEmpty(result)) {
+                jsonObject = JSONObject.parseObject(result);
+            } else {
+                return R.success(list);
+            }
+            Map<String, Object> resMap = new HashMap<String, Object>();
+            for (Map<String, Object> item : list) {
+                JSONArray  jsonArray  =  (JSONArray)jsonObject.get("data");
+                for (int i = 0; i < jsonArray.size(); i++) {
+                    JSONObject job = jsonArray.getJSONObject(i);
+                    if (item.get("shopID").equals(job.get("shopId"))) {
+                        item.put("totalSalesValue",job.get("totalSalesValue"));
+                        item.put("totalInventoryValue",job.get("totalInventoryValue"));
+                        item.put("totalAmount",job.get("totalAmount"));
+                        item.put("goodsId",job.get("goodsId"));
+                        item.put("totalStock",job.get("totalStock"));
+                        item.put("goodsName",job.get("goodsName"));
+                    }
+                }
+            }
             log.setEndTime(new Date());
             log.setRemark("app@@qrCode");
             sysoperationLogService.SaveLog(log);
         } catch (Exception e) {
             R.error("执行APP报表存储过程报表异常");
         }
-        return R.success(list).put("data2", JSONObject.parse(result));
+        return R.success(list);
     }
 }

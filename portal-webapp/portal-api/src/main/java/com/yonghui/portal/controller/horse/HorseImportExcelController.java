@@ -51,7 +51,7 @@ public class HorseImportExcelController {
     /**
      * 允许上传的扩展名
      */
-    private static final String[] extensionPermit = {"xsl", "xlsx"};
+    private static final String[] extensionPermit = {"xls", "xlsx"};
 
     /**
      * 赛马运营分数导入

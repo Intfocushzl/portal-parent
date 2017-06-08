@@ -137,19 +137,35 @@ public class RedisBizUtilAdmin {
     }
 
     /********************openapi接口配置*****************/
-    public void setRouteReport(String code, String value) {
+    public void setOpenApiReport(String code, String value) {
         redisUtil.put(String.format("%s:openapi:report", KEY_PREFIX), code, value);
     }
 
-    public String getRouteReport(String code) {
+    public String getOpenApiReport(String code) {
         return redisUtil.get(String.format("%s:openapi:report", KEY_PREFIX), code);
     }
 
-    public void removeRouteReport(String code) {
+    public void removeOpenApiReport(String code) {
         redisUtil.remove(String.format("%s:openapi:report", KEY_PREFIX), code);
     }
 
-    public boolean hasRouteReport(String code) {
+    public boolean hasOpenApiReport(String code) {
         return redisUtil.hasKey(String.format("%s:openapi:report", KEY_PREFIX), code);
+    }
+
+    public void setRouteReport(String code, String value) {
+        redisUtil.put(String.format("%s:openapi:route", KEY_PREFIX), code, value);
+    }
+
+    public String getRouteReport(String code) {
+        return redisUtil.get(String.format("%s:openapi:route", KEY_PREFIX), code);
+    }
+
+    public void removeRouteReport(String code) {
+        redisUtil.remove(String.format("%s:openapi:route", KEY_PREFIX), code);
+    }
+
+    public boolean hasRouteReport(String code) {
+        return redisUtil.hasKey(String.format("%s:openapi:route", KEY_PREFIX), code);
     }
 }

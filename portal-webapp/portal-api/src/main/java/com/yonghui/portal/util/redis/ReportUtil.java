@@ -168,7 +168,7 @@ public class ReportUtil {
         }
         PortalRouteReport report = JSONObject.parseObject(reportJson, PortalRouteReport.class);
         if (report == null || StringUtils.isEmpty(report.getCode())) {
-            throw new RRException("报表编码:" + yongHuiReportCustomCode + "无效，或未指定ExecuteCode");
+            throw new RRException("报表编码:" + yongHuiReportCustomCode + "无效，或未指定yongHuiReportCustomCode");
         }
         return report;
     }
@@ -244,6 +244,26 @@ public class ReportUtil {
         HttpMethodUtil httpUtil = new HttpMethodUtil();
         String result = httpUtil.getGetResult(url, new HashMap<String,Object>());
         return result;
+    }
+
+    /**
+     *获取openApi报表信息
+     * @param openApiCode
+     * @return
+     */
+    public PortalOpenapiReport  getPortalOpenApiReport(String openApiCode) {
+        if (StringUtils.isEmpty(openApiCode)) {
+            throw new RRException("报表编码不能为空");
+        }
+        String reportJson = redisBizUtilApi.getPortalOpenApiReport(openApiCode);
+        if (StringUtils.isEmpty(reportJson)) {
+            throw new RRException("报表编码 " + openApiCode + "无效");
+        }
+        PortalOpenapiReport report = JSONObject.parseObject(reportJson, PortalOpenapiReport.class);
+        if (report == null || StringUtils.isEmpty(report.getCode())) {
+            throw new RRException("报表编码:" + openApiCode + "无效，或未指定openApiCode");
+        }
+        return report;
     }
 
 }

@@ -123,6 +123,10 @@ public class RedisBizUtilApi {
     }
 
     public String getPortalRouteReport(String code) {
+        return redisUtil.get(String.format("%s:openapi:route", KEY_PREFIX), code);
+    }
+
+    public String getPortalOpenApiReport(String code) {
         return redisUtil.get(String.format("%s:openapi:report", KEY_PREFIX), code);
     }
 

@@ -23,7 +23,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * APP报表存错过程报表统一入口（路由外部系统）
+ * 调用外部系统，然后返回数据给客户端（portal_route_report管理）
  * liuwei 2017.06.01
  */
 @RestController

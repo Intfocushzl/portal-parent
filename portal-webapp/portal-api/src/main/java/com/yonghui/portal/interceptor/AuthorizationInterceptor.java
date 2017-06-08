@@ -4,7 +4,9 @@ import com.alibaba.dubbo.config.annotation.Reference;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.yonghui.portal.annotation.IgnoreAuth;
+import com.yonghui.portal.annotation.OpenAuth;
 import com.yonghui.portal.model.api.TokenApi;
+import com.yonghui.portal.model.report.PortalOpenapiReport;
 import com.yonghui.portal.model.sys.SysOperationLog;
 import com.yonghui.portal.service.global.UserService;
 import com.yonghui.portal.util.*;
@@ -44,14 +46,51 @@ public class AuthorizationInterceptor extends HandlerInterceptorAdapter {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         IgnoreAuth annotation;
+        OpenAuth openAuthAnnotation;
         if (handler instanceof HandlerMethod) {
             annotation = ((HandlerMethod) handler).getMethodAnnotation(IgnoreAuth.class);
+            openAuthAnnotation = ((HandlerMethod) handler).getMethodAnnotation(OpenAuth.class);
         } else {
             return true;
         }
         // 如果有@IgnoreAuth注解，则不验证token
         if (annotation != null) {
             return true;
+        }
+        //如果有@OpenAuth注解，则校验sigin
+        if(openAuthAnnotation != null){
+            String  openApiCode = request.getParameter("openApiCode");
+            String  sign = request.getParameter("sign");
+            if (StringUtils.isBlank(openApiCode) || StringUtils.isBlank(sign)) {
+                response.setHeader("Content-type", "text/html;charset=UTF-8");
+                response.getWriter().write(JSON.toJSONString(R.error(ConstantsUtil.ExceptionCode.SIGN_ERROR, "sign不能为空")));
+                return false;
+            }
+            // 从redis中查询token信息
+            String openApiJsonStr = redisBizUtilApi.getPortalOpenApiReport(openApiCode);
+            PortalOpenapiReport portalOpenapiReport = null;
+            if (StringUtils.isBlank(openApiJsonStr)) {
+                response.setHeader("Content-type", "text/html;charset=UTF-8");
+                response.getWriter().write(JSON.toJSONString(R.error(ConstantsUtil.ExceptionCode.SIGN_ERROR, "sign不存在")));
+                return false;
+            } else {
+                portalOpenapiReport = JSONObject.parseObject(openApiJsonStr, PortalOpenapiReport.class);
+                if (portalOpenapiReport == null || portalOpenapiReport.getKey() == null || portalOpenapiReport.getCode() == null) {
+                    response.setHeader("Content-type", "text/html;charset=UTF-8");
+                    response.getWriter().write(JSON.toJSONString(R.error(ConstantsUtil.ExceptionCode.SIGN_ERROR, "sign不存在")));
+                    return false;
+                }else {
+                    Md5Util util = new Md5Util();
+                    String originSign = util.getMd5("MD5", 0, null, openApiCode + portalOpenapiReport.getKey() );
+                    if (!originSign.equals(sign)) {
+                        response.setHeader("Content-type", "text/html;charset=UTF-8");
+                        response.getWriter().write(JSON.toJSONString(R.error(ConstantsUtil.ExceptionCode.SIGN_ERROR, "sign验证失败")));
+                        return false;
+                    }else{
+                        return true;
+                    }
+                }
+            }
         }
         // 从header中获取token
         String token = request.getHeader("token");

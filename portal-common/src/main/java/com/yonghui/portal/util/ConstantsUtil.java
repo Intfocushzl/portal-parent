@@ -32,6 +32,7 @@ public class ConstantsUtil {
     public abstract class ExceptionCode {
         public static final int TO_LOGIN = -99;                // 跳转到登录
         public static final int INTERNAL_ERROR = 500;          // 内部错误
+        public static final int SIGN_ERROR = -98;          // openApi请求sign校验错误
     }
 
     //获取数据方式

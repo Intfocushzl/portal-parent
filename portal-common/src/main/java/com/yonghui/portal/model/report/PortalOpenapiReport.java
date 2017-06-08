@@ -9,14 +9,12 @@ import com.yonghui.portal.model.base.AuditAuto;
  * @email walk_hai@163.com
  * @date 2017-06-07 14:01:50
  */
-public class PortalRouteReport extends AuditAuto {
+public class PortalOpenapiReport extends AuditAuto {
 
     //报表唯一编码，api接口请求必须参数
     private String code;
     //请求外部接口key值
     private String key;
-    //请求方式；1代表get，2代表post
-    private Integer requestType;
     //请求外部系统url
     private String url;
     //执行参数，格式如aa@@bb@@cc
@@ -47,18 +45,6 @@ public class PortalRouteReport extends AuditAuto {
      */
     public String getKey() {
             return key;
-            }
-    /**
-     * 设置：请求方式；1代表get，2代表post
-     */
-    public void setRequestType(Integer requestType) {
-            this.requestType = requestType;
-            }
-    /**
-     * 获取：请求方式；1代表get，2代表post
-     */
-    public Integer getRequestType() {
-            return requestType;
             }
     /**
      * 设置：请求外部系统url

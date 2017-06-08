@@ -1,13 +1,12 @@
 $(function () {
     $("#jqGrid").jqGrid({
-        url: '../portalroutereport/list',     // 请求后台json数据的url
+        url: '../portalopenapireport/list',     // 请求后台json数据的url
         datatype: "json",                // 后台返回的数据格式
         // 列表标题及列表模型
         colModel: [
             {label: 'id', name: 'id', index: 'id', width: 50, key: true },
             {label: '报表唯一编码，api接口请求必须参数', name: 'code', index: 'code', width: 80 }, 
             {label: '请求外部接口key值', name: 'key', index: 'key', width: 80 }, 
-            {label: '请求方式；1代表get，2代表post', name: 'requestType', index: 'request_type', width: 80 }, 
             {label: '请求外部系统url', name: 'url', index: 'url', width: 80 }, 
             {label: '执行参数，格式如aa@@bb@@cc', name: 'parameter', index: 'parameter', width: 80 }, 
             {label: '请求外部系统名称', name: 'name', index: 'name', width: 80 }, 
@@ -47,15 +46,15 @@ var vm = new Vue({
     data:{
         showList: true,
         title: null,
-        portalRouteReport: {}
+        portalOpenapiReport: {}
     },
     methods: {
         query: function () {
             //vm.reload();
             $("#jqGrid").jqGrid('setGridParam', {
                 postData: {
-                    id: vm.portalRouteReport.id,
-                    remark: vm.portalRouteReport.remark
+                    id: vm.portalOpenapiReport.id,
+                    remark: vm.portalOpenapiReport.remark
                 },
                 page: 1
             }).trigger("reloadGrid");
@@ -63,7 +62,7 @@ var vm = new Vue({
         add: function(){
             vm.showList = false;
             vm.title = "新增";
-            vm.portalRouteReport = {};
+            vm.portalOpenapiReport = {};
         },
         update: function (event) {
             var id = getSelectedRow();
@@ -76,11 +75,11 @@ var vm = new Vue({
             vm.getInfo(id)
         },
         saveOrUpdate: function (event) {
-            var url = vm.portalRouteReport.id == null ? "../portalroutereport/save" : "../portalroutereport/update";
+            var url = vm.portalOpenapiReport.id == null ? "../portalopenapireport/save" : "../portalopenapireport/update";
             $.ajax({
                 type: "POST",
                 url: url,
-                data: JSON.stringify(vm.portalRouteReport),
+                data: JSON.stringify(vm.portalOpenapiReport),
                 success: function(r){
                     if(r.code === 0){
                         alert('操作成功', function(index){
@@ -101,7 +100,7 @@ var vm = new Vue({
             confirm('确定要删除选中的记录？', function(){
                 $.ajax({
                     type: "POST",
-                    url: "../portalroutereport/delete",
+                    url: "../portalopenapireport/delete",
                     data: JSON.stringify(ids),
                     success: function(r){
                         if(r.code == 0){
@@ -116,8 +115,8 @@ var vm = new Vue({
             });
         },
         getInfo: function(id){
-            $.get("../portalroutereport/info/"+id, function(r){
-                vm.portalRouteReport = r.portalRouteReport;
+            $.get("../portalopenapireport/info/"+id, function(r){
+                vm.portalOpenapiReport = r.portalOpenapiReport;
             });
         },
         reload: function (event) {

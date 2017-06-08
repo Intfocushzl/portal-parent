@@ -1,10 +1,14 @@
 package com.yonghui.portal.controller.api;
 
 import com.alibaba.dubbo.config.annotation.Reference;
-import com.yonghui.portal.annotation.IgnoreAuth;
+import com.alibaba.fastjson.JSONObject;
+import com.yonghui.portal.annotation.OpenAuth;
+import com.yonghui.portal.model.report.PortalOpenapiReport;
 import com.yonghui.portal.model.sys.SysOperationLog;
 import com.yonghui.portal.service.sys.SysoperationLogService;
-import com.yonghui.portal.util.*;
+import com.yonghui.portal.util.HttpContextUtils;
+import com.yonghui.portal.util.IPUtils;
+import com.yonghui.portal.util.R;
 import com.yonghui.portal.util.redis.ReportUtil;
 import com.yonghui.portal.xss.SQLFilter;
 import org.apache.log4j.Logger;
@@ -22,59 +26,48 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * 提供统一报表数据接口给客户端（走的是统一接口，只是增加了sign验证）
- * APP报表存错过程报表统一入口
- * liuwei 2017.05.25
+ * 对外部系统提供统一的数据接口（portal_openapi_report管理）
+ * liuwei 2017.06.07
  */
 @RestController
-@RequestMapping("/app/api")
-public class AppApiController {
+@RequestMapping("/openApi/portal")
+public class OpenApiController {
 
     Logger log = Logger.getLogger(this.getClass());
+
     @Reference
     private SysoperationLogService sysoperationLogService;
+
     @Autowired
     private ReportUtil reportUtil;
 
-    public static final String TOKEN = "yhappQKXYfkjqn8Yq6ojACkwXRnt35322896dfd9419f9d2c4080b064d89a";
-
 
     /**
-     * APP报表存储过程报表统一入口
-     *
-     * @param req
-     * @param response
-     * @param yongHuiReportCustomCode 报表编码,字段名唯一，且不允许修改
-     * @param sign                    报表和token生成sign
-     * @return
+     * 外部系统调用openApi统一入口
      */
-    @IgnoreAuth
-    @RequestMapping(value = "report", method = RequestMethod.GET)
+    @OpenAuth
+    @RequestMapping(value = "report", method = RequestMethod.POST)
     @ResponseBody
-    public R portalCustom(HttpServletRequest req, HttpServletResponse response, String yongHuiReportCustomCode,
-                          String sign, String shopID , String barcode) {
+    public R portalCustom(HttpServletRequest req, HttpServletResponse response, String openApiCode) {
         String parameter = null;
         List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
+        String result = null;
+        JSONObject jsonObject = null;
         try {
-            //首先判断客户端秘钥是否正确
-            Md5Util util = new Md5Util();
-            String originSign = util.getMd5("MD5", 0, null, yongHuiReportCustomCode + TOKEN);
-            if (!originSign.equals(sign)) {
-                return R.error(ConstantsUtil.ExceptionCode.TO_LOGIN, "sign验证失败");
-            }
+            //根据code从redis查报表信息
+            PortalOpenapiReport report = reportUtil.getPortalOpenApiReport(openApiCode);
             parameter = HttpContextUtils.getRequestParameter(req);
-            //记录日志
             SysOperationLog log = new SysOperationLog();
-            log.setStartTime(new Date());
             log.setIp(new IPUtils().getIpAddr(req));
+            log.setStartTime(new Date());
             log.setUrl(req.getRequestURL().toString());
             log.setParameter(HttpContextUtils.getParameterForLog(req));
-            log.setRemark("App");
-            list = reportUtil.jdbcProListResultListMapByParam(SQLFilter.sqlInject(yongHuiReportCustomCode), SQLFilter.sqlInject(parameter));
+            list = reportUtil.jdbcProListResultListMapByParam(SQLFilter.sqlInject(openApiCode), SQLFilter.sqlInject(parameter));
             log.setEndTime(new Date());
+            log.setRemark("openApi");
             sysoperationLogService.SaveLog(log);
         } catch (Exception e) {
-            R.error("执行APP报表存储过程报表异常");
+            R.error("执行openApi统一报表程序异常");
         }
         return R.success(list);
     }
