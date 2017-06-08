@@ -7,6 +7,7 @@ import com.yonghui.portal.controller.AbstractController;
 import com.yonghui.portal.model.app.AppUsers;
 import com.yonghui.portal.service.app.AppUserRolesService;
 import com.yonghui.portal.service.app.AppUsersService;
+import com.yonghui.portal.util.Md5Util;
 import com.yonghui.portal.utils.ShiroUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -66,6 +67,7 @@ public class AppUsersController extends AbstractController {
     @RequestMapping("/save")
     @RequiresPermissions("appusers:save")
     public R save(@RequestBody AppUsers appUsers){
+        appUsers.setUserPass(Md5Util.getMd5("MD5", 0, null, "123456"));
 		appUsersService.save(appUsers);
         return R.success();
     }

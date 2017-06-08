@@ -2,9 +2,10 @@ package com.yonghui.portal.controller.global;
 
 import com.alibaba.dubbo.config.annotation.Reference;
 import com.yonghui.portal.model.global.User;
+import com.yonghui.portal.model.sys.SysOperationLog;
 import com.yonghui.portal.service.global.UserService;
-import com.yonghui.portal.util.Md5Util;
-import com.yonghui.portal.util.R;
+import com.yonghui.portal.service.sys.SysoperationLogService;
+import com.yonghui.portal.util.*;
 import org.apache.log4j.Logger;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.util.Date;
 
 /**
  * Author : 杨杨
@@ -25,12 +27,16 @@ public class UserController {
     Logger log = Logger.getLogger(this.getClass());
 
     @Reference
+    private SysoperationLogService sysoperationLogService;
+    @Reference
     private UserService userService;
+
+    public static final String KEY = "yhappQKXYfkjqn8Yq6ojACkwXRnt35322896dfd9419f9d2c4080b064d89a";
 
     /**
      * 注册
      */
-    @RequestMapping("reg")
+    @RequestMapping(value = "reg", method = RequestMethod.POST)
     public R regSecond(HttpSession session, HttpServletRequest request
             , String jobNumber
             , String userName
@@ -43,8 +49,23 @@ public class UserController {
             , String areaMans
             , String firm
             , String storeNumber
-            , String remark) {
+            , String remark
+            , String sign) {
         try {
+
+            //首先判断客户端秘钥是否正确
+            String originSign = Md5Util.getMd5("MD5", 0, null, "APPRegister" + KEY);
+            if (!originSign.equals(sign)) {
+                return R.error(ConstantsUtil.ExceptionCode.TO_LOGIN, "sign验证失败");
+            }
+            //记录日志
+            SysOperationLog log = new SysOperationLog();
+            log.setStartTime(new Date());
+            log.setIp(new IPUtils().getIpAddr(request));
+            log.setUrl(request.getRequestURL().toString());
+            log.setParameter(HttpContextUtils.getParameterForLog(request));
+            log.setRemark("App注册");
+
             User user = new User();
             if (jobNumber == null || jobNumber.equals("")) {
                 return R.error(1, "员工号不能为空");
@@ -112,8 +133,12 @@ public class UserController {
             int res = userService.insertSelective(user);
 
             if (res == 1) {
+                log.setEndTime(new Date());
+                sysoperationLogService.SaveLog(log);
                 return R.success().setMsg("注册成功");
             } else {
+                log.setEndTime(new Date());
+                sysoperationLogService.SaveLog(log);
                 return R.error(0, "注册异常");
             }
 
@@ -124,11 +149,26 @@ public class UserController {
     }
 
     @RequestMapping(value = "updatePassword", method = RequestMethod.POST)
-    private R updatePassword(HttpSession session, HttpServletRequest request,
-                             String jobNumber,
-                             String password) {
+    private R updatePassword(HttpSession session, HttpServletRequest request
+            , String jobNumber
+            , String password
+            , String sign) {
+        //首先判断客户端秘钥是否正确
+        String originSign = Md5Util.getMd5("MD5", 0, null, "APPUpdatePassword" + KEY);
+        if (!originSign.equals(sign)) {
+            return R.error(ConstantsUtil.ExceptionCode.TO_LOGIN, "sign验证失败");
+        }
+        //记录日志
+        SysOperationLog log = new SysOperationLog();
+        log.setStartTime(new Date());
+        log.setIp(new IPUtils().getIpAddr(request));
+        log.setUrl(request.getRequestURL().toString());
+        log.setParameter(HttpContextUtils.getParameterForLog(request));
+        log.setRemark("App修改或重置密码");
         int res = userService.updatePasswordByJobNumber(jobNumber, password);
 
+        log.setEndTime(new Date());
+        sysoperationLogService.SaveLog(log);
         if (res == 1) {
             return R.success().setMsg("修改密码成功");
         } else {
