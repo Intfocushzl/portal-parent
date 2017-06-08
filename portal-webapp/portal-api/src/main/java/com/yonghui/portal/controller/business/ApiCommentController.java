@@ -33,7 +33,7 @@ public class ApiCommentController {
     private SysoperationLogService sysoperationLogService;
     @Autowired
     private ReportUtil reportUtil;
-    @Autowired
+    @Reference
     private ApiCommentService apiCommentService;
 
     /**

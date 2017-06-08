@@ -128,4 +128,8 @@
     <dubbo:service interface="com.yonghui.portal.service.business.ApiCommentService" ref="apiCommentService"
                    timeout="300000"/>
 
+    <bean id="apiNoticeService" class="com.yonghui.portal.service.impl.business.ApiNoticeServiceImpl"/>
+    <dubbo:service interface="com.yonghui.portal.service.business.ApiNoticeService" ref="apiNoticeService"
+                   timeout="300000"/>
+
 </beans>

@@ -44,6 +44,7 @@ public class UserAuthMenuConntroller {
             json = JSONObject.parseObject(menuJson);
             json.put("msg","请求成功");
             json.put("code","0");
+            log.info("角色菜单数据:" + menuJson);
         }
         return json;
         /*try {

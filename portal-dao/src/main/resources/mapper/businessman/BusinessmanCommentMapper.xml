@@ -122,7 +122,7 @@
 	</delete>
 
 
-	<select id="commentList"  resultType="commentMap" parameterType="Map">
+	<select id="commentList"  resultMap="commentMap" parameterType="Map">
 		select * from businessman_comment
 		<where>
 			<if test="id != null and id !=''">
