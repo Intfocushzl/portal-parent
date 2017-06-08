@@ -75,11 +75,11 @@ public class MenuController extends AbstractController {
         List<Menu> menuList = null;
 
         //只有超级管理员，才能查看所有管理员列表
-        if(getUserId() == Constant.SUPER_ADMIN){
+//        if(getUserId() == Constant.SUPER_ADMIN){
             menuList = menuService.queryList(new HashMap<String, Object>());
-        }else{
-            menuList = menuService.queryUserList(getUserId());
-        }
+//        }else{
+//            menuList = menuService.queryUserList(getUserId());
+//        }
 
         return R.success().put("menuList", menuList);
     }

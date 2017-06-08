@@ -180,12 +180,16 @@
 	</select>
 
 
-    <select id="queryObject" resultType="com.yonghui.portal.model.global.User">
-		select * from  platform.user_forfront where id = #{value}
+    <select id="queryObject" resultMap="BaseResultMap">
+        select
+        u.*,r.name as roleName,r.type as roleType
+        from platform.user_forfront as u join platform.role_forfront as r on r.roleId=u.roleIdwhere id = #{value}
 	</select>
 
-    <select id="queryList" resultType="com.yonghui.portal.model.global.User">
-        select * from platform.user_forfront
+    <select id="queryList" resultMap="BaseResultMap">
+        select
+        u.*,r.name as roleName,r.type as roleType
+        from platform.user_forfront as u join platform.role_forfront as r on r.roleId=u.roleId
         <where>
             <if test="account != null and account !=''">
                 and account like concat('%',#{account},'%')
