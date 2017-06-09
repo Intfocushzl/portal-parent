@@ -20,6 +20,16 @@ public class SysFtpConfig extends AuditAuto {
     //端口
     private Integer port;
 
+    private String rootpath;
+
+    public String getRootpath() {
+        return rootpath;
+    }
+
+    public void setRootpath(String rootpath) {
+        this.rootpath = rootpath;
+    }
+
     /**
      * 设置：用户名
      */
