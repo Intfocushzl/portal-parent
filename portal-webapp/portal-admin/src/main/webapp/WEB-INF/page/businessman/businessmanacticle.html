@@ -195,10 +195,12 @@
             <div class="form-group">
                 <div class="col-sm-2 control-label">封面图</div>
                 <div class="col-sm-10">
-                    <input type="hidden" class="form-control" v-model="businessmanActicle.coverImg" placeholder="封面图"/>
                     <a href="javascript:void(0);" class="btn file-btn">
                         <i class="icon-cloud-upload"></i>上传图片
                         <input type="file" id="input_cover" name="inputCover" class="pic-upload-input">
+                        <img src="" width="230" height="90" alt="" class="pic-upload-show"
+                             style="background-color: #ccc;" id="cover_pic_show">
+                        <a href="javascript:void(0)">删除</a>
                     </a>
                 </div>
             </div>

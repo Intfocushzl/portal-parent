@@ -127,6 +127,7 @@ var vm = new Vue({
                 vm.businessmanActicle = r.businessmanActicle;
                 KindEditor.instances[0].html(vm.businessmanActicle.abstracts);
                 KindEditor.instances[1].html(vm.businessmanActicle.content);
+                $("#cover_pic_show").prop("src", vm.businessmanActicle.coverImg);
             });
         },
         reload: function (event) {
@@ -219,11 +220,13 @@ $('#input_cover').uploadify({
     'onUploadSuccess': function (file, data, response) {
         var $showImage = $("#cover_pic_show");
         var data = eval("(" + data + ")");
-        if (data.code == 0) {
+        if (data.RetCode == 0) {
             var url = data.RetUrl;
             $showImage.prop("src", url);
             $("#coverImg").val(url);
-            DialogBox.alert("上传成功");
+            vm.businessmanActicle.coverImg = url;
+            alert('上传成功', function (index) {
+            });
         }
     },
     'onUploadError': function (file, errorCode, errorMsg, errorString) {
