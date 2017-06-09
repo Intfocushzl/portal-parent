@@ -81,7 +81,7 @@
             <if test="password != null">`password` = #{password},</if>
             <if test="host != null">`host` = #{host},</if>
             <if test="port != null">`port` = #{port},</if>
-            <if test="rootpath != null">`port` = #{rootpath},</if>
+            <if test="rootpath != null">`rootpath` = #{rootpath},</if>
             <if test="remark != null">`remark` = #{remark}</if>
         </set>
         where id = #{id}
