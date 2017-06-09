@@ -57,7 +57,7 @@ public class AuthorizationInterceptor extends HandlerInterceptorAdapter {
         if (annotation != null) {
             return true;
         }
-        //如果有@OpenAuth注解，则校验sigin
+        //如果有@OpenAuth注解，则校验sign
         if(openAuthAnnotation != null){
             String  openApiCode = request.getParameter("openApiCode");
             String  sign = request.getParameter("sign");

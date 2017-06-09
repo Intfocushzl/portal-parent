@@ -61,11 +61,11 @@ public class ApiCommentController {
         PageUtils pageUtil = null;
         try {
             ApiQuery query = new ApiQuery(params);
-            List<Map<String, Object>>  portalDataSourceList = apiCommentService.commentList(query);
+            List<Map<String, Object>>  commentList = apiCommentService.commentList(query);
             int total = apiCommentService.queryTotal(query);
-            pageUtil = new PageUtils(portalDataSourceList, total, query.getLimit(), query.getPage());
+            pageUtil = new PageUtils(commentList, total, query.getLimit(), query.getPage());
         } catch (Exception e) {
-            R.error("获取用户评论信息失败");
+            R.error("获取用户评论列表失败");
         }
         return R.success().put("page", pageUtil);
     }

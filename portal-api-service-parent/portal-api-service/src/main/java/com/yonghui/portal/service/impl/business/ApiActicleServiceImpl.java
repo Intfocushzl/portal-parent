@@ -30,5 +30,8 @@ public class ApiActicleServiceImpl implements ApiActicleService {
 	public List<Map<String, Object>> acticleList(Map<String, Object> map){
 		return businessmanActicleMapper.acticleList(map);
 	}
-	
+
+	public List<Map<String, Object>> acticleDetail(Map<String, Object> map){
+		return businessmanActicleMapper.acticleDetail(map);
+	}
 }

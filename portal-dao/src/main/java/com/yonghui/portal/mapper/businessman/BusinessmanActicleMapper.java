@@ -14,5 +14,8 @@ import java.util.Map;
  * @date 2017-06-07 16:33:29
  */
 public interface BusinessmanActicleMapper extends BaseMapper<BusinessmanActicle> {
+
     List<Map<String, Object>> acticleList(Map<String, Object> map);
+
+    List<Map<String, Object>> acticleDetail(Map<String, Object> map);
 }

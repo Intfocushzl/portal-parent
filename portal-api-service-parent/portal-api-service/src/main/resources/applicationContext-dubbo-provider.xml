@@ -49,7 +49,8 @@
 
     <!--菜单管理 、 门店大区课组公共接口  -->
     <bean id="globalSelectService" class="com.yonghui.portal.service.impl.global.GlobalSelectServiceImpl"/>
-    <dubbo:service interface="com.yonghui.portal.service.global.GlobalSelectService" ref="globalSelectService" timeout="300000"/>
+    <dubbo:service interface="com.yonghui.portal.service.global.GlobalSelectService" ref="globalSelectService"
+                   timeout="300000"/>
 
     <!--首页公告、实时销售  -->
     <bean id="noticelService" class="com.yonghui.portal.service.impl.global.NoticeServiceImpl"/>
@@ -136,5 +137,10 @@
     <!-- 生意人文章  -->
     <bean id="apiActicleService" class="com.yonghui.portal.service.impl.business.ApiActicleServiceImpl"/>
     <dubbo:service interface="com.yonghui.portal.service.business.ApiActicleService" ref="apiActicleService"
+                   timeout="300000"/>
+
+    <!-- 生意人问题反馈  -->
+    <bean id="apiProblemService" class="com.yonghui.portal.service.impl.business.ApiProblemServiceImpl"/>
+    <dubbo:service interface="com.yonghui.portal.service.business.ApiProblemService" ref="apiProblemService"
                    timeout="300000"/>
 </beans>

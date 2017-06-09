@@ -22,4 +22,6 @@ public interface ApiActicleService {
 	int queryTotal(Map<String, Object> map);
 	
 	List<Map<String, Object>> acticleList(Map<String, Object> map);
+
+	List<Map<String, Object>> acticleDetail(Map<String, Object> map);
 }
