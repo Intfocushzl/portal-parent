@@ -33,7 +33,7 @@
 		from platform.businessman_notice n LEFT JOIN (
 		SELECT a.id,0 as see from platform.businessman_notice a,platform.businessman_notice_log b where a.id =
 		b.notice_id and b.CREATER = #{userId}
-		) c on n.id = c.id where n.notice_type in
+		) c on n.id = c.id where n.expire_time > NOW() and n.notice_type in
 		<foreach collection="noticeType" item="item" open="(" separator="," close=")">
 			'${item}'
 		</foreach>

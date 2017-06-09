@@ -2,6 +2,7 @@ package com.yonghui.portal.controller.business;
 
 import com.alibaba.dubbo.config.annotation.Reference;
 import com.yonghui.portal.annotation.OpenAuth;
+import com.yonghui.portal.model.businessman.BusinessmanNotice;
 import com.yonghui.portal.service.business.ApiNoticeService;
 import com.yonghui.portal.service.sys.SysoperationLogService;
 import com.yonghui.portal.util.ApiQuery;
@@ -14,8 +15,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 import java.util.Map;
 
@@ -37,15 +36,19 @@ public class ApiNoticeController {
 
     /**
      * 获取系统公告
-     *
-     * @param req
-     * @param response
      */
     @RequestMapping(value = "notice")
-    public R notice(HttpServletRequest req, HttpServletResponse response) {
-        return R.success();
+    @OpenAuth
+    public R notice(@RequestParam Map<String,Object> params) {
+        BusinessmanNotice bsn = apiNoticeService.notice(params);
+        if(bsn != null){
+            return R.success().setData(bsn);
+        }else{
+            return R.error("没找到对应详情");
+        }
     }
 
+    //
     @RequestMapping(value="noticeList")
     @OpenAuth
     public R noticeList(@RequestParam Map<String, Object> params){
@@ -58,7 +61,6 @@ public class ApiNoticeController {
         int total = apiNoticeService.queryTotal(query);
 
         PageUtils pageUtil = new PageUtils(list, total, query.getLimit(), query.getPage());
-
         return R.success().put("page", pageUtil);
 
     }
