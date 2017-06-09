@@ -61,6 +61,7 @@
 			`host`, 
 			`port`,
 			`rootpath`,
+			`origin`,
 			`remark`
 		)
 		values
@@ -70,6 +71,7 @@
 			#{host}, 
 			#{port},
 			#{rootpath},
+			#{origin},
 			#{remark}
 		)
 	</insert>
@@ -82,6 +84,7 @@
             <if test="host != null">`host` = #{host},</if>
             <if test="port != null">`port` = #{port},</if>
             <if test="rootpath != null">`rootpath` = #{rootpath},</if>
+            <if test="origin != null">`origin` = #{origin},</if>
             <if test="remark != null">`remark` = #{remark}</if>
         </set>
         where id = #{id}
