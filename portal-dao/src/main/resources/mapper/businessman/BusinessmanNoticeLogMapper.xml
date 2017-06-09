@@ -12,6 +12,10 @@
         <result property="createTime" column="CREATE_TIME"/>
     </resultMap>
 
+	<select id="queryIsSee" resultType="com.yonghui.portal.model.businessman.BusinessmanNoticeLog" parameterType="Map">
+	SELECT * from platform.businessman_notice_log WHERE notice_id = #{id} and CREATER = #{userId}
+	</select>
+
 	<select id="queryObject" resultType="com.yonghui.portal.model.businessman.BusinessmanNoticeLog">
 		select * from businessman_notice_log where id = #{value}
 	</select>
@@ -64,7 +68,7 @@
 			#{noticeId}, 
 			#{remark}, 
 			#{creater}, 
-			#{createTime}
+			NOW()
 		)
 	</insert>
 

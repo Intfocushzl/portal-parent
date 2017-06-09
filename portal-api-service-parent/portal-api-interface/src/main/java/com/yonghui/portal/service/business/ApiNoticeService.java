@@ -1,5 +1,7 @@
 package com.yonghui.portal.service.business;
 
+import com.yonghui.portal.model.businessman.BusinessmanNotice;
+
 import java.util.List;
 import java.util.Map;
 
@@ -9,11 +11,12 @@ import java.util.Map;
 public interface ApiNoticeService {
 
     //公告列表
-    public List<Map<String,Object>> noticeList(Map<String, Object> params);
+    List<Map<String,Object>> noticeList(Map<String, Object> params);
     //单个公告信息
-    public List<Map<String,Object>> getNoticeById(Integer id);
+    BusinessmanNotice notice(Map<String,Object> params);
 
     int queryTotal(Map<String, Object> map);
+
 
 
 }

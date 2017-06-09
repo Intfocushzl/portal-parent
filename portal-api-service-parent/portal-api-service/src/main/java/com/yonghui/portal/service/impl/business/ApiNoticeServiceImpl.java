@@ -2,6 +2,8 @@ package com.yonghui.portal.service.impl.business;
 
 import com.yonghui.portal.mapper.businessman.BusinessmanNoticeLogMapper;
 import com.yonghui.portal.mapper.businessman.BusinessmanNoticeMapper;
+import com.yonghui.portal.model.businessman.BusinessmanNotice;
+import com.yonghui.portal.model.businessman.BusinessmanNoticeLog;
 import com.yonghui.portal.service.business.ApiNoticeService;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -24,8 +26,18 @@ public class ApiNoticeServiceImpl implements ApiNoticeService {
     }
 
     @Override
-    public List<Map<String, Object>> getNoticeById(Integer id) {
-        return null;
+    public BusinessmanNotice notice(Map<String,Object> params) {
+        BusinessmanNotice bsn = businessmanNoticeMapper.queryObject(params.get("id"));
+        BusinessmanNoticeLog bsnl = businessmanNoticeLogMapper.queryIsSee(params);
+        if( bsn != null && bsnl==null){
+            BusinessmanNoticeLog nlog = new BusinessmanNoticeLog();
+            Long id = Long.parseLong(params.get("id").toString());
+            Long creater = Long.parseLong(params.get("userId").toString());
+            nlog.setNoticeId(id);
+            nlog.setCreater(creater);
+            businessmanNoticeLogMapper.save(nlog);
+        }
+        return bsn;
     }
 
     @Override

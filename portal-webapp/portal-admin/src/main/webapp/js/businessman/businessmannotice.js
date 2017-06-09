@@ -80,8 +80,11 @@ var vm = new Vue({
 
             vm.getInfo(id)
         },
-        saveOrUpdate: function (event) {
+        saveOrUpdate: function (status) {
             var url = vm.businessmanNotice.id == null ? "../businessmannotice/save" : "../businessmannotice/update";
+            vm.businessmanNotice.noticeType = $("#noticeType").val();
+            vm.businessmanNotice.status = status;
+            console.log(JSON.stringify(vm.businessmanNotice));
             $.ajax({
                 type: "POST",
                 url: url,
