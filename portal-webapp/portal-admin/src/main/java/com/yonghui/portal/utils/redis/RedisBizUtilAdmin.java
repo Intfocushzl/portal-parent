@@ -168,4 +168,22 @@ public class RedisBizUtilAdmin {
     public boolean hasRouteReport(String code) {
         return redisUtil.hasKey(String.format("%s:openapi:route", KEY_PREFIX), code);
     }
+
+    /********************FTP配置信息*****************/
+    public void setFtpInfo(Long id, String value) {
+        redisUtil.put(String.format("%s:sys:ftp", KEY_PREFIX), id.toString(), value);
+    }
+
+    public String getFtpInfo(Long id) {
+        return redisUtil.get(String.format("%s:sys:ftp", KEY_PREFIX), id.toString());
+    }
+
+    public void removeFtpInfo(Long id) {
+        redisUtil.remove(String.format("%s:sys:ftp", KEY_PREFIX), id.toString());
+    }
+
+    public boolean hasFtpInfo(Long id) {
+        return redisUtil.hasKey(String.format("%s:sys:ftp", KEY_PREFIX), id.toString());
+    }
+
 }
