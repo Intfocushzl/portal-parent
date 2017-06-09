@@ -62,10 +62,13 @@
         b.acticle_id and b.user_id = #{userId} and b.`status`=1
         ) c on a.id = c.id
         <if test="name != null and name !=''">
-            WHERE a.tag_info LIKE concat('%',#{name},'%') OR a.title LIKE concat('%',#{name},'%');
+            WHERE a.tag_info LIKE concat('%',#{name},'%') OR a.title LIKE concat('%',#{name},'%') GROUP BY a.CREATE_TIME DESC;
         </if>
     </select>
 
+    <select id="acticleDetail" resultType="Map" parameterType="Map">
+        select a.title , a.tag_info as tagInfo , a.content , a.CREATE_TIME as createTime from platform.businessman_acticle a WHERE a.id = #{id}
+    </select>
 
     <select id="queryTotal" resultType="int">
         select count(*) from businessman_acticle

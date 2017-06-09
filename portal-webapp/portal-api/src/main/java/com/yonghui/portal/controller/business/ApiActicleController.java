@@ -67,4 +67,20 @@ public class ApiActicleController {
         }
         return R.success().put("page", pageUtil);
     }
+
+    @OpenAuth
+    @RequestMapping(value = "acticleDetail", method = RequestMethod.GET)
+    public R acticleDetail(HttpServletRequest req, HttpServletResponse response, @RequestParam Map<String, Object> params) {
+        PageUtils pageUtil = null;
+        try {
+            ApiQuery query = new ApiQuery(params);
+            List<Map<String, Object>> acticleDetail = apiActicleService.acticleDetail(query);
+            int total = apiActicleService.queryTotal(query);
+            pageUtil = new PageUtils(acticleDetail, total, query.getLimit(), query.getPage());
+        } catch (Exception e) {
+            R.error("获取文章信息失败");
+        }
+        return R.success().put("page", pageUtil);
+    }
+
 }

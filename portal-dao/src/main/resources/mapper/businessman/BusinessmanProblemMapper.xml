@@ -3,7 +3,7 @@
 
 <mapper namespace="com.yonghui.portal.mapper.businessman.BusinessmanProblemMapper">
 
-	<!-- 可根据自己的需求，是否要使用 -->
+    <!-- 可根据自己的需求，是否要使用 -->
     <resultMap id="businessmanProblemMap" type="com.yonghui.portal.model.businessman.BusinessmanProblem">
         <result property="id" column="id"/>
         <result property="userId" column="user_id"/>
@@ -20,12 +20,12 @@
         <result property="version" column="VERSION"/>
     </resultMap>
 
-	<select id="queryObject" resultType="com.yonghui.portal.model.businessman.BusinessmanProblem">
+    <select id="queryObject" resultType="com.yonghui.portal.model.businessman.BusinessmanProblem">
 		select * from businessman_problem where id = #{value}
 	</select>
 
-	<select id="queryList" resultType="com.yonghui.portal.model.businessman.BusinessmanProblem">
-		select * from businessman_problem
+    <select id="queryList" resultType="com.yonghui.portal.model.businessman.BusinessmanProblem">
+        select * from businessman_problem
         <where>
             <if test="id != null and id !=''">
                 and id like concat('%',#{id},'%')
@@ -38,17 +38,21 @@
             <when test="sidx != null and sidx.trim() != ''">
                 order by ${sidx} ${order}
             </when>
-			<otherwise>
+            <otherwise>
                 order by id desc
-			</otherwise>
+            </otherwise>
         </choose>
-		<if test="offset != null and limit != null">
-			limit #{offset}, #{limit}
-		</if>
+        <if test="offset != null and limit != null">
+            limit #{offset}, #{limit}
+        </if>
+    </select>
+
+    <select id="problemDetail" resultType="Map" parameterType="Map">
+      select a.title , a.content , a.images , a.`status` from platform.businessman_problem a where a.user_id = #{userId} GROUP BY a.CREATE_TIME DESC
 	</select>
-	
- 	<select id="queryTotal" resultType="int">
-		select count(*) from businessman_problem
+
+    <select id="queryTotal" resultType="int">
+        select count(*) from businessman_problem
         <where>
             <if test="id != null and id !=''">
                 and id = #{id}
@@ -57,9 +61,10 @@
                 and remark like concat('%',#{remark},'%')
             </if>
         </where>
-	</select>
+    </select>
 
-    <insert id="save" parameterType="com.yonghui.portal.model.businessman.BusinessmanProblem" useGeneratedKeys="true" keyProperty="id">
+    <insert id="save" parameterType="com.yonghui.portal.model.businessman.BusinessmanProblem" useGeneratedKeys="true"
+            keyProperty="id">
 		insert into businessman_problem
 		(
 			`user_id`, 
@@ -95,31 +100,31 @@
     <update id="update" parameterType="com.yonghui.portal.model.businessman.BusinessmanProblem">
         update businessman_problem
         <set>
-			<if test="userId != null">`user_id` = #{userId}, </if>
-			<if test="title != null">`title` = #{title}, </if>
-			<if test="content != null">`content` = #{content}, </if>
-			<if test="images != null">`images` = #{images}, </if>
-			<if test="status != null">`status` = #{status}, </if>
-			<if test="remark != null">`REMARK` = #{remark}, </if>
-			<if test="creater != null">`CREATER` = #{creater}, </if>
-			<if test="createTime != null">`CREATE_TIME` = #{createTime}, </if>
-			<if test="modifier != null">`MODIFIER` = #{modifier}, </if>
-			`MODIFY_TIME` = NOW(), 
-			<if test="disabled != null">`DISABLED` = #{disabled}, </if>
-			<if test="version != null">`VERSION` = #{version}</if>
+            <if test="userId != null">`user_id` = #{userId},</if>
+            <if test="title != null">`title` = #{title},</if>
+            <if test="content != null">`content` = #{content},</if>
+            <if test="images != null">`images` = #{images},</if>
+            <if test="status != null">`status` = #{status},</if>
+            <if test="remark != null">`REMARK` = #{remark},</if>
+            <if test="creater != null">`CREATER` = #{creater},</if>
+            <if test="createTime != null">`CREATE_TIME` = #{createTime},</if>
+            <if test="modifier != null">`MODIFIER` = #{modifier},</if>
+            `MODIFY_TIME` = NOW(),
+            <if test="disabled != null">`DISABLED` = #{disabled},</if>
+            <if test="version != null">`VERSION` = #{version}</if>
         </set>
         where id = #{id}
     </update>
-	
-	<delete id="delete">
+
+    <delete id="delete">
 		delete from businessman_problem where id = #{value}
 	</delete>
-	
-	<delete id="deleteBatch">
-		delete from businessman_problem where id in 
-		<foreach item="id" collection="array" open="(" separator="," close=")">
-			#{id}
-		</foreach>
-	</delete>
+
+    <delete id="deleteBatch">
+        delete from businessman_problem where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
 
 </mapper>
