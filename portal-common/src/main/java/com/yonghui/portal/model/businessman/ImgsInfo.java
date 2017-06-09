@@ -22,78 +22,83 @@ public class ImgsInfo extends AuditAuto {
     //图品根目录
     private String imgPath;
     //目录ID
-    private Long directoryId;
+    private String directoryId;
 
     /**
      * 设置：图片名称
      */
     public void setName(String name) {
-            this.name = name;
-            }
+        this.name = name;
+    }
+
     /**
      * 获取：图片名称
      */
     public String getName() {
-            return name;
-            }
+        return name;
+    }
+
     /**
      * 设置：系统名称
      */
     public void setSysName(String sysName) {
-            this.sysName = sysName;
-            }
+        this.sysName = sysName;
+    }
+
     /**
      * 获取：系统名称
      */
     public String getSysName() {
-            return sysName;
-            }
+        return sysName;
+    }
+
     /**
      * 设置：图片格式
      */
     public void setImgType(String imgType) {
-            this.imgType = imgType;
-            }
+        this.imgType = imgType;
+    }
+
     /**
      * 获取：图片格式
      */
     public String getImgType() {
-            return imgType;
-            }
+        return imgType;
+    }
+
     /**
      * 设置：图片大小
      */
     public void setImgSize(String imgSize) {
-            this.imgSize = imgSize;
-            }
+        this.imgSize = imgSize;
+    }
+
     /**
      * 获取：图片大小
      */
     public String getImgSize() {
-            return imgSize;
-            }
+        return imgSize;
+    }
+
     /**
      * 设置：图品根目录
      */
     public void setImgPath(String imgPath) {
-            this.imgPath = imgPath;
-            }
+        this.imgPath = imgPath;
+    }
+
     /**
      * 获取：图品根目录
      */
     public String getImgPath() {
-            return imgPath;
-            }
-    /**
-     * 设置：目录ID
-     */
-    public void setDirectoryId(Long directoryId) {
-            this.directoryId = directoryId;
-            }
-    /**
-     * 获取：目录ID
-     */
-    public Long getDirectoryId() {
-            return directoryId;
-            }
+        return imgPath;
+    }
+
+    public String getDirectoryId() {
+        return directoryId;
+    }
+
+    public void setDirectoryId(String directoryId) {
+        this.directoryId = directoryId;
+    }
 }

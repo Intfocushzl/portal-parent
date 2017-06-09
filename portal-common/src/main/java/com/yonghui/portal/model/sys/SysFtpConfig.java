@@ -22,6 +22,16 @@ public class SysFtpConfig extends AuditAuto {
 
     private String rootpath;
 
+    private String origin;
+
+    public String getOrigin() {
+        return origin;
+    }
+
+    public void setOrigin(String origin) {
+        this.origin = origin;
+    }
+
     public String getRootpath() {
         return rootpath;
     }
