@@ -143,6 +143,32 @@ public class FileUploadController {
         }
     }
 
+
+    /**
+     * 删除图片
+     *
+     * @param request
+     * @param response
+     */
+    @RequestMapping("/removeImg")
+    public void removeImg(HttpServletRequest request, HttpServletResponse response) {
+        String imgPath = request.getParameter("imgPath");
+        try {
+            if (imgPath != null && !imgPath.equals("")) {
+                SysFtpConfig sysFtpConfig = JSONObject.parseObject(redisBizUtilAdmin.getFtpInfo(1L), SysFtpConfig.class);
+                String directory = sysFtpConfig.getRootpath() + "item/";
+                String deleteFile = imgPath.substring(imgPath.lastIndexOf("/") + 1, imgPath.length());
+                SftpUtil sftp = new SftpUtil(sysFtpConfig);
+                sftp.connect();
+                sftp.delete(directory, deleteFile);
+                sftp.disconnect();
+            }
+        } catch (Exception e) {
+            System.out.println("图片删除失败---->" + imgPath);
+        }
+    }
+
+    //操作结果
     protected void printJson(HttpServletResponse response, String json)
             throws IOException {
         response.setContentType("application/json;charset=UTF-8");
