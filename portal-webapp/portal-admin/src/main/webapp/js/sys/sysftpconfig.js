@@ -9,7 +9,8 @@ $(function () {
             {label: '密码', name: 'password', index: 'password', width: 80 }, 
             {label: '地址', name: 'host', index: 'host', width: 80 }, 
             {label: '端口', name: 'port', index: 'port', width: 80 },
-            {label: '备注', name: 'remark', index: 'remark', width: 80 },
+            {label: '根路径', name: 'rootpath', index: 'rootpath', width: 120 },
+            {label: '备注', name: 'remark', index: 'remark', width: 120 },
         ],
         viewrecords: true,     // 是否显示行号，默认值是false，不显示
         height: 385,            // 表格高度
