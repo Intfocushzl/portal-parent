@@ -52,13 +52,15 @@
         </where>
     </select>
 
-    <insert id="save" parameterType="com.yonghui.portal.model.sys.SysFtpConfig" useGeneratedKeys="true" keyProperty="id">
+    <insert id="save" parameterType="com.yonghui.portal.model.sys.SysFtpConfig" useGeneratedKeys="true"
+            keyProperty="id">
 		insert into sys_ftp_config
 		(
 			`username`,
 			`password`, 
 			`host`, 
-			`port`, 
+			`port`,
+			`rootpath`,
 			`remark`
 		)
 		values
@@ -66,7 +68,8 @@
 			#{username},
 			#{password}, 
 			#{host}, 
-			#{port}, 
+			#{port},
+			#{rootpath},
 			#{remark}
 		)
 	</insert>
@@ -78,6 +81,7 @@
             <if test="password != null">`password` = #{password},</if>
             <if test="host != null">`host` = #{host},</if>
             <if test="port != null">`port` = #{port},</if>
+            <if test="rootpath != null">`port` = #{rootpath},</if>
             <if test="remark != null">`remark` = #{remark}</if>
         </set>
         where id = #{id}
