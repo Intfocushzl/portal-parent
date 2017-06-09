@@ -1,155 +1,265 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>生意人数据学院文章信息表</title>
+    <title>生意人数据学院文章信息表</title>
     #parse("sys/header.html")
+
+    <!-- kindeditor -->
+    <link rel="stylesheet" href="${rc.contextPath}/statics/plugins/kindeditor/themes/default/default.css"/>
+    <script charset="utf-8" src="${rc.contextPath}/statics/plugins/kindeditor/kindeditor-min.js"></script>
+    <script charset="utf-8" src="${rc.contextPath}/statics/plugins/kindeditor/lang/zh_CN.js"></script>
+    <!-- uploadify -->
+    <link type="text/css" rel="stylesheet" href="${rc.contextPath}/statics/uploadify/uploadify.css"/>
+    <script type="text/javascript" src="${rc.contextPath}/statics/uploadify/jquery.uploadify.js"></script>
+
+    <style type="text/css">
+        .file-btn {
+            position: relative !important;
+        }
+
+        .tab-bar {
+            overflow: hidden;
+            border-bottom: 1px solid #ccc;
+        }
+
+        .tab-bar a {
+            display: block;
+            float: left;
+            padding: 5px 10px;
+            border: 1px solid #ccc;
+            background-color: #eee;
+            margin-bottom: -1px;
+            border-left: none;
+        }
+
+        .tab-bar a:first-child {
+            border-left: 1px solid #ccc;
+        }
+
+        .tab-bar a.active {
+            background-color: #fff;
+            border-bottom: 1px solid #fff;
+        }
+
+        .pc-des {
+            display: none;
+            margin-top: 15px;
+        }
+
+        .pc-des textarea, .pc-des input {
+            border: 1px solid #ccc;
+            line-height: 22px;
+            text-indent: 4px;
+        }
+
+        .pc-des input {
+            height: 22px;
+            width: 20em;
+        }
+
+        .pc-des fieldset {
+            border: 1px solid #ccc;
+        }
+
+        .pc-des legend {
+            margin-left: 10px;
+        }
+
+        .pc-des legend span {
+            display: block;
+            margin: 0 5px;
+        }
+
+        .pc-des fieldset div {
+            margin-bottom: .5em;
+            padding: .5em;
+            text-align: left;
+        }
+
+        .pc-des label {
+            display: inline-block;
+            width: 8em;
+            text-align: left;
+            vertical-align: top;
+        }
+
+        .pc-des textarea {
+            width: 400px;
+            height: 100px;
+        }
+
+        .ke-dialog-body .swfupload {
+            position: static;
+        }
+
+        .file-btn {
+            position: relative;
+        }
+
+        .uploadify {
+            position: absolute !important;
+            left: -10px;
+            top: 0;
+            z-index: 10;
+            /* older safari/Chrome browsers */
+            -webkit-opacity: 0;
+            /* Netscape and Older than Firefox 0.9 */
+            -moz-opacity: 0;
+            /* Safari 1.x (pre WebKit!) 老式khtml内核的Safari浏览器*/
+            -khtml-opacity: 0;
+            /* IE9 + etc...modern browsers */
+            opacity: 0;
+            /* IE 4-9 */
+            filter: alpha(opacity=50);
+            /*This works in IE 8 & 9 too*/
+            -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
+            /*IE4-IE9*/
+            filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=0);
+        }
+    </style>
 </head>
 <body>
 <div id="rrapp" v-cloak>
-	<div v-show="showList">
+    <div v-show="showList">
         <div id="queryDiv" class="queryDiv">
             <div class="grid-btn">
                 <div class="form-group col-sm-2">
-                    <input type="text" class="form-control" v-model="businessmanActicle.id" @keyup.enter="query" placeholder="主键ID">
+                    <input type="text" class="form-control" v-model="businessmanActicle.id" @keyup.enter="query"
+                           placeholder="主键ID">
                 </div>
                 <div class="form-group col-sm-2">
-                	<input type="text" class="form-control" v-model="businessmanActicle.remark" @keyup.enter="query" placeholder="备注说明">
+                    <input type="text" class="form-control" v-model="businessmanActicle.remark" @keyup.enter="query"
+                           placeholder="备注说明">
                 </div>
                 <a class="btn btn-primary" @click="query">查询</a>
 
-				#if($shiro.hasPermission("businessmanacticle:save"))
-				<a class="btn btn-primary" @click="add"><i class="fa fa-plus"></i>&nbsp;新增</a>
-				#end
-				#if($shiro.hasPermission("businessmanacticle:update"))
-				<a class="btn btn-primary" @click="update"><i class="fa fa-pencil-square-o"></i>&nbsp;修改</a>
-				#end
-				#if($shiro.hasPermission("businessmanacticle:delete"))
-				<a class="btn btn-primary" @click="del"><i class="fa fa-trash-o"></i>&nbsp;删除</a>
-				#end
-			</div>
-		</div>
-	    <table id="jqGrid"></table>
-	    <div id="jqGridPager"></div>
+                #if($shiro.hasPermission("businessmanacticle:save"))
+                <a class="btn btn-primary" @click="add"><i class="fa fa-plus"></i>&nbsp;新增</a>
+                #end
+                #if($shiro.hasPermission("businessmanacticle:update"))
+                <a class="btn btn-primary" @click="update"><i class="fa fa-pencil-square-o"></i>&nbsp;修改</a>
+                #end
+                #if($shiro.hasPermission("businessmanacticle:delete"))
+                <a class="btn btn-primary" @click="del"><i class="fa fa-trash-o"></i>&nbsp;删除</a>
+                #end
+            </div>
+        </div>
+        <table id="jqGrid"></table>
+        <div id="jqGridPager"></div>
     </div>
-    
+
     <div v-show="!showList" class="panel panel-default">
-		<div class="panel-heading">{{title}}</div>
-		<form class="form-horizontal">
-			<div class="form-group">
-			   	<div class="col-sm-2 control-label">文章类型</div>
-			   	<div class="col-sm-10">
-			        <input type="text" class="form-control" v-model="businessmanActicle.acticleType" placeholder="文章类型 1：文章 2：视频"/>
-			    </div>
-			</div>
-			<div class="form-group">
-			   	<div class="col-sm-2 control-label">发布范围角色编码</div>
-			   	<div class="col-sm-10">
-			        <input type="text" class="form-control" v-model="businessmanActicle.acticleRoles" placeholder="发布范围角色编码 如：101,102,103"/>
-			    </div>
-			</div>
-			<div class="form-group">
-			   	<div class="col-sm-2 control-label">发布范围群组编码</div>
-			   	<div class="col-sm-10">
-			        <input type="text" class="form-control" v-model="businessmanActicle.acticleGroups" placeholder="发布范围群组编码 如：10001,10002,10003"/>
-			    </div>
-			</div>
-			<div class="form-group">
-			   	<div class="col-sm-2 control-label">是否APP推送</div>
-			   	<div class="col-sm-10">
-			        <input type="text" class="form-control" v-model="businessmanActicle.appPush" placeholder="是否APP推送 0:推送 1：不推送"/>
-			    </div>
-			</div>
-			<div class="form-group">
-			   	<div class="col-sm-2 control-label">标签</div>
-			   	<div class="col-sm-10">
-			        <input type="text" class="form-control" v-model="businessmanActicle.tagInfo" placeholder="标签：最多三个 如 aa,bb,cc"/>
-			    </div>
-			</div>
-			<div class="form-group">
-			   	<div class="col-sm-2 control-label">标题</div>
-			   	<div class="col-sm-10">
-			        <input type="text" class="form-control" v-model="businessmanActicle.title" placeholder="标题"/>
-			    </div>
-			</div>
-			<div class="form-group">
-			   	<div class="col-sm-2 control-label">正文</div>
-			   	<div class="col-sm-10">
-			        <input type="text" class="form-control" v-model="businessmanActicle.content" placeholder="正文"/>
-			    </div>
-			</div>
-			<div class="form-group">
-			   	<div class="col-sm-2 control-label">摘要</div>
-			   	<div class="col-sm-10">
-			        <input type="text" class="form-control" v-model="businessmanActicle.abstracts" placeholder="摘要"/>
-			    </div>
-			</div>
-			<div class="form-group">
-			   	<div class="col-sm-2 control-label">封面图</div>
-			   	<div class="col-sm-10">
-			        <input type="text" class="form-control" v-model="businessmanActicle.coverImg" placeholder="封面图"/>
-			    </div>
-			</div>
-			<div class="form-group">
-			   	<div class="col-sm-2 control-label">状态</div>
-			   	<div class="col-sm-10">
-			        <input type="text" class="form-control" v-model="businessmanActicle.status" placeholder="1：草稿 2：已发布"/>
-			    </div>
-			</div>
-			<!--<div class="form-group">
-			   	<div class="col-sm-2 control-label">阅读数</div>
-			   	<div class="col-sm-10">
-			        <input type="text" class="form-control" v-model="businessmanActicle.pageview" placeholder="阅读数"/>
-			    </div>
-			</div>-->
-			<div class="form-group">
-			   	<div class="col-sm-2 control-label">说明</div>
-			   	<div class="col-sm-10">
-			        <textarea type="text" class="form-control" v-model="businessmanActicle.remark" placeholder="说明"></textarea>
-			    </div>
-			</div>
-			<!--<div class="form-group">
-			   	<div class="col-sm-2 control-label">创建人</div>
-			   	<div class="col-sm-10">
-			        <input type="text" class="form-control" v-model="businessmanActicle.creater" placeholder="创建人"/>
-			    </div>
-			</div>
-			<div class="form-group">
-			   	<div class="col-sm-2 control-label">创建时间</div>
-			   	<div class="col-sm-10">
-			        <input type="text" class="form-control" v-model="businessmanActicle.createTime" placeholder="创建时间"/>
-			    </div>
-			</div>
-			<div class="form-group">
-			   	<div class="col-sm-2 control-label">修改人</div>
-			   	<div class="col-sm-10">
-			        <input type="text" class="form-control" v-model="businessmanActicle.modifier" placeholder="修改人"/>
-			    </div>
-			</div>
-			<div class="form-group">
-			   	<div class="col-sm-2 control-label">修改时间</div>
-			   	<div class="col-sm-10">
-			        <input type="text" class="form-control" v-model="businessmanActicle.modifyTime" placeholder="修改时间"/>
-			    </div>
-			</div>
-			<div class="form-group">
-			   	<div class="col-sm-2 control-label">启用,禁用</div>
-			   	<div class="col-sm-10">
-			        <input type="text" class="form-control" v-model="businessmanActicle.disabled" placeholder="启用,禁用(0启用，1禁用)"/>
-			    </div>
-			</div>
-			<div class="form-group">
-			   	<div class="col-sm-2 control-label">版本号</div>
-			   	<div class="col-sm-10">
-			        <input type="text" class="form-control" v-model="businessmanActicle.version" placeholder="版本号"/>
-			    </div>
-			</div>-->
-			<div class="form-group">
-				<div class="col-sm-2 control-label"></div> 
-				<input type="button" class="btn btn-primary" @click="saveOrUpdate" value="确定"/>
-				&nbsp;&nbsp;<input type="button" class="btn btn-warning" @click="reload" value="返回"/>
-			</div>
-		</form>
-	</div>
+        <div class="panel-heading">{{title}}</div>
+        <form class="form-horizontal">
+            <div class="form-group">
+                <div class="col-sm-2 control-label">文章类型</div>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" v-model="businessmanActicle.acticleType"
+                           placeholder="文章类型 1：文章 2：视频"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">发布范围角色编码</div>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" v-model="businessmanActicle.acticleRoles"
+                           placeholder="发布范围角色编码 如：101,102,103"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">发布范围群组编码</div>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" v-model="businessmanActicle.acticleGroups"
+                           placeholder="发布范围群组编码 如：10001,10002,10003"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">是否APP推送</div>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" v-model="businessmanActicle.appPush"
+                           placeholder="是否APP推送 0:推送 1：不推送"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">标签</div>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" v-model="businessmanActicle.tagInfo"
+                           placeholder="标签：最多三个 如 aa,bb,cc"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">标题</div>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" v-model="businessmanActicle.title" placeholder="标题"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">封面图</div>
+                <div class="col-sm-10">
+                    <input type="hidden" class="form-control" v-model="businessmanActicle.coverImg" placeholder="封面图"/>
+                    <a href="javascript:void(0);" class="btn file-btn">
+                        <i class="icon-cloud-upload"></i>上传图片
+                        <input type="file" id="input_cover" name="inputCover" class="pic-upload-input">
+                    </a>
+                </div>
+            </div>
+            <!--<div class="form-group">
+                   <div class="col-sm-2 control-label">正文</div>
+                   <div class="col-sm-10">
+                    <input type="text" class="form-control" v-model="businessmanActicle.content" placeholder="正文"/>
+                </div>
+            </div>
+            <div class="form-group">
+                   <div class="col-sm-2 control-label">摘要</div>
+                   <div class="col-sm-10">
+                    <input type="text" class="form-control" v-model="businessmanActicle.abstracts" placeholder="摘要"/>
+                </div>
+            </div>-->
+
+
+            <div class="form-group">
+                <div class="col-sm-2 control-label"></div>
+                <div class="col-sm-10">
+                    <div class="bd description">
+                        <div class="tab-bar">
+                            <a href="javascript:void(0)" class="active">摘要</a>
+                            <a href="javascript:void(0)">正文</a>
+                            <div class="clear"></div>
+                        </div>
+                        <div class="pc-des">
+                    <textarea style="width:100%;height:200px;" kindEditor="true" v-model="businessmanActicle.abstracts"
+                              placeholder="摘要" id="abstracts" name="abstracts"></textarea>
+                        </div>
+                        <div class="pc-des">
+                    <textarea style="width:100%;height:200px;" kindEditor="true" v-model="businessmanActicle.content"
+                              placeholder="正文" id="content" name="content"></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="form-group">
+                <div class="col-sm-2 control-label">状态</div>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" v-model="businessmanActicle.status"
+                           placeholder="1：草稿 2：已发布"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">说明</div>
+                <div class="col-sm-10">
+                    <textarea type="text" class="form-control" v-model="businessmanActicle.remark"
+                              placeholder="说明"></textarea>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-sm-2 control-label"></div>
+                <input type="button" class="btn btn-primary" @click="saveOrUpdate" value="确定"/>
+                &nbsp;&nbsp;<input type="button" class="btn btn-warning" @click="reload" value="返回"/>
+            </div>
+        </form>
+    </div>
 </div>
 
 <script src="${rc.contextPath}/js/businessman/businessmanacticle.js?_${date.systemTime}"></script>

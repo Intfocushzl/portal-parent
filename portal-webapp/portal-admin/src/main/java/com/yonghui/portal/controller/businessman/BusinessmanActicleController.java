@@ -31,7 +31,7 @@ public class BusinessmanActicleController extends AbstractController {
      */
     @RequestMapping("/list")
     @RequiresPermissions("businessmanacticle:list")
-    public R list(@RequestParam Map<String, Object> params){
+    public R list(@RequestParam Map<String, Object> params) {
         //查询列表数据
         Query query = new Query(params);
 
@@ -48,7 +48,7 @@ public class BusinessmanActicleController extends AbstractController {
      */
     @RequestMapping("/info/{id}")
     @RequiresPermissions("businessmanacticle:info")
-    public R info(@PathVariable("id") Long id){
+    public R info(@PathVariable("id") Long id) {
         BusinessmanActicle businessmanActicle = businessmanActicleService.queryObject(id);
         return R.success().put("businessmanActicle", businessmanActicle);
     }
@@ -58,8 +58,9 @@ public class BusinessmanActicleController extends AbstractController {
      */
     @RequestMapping("/save")
     @RequiresPermissions("businessmanacticle:save")
-    public R save(@RequestBody BusinessmanActicle businessmanActicle){
-		businessmanActicleService.save(businessmanActicle);
+    public R save(@RequestBody BusinessmanActicle businessmanActicle) {
+        businessmanActicle.setContent(businessmanActicle.getContent().replace("\\\"", "'").replace("	", "").replace("\\r\\n", "<br/>"));
+        businessmanActicleService.save(businessmanActicle);
         return R.success();
     }
 
@@ -68,8 +69,9 @@ public class BusinessmanActicleController extends AbstractController {
      */
     @RequestMapping("/update")
     @RequiresPermissions("businessmanacticle:update")
-    public R update(@RequestBody BusinessmanActicle businessmanActicle){
-		businessmanActicleService.update(businessmanActicle);
+    public R update(@RequestBody BusinessmanActicle businessmanActicle) {
+        businessmanActicle.setContent(businessmanActicle.getContent().replace("\\\"", "'").replace("	", "").replace("\\r\\n", "<br/>"));
+        businessmanActicleService.update(businessmanActicle);
         return R.success();
     }
 
@@ -78,8 +80,8 @@ public class BusinessmanActicleController extends AbstractController {
      */
     @RequestMapping("/delete")
     @RequiresPermissions("businessmanacticle:delete")
-    public R delete(@RequestBody Long[] ids){
-		businessmanActicleService.deleteBatch(ids);
+    public R delete(@RequestBody Long[] ids) {
+        businessmanActicleService.deleteBatch(ids);
         return R.success();
     }
 
