@@ -58,15 +58,15 @@ public class AuthorizationInterceptor extends HandlerInterceptorAdapter {
             return true;
         }
         //如果有@OpenAuth注解，则校验sign
-        if(openAuthAnnotation != null){
-            String  openApiCode = request.getParameter("openApiCode");
-            String  sign = request.getParameter("sign");
+        if (openAuthAnnotation != null) {
+            String openApiCode = request.getParameter("openApiCode");
+            String sign = request.getParameter("sign");
             if (StringUtils.isBlank(openApiCode) || StringUtils.isBlank(sign)) {
                 response.setHeader("Content-type", "text/html;charset=UTF-8");
                 response.getWriter().write(JSON.toJSONString(R.error(ConstantsUtil.ExceptionCode.SIGN_ERROR, "sign不能为空")));
                 return false;
             }
-            // 从redis中查询token信息
+            // 从redis中查询key信息
             String openApiJsonStr = redisBizUtilApi.getPortalOpenApiReport(openApiCode);
             PortalOpenapiReport portalOpenapiReport = null;
             if (StringUtils.isBlank(openApiJsonStr)) {
@@ -79,14 +79,22 @@ public class AuthorizationInterceptor extends HandlerInterceptorAdapter {
                     response.setHeader("Content-type", "text/html;charset=UTF-8");
                     response.getWriter().write(JSON.toJSONString(R.error(ConstantsUtil.ExceptionCode.SIGN_ERROR, "sign不存在")));
                     return false;
-                }else {
+                } else {
+                    //获取请求参数，并转成这种格式“shppID=9318&barcode=2304348000004”,参数为空也要写成“shppID=”这种
+                    String parameter = HttpContextUtils.getParameterForSign(request);
+                    if (StringUtils.isBlank(parameter)) {
+                        response.setHeader("Content-type", "text/html;charset=UTF-8");
+                        response.getWriter().write(JSON.toJSONString(R.error(ConstantsUtil.ExceptionCode.SIGN_ERROR, "请求参数不能为空")));
+                        return false;
+                    }
                     Md5Util util = new Md5Util();
-                    String originSign = util.getMd5("MD5", 0, null, openApiCode + portalOpenapiReport.getKey() );
+                    //md5加密字符串为：key + parameter + key
+                    String originSign = util.getMd5("MD5", 0, null, portalOpenapiReport.getKey() + parameter + portalOpenapiReport.getKey());
                     if (!originSign.equals(sign)) {
                         response.setHeader("Content-type", "text/html;charset=UTF-8");
                         response.getWriter().write(JSON.toJSONString(R.error(ConstantsUtil.ExceptionCode.SIGN_ERROR, "sign验证失败")));
                         return false;
-                    }else{
+                    } else {
                         return true;
                     }
                 }

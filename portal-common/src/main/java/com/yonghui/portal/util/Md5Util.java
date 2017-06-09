@@ -173,7 +173,11 @@ public class Md5Util {
 		System.out.println("SHA1:" + Md5Util.getMd5("SHA1", 0, null, "123456"));
 		System.out.println("DESEnc:" + Md5Util.getDes("aaaaaa", 0, "xiaosa", null)); // 加密
 		System.out.println("DESDec:" + Md5Util.getDes("aaaaaa", 1, "343500812e90e54f", null)); // 解密
-		
-		
+
+
+		System.out.println("====================生成sign===========================");
+		String parameter = "openApiCode=OPENAPI_000001&page=1&limit=10&acticleId=1";
+		String key = "yhappQKXYfkjqn8Yq6ojACkwXRnt35322896dfd9419f9d2c4080b064d89a";
+		System.out.println("MD5后的sign值为:" + Md5Util.getMd5("MD5", 0, null, key + parameter + key));
 	}
 }

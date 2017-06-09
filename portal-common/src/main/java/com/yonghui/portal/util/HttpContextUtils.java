@@ -59,4 +59,29 @@ public class HttpContextUtils {
         return str.substring(0, str.length() - 2);
     }
 
+    /**
+     * 验证sign用，获取请求里面去掉sign全部参数
+     * @param request
+     * @return
+     */
+    public static String getParameterForSign(HttpServletRequest request) {
+        Map params = request.getParameterMap();
+        Iterator it = params.keySet().iterator();
+        StringBuffer sb = new StringBuffer();
+        while (it.hasNext()) {
+            String paramName = (String) it.next();
+            String paramValue = request.getParameter(paramName);
+            //处理得到的参数名与值
+            if (!"sign".equals(paramName)) {
+                sb.append(paramName + "=" + paramValue + "&");
+            }
+        }
+
+        String str = sb.toString();
+        if (StringUtils.isEmpty(str)) {
+            return null;
+        }
+        return str.substring(0, str.length() - 1);
+    }
+
 }
