@@ -193,6 +193,19 @@
                 </div>
             </div>
             <div class="form-group">
+                <div class="col-sm-2 control-label">附件</div>
+                <div class="col-sm-10">
+                        <a href="javascript:void(0);" class="btn file-btn">
+                            <i class="icon-cloud-upload"></i>上传附件
+                            <input type="file" id="input_file" name="inputFile" class="pic-upload-input"/>
+                            <a href="javascript:void(0)">删除</a>
+                        </a>
+                        <input type="text" readonly class="form-control" v-model="businessmanActicle.attachFile"
+                               id="attachFile"
+                               placeholder="附件地址"/>
+                </div>
+            </div>
+            <div class="form-group">
                 <div class="col-sm-2 control-label">封面图</div>
                 <div class="col-sm-10">
                     <div style="width: 100%;">
