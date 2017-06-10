@@ -62,7 +62,8 @@
         b.acticle_id and b.user_id = #{userId} and b.`status`=1
         ) c on a.id = c.id
         <if test="name != null and name !=''">
-            WHERE a.tag_info LIKE concat('%',#{name},'%') OR a.title LIKE concat('%',#{name},'%') GROUP BY a.CREATE_TIME DESC;
+            WHERE a.tag_info LIKE concat('%',#{name},'%') OR a.title LIKE concat('%',#{name},'%') GROUP BY a.CREATE_TIME
+            DESC;
         </if>
     </select>
 
@@ -94,7 +95,8 @@
 			`title`, 
 			`content`, 
 			`abstracts`, 
-			`cover_img`, 
+			`cover_img`,
+			`attach_file`,
 			`status`, 
 			`pageview`, 
 			`REMARK`, 
@@ -115,7 +117,8 @@
 			#{title}, 
 			#{content}, 
 			#{abstracts}, 
-			#{coverImg}, 
+			#{coverImg},
+			#{attachFile},
 			#{status}, 
 			#{pageview}, 
 			#{remark}, 
@@ -140,6 +143,7 @@
             <if test="content != null">`content` = #{content},</if>
             <if test="abstracts != null">`abstracts` = #{abstracts},</if>
             <if test="coverImg != null">`cover_img` = #{coverImg},</if>
+            <if test="attachFile != null">`attach_file` = #{attachFile},</if>
             <if test="status != null">`status` = #{status},</if>
             <if test="pageview != null">`pageview` = #{pageview},</if>
             <if test="remark != null">`REMARK` = #{remark},</if>
