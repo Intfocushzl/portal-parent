@@ -237,7 +237,7 @@ $('#input_cover').uploadify({
 
 //上传附件
 $('#input_file').uploadify({
-    'successTimeout': 10 * 60000,
+    'successTimeout': 5 * 60000,
     'swf': rcContextPath+ '/statics/uploadify/uploadify.swf',
     'uploader': '../upload/itemImgUpload',
     'height': 20,
