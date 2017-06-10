@@ -245,7 +245,7 @@ $('#input_file').uploadify({
     'auto': true,
     'fileDataName': 'file',
     'buttonText': '',
-    'fileTypeExts': '*.pdf;*.avi;*.mp4;*.png;*.jpg;*.doc',
+    'fileTypeExts': '*.pdf;*.avi;*.mp4;*.png;*.jpg;*.doc;*.docx',
     'multi': false,
     'method': 'post',
     'debug': false,
