@@ -128,6 +128,7 @@ var vm = new Vue({
                 KindEditor.instances[0].html(vm.businessmanActicle.abstracts);
                 KindEditor.instances[1].html(vm.businessmanActicle.content);
                 $("#cover_pic_show").prop("src", vm.businessmanActicle.coverImg);
+                $("#attachFile").val(vm.businessmanActicle.attachFile);
             });
         },
         reload: function (event) {
@@ -232,4 +233,34 @@ $('#input_cover').uploadify({
     'onUploadError': function (file, errorCode, errorMsg, errorString) {
         alert('文件:' + file.name + '上传失败!');
     }
+});
+
+//上传附件
+$('#input_file').uploadify({
+    'successTimeout': 5 * 60000,
+    'swf': rcContextPath + '/statics/uploadify/uploadify.swf',
+    'uploader': '../upload/itemImgUpload',
+    'height': 25,
+    'whith': 120,
+    'auto': true,
+    'fileDataName': 'file',
+    'buttonText': '',
+    'fileTypeExts': '*.pdf;*.avi;*.mp4;*.mp3;*.jpg;*.gif',
+    'multi': false,
+    'method': 'post',
+    'debug': false,
+    'onUploadSuccess': function (file, data, response) {
+        var data = eval("(" + data + ")");
+        if (data.RetCode == 0) {
+            var url = data.RetUrl;
+            $("#attachFile").val(url);
+            vm.businessmanActicle.attachFile = url;
+            alert('上传成功', function (index) {
+            });
+        }
+    },
+    'onUploadError': function (file, errorCode, errorMsg, errorString) {
+        alert('文件:' + file.name + '上传失败!');
+    }
+
 });
