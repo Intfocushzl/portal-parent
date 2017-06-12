@@ -87,11 +87,11 @@ public class ApiProblemController {
      */
     @OpenAuth
     @RequestMapping(value = "saveProblem", method = RequestMethod.GET)
-    public R saveProblem(@RequestBody BusinessmanProblem businessmanProblem) {
+    public R saveProblem(HttpServletRequest req, HttpServletResponse response, BusinessmanProblem businessmanProblem) {
         try {
             apiProblemService.save(businessmanProblem);
         } catch (Exception e) {
-            R.error("获取用户返回问题信息失败");
+           return R.error("获取用户返回问题信息失败");
         }
         return R.success();
     }
