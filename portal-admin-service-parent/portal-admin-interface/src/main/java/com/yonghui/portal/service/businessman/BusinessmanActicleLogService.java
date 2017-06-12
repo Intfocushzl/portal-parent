@@ -28,4 +28,6 @@ public interface BusinessmanActicleLogService {
 	void delete(Long id);
 	
 	void deleteBatch(Long[] ids);
+
+	List<Map<String, Object>> queryIsSee(Map<String, Object> map);
 }

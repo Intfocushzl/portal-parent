@@ -16,6 +16,10 @@
 		select * from businessman_acticle_log where id = #{value}
 	</select>
 
+	<select id="queryIsSee" resultType="Map" parameterType="Map">
+		SELECT * from platform.businessman_acticle_log WHERE acticle_id = #{id} and CREATER = #{userId}
+	</select>
+
 	<select id="queryList" resultType="com.yonghui.portal.model.businessman.BusinessmanActicleLog">
 		select * from businessman_acticle_log
         <where>
