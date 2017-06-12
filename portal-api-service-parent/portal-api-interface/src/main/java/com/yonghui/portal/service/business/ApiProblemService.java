@@ -24,4 +24,6 @@ public interface ApiProblemService {
 	void save(BusinessmanProblem businessmanProblem);
 
 	List<Map<String, Object>> problemDetail(Map<String, Object> map);
+
+	List<Map<String, Object>> problemList(Map<String, Object> map);
 }

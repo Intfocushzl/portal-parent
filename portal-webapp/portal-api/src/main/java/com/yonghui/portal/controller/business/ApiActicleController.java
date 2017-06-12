@@ -42,8 +42,8 @@ public class ApiActicleController {
      * @param req
      * @param response
      */
-    @RequestMapping(value = "acticle" , method = RequestMethod.GET)
-    public R acticle(HttpServletRequest req, HttpServletResponse response , @RequestParam Map<String, Object> params) {
+    @RequestMapping(value = "acticle", method = RequestMethod.GET)
+    public R acticle(HttpServletRequest req, HttpServletResponse response, @RequestParam Map<String, Object> params) {
         return R.success();
     }
 
@@ -63,7 +63,7 @@ public class ApiActicleController {
             int total = apiActicleService.queryTotal(query);
             pageUtil = new PageUtils(acticleList, total, query.getLimit(), query.getPage());
         } catch (Exception e) {
-            R.error("获取文章信息失败");
+            return R.error("获取文章信息失败");
         }
         return R.success().put("page", pageUtil);
     }
@@ -78,7 +78,7 @@ public class ApiActicleController {
             int total = apiActicleService.queryTotal(query);
             pageUtil = new PageUtils(acticleDetail, total, query.getLimit(), query.getPage());
         } catch (Exception e) {
-            R.error("获取文章信息失败");
+            return R.error("获取文章信息失败");
         }
         return R.success().put("page", pageUtil);
     }

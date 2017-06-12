@@ -36,4 +36,9 @@ public class ApiProblemServiceImpl implements ApiProblemService {
 	public List<Map<String, Object>> problemDetail(Map<String, Object> map){
 		return businessmanProblemMapper.problemDetail(map);
 	}
+
+	@Override
+	public List<Map<String, Object>> problemList(Map<String, Object> map){
+		return businessmanProblemMapper.problemList(map);
+	}
 }

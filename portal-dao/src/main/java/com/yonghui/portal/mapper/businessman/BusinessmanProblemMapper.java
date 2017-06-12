@@ -16,4 +16,7 @@ import java.util.Map;
 public interface BusinessmanProblemMapper extends BaseMapper<BusinessmanProblem> {
 
     public List<Map<String, Object>> problemDetail(Map<String, Object> map);
+
+    public List<Map<String, Object>> problemList(Map<String, Object> map);
+
 }
