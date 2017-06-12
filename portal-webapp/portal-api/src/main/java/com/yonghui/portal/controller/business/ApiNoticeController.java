@@ -2,7 +2,6 @@ package com.yonghui.portal.controller.business;
 
 import com.alibaba.dubbo.config.annotation.Reference;
 import com.yonghui.portal.annotation.OpenAuth;
-import com.yonghui.portal.model.businessman.BusinessmanNotice;
 import com.yonghui.portal.service.business.ApiNoticeService;
 import com.yonghui.portal.service.sys.SysoperationLogService;
 import com.yonghui.portal.util.ApiQuery;
@@ -40,7 +39,7 @@ public class ApiNoticeController {
     @RequestMapping(value = "notice")
     @OpenAuth
     public R notice(@RequestParam Map<String,Object> params) {
-        BusinessmanNotice bsn = apiNoticeService.notice(params);
+        Map<String,Object> bsn = apiNoticeService.notice(params);
         if(bsn != null){
             return R.success().setData(bsn);
         }else{

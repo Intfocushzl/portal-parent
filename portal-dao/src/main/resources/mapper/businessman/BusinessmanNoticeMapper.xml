@@ -28,18 +28,21 @@
 
 	<select id="noticeList" resultType="Map" parameterType="Map">
 		SELECT n.id,n.title,n.content,n.abstracts,n.CREATE_TIME,
-		case c.see WHEN '0' then '已读'
-		else '未读' end as see
+		case c.see WHEN '0' then '0'
+		else '1' end as see
 		from platform.businessman_notice n LEFT JOIN (
 		SELECT a.id,0 as see from platform.businessman_notice a,platform.businessman_notice_log b where a.id =
 		b.notice_id and b.CREATER = #{userId}
-		) c on n.id = c.id where n.expire_time > NOW() and n.notice_type in
+		) c on n.id = c.id where n.expire_time > NOW() and n.`status` = 2 and n.notice_type in
 		<foreach collection="noticeType" item="item" open="(" separator="," close=")">
 			'${item}'
 		</foreach>
 		ORDER BY n.CREATE_TIME DESC limit #{offset}, #{limit}
 	</select>
 
+	<select id="queryById" parameterType="Object" resultType="Map">
+		select id,notice_type,title,abstracts,content,CREATE_TIME from businessman_notice where id = #{id}
+	</select>
 
 	<select id="queryObject" resultType="com.yonghui.portal.model.businessman.BusinessmanNotice">
 		select * from businessman_notice where id = #{value}
