@@ -63,7 +63,7 @@ public class HttpContextUtils {
     /**
      * 验证sign用，获取请求里面去掉sign全部参数
      *
-     * @param request
+     * @param   request
      * @return
      */
     public static String getParameterForSign(HttpServletRequest request) {
