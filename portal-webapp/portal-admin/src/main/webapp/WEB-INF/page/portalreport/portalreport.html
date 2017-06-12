@@ -70,10 +70,12 @@
             max-width: 60px !important;
             overflow: visible;
         }
-        .form-horizontal .control-label{
+
+        .form-horizontal .control-label {
             width: 90%;
             text-align: left;
         }
+
         .col-sm-10 {
             width: 90%;
             margin-left: 10px;
@@ -105,6 +107,10 @@
                 <a class="btn btn-primary" @click="del"><i class="fa fa-trash-o"></i>&nbsp;删除</a>
                 #end
                 <a class="btn btn-primary" @click="addRedis">一键缓存</a>
+                #if($shiro.hasPermission("portalreport:module"))
+                <a class="btn btn-danger" href="portalreport_module.html">模板定义</a>
+                #end
+
             </div>
         </div>
         <table id="jqGrid"></table>

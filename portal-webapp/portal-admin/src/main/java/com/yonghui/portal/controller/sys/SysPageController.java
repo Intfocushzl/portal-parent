@@ -36,6 +36,10 @@ public class SysPageController {
         return "businessman/" + url + ".html";
     }
 
+    @RequestMapping("portalreport/{url}.html")
+    public String portalreport(@PathVariable("url") String url) {
+        return "portalreport/" + url + ".html";
+    }
 
     /**
      * 通用页面
