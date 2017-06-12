@@ -3,11 +3,132 @@
 <head>
     <title>定时任务日志</title>
     #parse("sys/header.html")
+
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+
+    <link href="${rc.contextPath}/statics/plugins/formbuild/css/bootstrap/css/bootstrap.css?2024" rel="stylesheet"
+          type="text/css"/>
+    <!--[if lte IE 6]>
+    <link rel="stylesheet" type="text/css"
+          href="${rc.contextPath}/statics/plugins/formbuild/css/bootstrap/css/bootstrap-ie6.css?2024">
+    <![endif]-->
+    <!--[if lte IE 7]>
+    <link rel="stylesheet" type="text/css"
+          href="${rc.contextPath}/statics/plugins/formbuild/css/bootstrap/css/ie.css?2024">
+    <![endif]-->
+    <link href="${rc.contextPath}/statics/plugins/formbuild/css/site.css?2024" rel="stylesheet" type="text/css"/>
+    <script type="text/javascript">
+        var _root = 'http://formbuild/index.php?s=/', _controller = 'index';
+    </script>
+
+    <style>
+
+        #components {
+            min-height: 600px;
+        }
+
+        #target {
+            min-height: 200px;
+            border: 1px solid #ccc;
+            padding: 5px;
+        }
+
+        #target .component {
+            border: 1px solid #fff;
+        }
+
+        #temp {
+            width: 500px;
+            background: white;
+            border: 1px dotted #ccc;
+            border-radius: 10px;
+        }
+
+        .popover-content form {
+            margin: 0 auto;
+            width: 213px;
+        }
+
+        .popover-content form .btn {
+            margin-right: 10px
+        }
+
+        #source {
+            min-height: 500px;
+        }
+
+        .span6 {
+            width: 50%;
+        }
+
+        .container {
+            width: 100%;
+        }
+
+        .row {
+            margin-left: 0px;
+        }
+
+        [class*="span"] {
+            margin-left: 0px;
+        }
+    </style>
+    <!--link href="${rc.contextPath}/statics/plugins/formbuild/css/bootstrap/css/bootstrap-responsive.min.css" rel="stylesheet"-->
+
+
 </head>
 <body>
-<div id="rrapp">
-    模板定义2.。。。。。。
-</div>
+
+
+<div class="container">
+    <div class="row clearfix">
+
+        <div class="span6">
+            <div class="clearfix">
+                <h2>模板定义</h2>
+                <hr>
+                <div id="build">
+                    <form id="target" class="form-horizontal">
+                        <fieldset>
+                            <div id="legend" class="component" rel="popover" title="编辑属性" trigger="manual"
+                                 data-content="
+                <form class='form'>
+                  <div class='controls'>
+                    <label class='control-label'>表单名称</label> <input type='text' id='orgvalue' placeholder='请输入表单名称'>
+                    <hr/>
+                    <button class='btn btn-info' type='button'>确定</button><button class='btn btn-danger' type='button'>取消</button>
+                  </div>
+                </form>"
+                            >
+                                <input type="hidden" name="form_name" value="" class="leipiplugins"
+                                       leipiplugins="form_name"/>
+                                <legend class="leipiplugins-orgvalue">点击填写表单名</legend>
+                            </div>
+                        </fieldset>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- 控件 -->
+        #parse("portalreport/portalreport_module_control.html")
+
+    </div> <!-- row -->
+
+</div> <!-- /container -->
+
+
+<script type="text/javascript" charset="utf-8"
+        src="${rc.contextPath}/statics/plugins/formbuild/js/jquery-1.7.2.min.js?2024"></script>
+<script type="text/javascript"
+        src="${rc.contextPath}/statics/plugins/formbuild/js/formbuild/bootstrap/js/bootstrap.min.js?2024"></script>
+<script type="text/javascript" charset="utf-8"
+        src="${rc.contextPath}/statics/plugins/formbuild/js/formbuild/leipi.form.build.core.js?2024"></script>
+<script type="text/javascript" charset="utf-8"
+        src="${rc.contextPath}/statics/plugins/formbuild/js/formbuild/leipi.form.build.plugins.js?2024"></script>
+
 
 </body>
 </html>
