@@ -71,16 +71,13 @@ public class ApiActicleController {
     @OpenAuth
     @RequestMapping(value = "acticleDetail", method = RequestMethod.GET)
     public R acticleDetail(HttpServletRequest req, HttpServletResponse response, @RequestParam Map<String, Object> params) {
-        PageUtils pageUtil = null;
+        List<Map<String, Object>> acticleDetail = null;
         try {
-            ApiQuery query = new ApiQuery(params);
-            List<Map<String, Object>> acticleDetail = apiActicleService.acticleDetail(query);
-            int total = apiActicleService.queryTotal(query);
-            pageUtil = new PageUtils(acticleDetail, total, query.getLimit(), query.getPage());
+            acticleDetail = apiActicleService.acticleDetail(params);
         } catch (Exception e) {
             return R.error("获取文章信息失败");
         }
-        return R.success().put("page", pageUtil);
+        return R.success(acticleDetail);
     }
 
 }

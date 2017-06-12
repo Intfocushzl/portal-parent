@@ -87,7 +87,7 @@ public class ApiFavoritesController {
                 return R.error("参数有误");
             } else {
                 BusinessmanFavorites favorites = apiFavoritesService.favoriteDetail(params);
-                if(favorites.getStatus().equals(params.get("status") )){
+                if(favorites.getStatus().toString().equals(params.get("status").toString())){
                     return R.error("参数有误");
                 }else{
                     apiFavoritesService.editfavorite(params);

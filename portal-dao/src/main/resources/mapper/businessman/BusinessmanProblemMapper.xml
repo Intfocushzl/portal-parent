@@ -48,7 +48,7 @@
     </select>
 
     <select id="problemList" resultType="Map" parameterType="Map">
-        select a.content , a.status from platform.businessman_problem a where a.user_id = #{userId}
+        select a.id , a.content , a.status from platform.businessman_problem a where a.user_id = #{userId}
         GROUP BY a.CREATE_TIME DESC
         <if test="offset != null and limit != null">
             limit #{offset}, #{limit}
@@ -56,7 +56,7 @@
     </select>
 
     <select id="problemDetail" resultType="Map" parameterType="Map">
-      select a.CREATE_TIME as createTime , a.title , a.content , a.images , a.status from platform.businessman_problem a where a.user_id = #{id} GROUP BY a.CREATE_TIME DESC
+      select a.CREATE_TIME as createTime , a.content , a.images , a.status from platform.businessman_problem a where a.id = #{id}
 	</select>
 
     <select id="queryTotal" resultType="int">
@@ -94,7 +94,7 @@
 			#{title}, 
 			#{content}, 
 			#{images}, 
-			#{status}, 
+			1,
 			#{remark}, 
 			#{creater}, 
 			#{createTime}, 
