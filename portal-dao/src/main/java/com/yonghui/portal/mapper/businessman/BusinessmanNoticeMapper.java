@@ -17,4 +17,5 @@ public interface BusinessmanNoticeMapper extends BaseMapper<BusinessmanNotice> {
 
     public List<Map<String,Object>> noticeList(Map<String,Object> map);
 
+    Map<String,Object> queryById(Object id);
 }
