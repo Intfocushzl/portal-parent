@@ -44,6 +44,33 @@
 			limit #{offset}, #{limit}
 		</if>
 	</select>
+
+	<select id="favoriteList" resultType="Map" parameterType="Map">
+		SELECT a.acticle_id AS acticleId, b.title ,b.tag_info AS tagInfo ,a.status, b.CREATE_TIME AS createTime
+		FROM  businessman_favorites a
+		LEFT JOIN businessman_acticle b ON a.acticle_id = b.id
+		<where>
+			<if test="userId != null and userId !=''">
+				and user_id = #{userId}
+			</if>
+		</where>
+				order by b.CREATE_TIME desc
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+
+	<select id="favoriteDetail" parameterType="Map" resultType="com.yonghui.portal.model.businessman.BusinessmanFavorites">
+		select * from businessman_favorites where acticle_id = #{acticleId} AND user_id = #{userId};
+	</select>
+
+	<update id="editfavorite" parameterType="Map">
+		update businessman_favorites
+		<set>
+			<if test="status != null">`status` = #{status}, </if>
+		</set>
+		where user_id = #{userId} AND acticle_id = #{acticleId}
+	</update>
 	
  	<select id="queryTotal" resultType="int">
 		select count(*) from businessman_favorites

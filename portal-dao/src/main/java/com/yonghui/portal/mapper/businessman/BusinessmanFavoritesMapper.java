@@ -3,6 +3,9 @@ package com.yonghui.portal.mapper.businessman;
 import com.yonghui.portal.mapper.base.BaseMapper;
 import com.yonghui.portal.model.businessman.BusinessmanFavorites;
 
+import java.util.List;
+import java.util.Map;
+
 /**
  * 用户收藏表
  * 
@@ -11,5 +14,10 @@ import com.yonghui.portal.model.businessman.BusinessmanFavorites;
  * @date 2017-06-07 16:33:29
  */
 public interface BusinessmanFavoritesMapper extends BaseMapper<BusinessmanFavorites> {
-	
+
+    List<Map<String, Object>> favoriteList(Map<String, Object> map);
+
+    void editfavorite(Map<String, Object> map);
+
+    BusinessmanFavorites favoriteDetail(Map<String, Object> map);
 }

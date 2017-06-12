@@ -10,7 +10,6 @@ import java.util.List;
 import java.util.Map;
 
 
-@Service("businessmanActicleLogService")
 public class BusinessmanActicleLogServiceImpl implements BusinessmanActicleLogService {
 	@Autowired
 	private BusinessmanActicleLogMapper businessmanActicleLogMapper;
@@ -48,6 +47,10 @@ public class BusinessmanActicleLogServiceImpl implements BusinessmanActicleLogSe
 	@Override
 	public void deleteBatch(Long[] ids){
 		businessmanActicleLogMapper.deleteBatch(ids);
+	}
+
+    public List<Map<String, Object>> queryIsSee(Map<String, Object> map){
+       return businessmanActicleLogMapper.queryIsSee(map);
 	}
 	
 }

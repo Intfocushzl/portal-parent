@@ -61,17 +61,18 @@ public class ApiCommentController {
         PageUtils pageUtil = null;
         try {
             ApiQuery query = new ApiQuery(params);
-            List<Map<String, Object>>  commentList = apiCommentService.commentList(query);
+            List<Map<String, Object>> commentList = apiCommentService.commentList(query);
             int total = apiCommentService.queryTotal(query);
             pageUtil = new PageUtils(commentList, total, query.getLimit(), query.getPage());
         } catch (Exception e) {
-            R.error("获取用户评论列表失败");
+            return R.error("获取用户评论列表失败");
         }
         return R.success().put("page", pageUtil);
     }
 
     /**
      * 保存评论
+     *
      * @param req
      * @param response
      * @return
@@ -82,7 +83,7 @@ public class ApiCommentController {
         try {
             apiCommentService.save(businessmanComment);
         } catch (Exception e) {
-            R.error("添加评论失败");
+            return R.error("添加评论失败");
         }
         return R.success();
     }

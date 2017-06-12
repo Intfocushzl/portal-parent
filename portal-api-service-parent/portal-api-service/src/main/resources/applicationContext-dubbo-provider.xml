@@ -143,4 +143,9 @@
     <bean id="apiProblemService" class="com.yonghui.portal.service.impl.business.ApiProblemServiceImpl"/>
     <dubbo:service interface="com.yonghui.portal.service.business.ApiProblemService" ref="apiProblemService"
                    timeout="300000"/>
+
+    <!-- 生意人收藏  -->
+    <bean id="apiFavoritesService" class="com.yonghui.portal.service.impl.business.ApiFavoritesServiceImpl"/>
+    <dubbo:service interface="com.yonghui.portal.service.business.ApiFavoritesService" ref="apiFavoritesService"
+                   timeout="300000"/>
 </beans>

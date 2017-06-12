@@ -55,18 +55,30 @@ public class ApiProblemController {
      * @return
      */
     @OpenAuth
-    @RequestMapping(value = "problemDetail", method = RequestMethod.GET)
-    public R problemDetail(HttpServletRequest req, HttpServletResponse response, @RequestParam Map<String, Object> params) {
+    @RequestMapping(value = "problemList", method = RequestMethod.GET)
+    public R problemList(HttpServletRequest req, HttpServletResponse response, @RequestParam Map<String, Object> params) {
         PageUtils pageUtil = null;
         try {
             ApiQuery query = new ApiQuery(params);
-            List<Map<String, Object>> problemDetail = apiProblemService.problemDetail(query);
+            List<Map<String, Object>> problemList = apiProblemService.problemList(query);
             int total = apiProblemService.queryTotal(query);
-            pageUtil = new PageUtils(problemDetail, total, query.getLimit(), query.getPage());
+            pageUtil = new PageUtils(problemList, total, query.getLimit(), query.getPage());
         } catch (Exception e) {
-            R.error("获取用户返回问题信息失败");
+           return R.error("获取用户返回问题信息失败");
         }
         return R.success().put("page", pageUtil);
+    }
+
+    @OpenAuth
+    @RequestMapping(value = "problemDetail", method = RequestMethod.GET)
+    public R problemDetail(HttpServletRequest req, HttpServletResponse response, @RequestParam Map<String, Object> params) {
+        List<Map<String, Object>> problemDetail = null;
+        try {
+            problemDetail = apiProblemService.problemDetail(params);
+        } catch (Exception e) {
+           return R.error("获取用户返回问题信息失败");
+        }
+        return R.success(problemDetail);
     }
 
 
