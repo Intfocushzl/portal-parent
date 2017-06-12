@@ -81,7 +81,14 @@ public class AuthorizationInterceptor extends HandlerInterceptorAdapter {
                     return false;
                 } else {
                     //获取请求参数，并转成这种格式“shppID=9318&barcode=2304348000004”,参数为空也要写成“shppID=”这种
-                    String parameter = HttpContextUtils.getParameterForSign(request);
+                    String parameter = null;
+                    try {
+                         parameter = HttpContextUtils.getParameterForSign(request);
+                    } catch (Exception e) {
+                        response.setHeader("Content-type", "text/html;charset=UTF-8");
+                        response.getWriter().write(JSON.toJSONString(R.error(ConstantsUtil.ExceptionCode.SIGN_ERROR, "sign不能为空")));
+                        return false;
+                    }
                     if (StringUtils.isBlank(parameter)) {
                         response.setHeader("Content-type", "text/html;charset=UTF-8");
                         response.getWriter().write(JSON.toJSONString(R.error(ConstantsUtil.ExceptionCode.SIGN_ERROR, "请求参数不能为空")));
