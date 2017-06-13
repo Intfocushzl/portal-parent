@@ -59,6 +59,10 @@
             min-height: 500px;
         }
 
+        #jsonstr {
+            min-height: 500px;
+        }
+
         .span6 {
             width: 50%;
         }
@@ -126,6 +130,8 @@
 
 </div> <!-- /container -->
 
+<script src="${rc.contextPath}/js/portalreport/portalreport_module.js?_${date.systemTime}"></script>
+
 <!--使用低版本JQuery更好兼容低版本IE-->
 <script type="text/javascript" charset="utf-8"
         src="${rc.contextPath}/statics/plugins/formbuild/js/jquery-1.7.2.min.js?2024"></script>
@@ -145,9 +151,6 @@
         src="${rc.contextPath}/js/portalreport/report.form.build.plugins.chart.js?_${date.systemTime}"></script>
 <script type="text/javascript" charset="utf-8"
         src="${rc.contextPath}/js/portalreport/report.form.build.plugins.custom.js?_${date.systemTime}"></script>
-
-
-<script src="${rc.contextPath}/js/portalreport/portalreport_module.js?_${date.systemTime}"></script>
 
 </body>
 </html>
