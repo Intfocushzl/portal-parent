@@ -1,20 +1,26 @@
 <!-- 图表控件 -->
 
-<div class="control-group component" rel="popover" title="文件上传" trigger="manual"
+<!-- 横幅 banner start -->
+<div class="control-group component" rel="popover" title="横幅" trigger="manual"
      data-content="
-                  <form class='form'>
-                    <div class='controls'>
-                      <label class='control-label'>控件名称</label> <input type='text' id='orgname' placeholder='必填项'>
-                      <hr/>
-                      <button class='btn btn-info' type='button'>确定</button><button class='btn btn-danger' type='button'>取消</button>
-                    </div>
-                  </form>"
->
-    <label class="control-label leipiplugins-orgname">文件上传</label>
-
-    <!-- File Upload -->
-    <div>
-        <input type="file" name="leipiNewField" title="文件上传" class="leipiplugins"
-               leipiplugins="uploadfile">
+  <form class='form'>
+    <div class='controls'>
+      <label class='control-label'>控件名称</label> <input type='text' id='orgname' placeholder='必填项'>
+      <label class='control-label'>默认值</label> <input type='text' id='orgvalue' placeholder='默认值'>
+      <label class='control-label'>标题</label> <input type='text' id='banner_config_title' placeholder='标题'>
+      <label class='control-label'>副标题</label> <input type='text' id='banner_config_subtitle' placeholder='副标题'>
+      <label class='control-label'>日期/周期</label> <input type='text' id='banner_config_date' placeholder='日期/周期'>
+      <hr/>
+      <button class='btn btn-info' type='button'>确定</button><button class='btn btn-danger' type='button'>取消</button>
     </div>
+  </form>"
+>
+    <!-- Text -->
+    <label class="control-label leipiplugins-orgname">文本框</label>
+    <div class="controls">
+        <input name="leipiNewField" type="text" placeholder="默认值" title="文本框" value=""
+               class="leipiplugins" leipiplugins="text"/>
+    </div>
+
 </div>
+<!-- 横幅 banner end -->

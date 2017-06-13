@@ -126,15 +126,26 @@
 
 </div> <!-- /container -->
 
-
+<!--使用低版本JQuery更好兼容低版本IE-->
 <script type="text/javascript" charset="utf-8"
         src="${rc.contextPath}/statics/plugins/formbuild/js/jquery-1.7.2.min.js?2024"></script>
 <script type="text/javascript"
-        src="${rc.contextPath}/statics/plugins/formbuild/js/formbuild/bootstrap/js/bootstrap.min.js?2024"></script>
+        src="${rc.contextPath}/statics/plugins/formbuild/js/formbuild/bootstrap/js/bootstrap.min.js?_${date.systemTime}"></script>
+<!--formbuild核心文件，开发者一般不修改-->
 <script type="text/javascript" charset="utf-8"
-        src="${rc.contextPath}/statics/plugins/formbuild/js/formbuild/leipi.form.build.core.js?2024"></script>
+        src="${rc.contextPath}/statics/plugins/formbuild/js/formbuild/leipi.form.build.core.js?_${date.systemTime}"></script>
+<!--控件扩展文件，开发者可以自行设计添加-->
+<!--
 <script type="text/javascript" charset="utf-8"
         src="${rc.contextPath}/statics/plugins/formbuild/js/formbuild/leipi.form.build.plugins.js?2024"></script>
+-->
+<script type="text/javascript" charset="utf-8"
+        src="${rc.contextPath}/js/portalreport/report.form.build.plugins.form.js?_${date.systemTime}"></script>
+<script type="text/javascript" charset="utf-8"
+        src="${rc.contextPath}/js/portalreport/report.form.build.plugins.chart.js?_${date.systemTime}"></script>
+<script type="text/javascript" charset="utf-8"
+        src="${rc.contextPath}/js/portalreport/report.form.build.plugins.custom.js?_${date.systemTime}"></script>
+
 
 <script src="${rc.contextPath}/js/portalreport/portalreport_module.js?_${date.systemTime}"></script>
 
