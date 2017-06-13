@@ -10,3 +10,19 @@ $("#saveOrUpdateModule").click(function () {
     });
 });
 
+$("#jsonstrtab").click(function () {
+    var jsonObj = [
+        {
+            "title": "",
+            "parts": []
+        }
+    ];
+    var $plugjsonstr = $('#build .plugjsonstr');
+    $plugjsonstr.each(function () {
+        var $this = $(this);
+        if (getStringValue($this.val()) != ""){
+            jsonObj[0].parts.push(JSON.parse($this.val()));
+        }
+    });
+    $("#jsonstr").val(JSON.stringify(jsonObj));
+});
