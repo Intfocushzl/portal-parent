@@ -5,9 +5,10 @@
      data-content="
   <form class='form'>
     <div class='controls'>
-      <label class='control-label'>标题</label> <input type='text' id='chart_banner_config_title' placeholder='标题'>
-      <label class='control-label'>副标题</label> <input type='text' id='chart_banner_config_subtitle' placeholder='副标题'>
-      <label class='control-label'>日期/周期</label> <input type='text' id='chart_banner_config_date' placeholder='日期/周期'>
+      <label class='control-label'>标题</label> <input type='text' id='banner_config_title' placeholder='标题'>
+      <label class='control-label'>副标题</label> <input type='text' id='banner_config_subtitle' placeholder='副标题'>
+      <label class='control-label'>日期/周期</label> <input type='text' id='banner_config_date' placeholder='日期/周期'>
+      <label class='control-label'>描述</label> <input type='text' id='banner_config_info' placeholder='描述'>
      <hr/>
       <button class='btn btn-info' type='button'>确定</button><button class='btn btn-danger' type='button'>取消</button>
     </div>
@@ -18,10 +19,54 @@
     <div class="controls">
         <div class="textarea">
             <textarea title="多行文本" name="leipiNewField" class="leipiplugins"
-                      leipiplugins="textarea"/> </textarea>
+                      leipiplugins="banner"/> </textarea>
         </div>
     </div>
 </div>
-<!-- Textarea end -->
-
 <!-- 横幅 banner end -->
+
+<!-- 折线图 chart_line start -->
+<div class="control-group component" rel="popover" title="横幅" trigger="manual"
+     data-content="
+  <form class='form'>
+    <div class='controls'>
+      <label class='control-label'>标题</label> <input type='text' id='chart_config_title' placeholder='标题'>
+     <hr/>
+      <button class='btn btn-info' type='button'>确定</button><button class='btn btn-danger' type='button'>取消</button>
+    </div>
+  </form>"
+>
+    <!-- Textarea -->
+    <label class="control-label leipiplugins-orgname">折线图</label>
+    <div class="controls">
+        <div class="textarea">
+            <textarea title="多行文本" name="leipiNewField" class="leipiplugins"
+                      leipiplugins="chart_line"/> </textarea>
+        </div>
+    </div>
+</div>
+<!-- 横幅折线图 chart_line end -->
+
+
+
+<!-- 表格tab切换 tables_v3 start -->
+<div class="control-group component" rel="popover" title="横幅" trigger="manual"
+     data-content="
+  <form class='form'>
+    <div class='controls'>
+      <label class='control-label'>标题</label> <input type='text' id='tables_v3_config_title' placeholder='标题'>
+     <hr/>
+      <button class='btn btn-info' type='button'>确定</button><button class='btn btn-danger' type='button'>取消</button>
+    </div>
+  </form>"
+>
+    <!-- Textarea -->
+    <label class="control-label leipiplugins-orgname">表格TAB</label>
+    <div class="controls">
+        <div class="textarea">
+            <textarea title="多行文本" name="leipiNewField" class="leipiplugins"
+                      leipiplugins="tables_v3"/> </textarea>
+        </div>
+    </div>
+</div>
+<!-- 表格tab切换 tables_v3 end -->
