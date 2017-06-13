@@ -6,11 +6,21 @@
  */
 LPB.plugins['textarea'] = function (active_component, leipiplugins) {
     var plugins = 'textarea', popover = $(".popover");
-    var jsonObj = JSON.parse($(leipiplugins).val());
-    //右弹form  初始化值
-    $(popover).find("#chart_banner_config_title").val(jsonObj.title);
-    $(popover).find("#chart_banner_config_subtitle").val(jsonObj.subtitle);
-    $(popover).find("#chart_banner_config_date").val(jsonObj.date);
+    var jsonStr = $(leipiplugins).val();
+    var jsonObj = {};
+    if (getStringValue(jsonStr) != "") {
+        jsonObj = JSON.parse($(leipiplugins).val());
+        //右弹form  初始化值
+        if (jsonObj.title !== undefined) {
+            $(popover).find("#chart_banner_config_title").val(jsonObj.title);
+        }
+        if (jsonObj.subtitle !== undefined) {
+            $(popover).find("#chart_banner_config_subtitle").val(jsonObj.subtitle);
+        }
+        if (jsonObj.date !== undefined) {
+            $(popover).find("#chart_banner_config_date").val(jsonObj.date);
+        }
+    }
 
     //右弹form  取消控件
     $(popover).delegate(".btn-danger", "click", function (e) {

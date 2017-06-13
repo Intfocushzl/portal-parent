@@ -1,6 +1,6 @@
 // 判断空
 function getStringValue(indexValue) {
-    if (indexValue == null || indexValue == undefined || indexValue == "") {
+    if ($.trim(indexValue) == null || $.trim(indexValue) == undefined || $.trim(indexValue) == "") {
         return "";
     }
     return indexValue;
