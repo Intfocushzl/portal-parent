@@ -78,7 +78,7 @@ public class ApiCommentController {
      * @return
      */
     @OpenAuth
-    @RequestMapping(value = "saveComment", method = RequestMethod.GET)
+    @RequestMapping(value = "saveComment", method = RequestMethod.POST)
     public R saveComment(HttpServletRequest req, HttpServletResponse response, BusinessmanComment businessmanComment) {
         try {
             apiCommentService.save(businessmanComment);

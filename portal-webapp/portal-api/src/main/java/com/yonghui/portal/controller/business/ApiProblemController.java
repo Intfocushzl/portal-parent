@@ -86,7 +86,7 @@ public class ApiProblemController {
      * 用户添加问题反馈
      */
     @OpenAuth
-    @RequestMapping(value = "saveProblem", method = RequestMethod.GET)
+    @RequestMapping(value = "saveProblem", method = RequestMethod.POST)
     public R saveProblem(HttpServletRequest req, HttpServletResponse response, BusinessmanProblem businessmanProblem) {
         try {
             apiProblemService.save(businessmanProblem);

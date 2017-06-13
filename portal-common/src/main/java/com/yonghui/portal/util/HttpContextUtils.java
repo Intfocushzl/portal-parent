@@ -63,12 +63,12 @@ public class HttpContextUtils {
     /**
      * 验证sign用，获取请求里面去掉sign全部参数
      *
-     * @param   request
+     * @param request
      * @return
      */
     public static String getParameterForSign(HttpServletRequest request) {
         String params = request.getQueryString();
-        return params.substring(0, params.indexOf("sign") - 1);
+        return params.substring(0, params.indexOf("sign=") - 1);
     }
 
 }
