@@ -144,12 +144,12 @@ public class HorseDailyRacingController {
 
 
     @RequestMapping(value = "groupHorseExcel", method = RequestMethod.GET)
-    public void groupHorseExcel(HttpServletRequest req, HttpServletResponse response) {
+    public void groupHorseExcel(HttpServletRequest req, HttpServletResponse response , String sdate) {
         response.setHeader("Access-Control-Allow-Origin", "*");
         response.setContentType("text/html;charset=UTF-8");
 
         try {
-            List<Map<String, Object>> list = everyDayHorseRacingService.groupHorse();
+            List<Map<String, Object>> list = everyDayHorseRacingService.groupHorse(sdate);
             groupHorseExport export = new groupHorseExport();
             HSSFWorkbook workbook = export.exportByHydBudget(list);
             String filename = "groupHorseExcel.xls";

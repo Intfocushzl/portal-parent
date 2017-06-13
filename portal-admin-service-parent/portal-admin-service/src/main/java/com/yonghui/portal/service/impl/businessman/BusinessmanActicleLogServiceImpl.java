@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Map;
 
-
+@Service("businessmanActicleLogService")
 public class BusinessmanActicleLogServiceImpl implements BusinessmanActicleLogService {
 	@Autowired
 	private BusinessmanActicleLogMapper businessmanActicleLogMapper;

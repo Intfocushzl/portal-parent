@@ -18,6 +18,6 @@ public interface EveryDayHorseRacingMapper {
     public List<EveryDayHorseRacingNew> shopHorse(Map<String, Object> map);
 
     //商行赛马指标明细下载
-    public List<Map<String, Object>> groupHorse();
+    public List<Map<String, Object>> groupHorse(String sdate);
 
 }

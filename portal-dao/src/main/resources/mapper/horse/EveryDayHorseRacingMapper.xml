@@ -159,7 +159,7 @@
     </select>
 
     <!--商行赛马指标明细下载-->
-    <select id="groupHorse" resultType="Map" parameterType="Map">
+    <select id="groupHorse" resultType="Map" parameterType="String">
         select * from saima.data_basic_group
     </select>
 
