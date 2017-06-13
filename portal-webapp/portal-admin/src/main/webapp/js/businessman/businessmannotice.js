@@ -84,6 +84,9 @@ var vm = new Vue({
             var url = vm.businessmanNotice.id == null ? "../businessmannotice/save" : "../businessmannotice/update";
             vm.businessmanNotice.noticeType = $("#noticeType").val();
             vm.businessmanNotice.status = status;
+            vm.businessmanNotice.abstracts = KindEditor.instances[0].html();
+            vm.businessmanNotice.content = KindEditor.instances[1].html();
+            vm.businessmanNotice.expireTime = $("#expireTime").val();
             console.log(JSON.stringify(vm.businessmanNotice));
             $.ajax({
                 type: "POST",
@@ -126,6 +129,11 @@ var vm = new Vue({
         getInfo: function(id){
             $.get("../businessmannotice/info/"+id, function(r){
                 vm.businessmanNotice = r.businessmanNotice;
+                KindEditor.instances[0].html(vm.businessmanNotice.abstracts);
+                KindEditor.instances[1].html(vm.businessmanNotice.contentManuscript);
+                $("#cover_pic_show").prop("src", vm.businessmanNotice.coverImg);
+                vm.businessmanNotice.oldContent = vm.businessmanNotice.content;
+              //  $("#expireTime").val(vm.businessmanNotice.expireTime);
             });
         },
         reload: function (event) {
@@ -135,5 +143,112 @@ var vm = new Vue({
                 page:page
             }).trigger("reloadGrid");
         }
+    }
+});
+
+var $fdate = $(".form_date");
+$fdate.datetimepicker({
+ language:  'zh-CN',
+ format: "yyyy-mm-dd HH:mm:ss",
+ weekStart: 0,
+ todayBtn:  1,
+ autoclose: 1,
+ todayHighlight: 1,
+ startView: 2,
+ minView: 2,
+ forceParse: 0,
+    initialDate: "2020-01-01 00:00:00"
+ });
+
+//编辑器
+var $tab = $('.tab-bar a');
+var $pcDes = $('.pc-des');
+$pcDes.eq(0).css('display', 'block')
+$tab.click(function () {
+    var num = $(this).index();
+    $(this).addClass('active').siblings().removeClass('active');
+    $pcDes.eq(num).css('display', 'block').siblings('.pc-des').css('display', 'none')
+});
+
+initkindEditor();
+//初始化富文本
+function initkindEditor() {
+    KindEditor.ready(function (K) {
+        vm.editor1 = K.create('textarea[kindEditor="true"]', {
+            themeType: "simple",
+            uploadJson: '../upload/kindEditorImgUpload',  //指定上传图片的服务器端程序
+            fileManagerJson: '',                //指定浏览远程图片的服务器端程序
+            allowFileManager: true,             //true时显示浏览服务器图片功能。服务器图片就是我们上传的图片所在的目录。
+            resizeType: 1,
+            pasteType: 2,
+            syncType: "",
+            filterMode: true,
+            allowPreviewEmoticons: false,
+            //先注释页面查看所有图标的data-name
+            items: [
+                'source', 'undo', 'redo', 'plainpaste', 'wordpaste', 'clearhtml', 'quickformat',
+                'selectall', 'fullscreen', 'fontname', 'fontsize', '|', 'forecolor', 'hilitecolor',
+                'bold', 'italic', 'underline', 'hr', 'removeformat', '|', 'justifyleft', 'justifycenter',
+                'justifyright', 'insertorderedlist', 'insertunorderedlist', '|', 'link', 'image', 'multiimage',
+                'unlink', 'baidumap', 'emoticons'
+            ],
+            //设置编辑器创建后执行的回调函数
+            afterCreate: function () {
+                var self = this;
+                K.ctrl(document, 13, function () {
+                    self.sync();
+                });
+                K.ctrl(self.edit.doc, 13, function () {
+                    self.sync();
+                });
+            }, afterBlur: function () {
+                this.sync();
+            },
+            afterChange: function () {
+                //富文本输入区域的改变事件，一般用来编写统计字数等判断
+                K('.word_count1').html("最多20个字符,已输入" + this.count() + "个字符");
+            },
+            afterUpload: function (url) {
+                //上传图片后的代码
+            },
+            allowFileManager: false,
+            allowFlashUpload: false,
+            allowMediaUpload: false,
+            allowFileUpload: false
+        });
+        //可以调整高度，但不能调整宽度
+        /*vm.editor1.show({
+         resizeMode: 1
+         });*/
+    });
+}
+
+//上传封面图
+$('#input_cover').uploadify({
+    'swf': rcContextPath + '/statics/uploadify/uploadify.swf',
+    'uploader': '../upload/itemImgUpload',
+    'height': 45,
+    'whith': 120,
+    'auto': true,
+    'fileDataName': 'file',
+    'buttonText': '',
+    'fileTypeExts': '*.gif; *.jpg;*.png;*.jpeg',
+    'multi': false,
+    'method': 'post',
+    'debug': false,
+    'onUploadSuccess': function (file, data, response) {
+        var $showImage = $("#cover_pic_show");
+        var data = eval("(" + data + ")");
+        if (data.RetCode == 0) {
+            var url = data.RetUrl;
+            $showImage.prop("src", url);
+            $("#coverImg").val(url);
+            vm.businessmanNotice.coverImg = url;
+            alert('上传成功', function (index) {
+            });
+        }
+    },
+    'onUploadError': function (file, errorCode, errorMsg, errorString) {
+        alert('文件:' + file.name + '上传失败!');
     }
 });

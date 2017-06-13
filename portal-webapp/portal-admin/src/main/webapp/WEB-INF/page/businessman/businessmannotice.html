@@ -3,6 +3,134 @@
 <head>
 <title>生意人公告信息表</title>
     #parse("sys/header.html")
+
+	<!-- kindeditor -->
+	<link rel="stylesheet" href="${rc.contextPath}/statics/plugins/kindeditor/themes/default/default.css"/>
+	<script charset="utf-8" src="${rc.contextPath}/statics/plugins/kindeditor/kindeditor-min.js"></script>
+	<script charset="utf-8" src="${rc.contextPath}/statics/plugins/kindeditor/lang/zh_CN.js"></script>
+	<!-- uploadify -->
+	<link type="text/css" rel="stylesheet" href="${rc.contextPath}/statics/uploadify/uploadify.css"/>
+	<script type="text/javascript" src="${rc.contextPath}/statics/uploadify/jquery.uploadify.js"></script>
+	<!-- 日期  -->
+	<link href="${rc.contextPath}/statics/plugins/datetimepicker/bootstrap-datetimepicker.min.css" rel="stylesheet" media="screen">
+	<script type="text/javascript" src="${rc.contextPath}/statics/plugins/datetimepicker/bootstrap-datetimepicker.js" charset="UTF-8"></script>
+	<script type="text/javascript" src="${rc.contextPath}/statics/plugins/datetimepicker/bootstrap-datetimepicker.zh-CN.js" charset="UTF-8"></script>
+
+	<style type="text/css">
+		.file-btn {
+			position: relative !important;
+		}
+
+		.tab-bar {
+			overflow: hidden;
+			border-bottom: 1px solid #ccc;
+		}
+
+		.tab-bar a {
+			display: block;
+			float: left;
+			padding: 5px 10px;
+			border: 1px solid #ccc;
+			background-color: #eee;
+			margin-bottom: -1px;
+			border-left: none;
+		}
+
+		.tab-bar a:first-child {
+			border-left: 1px solid #ccc;
+		}
+
+		.tab-bar a.active {
+			background-color: #fff;
+			border-bottom: 1px solid #fff;
+		}
+
+		.pc-des {
+			display: none;
+			margin-top: 15px;
+		}
+
+		.pc-des textarea, .pc-des input {
+			border: 1px solid #ccc;
+			line-height: 22px;
+			text-indent: 4px;
+		}
+
+		.pc-des input {
+			height: 22px;
+			width: 20em;
+		}
+
+		.pc-des fieldset {
+			border: 1px solid #ccc;
+		}
+
+		.pc-des legend {
+			margin-left: 10px;
+		}
+
+		.pc-des legend span {
+			display: block;
+			margin: 0 5px;
+		}
+
+		.pc-des fieldset div {
+			margin-bottom: .5em;
+			padding: .5em;
+			text-align: left;
+		}
+
+		.pc-des label {
+			display: inline-block;
+			width: 8em;
+			text-align: left;
+			vertical-align: top;
+		}
+
+		.pc-des textarea {
+			width: 400px;
+			height: 100px;
+		}
+
+		.ke-dialog-body .swfupload {
+			position: static;
+		}
+
+		.file-btn {
+			position: relative;
+		}
+
+		.swfupload {
+			left: 0px;
+			height: 30px;
+		}
+
+		.uploadify {
+			position: absolute !important;
+			left: -10px;
+			top: 0;
+			z-index: 10;
+			/* older safari/Chrome browsers */
+			-webkit-opacity: 0;
+			/* Netscape and Older than Firefox 0.9 */
+			-moz-opacity: 0;
+			/* Safari 1.x (pre WebKit!) 老式khtml内核的Safari浏览器*/
+			-khtml-opacity: 0;
+			/* IE9 + etc...modern browsers */
+			opacity: 0;
+			/* IE 4-9 */
+			filter: alpha(opacity=50);
+			/*This works in IE 8 & 9 too*/
+			-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
+			/*IE4-IE9*/
+			filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=0);
+		}
+
+		.uploadify-queue-item {
+			max-width: 700px;
+			min-width: 600px;;
+		}
+	</style>
 </head>
 <body>
 <div id="rrapp" v-cloak>
@@ -61,9 +189,6 @@
 			</div>
 			<div class="form-group">
 			   	<div class="col-sm-2 control-label">是否APP推送</div>
-			   	<!--<div class="col-sm-10">
-			        <input type="text" class="form-control" v-model="businessmanNotice.appPush" placeholder="是否APP推送 0:推送 1：不推送"/>
-			    </div>-->
 				<label class="radio-inline">
 					<input type="radio" name="type" value="0" v-model="businessmanNotice.appPush"/>
 					推送
@@ -79,7 +204,8 @@
 			        <input type="text" class="form-control" v-model="businessmanNotice.title" placeholder="标题"/>
 			    </div>
 			</div>
-			<div class="form-group">
+
+			<!--<div class="form-group">
 			   	<div class="col-sm-2 control-label">正文</div>
 			   	<div class="col-sm-10">
 			        <input type="text" class="form-control" v-model="businessmanNotice.content" placeholder="正文"/>
@@ -90,18 +216,56 @@
 			   	<div class="col-sm-10">
 			        <textarea class="form-control" v-model="businessmanNotice.abstracts" placeholder="摘要"></textarea>
 			    </div>
+			</div>-->
+
+			<div class="form-group">
+				<div class="col-sm-2 control-label"></div>
+				<div class="col-sm-10">
+					<div class="bd description">
+						<div class="tab-bar">
+							<a href="javascript:void(0)" class="active">摘要</a>
+							<a href="javascript:void(0)">正文</a>
+							<div class="clear"></div>
+						</div>
+						<div class="pc-des">
+                    <textarea style="width:100%;height:200px;" kindEditor="true" v-model="businessmanNotice.abstracts"
+							  placeholder="摘要" id="abstracts" name="abstracts"></textarea>
+						</div>
+						<div class="pc-des">
+                    <textarea style="width:100%;height:200px;" kindEditor="true" v-model="businessmanNotice.content"
+							  placeholder="正文" id="content" name="content"></textarea>
+						</div>
+					</div>
+				</div>
 			</div>
+			<input type="hidden" v-model="businessmanNotice.oldContent" />
+
 			<div class="form-group">
 			   	<div class="col-sm-2 control-label">封面图</div>
-			   	<div class="col-sm-10">
+			   	<!--<div class="col-sm-10">
 			        <input type="text" class="form-control" v-model="businessmanNotice.coverImg" placeholder="封面图"/>
-			    </div>
+			    </div>-->
+				<div class="col-sm-10">
+					<div style="width: 100%;">
+						<a href="javascript:void(0);" class="btn file-btn">
+							<i class="icon-cloud-upload"></i>上传图片
+							<input type="file" id="input_cover" name="inputCover" class="pic-upload-input">
+						</a>
+					</div>
+					<div style="width: 100%;">
+						<img src="" width="230" height="150" alt="" class="pic-upload-show"
+							 style="background-color: #ccc;" id="cover_pic_show">
+						<a href="javascript:void(0)">删除</a>
+						<p class="explain">图片请选择jpg,jpeg,gif,png格式</p>
+					</div>
+				</div>
 			</div>
 			<div class="form-group">
 
-			   	<div class="col-sm-2 control-label">过期时间，有效截止期</div>
+			   	<div class="col-sm-2 control-label">过期时间</div>
 			   	<div class="col-sm-10">
-			        <input type="text" class="form-control" v-model="businessmanNotice.expireTime" placeholder="过期时间，有效截止期"/>
+			       <!-- <input type="text" class="form-control" v-model="businessmanNotice.expireTime" placeholder="过期时间，有效截止期"/>-->
+					<input type="text" id="expireTime" v-model="businessmanNotice.expireTime" class="form-control date  form_date input-sm"/>
 			    </div>
 			</div>
 			<div class="form-group">

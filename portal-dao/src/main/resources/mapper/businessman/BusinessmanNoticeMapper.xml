@@ -12,6 +12,7 @@
         <result property="appPush" column="app_push"/>
         <result property="title" column="title"/>
         <result property="content" column="content"/>
+		<result property="contentManuscript" column="content_manuscript"/>
         <result property="abstracts" column="abstracts"/>
         <result property="coverImg" column="cover_img"/>
         <result property="status" column="status"/>
@@ -27,13 +28,13 @@
     </resultMap>
 
 	<select id="noticeList" resultType="Map" parameterType="Map">
-		SELECT n.id,n.title,n.content,n.abstracts,n.CREATE_TIME,
+		SELECT n.id,n.title,n.content,n.abstracts,n.CREATE_TIME,n.notice_type,
 		case c.see WHEN '0' then '0'
 		else '1' end as see
 		from platform.businessman_notice n LEFT JOIN (
 		SELECT a.id,0 as see from platform.businessman_notice a,platform.businessman_notice_log b where a.id =
 		b.notice_id and b.CREATER = #{userId}
-		) c on n.id = c.id where n.expire_time > NOW() and n.`status` = 2 and n.notice_type in
+		) c on n.id = c.id where n.expire_time > NOW() and n.`status` = 2 and n.DISABLED = 0  and n.notice_type in
 		<foreach collection="noticeType" item="item" open="(" separator="," close=")">
 			'${item}'
 		</foreach>
@@ -91,7 +92,8 @@
 			`notice_groups`, 
 			`app_push`, 
 			`title`, 
-			`content`, 
+			`content`,
+			content_manuscript,
 			`abstracts`, 
 			`cover_img`, 
 			`status`, 
@@ -112,7 +114,8 @@
 			#{noticeGroups}, 
 			#{appPush}, 
 			#{title}, 
-			#{content}, 
+			#{content},
+			#{contentManuscript},
 			#{abstracts}, 
 			#{coverImg}, 
 			#{status}, 
@@ -137,6 +140,7 @@
 			<if test="appPush != null">`app_push` = #{appPush}, </if>
 			<if test="title != null">`title` = #{title}, </if>
 			<if test="content != null">`content` = #{content}, </if>
+			<if test="contentManuscript !=null">content_manuscript = #{contentManuscript},</if>
 			<if test="abstracts != null">`abstracts` = #{abstracts}, </if>
 			<if test="coverImg != null">`cover_img` = #{coverImg}, </if>
 			<if test="status != null">`status` = #{status}, </if>
