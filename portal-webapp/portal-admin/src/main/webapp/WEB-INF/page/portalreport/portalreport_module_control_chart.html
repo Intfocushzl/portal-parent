@@ -5,22 +5,23 @@
      data-content="
   <form class='form'>
     <div class='controls'>
-      <label class='control-label'>控件名称</label> <input type='text' id='orgname' placeholder='必填项'>
-      <label class='control-label'>默认值</label> <input type='text' id='orgvalue' placeholder='默认值'>
-      <label class='control-label'>标题</label> <input type='text' id='banner_config_title' placeholder='标题'>
-      <label class='control-label'>副标题</label> <input type='text' id='banner_config_subtitle' placeholder='副标题'>
-      <label class='control-label'>日期/周期</label> <input type='text' id='banner_config_date' placeholder='日期/周期'>
-      <hr/>
+      <label class='control-label'>标题</label> <input type='text' id='chart_banner_config_title' placeholder='标题'>
+      <label class='control-label'>副标题</label> <input type='text' id='chart_banner_config_subtitle' placeholder='副标题'>
+      <label class='control-label'>日期/周期</label> <input type='text' id='chart_banner_config_date' placeholder='日期/周期'>
+     <hr/>
       <button class='btn btn-info' type='button'>确定</button><button class='btn btn-danger' type='button'>取消</button>
     </div>
   </form>"
 >
-    <!-- Text -->
-    <label class="control-label leipiplugins-orgname">文本框</label>
+    <!-- Textarea -->
+    <label class="control-label leipiplugins-orgname">横幅</label>
     <div class="controls">
-        <input name="leipiNewField" type="text" placeholder="默认值" title="文本框" value=""
-               class="leipiplugins" leipiplugins="text"/>
+        <div class="textarea">
+            <textarea title="多行文本" name="leipiNewField" class="leipiplugins"
+                      leipiplugins="textarea"/> </textarea>
+        </div>
     </div>
-
 </div>
+<!-- Textarea end -->
+
 <!-- 横幅 banner end -->
