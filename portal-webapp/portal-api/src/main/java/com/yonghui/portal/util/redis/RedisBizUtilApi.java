@@ -132,6 +132,7 @@ public class RedisBizUtilApi {
 
     /**
      * 获取报表标题信息
+     *
      * @param code
      * @return
      */
@@ -140,8 +141,13 @@ public class RedisBizUtilApi {
     }
 
     //菜单信息
-    public String getRoleMenu(Integer roleId){
-        return redisUtil.get(String.format("%s:role:menu",KEY_PREFIX),roleId.toString());
+    public String getRoleMenu(Integer roleId) {
+        return redisUtil.get(String.format("%s:role:menu", KEY_PREFIX), roleId.toString());
+    }
+
+    //获取ftp用户信息
+    public String getFtpInfo(Long id) {
+        return redisUtil.get(String.format("%s:sys:ftp", KEY_PREFIX), id.toString());
     }
 
 }
