@@ -48,13 +48,28 @@
 <!-- 横幅折线图 chart_line end -->
 
 
-
 <!-- 表格tab切换 tables_v3 start -->
 <div class="control-group component" rel="popover" title="表格TAB" trigger="manual"
      data-content="
   <form class='form'>
     <div class='controls'>
       <label class='control-label'>标题</label> <input type='text' id='tables_v3_config_title' placeholder='标题'>
+
+      <div id='doclist'>
+        <ul id='documents'>
+            <li><a href='#' onclick='addTab($(this))' rel='Document1' title='1'>1</a></li>
+            <li><a href='#' onclick='addTab($(this))' rel='Document2' title='2'>2</a></li>
+            <li><a href='#' onclick='addTab($(this))' rel='Document3' title='3'>3</a></li>
+            <li><a href='#' onclick='addTab($(this))' rel='Document4' title='4'>4</a></li>
+        </ul>
+      </div>
+
+      <div id='wrapper'>
+        <ul id='tabs'>
+        </ul>
+        <div id='content'>
+        </div>
+      </div>
      <hr/>
       <button class='btn btn-info' type='button'>确定</button><button class='btn btn-danger' type='button'>取消</button>
     </div>
