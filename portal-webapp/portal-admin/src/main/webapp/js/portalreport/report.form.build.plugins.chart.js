@@ -186,7 +186,7 @@ LPB.plugins['tables_v3'] = function (active_component, leipiplugins) {
 $(document).ready(function () {
     $('#tabs a.tab').live('click', function () {
         var contentname = $(this).attr("id") + "_content";
-        $("#content p").hide();
+        $("#content div").hide();
         $("#tabs li").removeClass("current");
         $("#" + contentname).show();
         $(this).parent().addClass("current");
@@ -204,16 +204,24 @@ $(document).ready(function () {
         }
     });
 });
-function addTab(link) {
-    // If tab already exist in the list, return
-    if ($("#" + $(link).attr("rel")).length != 0)
-        return;
+
+// 添加标签
+function addTab() {
+    var document = "document" + RndNum(10);
+
     $("#tabs li").removeClass("current");
-    $("#content p").hide();
-    $("#tabs").append("<li class='current'><a class='tab' id='" +
-        $(link).attr("rel") + "' href='#'>" + $(link).html() +
-        "</a><a href='#' class='remove'>x</a></li>");
-    $("#content").append("<p id='" + $(link).attr("rel") + "_content'>" +
-        $(link).attr("title") + "</p>");
-    $("#" + $(link).attr("rel") + "_content").show();
+    // 隐藏所有tab div
+    $("#content div").hide();
+
+    $("#tabs").append("<li class='current'><a class='tab' id='" + document + "' href='#'>"
+        + "TAB"
+        + "</a><a href='#' class='remove'>x</a></li>");
+
+    $("#content").append("<div id='" + document + "_content'>"
+        + "<label class='control-label'>标题</label>"
+        + "<input type='text'class='tables_v3_config_title' id='tables_v3_config_title_" + document + "' placeholder='标题'>"
+        + "</div>");
+
+    // 显示新增tab div
+    $("#" + document + "_content").show();
 }
