@@ -148,4 +148,9 @@
     <bean id="apiFavoritesService" class="com.yonghui.portal.service.impl.business.ApiFavoritesServiceImpl"/>
     <dubbo:service interface="com.yonghui.portal.service.business.ApiFavoritesService" ref="apiFavoritesService"
                    timeout="300000"/>
+
+    <!-- 图片上传  -->
+    <bean id="apiImgsInfoService" class="com.yonghui.portal.service.impl.sys.ApiImgsInfoServiceImpl"/>
+    <dubbo:service interface="com.yonghui.portal.service.sys.ApiImgsInfoService" ref="apiImgsInfoService"
+                   timeout="300000"/>
 </beans>
