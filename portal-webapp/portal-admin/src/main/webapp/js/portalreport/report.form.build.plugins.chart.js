@@ -182,3 +182,38 @@ LPB.plugins['tables_v3'] = function (active_component, leipiplugins) {
         $(leipiplugins).text(JSON.stringify(jsonObj));
     });
 }
+
+$(document).ready(function () {
+    $('#tabs a.tab').live('click', function () {
+        var contentname = $(this).attr("id") + "_content";
+        $("#content p").hide();
+        $("#tabs li").removeClass("current");
+        $("#" + contentname).show();
+        $(this).parent().addClass("current");
+    });
+    $('#tabs a.remove').live('click', function () {
+        var tabid = $(this).parent().find(".tab").attr("id");
+        var contentname = tabid + "_content";
+        $("#" + contentname).remove();
+        $(this).parent().remove();
+        if ($("#tabs li.current").length == 0 && $("#tabs li").length > 0) {
+            var firsttab = $("#tabs li:first-child");
+            firsttab.addClass("current");
+            var firsttabid = $(firsttab).find("a.tab").attr("id");
+            $("#" + firsttabid + "_content").show();
+        }
+    });
+});
+function addTab(link) {
+    // If tab already exist in the list, return
+    if ($("#" + $(link).attr("rel")).length != 0)
+        return;
+    $("#tabs li").removeClass("current");
+    $("#content p").hide();
+    $("#tabs").append("<li class='current'><a class='tab' id='" +
+        $(link).attr("rel") + "' href='#'>" + $(link).html() +
+        "</a><a href='#' class='remove'>x</a></li>");
+    $("#content").append("<p id='" + $(link).attr("rel") + "_content'>" +
+        $(link).attr("title") + "</p>");
+    $("#" + $(link).attr("rel") + "_content").show();
+}
