@@ -158,6 +158,10 @@ LPB.plugins['tables_v3'] = function (active_component, leipiplugins) {
             $(popover).find("#tables_v3_config_title").val(jsonObj.config[0].title);
         }
     }
+
+    // 初始化tab
+    addTab();
+
     //右弹form  取消控件
     $(popover).delegate(".btn-danger", "click", function (e) {
         active_component.popover("hide");
