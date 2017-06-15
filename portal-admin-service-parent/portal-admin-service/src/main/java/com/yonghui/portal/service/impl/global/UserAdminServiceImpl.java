@@ -36,16 +36,16 @@ public class UserAdminServiceImpl implements UserAdminService {
 
     @Override
     public void save(User user) {
-        String account=user.getJobNumber().trim();
+        String account = user.getJobNumber().trim();
         user.setAccount(account);
 
-        if (user.getLargeArea()!=null&&user.getLargeArea().equals("全部")) {
+        if (user.getLargeArea() != null && user.getLargeArea().equals("全部")) {
             user.setLargeArea("ALL");
         }
-        if (user.getProvince()!=null&&user.getProvince().equals("全部")) {
+        if (user.getProvince() != null && user.getProvince().equals("全部")) {
             user.setProvince("ALL");
         }
-        if (user.getCity()!=null&&user.getCity().equals("全部")) {
+        if (user.getCity() != null && user.getCity().equals("全部")) {
             user.setCity("ALL");
         }
         user.setStatus(1);
@@ -58,21 +58,20 @@ public class UserAdminServiceImpl implements UserAdminService {
 
     @Override
     public void update(User user) {
-        String account=user.getJobNumber().trim();
+        String account = user.getJobNumber().trim();
         user.setAccount(account);
-        user.setStatus(1);
         user.setAccount(user.getJobNumber().trim());
 
-        if (user.getLargeArea()!=null&&user.getLargeArea().equals("全部")) {
+        if (user.getLargeArea() != null && user.getLargeArea().equals("全部")) {
             user.setLargeArea("ALL");
         }
-        if (user.getProvince()!=null&&user.getProvince().equals("全部")) {
+        if (user.getProvince() != null && user.getProvince().equals("全部")) {
             user.setProvince("ALL");
         }
-        if (user.getCity()!=null&&user.getCity().equals("全部")) {
+        if (user.getCity() != null && user.getCity().equals("全部")) {
             user.setCity("ALL");
         }
-        user.setStatus(1);
+        user.setStatus(user.getStatus());
         if (user.getStoreNumber() == null || user.getStoreNumber().equals("")) {
             user.setStoreNumber("ALL");
         }
@@ -81,7 +80,7 @@ public class UserAdminServiceImpl implements UserAdminService {
     }
 
     @Override
-    public void delete(Integer id){
+    public void delete(Integer id) {
         userMapper.delete(id);
     }
 
@@ -90,4 +89,14 @@ public class UserAdminServiceImpl implements UserAdminService {
         userMapper.deleteBatch(ids);
     }
 
+    @Override
+    public void updateStatus(User user) {
+//        user.setPass(Md5Util.getMd5("MD5", 0, null, user.getPass()));
+        int res = userMapper.update(user);
+        if (res == 1) {
+            // TODO: 2017/6/9 0009   调用APP注册接口
+        } else {
+
+        }
+    }
 }

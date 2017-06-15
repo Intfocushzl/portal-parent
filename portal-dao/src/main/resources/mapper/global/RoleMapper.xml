@@ -73,9 +73,9 @@
 			#{status}, 
 			NOW(),
 			NOW(),
-			#{updatedAt}, 
+			Now(),
 			#{type}, 
-			#{ownerType}
+			1
 		)
 	</insert>
 
@@ -84,13 +84,11 @@
         <set>
 			<if test="name != null">`name` = #{name}, </if>
 			<if test="status != null">`status` = #{status}, </if>
-			<if test="createTime != null">`createTime` = #{createTime}, </if>
-			<if test="createdAt != null">`created_at` = #{createdAt}, </if>
 			<if test="type != null">`type` = #{type}, </if>
 			<if test="ownerType != null">`ownerType` = #{ownerType}, </if>
-			`updated_at` =  NOW(),
+			`updated_at` =  NOW()
         </set>
-        where roleId = #{id}
+        where roleId = #{roleId}
     </update>
 	
 	<delete id="delete">
