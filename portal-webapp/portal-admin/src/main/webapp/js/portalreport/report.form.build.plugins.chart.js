@@ -147,6 +147,7 @@ LPB.plugins['tables_v3'] = function (active_component, leipiplugins) {
                 // 创建tab
                 document = addTab();
                 if (value.title !== undefined) {
+                    $("#a_" + document).html(value.title);
                     $(popover).find("#tables_v3_config_title_" + document).val(value.title);
                 }
                 if (value.dataUrl !== undefined) {
@@ -236,13 +237,13 @@ function addTab() {
     // 隐藏所有tab div
     $("#content div").hide();
 
-    $("#tabs").append("<li class='current' id='li_" + document + "'><a class='tab' id='" + document + "' href='#'>"
-        + "TAB"
+    $("#tabs").append("<li class='current' id='li_" + document + "'><a class='tab' id='a_" + document + "' href='#'>"
+        + "标题"
         + "</a><a href='#' class='remove'>x</a></li>");
 
     $("#content").append("<div class='tab_document' document='" + document + "' id='" + document + "_content'>"
         + "<label class='control-label'>标题</label>"
-        + "<input type='text'class='tables_v3_config_title' id='tables_v3_config_title_" + document + "' placeholder='标题'>"
+        + "<input type='text'class='tables_v3_config_title' document='" + document + "' id='tables_v3_config_title_" + document + "' placeholder='标题' onchange='onchangeTabTitle(this)'>"
         + "<label class='control-label'>数据源</label>"
         + "<input type='text'class='tables_v3_config_data_url' id='tables_v3_config_data_url_" + document + "' placeholder='数据源'>"
         + "</div>");
@@ -250,4 +251,8 @@ function addTab() {
     // 显示新增tab div
     $("#" + document + "_content").show();
     return document;
+}
+// 修改tab标题
+function onchangeTabTitle(obj) {
+    $("#a_" + $(obj).attr("document")).html($(obj).val());
 }
