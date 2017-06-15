@@ -11,9 +11,10 @@ $("#saveOrUpdateModule").click(function () {
 });
 
 $("#jsonstrtab").click(function () {
+    var fromName = $("#form_name").val();
     var jsonObj = [
         {
-            "title": "",
+            "title": fromName,
             "parts": []
         }
     ];
