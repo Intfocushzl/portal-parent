@@ -60,11 +60,11 @@
         from platform.businessman_acticle a LEFT JOIN (
         SELECT a.id, 0 as fav from platform.businessman_acticle a,platform.businessman_favorites b where a.id =
         b.acticle_id and b.user_id = #{userId} and b.`status`=1
-        ) c on a.id = c.id
+        ) c on a.id = c.id  WHERE
         <if test="keyWord != null and keyWord !=''">
-            WHERE a.tag_info LIKE concat('%',#{keyWord},'%') OR a.title LIKE concat('%',#{keyWord},'%') GROUP BY a.CREATE_TIME
-            DESC;
+            a.tag_info LIKE concat('%',#{keyWord},'%') OR a.title LIKE concat('%',#{keyWord},'%') AND
         </if>
+        a.status = 2 AND a.DISABLED = 0 GROUP BY a.CREATE_TIME DESC;
     </select>
 
     <select id="acticleDetail" resultType="Map" parameterType="Map">

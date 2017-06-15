@@ -10,7 +10,9 @@ import com.yonghui.portal.service.global.UserService;
 import com.yonghui.portal.service.sys.SysoperationLogService;
 import com.yonghui.portal.util.*;
 import com.yonghui.portal.util.redis.RedisBizUtilApi;
+import com.yonghui.portal.util.redis.ReportUtil;
 import com.yonghui.portal.util.redis.TokenUtil;
+import com.yonghui.portal.xss.SQLFilter;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,7 +20,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.Date;
+import javax.servlet.http.HttpServletResponse;
+import java.util.*;
+
+import static com.yonghui.portal.interceptor.AuthorizationInterceptor.LOGIN_USER_OPERATION_LOG;
 
 /**
  * 测试用户登陆
@@ -40,6 +45,8 @@ public class LoginController {
     private RedisBizUtilApi redisBizUtilApi;
     @Autowired
     private TokenUtil tokenUtil;
+    @Autowired
+    private ReportUtil reportUtil;
 
     /**
      * 用户登陆操作
@@ -126,6 +133,42 @@ public class LoginController {
             //      tokenApiService.deleteByToken(token);
         }
     }
+
+    /**
+     * 获取帆软用户的密码
+     * @param req
+     * @param response
+     * @return
+     */
+    @RequestMapping(value = "/api/queryFinePwd", method = RequestMethod.GET)
+public R queryFineUserPwd(HttpServletRequest req, HttpServletResponse response){
+    String parameter = null;
+    List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
+        String originPasssword = "";
+    SysOperationLog log = (SysOperationLog) req.getAttribute(LOGIN_USER_OPERATION_LOG);
+    try {
+        parameter = HttpContextUtils.getRequestParameter(req);
+        IPUtils iputil = new IPUtils();
+        log.setIp(iputil.getIpAddr(req));
+        log.setUrl(req.getRequestURL().toString());
+        log.setParameter(HttpContextUtils.getParameterForLog(req));
+        list = reportUtil.jdbcProListResultListMapByParam("REP_000055", SQLFilter.sqlInject(parameter));
+        for(Map<String, Object> item : list){
+            originPasssword = item.get("password").toString();
+        }
+        FineDecodePwdUtil util = new FineDecodePwdUtil();
+        log.setEndTime(new Date());
+        log.setRemark("queryFinePwd");
+        sysoperationLogService.SaveLog(log);
+        if(originPasssword == null || originPasssword == ""){
+            return R.error("该用户不存在");
+        }else{
+         return R.success(util.passwordDecode(originPasssword));
+        }
+    } catch (Exception e) {
+       return R.error("获取帆软用户的密码异常");
+    }
+}
 
     /**
      * 测试登陆产生token信息

@@ -14,6 +14,7 @@ public class ConstantsUtil {
         public static final String DATA_000001 = "DATA_000001";         //主mysql连接池
         public static final String DATA_000002 = "DATA_000002";         //jdbc动态数据源
         public static final String DATA_000003 = "DATA_000003";         //主hana连接池
+        public static final String DATA_000004 = "DATA_000004";         //帆软数据源
     }
 
     //通用的状态码
