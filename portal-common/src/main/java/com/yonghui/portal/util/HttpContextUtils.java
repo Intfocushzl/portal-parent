@@ -4,6 +4,7 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
+import java.net.URLDecoder;
 import java.util.Iterator;
 import java.util.Map;
 
@@ -66,9 +67,24 @@ public class HttpContextUtils {
      * @param request
      * @return
      */
-    public static String getParameterForSign(HttpServletRequest request) {
-        String params = request.getQueryString();
-        return params.substring(0, params.indexOf("sign=") - 1);
+    public static String getParameterForSign(HttpServletRequest request) throws Exception {
+        String params = null;
+        String method = request.getMethod();
+        if ("GET".equals(method)) {
+            params = URLDecoder.decode(request.getQueryString(),"utf-8");
+            return params.substring(0, params.indexOf("sign=") - 1);
+        } else if ("POST".equals(method)) {
+            Map<String, String[]> paramMap = request.getParameterMap();
+            String queryString = "";
+            for (String key : paramMap.keySet()) {
+                String[] values = paramMap.get(key);
+                for (int i = 0; i < values.length; i++) {
+                    String value = values[i];
+                    queryString += key + "=" + value + "&";
+                }
+            }
+            return queryString;
+        }
+        return params;
     }
-
 }
