@@ -139,10 +139,10 @@ LPB.plugins['tables_v3'] = function (active_component, leipiplugins) {
     };
     var jsonConfigObj;
     var document;
+    //右弹form  初始化值
     if (getStringValue(jsonStr) != "") {
         jsonObj = JSON.parse($(leipiplugins).val());
         if (jsonObj.config.length > 0) {
-            //右弹form  初始化值
             $.each(jsonObj.config, function (n, value) {
                 // 创建tab
                 document = addTab();
@@ -168,6 +168,8 @@ LPB.plugins['tables_v3'] = function (active_component, leipiplugins) {
     });
     //右弹form  确定控件
     $(popover).delegate(".btn-info", "click", function (e) {
+        //清空config数组
+        jsonObj.config = [];
         var tabDocuments = $(".tab_document");
         // 遍历所有tab div
         $.each(tabDocuments, function (j, tabDoc) {
@@ -197,11 +199,10 @@ LPB.plugins['tables_v3'] = function (active_component, leipiplugins) {
                 LPB.genSource();//重置源代码
             });
             jsonObj.config[j] = jsonConfigObj;
-            // 删除 tab div
-            $("#li_" + document).remove();
-            $("#" + document + "_content").remove();
         });
         $(leipiplugins).text(JSON.stringify(jsonObj));
+        // 删除 tab div
+        $("#content div").html("");
     });
 }
 
