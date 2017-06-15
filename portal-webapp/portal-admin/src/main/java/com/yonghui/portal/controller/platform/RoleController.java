@@ -126,11 +126,13 @@ public class RoleController extends AbstractController {
 
     public void getRoleMenu(Role role) {
         List<Menu> menus = new ArrayList<Menu>();
-        List<Menu> menuList = new ArrayList<Menu>();
-        menuList = userMenuService.listRoleMenu(role.getMenuIdList());
+        List<Menu> menuList  = userMenuService.listRoleMenu(role.getMenuIdList());
         menus = new ListToTreeUtils().listTreeMenu(menuList);
         JSONObject json = new JSONObject();
         json.put("data", menus);
+        if (menuList==null){
+            menuList = new ArrayList<Menu>();
+        }
         log.info("角色菜单数据:" + menuList);
         redisBizUtilAdmin.setRoleMenu(role.getRoleId(), json.toString());
     }

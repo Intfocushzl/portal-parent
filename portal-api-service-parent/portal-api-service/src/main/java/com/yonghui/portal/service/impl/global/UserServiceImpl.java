@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Map;
 
+
 public class UserServiceImpl implements UserService {
 
     @Autowired
@@ -49,6 +50,16 @@ public class UserServiceImpl implements UserService {
     @Override
     public int update(User user) throws Exception {
         return userMapper.update(user);
+    }
+
+    @Override
+    public int updateInfoByJobNumber(Map<String, Object> params) {
+        return userMapper.updateInfoByJobNumber(params);
+    }
+
+    @Override
+    public int changeGrant(User user) throws Exception {
+        return userMapper.changeGrant(user);
     }
 
 }

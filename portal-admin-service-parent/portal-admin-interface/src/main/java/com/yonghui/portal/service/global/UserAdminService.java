@@ -24,5 +24,5 @@ public interface UserAdminService {
 
     void deleteBatch(Integer[] ids);
 
-
+    void updateStatus(User user);
 }

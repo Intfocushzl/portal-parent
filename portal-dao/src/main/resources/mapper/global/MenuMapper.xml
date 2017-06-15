@@ -186,13 +186,17 @@
     </select>
 
     <select id="queryList" resultType="com.yonghui.portal.model.global.Menu">
-        select * from platform.menu_forfront
+        select m.*,(select p.name from platform.menu_forfront p where p.id = m.pid) as pName
+        from platform.menu_forfront m
         <where>
             <if test="id != null and id !=''">
-                and id = #{id}
+                and m.id = #{id}
             </if>
             <if test="name != null and name !=''">
-                and name like concat('%',#{name},'%')
+                and m.`name` like concat('%',#{name},'%')
+            </if>
+            <if test="pid != null and pid !=''">
+                and m.`pid` =#{pid}
             </if>
         </where>
         <choose>
@@ -200,7 +204,7 @@
                 order by ${sidx} ${order}
             </when>
             <otherwise>
-                order by id asc
+                order by m.id asc
             </otherwise>
         </choose>
         <if test="offset != null and limit != null">

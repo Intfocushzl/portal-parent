@@ -15,7 +15,7 @@ public class User  implements Serializable{
 	//手机号
 	private String mobile;
 	//菜单权限，默认ALL权限拥有全部。 逗号隔开为拥有权限
-	private Integer roleId;
+	private String  roleId;
 	//密码
 	private String pass;
 	//工号
@@ -40,10 +40,12 @@ public class User  implements Serializable{
 	private String firm;
 	//拥有门店逗号隔开,ALL默认全部
 	private String storeNumber;
-	//拥有商行逗号隔开,ALL默认全部
+	//拥有群组逗号隔开,ALL默认全部
 	private String groupId;
+
 	//变更角色id
-	private Integer changeRoleid;
+
+	private String changeMobile;
 	//变更业态
 	private Integer changeType;
 	//变更大区
@@ -131,11 +133,11 @@ public class User  implements Serializable{
 		this.mobile = mobile;
 	}
 
-	public Integer getRoleId() {
+	public String getRoleId() {
 		return roleId;
 	}
 
-	public void setRoleId(Integer roleId) {
+	public void setRoleId(String roleId) {
 		this.roleId = roleId;
 	}
 
@@ -243,6 +245,14 @@ public class User  implements Serializable{
 		this.roleType = roleType;
 	}
 
+	public String getChangeMobile() {
+		return changeMobile;
+	}
+
+	public void setChangeMobile(String changeMobile) {
+		this.changeMobile = changeMobile;
+	}
+
 	public String getChangeRoleId() {
 		return changeRoleId;
 	}
@@ -337,14 +347,6 @@ public class User  implements Serializable{
 
 	public void setUpdatedAt(Date updatedAt) {
 		this.updatedAt = updatedAt;
-	}
-
-	public Integer getChangeRoleid() {
-		return changeRoleid;
-	}
-
-	public void setChangeRoleid(Integer changeRoleid) {
-		this.changeRoleid = changeRoleid;
 	}
 
 	public String getAreaMans() {

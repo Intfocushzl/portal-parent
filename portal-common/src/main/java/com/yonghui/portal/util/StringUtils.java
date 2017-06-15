@@ -1,7 +1,8 @@
 package com.yonghui.portal.util;
 
 import java.util.Random;
-
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class StringUtils {
 
@@ -131,6 +132,39 @@ public class StringUtils {
                 throw new RuntimeException(e);
             }
         }
+    }
+
+    /**
+     * 判断字段是否为Email 符合返回ture
+     * @param str
+     * @return boolean
+     */
+    public static final String EMAIL = "\\w+(\\.\\w+)*@\\w+(\\.\\w+)+";
+    public static  boolean isEmail(String str) {
+        return Regular(str,EMAIL);
+    }
+
+    /**
+     * 判断是否为手机号码 符合返回ture
+     * @param str
+     * @return boolean
+     */
+    public static final String MOBILE ="^(13[0-9]|14[0-9]|15[0-9]|17[0-9]|18[0-9]|19[0-9])\\d{8}$";
+    public static  boolean isMobile(String str) {
+        return Regular(str,MOBILE);
+    }
+    /**
+     * 匹配是否符合正则表达式pattern 匹配返回true
+     * @param str 匹配的字符串
+     * @param pattern 匹配模式
+     * @return boolean
+     */
+    private static  boolean Regular(String str,String pattern){
+        if(null == str || str.trim().length()<=0)
+            return false;
+        Pattern p = Pattern.compile(pattern);
+        Matcher m = p.matcher(str);
+        return m.matches();
     }
 
     public static String join(Object[] array, String separator) {

@@ -14,6 +14,8 @@
         <result column="jobNumber" property="jobNumber" jdbcType="VARCHAR"/>
         <result column="storeNumber" property="storeNumber" jdbcType="VARCHAR"/>
         <result column="createTime" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="created_at" property="createdAt" jdbcType="TIMESTAMP"/>
+        <result column="updated_at" property="updatedAt" jdbcType="TIMESTAMP"/>
         <result column="status" property="status" jdbcType="INTEGER"/>
         <result column="type" property="type" jdbcType="INTEGER"/>
         <result column="firm" property="firm" jdbcType="VARCHAR"/>
@@ -22,6 +24,7 @@
         <result column="city" property="city" jdbcType="VARCHAR"/>
         <result column="roleName" property="roleName" jdbcType="VARCHAR"/>
         <result column="roleType" property="roleType" jdbcType="INTEGER"/>
+        <result column="changeMobile" property="changeMobile" jdbcType="INTEGER"/>
         <result column="changeRoleId" property="changeRoleId" jdbcType="INTEGER"/>
         <result column="changeType" property="changeType" jdbcType="INTEGER"/>
         <result column="changeLargeArea" property="changeLargeArea" jdbcType="VARCHAR"/>
@@ -38,7 +41,7 @@
     </resultMap>
 
     <sql id="Base_Column_List">
-		id, account, `name`,email, roleId, pass, jobNumber, storeNumber,
+		id, account, `name`,email, roleId,jobNumber, storeNumber,
 		createTime,status,type,firm,largeArea,province,city,changeRoleId, changeType, changeLargeArea,
     changeProvince, changeCity, changeFirm, changeStatus,changeStoreNumber,remark,changeTime,rold,areaMans,changeAreaMans
 	</sql>
@@ -155,15 +158,25 @@
 
     <select id="getUserByJobNumber" resultMap="BaseResultMap">
         select
-        <include refid="Base_Column_List"/>
-        from platform.user_forfront
+        u.id, u.account,u.mobile, u.`name`,u.email, u.roleId,u.jobNumber, u.storeNumber,
+		u.createTime,u.status,u.`type`,u.firm,u.largeArea,
+		u.province,u.city,u.changeMobile,u.changeRoleId,u. changeType, u.changeLargeArea,
+        u.changeProvince, u.changeCity, u.changeFirm,u. changeStatus,u.changeStoreNumber,u.remark,
+        u.changeTime,u.rold,u.areaMans,u.changeAreaMans
+        ,r.name as roleName,r.type as roleType
+        from platform.user_forfront as u join platform.role_forfront as r on r.roleId=u.roleId
         where jobNumber = #{jobNumber}
     </select>
 
 
     <select id="Login" resultMap="BaseResultMap">
         select
-        u.*,r.name as roleName,r.type as roleType
+        u.id, u.account, u.`name`,u.mobile,u.email, u.roleId,u.jobNumber, u.storeNumber,
+		u.createTime,u.status,u.`type`,u.firm,u.largeArea,
+		u.province,u.city,u.changeMobile,u.changeRoleId,u. changeType, u.changeLargeArea,
+        u.changeProvince, u.changeCity, u.changeFirm,u. changeStatus,u.changeStoreNumber,u.remark,
+        u.changeTime,u.rold,u.areaMans,u.changeAreaMans
+        ,r.name as roleName,r.type as roleType
         from platform.user_forfront as u join platform.role_forfront as r on r.roleId=u.roleId
         and u.jobNumber=#{jobNumber} and u.pass=#{pass}
     </select>
@@ -182,13 +195,23 @@
 
     <select id="queryObject" resultMap="BaseResultMap">
         select
-        u.*,r.name as roleName,r.type as roleType
-        from platform.user_forfront as u join platform.role_forfront as r on r.roleId=u.roleIdwhere id = #{value}
+        u.id, u.account, u.`name`,u.email, u.roleId,u.jobNumber, u.storeNumber,
+		u.createTime,u.status,u.`type`,u.firm,u.largeArea,
+		u.province,u.city,u.changeRoleId,u. changeType, u.changeLargeArea,
+        u.changeProvince, u.changeCity, u.changeFirm,u. changeStatus,u.changeStoreNumber,u.remark,
+        u.changeTime,u.rold,u.areaMans,u.changeAreaMans
+        ,r.name as roleName,r.type as roleType
+        from platform.user_forfront as u join platform.role_forfront as r on r.roleId=u.roleId where id = #{value}
 	</select>
 
     <select id="queryList" resultMap="BaseResultMap">
         select
-        u.*,r.name as roleName,r.type as roleType
+        u.id, u.account, u.`name`,u.email, u.roleId,u.jobNumber, u.storeNumber,
+        u.createTime,u.status,u.`type`,u.firm,u.largeArea,
+        u.province,u.city,u.changeRoleId,u. changeType, u.changeLargeArea,
+        u.changeProvince, u.changeCity, u.changeFirm,u. changeStatus,u.changeStoreNumber,u.remark,
+        u.changeTime,u.rold,u.areaMans,u.changeAreaMans
+        ,r.name as roleName,r.type as roleType
         from platform.user_forfront as u join platform.role_forfront as r on r.roleId=u.roleId
         <where>
             <if test="account != null and account !=''">
@@ -330,7 +353,7 @@
             <if test="areaMans != null">`areaMans` = #{areaMans},</if>
             <if test="changeAreaMans != null">`changeAreaMans` = #{changeAreaMans},</if>
             <if test="rold != null">`rold` = #{rold},</if>
-            `updated_at` = NOW(),
+            `updated_at` = NOW()
         </set>
         where id = #{id}
     </update>
@@ -348,8 +371,36 @@
     <update id="updatePasswordByJobNumber" parameterType="Map">
         update platform.user_forfront
         <set>
-            <if test="pass != null">`pass` = #{pass},</if>
+            <if test="pass != null and pass !='' ">`pass` = #{pass},</if>
             `updated_at` = NOW(),
+        </set>
+        where jobNumber = #{jobNumber}
+    </update>
+    <update id="updateInfoByJobNumber" parameterType="Map">
+        update platform.user_forfront
+        <set>
+            <if test="userName != null">`name` = #{userName},</if>
+            <if test="email != null">`email` = #{email},</if>
+            <if test="mobile != null">`mobile` = #{mobile},</if>
+            `updated_at` = NOW()
+        </set>
+        where jobNumber = #{jobNumber}
+    </update>
+
+    <update id="changeGrant" parameterType="com.yonghui.portal.model.global.User">
+        update platform.user_forfront
+        <set>
+            <if test="changeRoleId != null">`changeRoleId` = #{changeRoleId},</if>
+            <if test="changeType != null">`changeType` = #{changeType},</if>
+            <if test="changeLargeArea != null">`changeLargeArea` = #{changeLargeArea},</if>
+            <if test="changeProvince != null">`changeProvince` = #{changeProvince},</if>
+            <if test="changeCity != null">`changeCity` = #{changeCity},</if>
+            <if test="changeFirm != null">`changeFirm` = #{changeFirm},</if>
+            <if test="changeStoreNumber != null">`changeStoreNumber` = #{changeStoreNumber},</if>
+            <if test="remark!= null">`remark` = #{remark},</if>
+            <if test="changeAreaMans != null">`changeAreaMans` = #{changeAreaMans},</if>
+            `changeStatus` = 1,
+            `changeTime` = NOW()
         </set>
         where jobNumber = #{jobNumber}
     </update>

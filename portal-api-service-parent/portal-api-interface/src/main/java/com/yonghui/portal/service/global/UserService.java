@@ -22,4 +22,8 @@ public interface UserService {
     int updatePasswordByJobNumber(String jobNumber, String password);
 
     int update(User user)throws Exception;
+
+    int updateInfoByJobNumber(Map<String, Object> params);
+
+    int changeGrant(User user) throws Exception;
 }

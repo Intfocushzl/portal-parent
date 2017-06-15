@@ -81,6 +81,16 @@ var vm = new Vue({
         }
     },
     methods: {
+        query: function () {
+            //vm.reload();
+            $("#jqGrid").jqGrid('setGridParam', {
+                postData: {
+                    pid: vm.menu.pid,
+                    name: vm.menu.name
+                },
+                page: 1
+            }).trigger("reloadGrid");
+        },
         getMenu: function (id) {
             //加载菜单树
             $.get("../forfront/menu/select", function (r) {
