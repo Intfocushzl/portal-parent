@@ -18,7 +18,7 @@
 
   };
     /* 表单名称控件 form_name
-    acc  是 class="component" 的DIV 
+    acc  是 class="component" 的DIV
     e 是 class="leipiplugins" 的控件
     */
     LPB.plugins['form_name'] = function (active_component,leipiplugins) {
@@ -77,10 +77,10 @@ $(document).ready(function(){
 
     var delayed = setTimeout(function(){
       if(type === "main"){
-        $temp = $("<form class='form-horizontal span6' id='temp'></form>").append($this.clone());
+        $temp = $("<form class='form-horizontal span6' id='temp' style='width: 300px'></form>").append($this.clone());
       } else {
         if($this.attr("id") !== "legend"){
-          $temp = $("<form class='form-horizontal span6' id='temp'></form>").append($this);
+          $temp = $("<form class='form-horizontal span6' id='temp' style='width: 300px'></form>").append($this);
         }
       }
 
