@@ -52,5 +52,9 @@ public class BusinessmanActicleLogServiceImpl implements BusinessmanActicleLogSe
     public List<Map<String, Object>> queryIsSee(Map<String, Object> map){
        return businessmanActicleLogMapper.queryIsSee(map);
 	}
-	
+
+	@Override
+	public List<BusinessmanActicleLog> getListByArticleId(Integer id) {
+		return businessmanActicleLogMapper.getListByArticleId(id);
+	}
 }

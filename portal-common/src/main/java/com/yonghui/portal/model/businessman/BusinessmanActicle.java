@@ -11,6 +11,10 @@ import com.yonghui.portal.model.base.AuditAuto;
  */
 public class BusinessmanActicle extends AuditAuto {
 
+    //发布后修改：存为草稿时保存之前的内容
+    private String oldContent;
+    //正文草稿
+    private String contentManuscript;
     //文章类型 1：文章 2：视频
     private Long acticleType;
     //发布范围角色编码 如：101,102,103
@@ -195,5 +199,21 @@ public class BusinessmanActicle extends AuditAuto {
      */
     public Long getPageview() {
         return pageview;
+    }
+
+    public String getOldContent() {
+        return oldContent;
+    }
+
+    public void setOldContent(String oldContent) {
+        this.oldContent = oldContent;
+    }
+
+    public String getContentManuscript() {
+        return contentManuscript;
+    }
+
+    public void setContentManuscript(String contentManuscript) {
+        this.contentManuscript = contentManuscript;
     }
 }

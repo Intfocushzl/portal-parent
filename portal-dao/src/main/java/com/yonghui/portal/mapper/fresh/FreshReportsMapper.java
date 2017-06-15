@@ -5,12 +5,15 @@ import java.util.Map;
 
 public interface FreshReportsMapper {
 
-	public List<Map<String,Object>> shellSurveyReports(Map<String, Object> map);
-	
-	public List<Map<String,Object>> shellSurvey(Map<String, Object> map);
-	
-	public List<Map<String,Object>> lossSurveyList(Map<String, Object> map);
-	
+
+	public List<Map<String,Object>> areaExcel(Map<String,Object> map);
+
+	public List<Map<String,Object>> shopExcel(Map<String,Object> map);
+
+	public List<Map<String,Object>> wastageAreaExcel(Map<String,Object> map);
+
+	public List<Map<String,Object>> wastageShopExcel(Map<String,Object> map);
+
 	public List<Map<String,Object>> minusProfitSurvey(Map<String, Object> map);
 	
 }

@@ -28,4 +28,6 @@ public interface BusinessmanTagInfoService {
 	void delete(Long id);
 	
 	void deleteBatch(Long[] ids);
+
+	List<BusinessmanTagInfo> queryByTagType(Integer type);
 }

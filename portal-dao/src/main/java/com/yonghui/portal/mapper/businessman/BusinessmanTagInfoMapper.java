@@ -3,6 +3,8 @@ package com.yonghui.portal.mapper.businessman;
 import com.yonghui.portal.mapper.base.BaseMapper;
 import com.yonghui.portal.model.businessman.BusinessmanTagInfo;
 
+import java.util.List;
+
 /**
  * 标签信息表
  * 
@@ -12,4 +14,5 @@ import com.yonghui.portal.model.businessman.BusinessmanTagInfo;
  */
 public interface BusinessmanTagInfoMapper extends BaseMapper<BusinessmanTagInfo> {
 
+    List<BusinessmanTagInfo> queryByTagType(Integer type);
 }

@@ -13,6 +13,7 @@
         <result property="tagInfo" column="tag_info"/>
         <result property="title" column="title"/>
         <result property="content" column="content"/>
+        <result property="contentManuscript" column="content_manuscript"/>
         <result property="abstracts" column="abstracts"/>
         <result property="coverImg" column="cover_img"/>
         <result property="status" column="status"/>
@@ -93,7 +94,8 @@
 			`app_push`, 
 			`tag_info`, 
 			`title`, 
-			`content`, 
+			`content`,
+			`content_manuscript`,
 			`abstracts`, 
 			`cover_img`,
 			`attach_file`,
@@ -115,7 +117,8 @@
 			#{appPush}, 
 			#{tagInfo}, 
 			#{title}, 
-			#{content}, 
+			#{content},
+			#{contentManuscript},
 			#{abstracts}, 
 			#{coverImg},
 			#{attachFile},
@@ -141,6 +144,7 @@
             <if test="tagInfo != null">`tag_info` = #{tagInfo},</if>
             <if test="title != null">`title` = #{title},</if>
             <if test="content != null">`content` = #{content},</if>
+            <if test="contentManuscript != null">content_manuscript = #{contentManuscript},</if>
             <if test="abstracts != null">`abstracts` = #{abstracts},</if>
             <if test="coverImg != null">`cover_img` = #{coverImg},</if>
             <if test="attachFile != null">`attach_file` = #{attachFile},</if>

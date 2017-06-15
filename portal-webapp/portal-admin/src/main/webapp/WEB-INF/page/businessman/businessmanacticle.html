@@ -130,7 +130,7 @@
 </head>
 <body>
 <div id="rrapp" v-cloak>
-    <div v-show="showList">
+    <div v-show="showList == 1">
         <div id="queryDiv" class="queryDiv">
             <div class="grid-btn">
                 <div class="form-group col-sm-2">
@@ -158,15 +158,23 @@
         <div id="jqGridPager"></div>
     </div>
 
-    <div v-show="!showList" class="panel panel-default">
+    <div v-show="showList == 2" class="panel panel-default">
         <div class="panel-heading">{{title}}</div>
         <form class="form-horizontal">
             <div class="form-group">
                 <div class="col-sm-2 control-label">文章类型</div>
-                <div class="col-sm-10">
+                <!--<div class="col-sm-10">
                     <input type="text" class="form-control" v-model="businessmanActicle.acticleType"
                            placeholder="文章类型 1：文章 2：视频"/>
-                </div>
+                </div>-->
+                <label class="radio-inline">
+                    <input type="radio" @click="getTagList(1)" name="type" value="1" v-model="businessmanActicle.acticleType"/>
+                    文章
+                </label>
+                <label class="radio-inline">
+                    <input type="radio" @click="getTagList(2)" name="type" value="2" v-model="businessmanActicle.acticleType"/>
+                    视频
+                </label>
             </div>
             <div class="form-group">
                 <div class="col-sm-2 control-label">发布范围角色编码</div>
@@ -184,16 +192,27 @@
             </div>
             <div class="form-group">
                 <div class="col-sm-2 control-label">是否APP推送</div>
-                <div class="col-sm-10">
+                <!--<div class="col-sm-10">
                     <input type="text" class="form-control" v-model="businessmanActicle.appPush"
                            placeholder="是否APP推送 0:推送 1：不推送"/>
-                </div>
+                </div>-->
+                <label class="radio-inline">
+                    <input type="radio" name="appPush" value="0" v-model="businessmanActicle.appPush"/>
+                    推送
+                </label>
+                <label class="radio-inline">
+                    <input type="radio" name="appPush" value="1" v-model="businessmanActicle.appPush"/>
+                    不推送
+                </label>
             </div>
             <div class="form-group">
                 <div class="col-sm-2 control-label">标签</div>
                 <div class="col-sm-10">
-                    <input type="text" class="form-control" v-model="businessmanActicle.tagInfo"
-                           placeholder="标签：最多三个 如 aa,bb,cc"/>
+                    <!--<input type="text" class="form-control" v-model="businessmanActicle.tagInfo"
+                           placeholder="标签：最多三个 如 aa,bb,cc"/>                 multiple data-max-options="3"-->
+                   <select class="selectpicker form-control" data-live-search="true"
+                            id="tagList"  v-model="businessmanActicle.tagInfo">
+                    </select>
                 </div>
             </div>
             <div class="form-group">
@@ -270,13 +289,13 @@
             </div>
 
 
-            <div class="form-group">
+           <!-- <div class="form-group">
                 <div class="col-sm-2 control-label">状态</div>
                 <div class="col-sm-10">
                     <input type="text" class="form-control" v-model="businessmanActicle.status"
                            placeholder="1：草稿 2：已发布"/>
                 </div>
-            </div>
+            </div>-->
             <div class="form-group">
                 <div class="col-sm-2 control-label">说明</div>
                 <div class="col-sm-10">
@@ -287,11 +306,19 @@
 
             <div class="form-group">
                 <div class="col-sm-2 control-label"></div>
-                <input type="button" class="btn btn-primary" @click="saveOrUpdate" value="确定"/>
+                <input type="button" class="btn btn-primary" @click="saveOrUpdate(1)" value="保存"/> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <input type="button" class="btn btn-info" @click="saveOrUpdate(2)" value="发布"/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                 &nbsp;&nbsp;<input type="button" class="btn btn-warning" @click="reload" value="返回"/>
             </div>
         </form>
     </div>
+
+
+    <div v-show="showList == 3" class="panel panel-default">
+        <table id="logGqGrid"></table>
+        <input type="button" class="btn btn-warning" @click="reload" value="返回"/>
+    </div>
+
 </div>
 
 <script src="${rc.contextPath}/js/businessman/businessmanacticle.js?_${date.systemTime}"></script>

@@ -4,14 +4,28 @@ $(function () {
         datatype: "json",                // 后台返回的数据格式
         // 列表标题及列表模型
         colModel: [
-            {label: 'id', name: 'id', index: 'id', width: 50, key: true},
-            {label: '文章类型', name: 'acticleType', index: 'acticle_type', width: 80},
-            {label: '发布范围角色编码', name: 'acticleRoles', index: 'acticle_roles', width: 80},
-            {label: '发布范围群组编码', name: 'acticleGroups', index: 'acticle_groups', width: 80},
-            {label: '是否APP推送', name: 'appPush', index: 'app_push', width: 80},
+            {label: 'id', name: 'id', index: 'id', width: 30, key: true},
+            {
+                label: '文章类型', name: 'acticleType', index: 'acticle_type', width: 50, formatter: function (type) {
+                if (type == 1) {
+                    return "文章";
+                } else if (type == 2) {
+                    return "视频";
+                }
+            }
+            },
+            {label: '角色编码', name: 'acticleRoles', index: 'acticle_roles', width: 80},
+            {label: '群组编码', name: 'acticleGroups', index: 'acticle_groups', width: 80},
+            /*{label: '是否APP推送', name: 'appPush', index: 'app_push', width: 80},*/
             {label: '标题', name: 'title', index: 'title', width: 80},
-            {label: '标签：最多三个 如 aa,bb,cc', name: 'tagInfo', index: 'tag_info', width: 80},
+            {label: '标签', name: 'tagInfo', index: 'tag_info', width: 80},
             {label: '创建时间', name: 'createTime', index: 'CREATE_TIME', width: 80},
+            {
+                label: '操作', name: 'operation', with: 100, formatter: function (value, options, row) {
+                return "<span class='label label-success' onclick='vm.logInfo(" + row.id + ")'>阅读日志</span>&nbsp;&nbsp;<span class='label label-success'>收藏</span>" +
+                    "&nbsp;&nbsp;<span class='label label-success'>评论</span>";
+            }
+            }
         ],
         viewrecords: true,     // 是否显示行号，默认值是false，不显示
         height: 385,            // 表格高度
@@ -41,14 +55,56 @@ $(function () {
         }
     });
 
-
 });
 
+
+function logJqGrid(id) {
+    $("#logGqGrid").jqGrid({
+        url: '../businessmanacticlelog/getListByArticleId?id='+id,     // 请求后台json数据的url
+        datatype: "json",                // 后台返回的数据格式
+        // 列表标题及列表模型
+        colModel: [
+            {label: 'ID', name: 'id', index: 'id',key: true},
+            {label: '文章ID', name: 'acticleId', index: 'acticle_id',key: true},
+            {label: '角色编码', name: 'creater', index: 'creater' },
+            {label: '创建时间', name: 'createTime', index: 'CREATE_TIME'},
+        ],
+        viewrecords: true,     // 是否显示行号，默认值是false，不显示
+        height: 100,            // 表格高度
+      //  width: 1000,
+        /* rowNum: 50,             // 一页显示的行记录数
+         rowList: [50, 100],     // 翻页控制条中 每页显示记录数可选集合*/
+        rownumbers: true,
+        /* rownumWidth: 25,*/
+        autowidth: true,
+        autoScroll: true,
+        shrinkToFit: true,
+      /*  multiselect: true,*/
+        /* pager: "#jqGridPager",          // 翻页DOM*/
+        jsonReader: {                   // 重写后台返回数据的属性
+            root: "data"         // 将rows修改为page.list
+            /*page: "page.currPage",      // 将page修改为page.currPage
+             total: "page.totalPage",    // 将total修改为page.totalPage
+             records: "page.totalCount"  // 将records修改为page.totalCount*/
+        },
+        /*  prmNames: {                     // 改写请求参数属性
+         page: "page",
+         rows: "limit",
+         order: "order"
+         },*/
+        gridComplete: function () {
+            // //隐藏grid底部滚动条
+            $("#logGqGrid").closest(".ui-jqgrid-bdiv").css({"overflow-x": "hiden"});
+            // //设置高度
+            // $("#logGqGrid").jqGrid('setGridHeight', getWinH());
+        }
+    });
+}
 
 var vm = new Vue({
     el: '#rrapp',
     data: {
-        showList: true,
+        showList: 1,//1,文章列表 2.新增或修改 3.阅读日志 4.收藏 5.评论
         title: null,
         businessmanActicle: {},
         editor1: null
@@ -65,25 +121,30 @@ var vm = new Vue({
             }).trigger("reloadGrid");
         },
         add: function () {
-            vm.showList = false;
+            vm.showList = 2;
             vm.title = "新增";
             vm.businessmanActicle = {};
+            KindEditor.instances[0].html("");
+            KindEditor.instances[1].html("");
+            $("#cover_pic_show").prop("src", "");
         },
         update: function (event) {
             var id = getSelectedRow();
             if (id == null) {
                 return;
             }
-            vm.showList = false;
+            vm.showList = 2;
             vm.title = "修改";
 
             vm.getInfo(id);
         },
-        saveOrUpdate: function (event) {
+        saveOrUpdate: function (status) {
             var url = vm.businessmanActicle.id == null ? "../businessmanacticle/save" : "../businessmanacticle/update";
             vm.businessmanActicle.abstracts = KindEditor.instances[0].html();
             vm.businessmanActicle.content = KindEditor.instances[1].html();
-
+            vm.businessmanActicle.tagInfo = $("#tagList").val();
+            vm.businessmanActicle.status = status;
+            console.log(vm.businessmanActicle);
             $.ajax({
                 type: "POST",
                 url: url,
@@ -129,14 +190,34 @@ var vm = new Vue({
                 KindEditor.instances[1].html(vm.businessmanActicle.content);
                 $("#cover_pic_show").prop("src", vm.businessmanActicle.coverImg);
                 $("#attachFile").val(vm.businessmanActicle.attachFile);
+                vm.getTagList(vm.businessmanActicle.acticleType);
+                vm.businessmanActicle.oldContent = vm.businessmanActicle.content;
             });
         },
         reload: function (event) {
-            vm.showList = true;
+            vm.showList = 1;
             var page = $("#jqGrid").jqGrid('getGridParam', 'page');
             $("#jqGrid").jqGrid('setGridParam', {
                 page: page
             }).trigger("reloadGrid");
+        },
+        getTagList: function (type) {//获取标签列表
+            $("#tagList").empty();
+            $.get("../businessmanacticle/tagInfoList?type=" + type, function (r) {
+                for (var i = 0; i < r.data.length; i++) {
+                    $("#tagList").append("<option value='" + r.data[i].tagName + "'>" + r.data[i].tagName + "</option>");
+                }
+                // refresh刷新和render渲染操作，必不可少  +r.data[i].id+"<===>"
+                $('#tagList').selectpicker('refresh');
+                $('#tagList').selectpicker('render');
+            });
+        },
+        logInfo: function (id) {
+            vm.showList = 3;
+            /*$("#logGqGrid").jqGrid('setGridParam', {
+                id: id
+            }).trigger("reloadGrid");*/
+            logJqGrid(id);
         }
     }
 });
@@ -238,7 +319,7 @@ $('#input_cover').uploadify({
 //上传附件
 $('#input_file').uploadify({
     'successTimeout': 5 * 60000,
-    'swf': rcContextPath+ '/statics/uploadify/uploadify.swf',
+    'swf': rcContextPath + '/statics/uploadify/uploadify.swf',
     'uploader': '../upload/itemImgUpload',
     'height': 20,
     'whith': 120,

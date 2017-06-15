@@ -2,7 +2,9 @@ package com.yonghui.portal.controller.businessman;
 
 import com.yonghui.portal.controller.AbstractController;
 import com.yonghui.portal.model.businessman.BusinessmanActicle;
+import com.yonghui.portal.model.businessman.BusinessmanTagInfo;
 import com.yonghui.portal.service.businessman.BusinessmanActicleService;
+import com.yonghui.portal.service.businessman.BusinessmanTagInfoService;
 import com.yonghui.portal.util.PageUtils;
 import com.yonghui.portal.util.Query;
 import com.yonghui.portal.util.R;
@@ -25,6 +27,8 @@ import java.util.Map;
 public class BusinessmanActicleController extends AbstractController {
     @Autowired
     private BusinessmanActicleService businessmanActicleService;
+    @Autowired
+    private BusinessmanTagInfoService businessmanTagInfoService;
 
     /**
      * 列表
@@ -83,6 +87,13 @@ public class BusinessmanActicleController extends AbstractController {
     public R delete(@RequestBody Long[] ids) {
         businessmanActicleService.deleteBatch(ids);
         return R.success();
+    }
+
+    @RequestMapping("/tagInfoList")
+    @ResponseBody
+    public R tagInfoList(@RequestParam Integer type){
+        List<BusinessmanTagInfo> list = businessmanTagInfoService.queryByTagType(type);
+        return R.success().setData(list);
     }
 
 }
