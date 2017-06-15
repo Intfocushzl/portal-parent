@@ -226,6 +226,8 @@ public class ApiDataBaseSqlServiceImpl implements ApiDataBaseSqlService {
         } else if (ConstantsUtil.DataSourceCode.DATA_000003.equals(portalDataSource.getCode())) {
             //主hana连接池
             return getHanaConnectionHandle(portalDataSource);
+        }else if(ConstantsUtil.DataSourceCode.DATA_000004.equals(portalDataSource.getCode())){
+            return getConnectionNew(portalDataSource);
         }
         return null;
     }

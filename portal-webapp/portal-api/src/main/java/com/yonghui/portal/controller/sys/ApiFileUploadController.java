@@ -18,9 +18,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.Iterator;
 import java.util.UUID;
 
@@ -32,61 +29,6 @@ public class ApiFileUploadController {
     @Autowired
     private RedisBizUtilApi rediBizUtilApi;
 
-    //编辑器插入图片
-    @RequestMapping("/kindEditorImgUpload")
-    public void kindEditorImgUpload(HttpServletRequest request, HttpServletResponse response) {
-        PrintWriter out;
-        JSONObject json = new JSONObject();
-        try {
-            CommonsMultipartResolver multipartResolver = new CommonsMultipartResolver(request.getSession().getServletContext());
-            ImgsInfo imgsInfo = null;
-            if (multipartResolver.isMultipart(request)) {
-                MultipartHttpServletRequest multiRequest = (MultipartHttpServletRequest) request;
-                Iterator<String> iter = multiRequest.getFileNames();
-                SysFtpConfig sysFtpConfig = JSONObject.parseObject(rediBizUtilApi.getFtpInfo(1L), SysFtpConfig.class);
-                while (iter.hasNext()) {
-                    MultipartFile file = multiRequest.getFile(iter.next());
-                    if (file != null) {
-                        SftpUtil sftp = new SftpUtil(sysFtpConfig);
-                        sftp.connect();
-                        String fileName = file.getOriginalFilename();
-                        String imgType = fileName.substring(fileName.lastIndexOf(".") + 1).toLowerCase();
-//						String sysName = UUID.randomUUID().toString().replace("-", "").toLowerCase() + "." + imgType;
-                        SimpleDateFormat df = new SimpleDateFormat("yyyyMMddHHmmss");
-                        String sysName = df.format(new Date());
-                        String random = Math.random() + "";
-                        sysName += random.substring(2, 8) + "." + imgType;
-                        String imgPath = "portal_pic" + File.separator + "item" + File.separator;
-                        String path = sysFtpConfig.getRootpath() + imgPath;
-//						//原图
-                        sftp.upload(path.replace("\\", "/"), sysName, file.getInputStream());
-                        imgsInfo = new ImgsInfo();
-                        imgsInfo.setName(fileName);
-                        imgsInfo.setSysName(sysName);
-                        imgsInfo.setImgSize(file.getSize() + "");
-                        imgsInfo.setImgType(imgType);
-                        imgsInfo.setImgPath(imgPath.replace("\\", "/") + sysName);
-                        imgsInfo.setDirectoryId(sysFtpConfig.getRootpath());
-                        apiImgsInfoService.save(imgsInfo);
-                        // KindEditor 需要返回的信息
-                        json.put("error", 0);
-                        json.put("url", sysFtpConfig.getOrigin() + imgsInfo.getImgPath());
-                        sftp.disconnect();
-                    }
-                }
-            }
-            printJson(response, json.toString());
-        } catch (Exception e) {
-            e.printStackTrace();
-            try {
-                json.put("error", 1);
-                json.put("message", "错误信息");
-                printJson(response, json.toString());
-            } catch (IOException e1) {
-                e1.printStackTrace();
-            }
-        }
-    }
 
     // 图片上传
     @RequestMapping("/itemImgUpload")
