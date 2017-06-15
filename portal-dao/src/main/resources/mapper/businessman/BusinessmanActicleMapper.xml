@@ -64,7 +64,7 @@
         <if test="keyWord != null and keyWord !=''">
             a.tag_info LIKE concat('%',#{keyWord},'%') OR a.title LIKE concat('%',#{keyWord},'%') AND
         </if>
-        a.status = 2 AND a.DISABLED = 0 GROUP BY a.CREATE_TIME DESC;
+        a.status = 2 AND a.DISABLED = 0 ORDER BY a.CREATE_TIME DESC limit #{offset}, #{limit}
     </select>
 
     <select id="acticleDetail" resultType="Map" parameterType="Map">
