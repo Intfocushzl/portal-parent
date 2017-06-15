@@ -197,6 +197,9 @@ LPB.plugins['tables_v3'] = function (active_component, leipiplugins) {
                 LPB.genSource();//重置源代码
             });
             jsonObj.config[j] = jsonConfigObj;
+            // 删除 tab div
+            $("#li_" + document).remove();
+            $("#" + document + "_content").remove();
         });
         $(leipiplugins).text(JSON.stringify(jsonObj));
     });
@@ -226,13 +229,13 @@ $(document).ready(function () {
 
 // 添加标签
 function addTab() {
-    var document = "document" + RndNum(10);
+    var document = "document_" + RndNum(10);
 
     $("#tabs li").removeClass("current");
     // 隐藏所有tab div
     $("#content div").hide();
 
-    $("#tabs").append("<li class='current'><a class='tab' id='" + document + "' href='#'>"
+    $("#tabs").append("<li class='current' id='li_" + document + "'><a class='tab' id='" + document + "' href='#'>"
         + "TAB"
         + "</a><a href='#' class='remove'>x</a></li>");
 
