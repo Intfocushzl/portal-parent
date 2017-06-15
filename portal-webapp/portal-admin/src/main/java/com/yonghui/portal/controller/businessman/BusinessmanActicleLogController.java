@@ -74,13 +74,20 @@ public class BusinessmanActicleLogController extends AbstractController {
     }
 
     /**
-     * 修改
+     * 删除
      */
     @RequestMapping("/delete")
     @RequiresPermissions("businessmanacticlelog:delete")
     public R delete(@RequestBody Long[] ids){
 		businessmanActicleLogService.deleteBatch(ids);
         return R.success();
+    }
+
+    @RequestMapping("getListByArticleId")
+    public R getListByArticleId(@RequestParam Map<String, Object> params){
+        Integer id = Integer.parseInt(params.get("id").toString());
+        List<BusinessmanActicleLog> list = businessmanActicleLogService.getListByArticleId(id);
+        return R.success().setData(list);
     }
 
 }

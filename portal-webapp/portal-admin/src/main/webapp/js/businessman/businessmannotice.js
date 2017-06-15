@@ -69,6 +69,9 @@ var vm = new Vue({
             vm.showList = false;
             vm.title = "新增";
             vm.businessmanNotice = {};
+            KindEditor.instances[0].html("");
+            KindEditor.instances[1].html("");
+            $("#cover_pic_show").prop("src", "");
         },
         update: function (event) {
             var id = getSelectedRow();
@@ -142,6 +145,17 @@ var vm = new Vue({
             $("#jqGrid").jqGrid('setGridParam',{
                 page:page
             }).trigger("reloadGrid");
+        },
+        deleteImg: function(){
+            var imgPath = $("#cover_pic_show")[0].src;
+            $.get("../upload/removeImg?imgPath="+imgPath,function(){
+               // console.log(r);
+                /*alert("删除成功",function(){
+                    $("#cover_pic_show").attr("src",'');
+                });*/
+                console.log(111);
+                alert("删除成功");
+            })
         }
     }
 });

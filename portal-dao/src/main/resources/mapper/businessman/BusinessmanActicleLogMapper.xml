@@ -12,6 +12,10 @@
         <result property="createTime" column="CREATE_TIME"/>
     </resultMap>
 
+	<select id="getListByArticleId" parameterType="Integer" resultType="com.yonghui.portal.model.businessman.BusinessmanActicleLog">
+		select * from platform.businessman_acticle_log WHERE acticle_id = #{id};
+	</select>
+
 	<select id="queryObject" resultType="com.yonghui.portal.model.businessman.BusinessmanActicleLog">
 		select * from businessman_acticle_log where id = #{value}
 	</select>

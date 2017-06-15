@@ -17,6 +17,10 @@
         <result property="version" column="VERSION"/>
     </resultMap>
 
+	<select id="queryByTagType" parameterType="Integer" resultType="com.yonghui.portal.model.businessman.BusinessmanTagInfo">
+		SELECT * from platform.businessman_tag_info WHERE tag_type = #{type} and DISABLED = 0;
+	</select>
+
 	<select id="queryObject" resultType="com.yonghui.portal.model.businessman.BusinessmanTagInfo">
 		select * from businessman_tag_info where id = #{value}
 	</select>

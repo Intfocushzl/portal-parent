@@ -48,5 +48,9 @@ public class BusinessmanTagInfoServiceImpl implements BusinessmanTagInfoService 
 	public void deleteBatch(Long[] ids){
 		businessmanTagInfoMapper.deleteBatch(ids);
 	}
-	
+
+	@Override
+	public List<BusinessmanTagInfo> queryByTagType(Integer type) {
+		return businessmanTagInfoMapper.queryByTagType(type);
+	}
 }

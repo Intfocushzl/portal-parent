@@ -30,4 +30,6 @@ public interface BusinessmanActicleLogService {
 	void deleteBatch(Long[] ids);
 
 	List<Map<String, Object>> queryIsSee(Map<String, Object> map);
+
+	List<BusinessmanActicleLog> getListByArticleId(Integer id);
 }

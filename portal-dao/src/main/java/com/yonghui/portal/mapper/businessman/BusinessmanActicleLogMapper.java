@@ -16,4 +16,6 @@ import java.util.Map;
 public interface BusinessmanActicleLogMapper extends BaseMapper<BusinessmanActicleLog> {
 
     List<Map<String, Object>> queryIsSee(Map<String, Object> map);
+
+    List<BusinessmanActicleLog> getListByArticleId(Integer id);
 }
