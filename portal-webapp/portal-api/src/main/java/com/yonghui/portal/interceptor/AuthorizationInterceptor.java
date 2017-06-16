@@ -61,7 +61,6 @@ public class AuthorizationInterceptor extends HandlerInterceptorAdapter {
         //如果有@OpenAuth注解，则校验sign
         if (openAuthAnnotation != null) {
             Map paramsMap = request.getParameterMap();
-            System.out.println(paramsMap.get("openApiCode")+"======"+paramsMap.get("sign"));
             String openApiCode = request.getParameter("openApiCode");
             String sign = request.getParameter("sign");
             if (StringUtils.isBlank(openApiCode) || StringUtils.isBlank(sign)) {

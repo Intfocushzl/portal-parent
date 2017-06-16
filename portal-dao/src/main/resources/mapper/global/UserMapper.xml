@@ -25,7 +25,7 @@
         <result column="roleName" property="roleName" jdbcType="VARCHAR"/>
         <result column="roleType" property="roleType" jdbcType="INTEGER"/>
         <result column="changeMobile" property="changeMobile" jdbcType="INTEGER"/>
-        <result column="changeRoleId" property="changeRoleId" jdbcType="INTEGER"/>
+        <result column="changeRoleId" property="changeRoleId" jdbcType="VARCHAR"/>
         <result column="changeType" property="changeType" jdbcType="INTEGER"/>
         <result column="changeLargeArea" property="changeLargeArea" jdbcType="VARCHAR"/>
         <result column="changeProvince" property="changeProvince" jdbcType="VARCHAR"/>
@@ -390,15 +390,15 @@
     <update id="changeGrant" parameterType="com.yonghui.portal.model.global.User">
         update platform.user_forfront
         <set>
-            <if test="changeRoleId != null">`changeRoleId` = #{changeRoleId},</if>
-            <if test="changeType != null">`changeType` = #{changeType},</if>
-            <if test="changeLargeArea != null">`changeLargeArea` = #{changeLargeArea},</if>
-            <if test="changeProvince != null">`changeProvince` = #{changeProvince},</if>
-            <if test="changeCity != null">`changeCity` = #{changeCity},</if>
-            <if test="changeFirm != null">`changeFirm` = #{changeFirm},</if>
-            <if test="changeStoreNumber != null">`changeStoreNumber` = #{changeStoreNumber},</if>
+            <if test="changeRoleId != null and changeRoleId != ''">`changeRoleId` = #{changeRoleId},</if>
+            <if test="changeType != null and changeType != ''">`changeType` = #{changeType},</if>
+            <if test="changeLargeArea != null and changeLargeArea != ''">`changeLargeArea` = #{changeLargeArea},</if>
+            <if test="changeProvince != null and changeProvince != ''">`changeProvince` = #{changeProvince},</if>
+            <if test="changeCity != null and changeCity != ''">`changeCity` = #{changeCity},</if>
+            <if test="changeFirm != null and changeFirm != ''">`changeFirm` = #{changeFirm},</if>
+            <if test="changeStoreNumber != null and changeStoreNumber != ''">`changeStoreNumber` = #{changeStoreNumber},</if>
             <if test="remark!= null">`remark` = #{remark},</if>
-            <if test="changeAreaMans != null">`changeAreaMans` = #{changeAreaMans},</if>
+            <if test="changeAreaMans != null and changeAreaMans != ''">`changeAreaMans` = #{changeAreaMans},</if>
             `changeStatus` = 1,
             `changeTime` = NOW()
         </set>
