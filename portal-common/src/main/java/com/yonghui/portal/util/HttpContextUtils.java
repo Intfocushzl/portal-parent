@@ -82,7 +82,7 @@ public class HttpContextUtils {
                 String paramName = (String) it.next();
                 String paramValue = request.getParameter(paramName);
                 //处理得到的参数名与值
-                if (!"openApiCode".equals(paramName) && !"sign".equals(paramName)) {
+                if (!"sign".equals(paramName)) {
                     sb.append(paramName + "=" + paramValue + "@@");
                 }
             }
