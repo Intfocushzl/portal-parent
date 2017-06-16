@@ -1,6 +1,5 @@
 package com.yonghui.portal.controller.platform;
 
-import com.alibaba.dubbo.config.annotation.Reference;
 import com.yonghui.portal.controller.AbstractController;
 import com.yonghui.portal.model.global.Menu;
 import com.yonghui.portal.service.global.MenuService;
@@ -9,6 +8,7 @@ import com.yonghui.portal.util.Query;
 import com.yonghui.portal.util.R;
 import com.yonghui.portal.utils.Constant;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -24,7 +24,7 @@ import java.util.Map;
 @RequestMapping("/forfront/menu")
 public class MenuController extends AbstractController {
 
-    @Reference
+    @Autowired
     private MenuService menuService;
 
     /**
@@ -75,11 +75,11 @@ public class MenuController extends AbstractController {
         List<Menu> menuList = null;
 
         //只有超级管理员，才能查看所有管理员列表
-        if(getUserId() == Constant.SUPER_ADMIN){
+//        if(getUserId() == Constant.SUPER_ADMIN){
             menuList = menuService.queryList(new HashMap<String, Object>());
-        }else{
-            menuList = menuService.queryUserList(getUserId());
-        }
+//        }else{
+//            menuList = menuService.queryUserList(getUserId());
+//        }
 
         return R.success().put("menuList", menuList);
     }

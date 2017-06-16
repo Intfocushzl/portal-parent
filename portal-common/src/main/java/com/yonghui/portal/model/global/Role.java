@@ -15,6 +15,8 @@ import java.util.List;
 public class Role implements Serializable {
 
     private Integer id;
+    //角色唯一编码
+    private Integer roleId;
     //角色名称
     private String name;
     //状态 0冻结，1激活
@@ -44,6 +46,15 @@ public class Role implements Serializable {
     public void setId(Integer id) {
         this.id = id;
     }
+
+    public Integer getRoleId() {
+        return roleId;
+    }
+
+    public void setRoleId(Integer roleId) {
+        this.roleId = roleId;
+    }
+
     /**
      * 设置：角色名称
      */

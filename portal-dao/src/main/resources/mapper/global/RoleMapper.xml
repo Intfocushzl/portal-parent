@@ -5,6 +5,7 @@
 	<!-- 可根据自己的需求，是否要使用 -->
     <resultMap id="roleMap" type="com.yonghui.portal.model.global.Role">
         <result property="id" column="id"/>
+		<result property="roleId" column="roleId"/>
         <result property="name" column="name"/>
         <result property="status" column="status"/>
         <result property="createTime" column="createTime"/>
@@ -15,14 +16,14 @@
     </resultMap>
 
 	<select id="queryObject" resultType="com.yonghui.portal.model.global.Role">
-		select * from platform.role_forfront where id = #{value}
+		select * from platform.role_forfront where roleId = #{value}
 	</select>
 
 	<select id="queryList" resultType="com.yonghui.portal.model.global.Role">
 		select * from platform.role_forfront
         <where>
-            <if test="id != null and id !=''">
-                and id = #{id}
+            <if test="roleId != null and roleId !=''">
+                and roleId = #{id}
             </if>
             <if test="name != null and name !=''">
                 and `name` like concat('%',#{name},'%')
@@ -44,9 +45,9 @@
  	<select id="queryTotal" resultType="int">
 		select count(*) from platform.role_forfront
         <where>
-            <if test="id != null and id !=''">
-                and id = #{id}
-            </if>
+			<if test="roleId != null and roleId !=''">
+				and roleId = #{id}
+			</if>
             <if test="name != null and name !=''">
                 and `name` like concat('%',#{name},'%')
             </if>
@@ -56,6 +57,7 @@
     <insert id="save" parameterType="com.yonghui.portal.model.global.Role" useGeneratedKeys="true" keyProperty="id">
 		insert into platform.role_forfront
 		(
+			`roleId`,
 			`name`, 
 			`status`, 
 			`createTime`, 
@@ -66,13 +68,14 @@
 		)
 		values
 		(
+			#{roleId},
 			#{name}, 
 			#{status}, 
 			NOW(),
 			NOW(),
-			#{updatedAt}, 
+			Now(),
 			#{type}, 
-			#{ownerType}
+			1
 		)
 	</insert>
 
@@ -81,21 +84,19 @@
         <set>
 			<if test="name != null">`name` = #{name}, </if>
 			<if test="status != null">`status` = #{status}, </if>
-			<if test="createTime != null">`createTime` = #{createTime}, </if>
-			<if test="createdAt != null">`created_at` = #{createdAt}, </if>
 			<if test="type != null">`type` = #{type}, </if>
 			<if test="ownerType != null">`ownerType` = #{ownerType}, </if>
-			`updated_at` =  NOW(),
+			`updated_at` =  NOW()
         </set>
-        where id = #{id}
+        where roleId = #{roleId}
     </update>
 	
 	<delete id="delete">
-		delete from platform.role_forfront where id = #{value}
+		delete from platform.role_forfront where roleId = #{value}
 	</delete>
 	
 	<delete id="deleteBatch">
-		delete from platform.role_forfront where id in
+		delete from platform.role_forfront where roleId in
 		<foreach item="id" collection="array" open="(" separator="," close=")">
 			#{id}
 		</foreach>

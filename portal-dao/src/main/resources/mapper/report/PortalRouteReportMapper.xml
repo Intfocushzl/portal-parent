@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.yonghui.portal.mapper.report.PortalRouteReportMapper">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap id="portalRouteReportMap" type="com.yonghui.portal.model.report.PortalRouteReport">
+        <result property="id" column="id"/>
+        <result property="code" column="code"/>
+        <result property="key" column="key"/>
+        <result property="requestType" column="request_type"/>
+        <result property="url" column="url"/>
+        <result property="parameter" column="parameter"/>
+        <result property="name" column="name"/>
+        <result property="remark" column="remark"/>
+        <result property="creater" column="creater"/>
+        <result property="createTime" column="create_time"/>
+        <result property="modifier" column="modifier"/>
+        <result property="modifyTime" column="modify_time"/>
+        <result property="disabled" column="disabled"/>
+        <result property="version" column="version"/>
+    </resultMap>
+
+	<select id="queryObject" resultType="com.yonghui.portal.model.report.PortalRouteReport">
+		select * from portal_route_report where id = #{value}
+	</select>
+
+	<select id="queryList" resultType="com.yonghui.portal.model.report.PortalRouteReport">
+		select * from portal_route_report
+        <where>
+            <if test="id != null and id !=''">
+                and id like concat('%',#{id},'%')
+            </if>
+            <if test="remark != null and remark !=''">
+                and remark like concat('%',#{remark},'%')
+            </if>
+        </where>
+        <choose>
+            <when test="sidx != null and sidx.trim() != ''">
+                order by ${sidx} ${order}
+            </when>
+			<otherwise>
+                order by id desc
+			</otherwise>
+        </choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="queryTotal" resultType="int">
+		select count(*) from portal_route_report
+        <where>
+            <if test="id != null and id !=''">
+                and id = #{id}
+            </if>
+            <if test="remark != null and remark !=''">
+                and remark like concat('%',#{remark},'%')
+            </if>
+        </where>
+	</select>
+
+    <insert id="save" parameterType="com.yonghui.portal.model.report.PortalRouteReport" useGeneratedKeys="true" keyProperty="id">
+		insert into portal_route_report
+		(
+			`code`, 
+			`key`, 
+			`request_type`, 
+			`url`, 
+			`parameter`, 
+			`name`, 
+			`remark`, 
+			`creater`, 
+			`create_time`, 
+			`modifier`, 
+			`modify_time`, 
+			`disabled`, 
+			`version`
+		)
+		values
+		(
+			#{code}, 
+			#{key}, 
+			#{requestType}, 
+			#{url}, 
+			#{parameter}, 
+			#{name}, 
+			#{remark}, 
+			#{creater}, 
+			#{createTime}, 
+			#{modifier}, 
+			NOW(), 
+			#{disabled}, 
+			#{version}
+		)
+	</insert>
+
+    <update id="update" parameterType="com.yonghui.portal.model.report.PortalRouteReport">
+        update portal_route_report
+        <set>
+			<if test="code != null">`code` = #{code}, </if>
+			<if test="key != null">`key` = #{key}, </if>
+			<if test="requestType != null">`request_type` = #{requestType}, </if>
+			<if test="url != null">`url` = #{url}, </if>
+			<if test="parameter != null">`parameter` = #{parameter}, </if>
+			<if test="name != null">`name` = #{name}, </if>
+			<if test="remark != null">`remark` = #{remark}, </if>
+			<if test="creater != null">`creater` = #{creater}, </if>
+			<if test="createTime != null">`create_time` = #{createTime}, </if>
+			<if test="modifier != null">`modifier` = #{modifier}, </if>
+			`modify_time` = NOW(), 
+			<if test="disabled != null">`disabled` = #{disabled}, </if>
+			<if test="version != null">`version` = #{version}</if>
+        </set>
+        where id = #{id}
+    </update>
+	
+	<delete id="delete">
+		delete from portal_route_report where id = #{value}
+	</delete>
+	
+	<delete id="deleteBatch">
+		delete from portal_route_report where id in 
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+</mapper>

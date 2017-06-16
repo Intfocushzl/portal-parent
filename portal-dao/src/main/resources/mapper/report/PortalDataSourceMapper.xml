@@ -10,8 +10,9 @@
         select * from portal_data_source where code = #{code}
     </select>
 
-    <select id="queryList" parameterType="map" resultType="com.yonghui.portal.model.report.PortalDataSource">
-        select * from portal_data_source where 1 = 1
+    <select id="queryList" parameterType="map" resultType="Map">
+        select a.`code`,a.title,a.url,a.jdbc_driver,a.`user`,a.create_time,b.username from portal_data_source a
+        LEFT JOIN sys_user b ON a.creater = b.user_id
         <where>
             <if test="code != null and code !=''">
                 and code like concat('%',#{code},'%')

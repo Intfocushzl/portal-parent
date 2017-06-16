@@ -10,12 +10,12 @@
         <div id="queryDiv" class="queryDiv">
             <div class="grid-btn">
                 <div class="form-group col-sm-2">
-                    <input type="text" class="form-control" v-model="portalProcedure.id" @keyup.enter="query"
-                           placeholder="主键ID">
+                    <input type="text" class="form-control" v-model="portalProcedure.procode" @keyup.enter="query"
+                           placeholder="唯一编码">
                 </div>
                 <div class="form-group col-sm-2">
-                    <input type="text" class="form-control" v-model="portalProcedure.remark" @keyup.enter="query"
-                           placeholder="备注说明">
+                    <input type="text" class="form-control" v-model="portalProcedure.title" @keyup.enter="query"
+                           placeholder="标题">
                 </div>
                 <a class="btn btn-primary" @click="query">查询</a>
 
@@ -28,6 +28,7 @@
                 #if($shiro.hasPermission("portalprocedure:delete"))
                 <a class="btn btn-primary" @click="del"><i class="fa fa-trash-o"></i>&nbsp;删除</a>
                 #end
+                <a class="btn btn-primary" @click="addRedis">一键缓存</a>
             </div>
         </div>
         <table id="jqGrid"></table>
@@ -38,9 +39,10 @@
         <div class="panel-heading">{{title}}</div>
         <form class="form-horizontal">
             <div class="form-group">
-                <div class="col-sm-2 control-label">存储过程唯一编码</div>
+                <div class="col-sm-2 control-label">唯一编码</div>
                 <div class="col-sm-10">
-                    <input type="text" class="form-control" v-model="portalProcedure.procode" placeholder="存储过程唯一编码"/>
+                    <input type="text" name="code" class="form-control" v-model="portalProcedure.procode"
+                           placeholder="存储过程唯一编码(格式例：PRO_000001)"/>
                     <input type="hidden" v-model="portalProcedure.procodeOld" placeholder="存储过程唯一编码"/>
                 </div>
             </div>
@@ -53,71 +55,38 @@
             <div class="form-group">
                 <div class="col-sm-2 control-label">数据源唯一编码</div>
                 <div class="col-sm-10">
-                    <input type="text" class="form-control" v-model="portalProcedure.dataSourceCode"
-                           placeholder="数据源唯一编码"/>
+                   <!-- <input type="text" class="form-control" v-model="portalProcedure.dataSourceCode"
+                           placeholder="数据源唯一编码"/>-->
+                    <select class="form-control" id="dataList" v-model="portalProcedure.dataSourceCode"
+                            placeholder="数据源唯一编码"></select>
                 </div>
             </div>
             <div class="form-group">
-                <div class="col-sm-2 control-label">存储过程名称,用户执行</div>
+                <div class="col-sm-2 control-label">存储过程名</div>
                 <div class="col-sm-10">
                     <input type="text" class="form-control" v-model="portalProcedure.proname"
                            placeholder="存储过程名称,用户执行"/>
                 </div>
             </div>
             <div class="form-group">
-                <div class="col-sm-2 control-label">存储过程执行参数，格式如aa@@bb@@cc</div>
+                <div class="col-sm-2 control-label">执行参数</div>
                 <div class="col-sm-10">
-                    <input type="text" class="form-control" v-model="portalProcedure.parameter"
-                           placeholder="存储过程执行参数，格式如aa@@bb@@cc"/>
+                    <!--<input type="text" class="form-control" v-model="portalProcedure.parameter"
+                           placeholder="存储过程执行参数，格式如aa@@bb@@cc"/>-->
+                    <textarea class="form-control" v-model="portalProcedure.parameter"
+                              placeholder="存储过程执行参数，格式如aa@@bb@@cc"></textarea>
                 </div>
             </div>
             <div class="form-group">
-                <div class="col-sm-2 control-label">数据源（不启用）</div>
+                <div class="col-sm-2 control-label">所在数据库</div>
                 <div class="col-sm-10">
-                    <input type="text" class="form-control" v-model="portalProcedure.prodb" placeholder="数据源（不启用）"/>
+                    <input type="text" class="form-control" v-model="portalProcedure.prodb" placeholder="数据源（所在库）"/>
                 </div>
             </div>
             <div class="form-group">
                 <div class="col-sm-2 control-label">说明</div>
                 <div class="col-sm-10">
-                    <input type="text" class="form-control" v-model="portalProcedure.remark" placeholder="说明"/>
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="col-sm-2 control-label">创建人</div>
-                <div class="col-sm-10">
-                    <input type="text" class="form-control" v-model="portalProcedure.creater" placeholder="创建人"/>
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="col-sm-2 control-label">创建时间</div>
-                <div class="col-sm-10">
-                    <input type="text" class="form-control" v-model="portalProcedure.createTime" placeholder="创建时间"/>
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="col-sm-2 control-label">修改人</div>
-                <div class="col-sm-10">
-                    <input type="text" class="form-control" v-model="portalProcedure.modifier" placeholder="修改人"/>
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="col-sm-2 control-label">修改时间</div>
-                <div class="col-sm-10">
-                    <input type="text" class="form-control" v-model="portalProcedure.modifyTime" placeholder="修改时间"/>
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="col-sm-2 control-label">启用,禁用(0启用，1禁用)</div>
-                <div class="col-sm-10">
-                    <input type="text" class="form-control" v-model="portalProcedure.disabled"
-                           placeholder="启用,禁用(0启用，1禁用)"/>
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="col-sm-2 control-label">版本号</div>
-                <div class="col-sm-10">
-                    <input type="text" class="form-control" v-model="portalProcedure.version" placeholder="版本号"/>
+                    <textarea class="form-control" v-model="portalProcedure.remark" placeholder="说明"></textarea>
                 </div>
             </div>
             <div class="form-group">

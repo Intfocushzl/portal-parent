@@ -57,5 +57,26 @@ public class ListToTreeUtils<T> {
         return nodeList;
     }
 
+    //表头信息
+    /*public List<ReportMeasureRelation> listTreeTableColumns(List<ReportMeasureRelation> list){
+        List<ReportMeasureRelation> nodeList = new ArrayList<ReportMeasureRelation>();
+        for (ReportMeasureRelation tableTitle : list) {
+            boolean mark = false;
+            for (ReportMeasureRelation tableTitleP: list) {
+                if (tableTitle.getParentid() != null && Long.valueOf(tableTitle.getParentid()).equals(tableTitleP.getId())){
+                    mark = true;
+                    if (tableTitleP.getChildren() == null)tableTitleP.setChildren(new ArrayList<ReportMeasureRelation>());
+                    tableTitleP.getChildren().add(tableTitle);
+                    break;
+                }
+            }
+            if (!mark) {
+                nodeList.add(tableTitle);
+            }
+
+        }
+        return nodeList;
+    }*/
+
 
 }

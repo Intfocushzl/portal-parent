@@ -3,6 +3,7 @@ package com.yonghui.portal.service.impl.report;
 import com.yonghui.portal.mapper.report.ReportMeasureRelationMapper;
 import com.yonghui.portal.model.report.ReportMeasureRelation;
 import com.yonghui.portal.service.report.ReportMeasureRelationService;
+import org.apache.poi.ss.formula.functions.T;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,6 +23,11 @@ public class ReportMeasureRelationServiceImpl implements ReportMeasureRelationSe
     @Override
     public List<ReportMeasureRelation> queryList(Map<String, Object> map) {
         return reportMeasureRelationMapper.queryList(map);
+    }
+
+    @Override
+    public List<ReportMeasureRelation> queryListByReportCode(String reportcode) {
+        return reportMeasureRelationMapper.queryListByReportCode(reportcode);
     }
 
     @Override

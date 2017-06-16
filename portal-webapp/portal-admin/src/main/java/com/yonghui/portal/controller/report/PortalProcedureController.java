@@ -7,11 +7,13 @@ import com.yonghui.portal.service.report.PortalProcedureService;
 import com.yonghui.portal.util.PageUtils;
 import com.yonghui.portal.util.Query;
 import com.yonghui.portal.util.R;
+import com.yonghui.portal.utils.ShiroUtils;
 import com.yonghui.portal.utils.redis.RedisBizUtilAdmin;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -61,6 +63,7 @@ public class PortalProcedureController extends AbstractController {
     @RequestMapping("/save")
     @RequiresPermissions("portalprocedure:save")
     public R save(@RequestBody PortalProcedure portalProcedure) {
+        portalProcedure.setCreater(ShiroUtils.getUserId());
         portalProcedureService.save(portalProcedure);
         redisBizUtilAdmin.setPortalProcedure(portalProcedure.getProcodeOld(), portalProcedure.getProcode(), JSONObject.toJSONString(portalProcedure));
         return R.success();
@@ -72,6 +75,7 @@ public class PortalProcedureController extends AbstractController {
     @RequestMapping("/update")
     @RequiresPermissions("portalprocedure:update")
     public R update(@RequestBody PortalProcedure portalProcedure) {
+        portalProcedure.setCreater(ShiroUtils.getUserId());
         portalProcedureService.update(portalProcedure);
         redisBizUtilAdmin.setPortalProcedure(portalProcedure.getProcodeOld(), portalProcedure.getProcode(), JSONObject.toJSONString(portalProcedure));
         return R.success();
@@ -86,6 +90,25 @@ public class PortalProcedureController extends AbstractController {
         portalProcedureService.deleteBatch(procodes);
         for (String procode : procodes) {
             redisBizUtilAdmin.removePortalProcedure(procode);
+        }
+        return R.success();
+    }
+
+    //report配置中查询procode
+    @RequestMapping("/proList")
+    @ResponseBody
+    public R proList() {
+        Map<String,Object> map = new HashMap<>();
+        List<PortalProcedure> portalExecuteProList = portalProcedureService.queryList(map);
+        return R.success().put("proList", portalExecuteProList);
+    }
+
+    //一键缓存
+    @RequestMapping("/addRedis")
+    public R addRedis(@RequestBody String[] codes) {
+        for (String code : codes) {
+            PortalProcedure portalProcedure = portalProcedureService.queryObjectByProcode(code);
+            redisBizUtilAdmin.setPortalProcedure(code, code, JSONObject.toJSONString(portalProcedure));
         }
         return R.success();
     }

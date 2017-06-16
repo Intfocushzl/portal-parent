@@ -9,6 +9,8 @@ public class Menu implements Serializable{
 
     private String name;
 
+    private String pName;
+
     private String url;
 
     private Integer pid;
@@ -46,6 +48,14 @@ public class Menu implements Serializable{
 
     public void setName(String name) {
         this.name = name == null ? null : name.trim();
+    }
+
+    public String getpName() {
+        return pName;
+    }
+
+    public void setpName(String pName) {
+        this.pName = pName;
     }
 
     public String getUrl() {

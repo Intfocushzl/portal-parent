@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.yonghui.portal.mapper.platform.BravoShopMapper">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap id="bravoShopMap" type="com.yonghui.portal.model.platform.BravoShop">
+        <result property="shopid" column="ShopID"/>
+        <result property="sapShopid" column="SAP_ShopID"/>
+        <result property="sname" column="SName"/>
+        <result property="shopno" column="ShopNo"/>
+        <result property="congou" column="Congou"/>
+        <result property="opendate" column="OpenDate"/>
+        <result property="sno" column="sNo"/>
+        <result property="areaid" column="AreaID"/>
+        <result property="areaname" column="AreaName"/>
+        <result property="typeComm" column="type_comm"/>
+        <result property="typename" column="typename"/>
+        <result property="area" column="Area"/>
+        <result property="province" column="Province"/>
+        <result property="city" column="City"/>
+        <result property="shopgroupid" column="ShopGroupID"/>
+        <result property="shopgroupname" column="ShopGroupName"/>
+        <result property="areamans" column="AreaMans"/>
+        <result property="updatetime" column="updatetime"/>
+    </resultMap>
+
+	<select id="queryObject" resultType="com.yonghui.portal.model.platform.BravoShop">
+		select * from platform.d_bravo_shop where ShopID = #{value}
+	</select>
+
+	<select id="queryList" resultType="com.yonghui.portal.model.platform.BravoShop">
+		select * from platform.d_bravo_shop
+        <where>
+            <if test="shopid != null and shopid !=''">
+                and ShopID like concat('%',#{shopid},'%')
+            </if>
+            <if test="sapShopid != null and sapShopid !=''">
+                and SAP_ShopID like concat('%',#{sapShopid},'%')
+            </if>
+			<if test="sname != null and sname !=''">
+				and SName like concat('%',#{sname},'%')
+			</if>
+			<if test="areaname != null and areaname !=''">
+				and AreaName like concat('%',#{areaname},'%')
+			</if>
+			<if test="areamans != null and areamans !=''">
+				and AreaMans like concat('%',#{areamans},'%')
+			</if>
+        </where>
+        <choose>
+            <when test="sidx != null and sidx.trim() != ''">
+                order by ${sidx} ${order}
+            </when>
+			<otherwise>
+                order by ShopID desc
+			</otherwise>
+        </choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="queryTotal" resultType="int">
+		select count(*) from platform.d_bravo_shop
+        <where>
+			<if test="shopid != null and shopid !=''">
+				and ShopID like concat('%',#{shopid},'%')
+			</if>
+			<if test="sapShopid != null and sapShopid !=''">
+				and SAP_ShopID like concat('%',#{sapShopid},'%')
+			</if>
+			<if test="sname != null and sname !=''">
+				and SName like concat('%',#{sname},'%')
+			</if>
+			<if test="areaname != null and areaname !=''">
+				and AreaName like concat('%',#{areaname},'%')
+			</if>
+			<if test="areamans != null and areamans !=''">
+				and AreaMans like concat('%',#{areamans},'%')
+			</if>
+        </where>
+	</select>
+
+    <insert id="save" parameterType="com.yonghui.portal.model.platform.BravoShop">
+		insert into platform.d_bravo_shop
+		(
+			`ShopID`, 
+			`SAP_ShopID`, 
+			`SName`, 
+			`ShopNo`, 
+			`Congou`, 
+			`OpenDate`, 
+			`sNo`, 
+			`AreaID`, 
+			`AreaName`, 
+			`type_comm`, 
+			`typename`, 
+			`Area`, 
+			`Province`, 
+			`City`, 
+			`ShopGroupID`, 
+			`ShopGroupName`, 
+			`AreaMans`, 
+			`updatetime`
+		)
+		values
+		(
+			#{shopid}, 
+			#{sapShopid}, 
+			#{sname}, 
+			#{shopno}, 
+			#{congou}, 
+			#{opendate}, 
+			#{sno}, 
+			#{areaid}, 
+			#{areaname}, 
+			#{typeComm}, 
+			#{typename}, 
+			#{area}, 
+			#{province}, 
+			#{city}, 
+			#{shopgroupid}, 
+			#{shopgroupname}, 
+			#{areamans}, 
+			#{updatetime}
+		)
+	</insert>
+
+    <update id="update" parameterType="com.yonghui.portal.model.platform.BravoShop">
+        update platform.d_bravo_shop
+        <set>
+			<if test="sapShopid != null">`SAP_ShopID` = #{sapShopid}, </if>
+			<if test="sname != null">`SName` = #{sname}, </if>
+			<if test="shopno != null">`ShopNo` = #{shopno}, </if>
+			<if test="congou != null">`Congou` = #{congou}, </if>
+			<if test="opendate != null">`OpenDate` = #{opendate}, </if>
+			<if test="sno != null">`sNo` = #{sno}, </if>
+			<if test="areaid != null">`AreaID` = #{areaid}, </if>
+			<if test="areaname != null">`AreaName` = #{areaname}, </if>
+			<if test="typeComm != null">`type_comm` = #{typeComm}, </if>
+			<if test="typename != null">`typename` = #{typename}, </if>
+			<if test="area != null">`Area` = #{area}, </if>
+			<if test="province != null">`Province` = #{province}, </if>
+			<if test="city != null">`City` = #{city}, </if>
+			<if test="shopgroupid != null">`ShopGroupID` = #{shopgroupid}, </if>
+			<if test="shopgroupname != null">`ShopGroupName` = #{shopgroupname}, </if>
+			<if test="areamans != null">`AreaMans` = #{areamans}, </if>
+			`updatetime` = now()
+        </set>
+        where ShopID = #{shopid}
+    </update>
+	
+	<delete id="delete">
+		delete from platform.d_bravo_shop where ShopID = #{value}
+	</delete>
+	
+	<delete id="deleteBatch">
+		delete from platform.d_bravo_shop where ShopID in
+		<foreach item="shopid" collection="array" open="(" separator="," close=")">
+			#{shopid}
+		</foreach>
+	</delete>
+
+</mapper>

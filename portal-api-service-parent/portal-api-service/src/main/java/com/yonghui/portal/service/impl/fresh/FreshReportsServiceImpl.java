@@ -18,35 +18,25 @@ public class FreshReportsServiceImpl implements FreshReportsService {
 	@Autowired
 	private FreshReportsMapper freshReportsMapper;
 
-	/**
-	 * 销售概况图表数据
-	 * @param map
-	 * @return
-	 */
 	@Override
-	public List<Map<String, Object>> shellSurveyReports(Map<String, Object> map) {
-		return freshReportsMapper.shellSurveyReports(map);
+	public List<Map<String, Object>> areaExcel(Map<String, Object> map) {
+		return freshReportsMapper.areaExcel(map);
 	}
-	//销售概况下三个表格
+
 	@Override
-	public List<Map<String, Object>> shellSurvey(Map<String, Object> map) {
-		List<Map<String, Object>>  list = freshReportsMapper.shellSurvey(map);
-		return reportSort(list,map);
+	public List<Map<String, Object>> shopExcel(Map<String, Object> map) {
+		return freshReportsMapper.shopExcel(map);
 	}
 
-
-	//损耗概况图表
 	@Override
-	public List<Map<String, Object>> lossSurveyList(Map<String, Object> map) {
-		return freshReportsMapper.lossSurveyList(map);
+	public List<Map<String, Object>> wastageAreaExcel(Map<String, Object> map) {
+		return freshReportsMapper.wastageAreaExcel(map);
 	}
 
-	//损耗概况下表格
-	public  List<Map<String,Object>> lossSurvey(Map<String, Object> map){
-		List<Map<String, Object>> list = freshReportsMapper.lossSurveyList(map);
-		return reportSort(list,map);
+	@Override
+	public List<Map<String, Object>> wastageShopExcel(Map<String, Object> map) {
+		return freshReportsMapper.wastageShopExcel(map);
 	}
-
 
 	//负毛利概况
 	@Override

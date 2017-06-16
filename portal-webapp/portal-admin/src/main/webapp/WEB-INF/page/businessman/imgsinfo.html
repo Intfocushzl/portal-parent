@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>图片信息</title>
+    #parse("sys/header.html")
+</head>
+<body>
+<div id="rrapp" v-cloak>
+	<div v-show="showList">
+        <div id="queryDiv" class="queryDiv">
+            <div class="grid-btn">
+                <div class="form-group col-sm-2">
+                    <input type="text" class="form-control" v-model="imgsInfo.id" @keyup.enter="query" placeholder="主键ID">
+                </div>
+                <div class="form-group col-sm-2">
+                	<input type="text" class="form-control" v-model="imgsInfo.remark" @keyup.enter="query" placeholder="备注说明">
+                </div>
+                <a class="btn btn-primary" @click="query">查询</a>
+
+				#if($shiro.hasPermission("imgsinfo:save"))
+				<a class="btn btn-primary" @click="add"><i class="fa fa-plus"></i>&nbsp;新增</a>
+				#end
+				#if($shiro.hasPermission("imgsinfo:update"))
+				<a class="btn btn-primary" @click="update"><i class="fa fa-pencil-square-o"></i>&nbsp;修改</a>
+				#end
+				#if($shiro.hasPermission("imgsinfo:delete"))
+				<a class="btn btn-primary" @click="del"><i class="fa fa-trash-o"></i>&nbsp;删除</a>
+				#end
+			</div>
+		</div>
+	    <table id="jqGrid"></table>
+	    <div id="jqGridPager"></div>
+    </div>
+    
+    <div v-show="!showList" class="panel panel-default">
+		<div class="panel-heading">{{title}}</div>
+		<form class="form-horizontal">
+			<div class="form-group">
+			   	<div class="col-sm-2 control-label">图片名称</div>
+			   	<div class="col-sm-10">
+			        <input type="text" class="form-control" v-model="imgsInfo.name" placeholder="图片名称"/>
+			    </div>
+			</div>
+			<div class="form-group">
+			   	<div class="col-sm-2 control-label">系统名称</div>
+			   	<div class="col-sm-10">
+			        <input type="text" class="form-control" v-model="imgsInfo.sysName" placeholder="系统名称"/>
+			    </div>
+			</div>
+			<div class="form-group">
+			   	<div class="col-sm-2 control-label">图片格式</div>
+			   	<div class="col-sm-10">
+			        <input type="text" class="form-control" v-model="imgsInfo.imgType" placeholder="图片格式"/>
+			    </div>
+			</div>
+			<div class="form-group">
+			   	<div class="col-sm-2 control-label">图片大小</div>
+			   	<div class="col-sm-10">
+			        <input type="text" class="form-control" v-model="imgsInfo.imgSize" placeholder="图片大小"/>
+			    </div>
+			</div>
+			<div class="form-group">
+			   	<div class="col-sm-2 control-label">图品根目录</div>
+			   	<div class="col-sm-10">
+			        <input type="text" class="form-control" v-model="imgsInfo.imgPath" placeholder="图品根目录"/>
+			    </div>
+			</div>
+			<div class="form-group">
+			   	<div class="col-sm-2 control-label">目录ID</div>
+			   	<div class="col-sm-10">
+			        <input type="text" class="form-control" v-model="imgsInfo.directoryId" placeholder="目录ID"/>
+			    </div>
+			</div>
+			<div class="form-group">
+			   	<div class="col-sm-2 control-label">说明</div>
+			   	<div class="col-sm-10">
+			        <input type="text" class="form-control" v-model="imgsInfo.remark" placeholder="说明"/>
+			    </div>
+			</div>
+			<div class="form-group">
+			   	<div class="col-sm-2 control-label">启用,禁用</div>
+			   	<div class="col-sm-10">
+			        <input type="text" class="form-control" v-model="imgsInfo.disabled" placeholder="启用,禁用(0启用，1禁用)"/>
+			    </div>
+			</div>
+			<div class="form-group">
+				<div class="col-sm-2 control-label"></div> 
+				<input type="button" class="btn btn-primary" @click="saveOrUpdate" value="确定"/>
+				&nbsp;&nbsp;<input type="button" class="btn btn-warning" @click="reload" value="返回"/>
+			</div>
+		</form>
+	</div>
+</div>
+
+<script src="${rc.contextPath}/js/businessman/imgsinfo.js?_${date.systemTime}"></script>
+</body>
+</html>

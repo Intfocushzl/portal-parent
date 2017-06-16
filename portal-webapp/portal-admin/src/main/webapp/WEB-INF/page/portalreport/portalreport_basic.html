@@ -1,0 +1,81 @@
+<!-- 基础数据信息 -->
+<div v-show="!showList" class="panel panel-default">
+    <div class="panel-heading">{{title}}</div>
+    <form class="form-horizontal">
+        <div class="form-group">
+            <div class="col-sm-2 control-label"><b>唯一编码</b></div>
+            <div class="col-sm-10">
+                <input type="text" name="code" class="form-control" v-model="portalReport.code"
+                       placeholder="报表唯一编码，api接口请求必须参数(格式例：REP_000001)"/>
+                <input type="hidden" class="form-control" v-model="portalReport.codeOld"
+                       placeholder="报表唯一编码，api接口请求必须参数"/>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-2 control-label"><b>标题简介</b></div>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" v-model="portalReport.title" placeholder="标题简介"/>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-2 control-label" style="width: 100px;">执行类型</div>
+            <label class="radio-inline">
+                <input type="radio" @click="onlycodeshow" name="type" value="1" v-model="portalReport.executeType"/>
+                存储过程
+            </label>
+            <label class="radio-inline">
+                <input type="radio" @click="onlycodeshow" name="type" value="2" v-model="portalReport.executeType"/>
+                select查询
+            </label>
+        </div>
+
+        <div class="form-group">
+            <div class="col-sm-2 control-label"><b>执行编码选项</b></div>
+            <div class="col-sm-10">
+                <select class="selectpicker form-control" v-model="portalReport.executeCode"
+                        data-live-search="true" id="onlycode"></select>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-2 control-label"><b>说明</b></div>
+            <div class="col-sm-10">
+                <textarea class="form-control" v-model="portalReport.remark" placeholder="说明"></textarea>
+            </div>
+        </div>
+
+        <!-- 报表标题 handsontable -->
+        <div class="form-group">
+            <div class="col-sm-2 control-label"><b>报表标题</b></div>
+            <div class="col-sm-10" id="overflow-pad">
+                <div id="reportConsole" class="reportConsole"></div>
+                <div class="pad" data-jsfiddle="reportHeaders">
+                    <input type="hidden" id="reportHeadersConsole" class="form-control console"
+                           v-model="portalReport.reportHeadersConsole"
+                           placeholder="标题列数据(表格最后一行数据)"/>
+                    <input type="hidden" id="reportHeadersFormatConsole" class="form-control console"
+                           v-model="portalReport.reportHeadersFormatConsole"
+                           placeholder="标题列格式化数据"/>
+                    <input type="hidden" id="reportHotData" class="form-control console"
+                           v-model="portalReport.reportHotData"
+                           placeholder="表格数据"/>
+                    <input type="hidden" id="reportMergedCellInfoCollection" class="form-control console"
+                           v-model="portalReport.reportMergedCellInfoCollection"
+                           placeholder="表格合并单元格数据"/>
+                    <input type="hidden" id="reportOuterHtml" class="form-control console"
+                           v-model="portalReport.reportOuterHtml"
+                           placeholder="表格HTML"/>
+                    <div id="reportHeadersContainer"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 表格属性值选择 -->
+        #parse("portalreport/portalreport_dialog.html")
+
+        <div class="form-group">
+            <div class="col-sm-2 control-label" style="width: 10px;"></div>
+            <input type="button" id="saveOrUpdate" class="btn btn-primary" value="确定"/>
+            &nbsp;&nbsp;<input type="button" class="btn btn-warning" @click="reload" value="返回"/>
+        </div>
+    </form>
+</div>

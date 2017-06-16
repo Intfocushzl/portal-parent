@@ -7,11 +7,13 @@ import com.yonghui.portal.service.report.PortalExecuteSqlService;
 import com.yonghui.portal.util.PageUtils;
 import com.yonghui.portal.util.Query;
 import com.yonghui.portal.util.R;
+import com.yonghui.portal.utils.ShiroUtils;
 import com.yonghui.portal.utils.redis.RedisBizUtilAdmin;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -62,6 +64,7 @@ public class PortalExecuteSqlController extends AbstractController {
     @RequestMapping("/save")
     @RequiresPermissions("portalexecutesql:save")
     public R save(@RequestBody PortalExecuteSql portalExecuteSql) {
+        portalExecuteSql.setCreater(ShiroUtils.getUserId());
         portalExecuteSqlService.save(portalExecuteSql);
         redisBizUtilAdmin.setPortalExecuteSql(portalExecuteSql.getSqlcodeOld(), portalExecuteSql.getSqlcode(), JSONObject.toJSONString(portalExecuteSql));
         return R.success();
@@ -73,13 +76,14 @@ public class PortalExecuteSqlController extends AbstractController {
     @RequestMapping("/update")
     @RequiresPermissions("portalexecutesql:update")
     public R update(@RequestBody PortalExecuteSql portalExecuteSql) {
+        portalExecuteSql.setCreater(ShiroUtils.getUserId());
         portalExecuteSqlService.update(portalExecuteSql);
         redisBizUtilAdmin.setPortalExecuteSql(portalExecuteSql.getSqlcodeOld(), portalExecuteSql.getSqlcode(), JSONObject.toJSONString(portalExecuteSql));
         return R.success();
     }
 
     /**
-     * 修改
+     * 删除
      */
     @RequestMapping("/delete")
     @RequiresPermissions("portalexecutesql:delete")
@@ -87,6 +91,25 @@ public class PortalExecuteSqlController extends AbstractController {
         portalExecuteSqlService.deleteBatchBySqlcodes(sqlcodes);
         for (String sqlcode : sqlcodes) {
             redisBizUtilAdmin.removePortalExecuteSql(sqlcode);
+        }
+        return R.success();
+    }
+
+    //report配置中查询sqlcode
+    @RequestMapping("/sqlList")
+    @ResponseBody
+    public R sqlList() {
+        Map<String,Object> map = new HashMap<>();
+        List<PortalExecuteSql> portalExecuteSqlList = portalExecuteSqlService.queryList(map);
+        return R.success().put("sqlList", portalExecuteSqlList);
+    }
+
+    //一键缓存
+    @RequestMapping("/addRedis")
+    public R addRedis(@RequestBody String[] codes){
+        for (String code:codes){
+            PortalExecuteSql portalExecuteSql = portalExecuteSqlService.queryObjectBySqlcode(code);
+            redisBizUtilAdmin.setPortalExecuteSql(code, code, JSONObject.toJSONString(portalExecuteSql));
         }
         return R.success();
     }

@@ -5,16 +5,18 @@ $(function () {
         // 列表标题及列表模型
         colModel: [
             {label: 'id', name: 'id', index: 'id', width: 50 , hidden: true},
-            {label: '数据源唯一编码', name: 'code', index: 'code', width: 80 , key: true },
+            {label: '唯一编码', name: 'code', index: 'code', width: 80 , key: true },
             {label: '标题简介', name: 'title', index: 'title', width: 80 }, 
-            {label: '数据源连接地址,包含数据库名称', name: 'url', index: 'url', width: 80 }, 
-            {label: '数据库类型驱动', name: 'jdbcDriver', index: 'jdbc_driver', width: 80 }, 
-            {label: '用户名', name: 'user', index: 'user', width: 80 }, 
-            {label: '用户密码', name: 'password', index: 'password', width: 80 }, 
+            {label: '连接地址', name: 'url', index: 'url', width: 80 },
+            {label: '类型驱动', name: 'jdbc_driver', index: 'jdbc_driver', width: 80 },
+            {label: '用户名', name: 'user', index: 'user', width: 80 },
+            {label: '创建人', name: 'username', index: 'username', width: 80 },
+            {label: '创建时间', name: 'create_time', index: 'create_time', width: 80 },
+            /* {label: '用户密码', name: 'password', index: 'password', width: 80 },
             {label: '连接池最小连接', name: 'minConnectionsPerPartition', index: 'min_connections_per_partition', width: 80 },
             {label: '连接池最大连接', name: 'maxConnectionsPerPartition', index: 'max_connections_per_partition', width: 80 },
-            {label: '1,从连接池获取连接。2新建数据库连接（目前只有一个连接池，其他都为2）', name: 'connectionTag', index: 'connection_tag', width: 80 }, 
-            {label: '创建时间', name: 'createTime', index: 'create_time', width: 80 }, 
+            {label: '连接选项', name: 'connectionTag', index: 'connection_tag', width: 80 },
+             */
         ],
         viewrecords: true,     // 是否显示行号，默认值是false，不显示
         height: 385,            // 表格高度
@@ -67,6 +69,7 @@ var vm = new Vue({
             vm.showList = false;
             vm.title = "新增";
             vm.portalDataSource = {};
+            $("input[name='code']").removeAttr("readonly");
         },
         update: function (event) {
             var code = getSelectedRow();
@@ -76,10 +79,26 @@ var vm = new Vue({
             vm.showList = false;
             vm.title = "修改";
 
-            vm.getInfo(code)
+            vm.getInfo(code);
+            $("input[name='code']").attr("readonly","readonly");
         },
         saveOrUpdate: function (event) {
+            var code = vm.portalDataSource.code;
+            var id = vm.portalDataSource.id;
             var url = vm.portalDataSource.id == null ? "../portaldatasource/save" : "../portaldatasource/update";
+            if(id==null){
+                $.get("../portaldatasource/info/"+code,function(r){
+                    if(r.portalDataSource != null){
+                        alert("唯一编码已存在，请重新输入");
+                    }else{
+                        vm.addAndUpdate(url);
+                    }
+                })
+            }else{
+                vm.addAndUpdate(url);
+            }
+        },
+        addAndUpdate:function(url){
             $.ajax({
                 type: "POST",
                 url: url,
@@ -88,7 +107,7 @@ var vm = new Vue({
                     if(r.code === 0){
                         alert('操作成功', function(index){
                             vm.reload();
-                     });
+                        });
                     }else{
                         alert(r.msg);
                     }
@@ -130,6 +149,28 @@ var vm = new Vue({
             $("#jqGrid").jqGrid('setGridParam',{
                 page:page
             }).trigger("reloadGrid");
-        }
+        },
+        addRedis: function (event) {
+            var codes = getSelectedRows();
+            if(codes == null){
+                return ;
+            }
+            $.ajax({
+                type:"POST",
+                url:"../portaldatasource/addRedis",
+                data: JSON.stringify(codes),
+                success: function(r){
+                    if(r.code == 0){
+                        alert('操作成功', function(index){
+                            $("#jqGrid").trigger("reloadGrid");
+                        });
+                    }else{
+                        alert(r.msg);
+                    }
+                }
+            });
+        },
+
+
     }
 });

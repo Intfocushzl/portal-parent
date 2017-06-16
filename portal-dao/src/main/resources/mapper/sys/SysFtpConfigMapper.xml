@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.yonghui.portal.mapper.sys.SysFtpConfigMapper">
+
+    <!-- 可根据自己的需求，是否要使用 -->
+    <resultMap id="sysFtpConfigMap" type="com.yonghui.portal.model.sys.SysFtpConfig">
+        <result property="id" column="id"/>
+        <result property="username" column="username"/>
+        <result property="password" column="password"/>
+        <result property="host" column="host"/>
+        <result property="port" column="port"/>
+        <result property="remark" column="remark"/>
+    </resultMap>
+
+    <select id="queryObject" resultType="com.yonghui.portal.model.sys.SysFtpConfig">
+		select * from sys_ftp_config where id = #{value}
+	</select>
+
+    <select id="queryList" resultType="com.yonghui.portal.model.sys.SysFtpConfig">
+        select * from sys_ftp_config
+        <where>
+            <if test="id != null and id !=''">
+                and id like concat('%',#{id},'%')
+            </if>
+            <if test="remark != null and remark !=''">
+                and remark like concat('%',#{remark},'%')
+            </if>
+        </where>
+        <choose>
+            <when test="sidx != null and sidx.trim() != ''">
+                order by ${sidx} ${order}
+            </when>
+            <otherwise>
+                order by id desc
+            </otherwise>
+        </choose>
+        <if test="offset != null and limit != null">
+            limit #{offset}, #{limit}
+        </if>
+    </select>
+
+    <select id="queryTotal" resultType="int">
+        select count(*) from sys_ftp_config
+        <where>
+            <if test="id != null and id !=''">
+                and id = #{id}
+            </if>
+            <if test="remark != null and remark !=''">
+                and remark like concat('%',#{remark},'%')
+            </if>
+        </where>
+    </select>
+
+    <insert id="save" parameterType="com.yonghui.portal.model.sys.SysFtpConfig" useGeneratedKeys="true"
+            keyProperty="id">
+		insert into sys_ftp_config
+		(
+			`username`,
+			`password`, 
+			`host`, 
+			`port`,
+			`rootpath`,
+			`origin`,
+			`remark`
+		)
+		values
+		(
+			#{username},
+			#{password}, 
+			#{host}, 
+			#{port},
+			#{rootpath},
+			#{origin},
+			#{remark}
+		)
+	</insert>
+
+    <update id="update" parameterType="com.yonghui.portal.model.sys.SysFtpConfig">
+        update sys_ftp_config
+        <set>
+            <if test="username != null">`username` = #{username},</if>
+            <if test="password != null">`password` = #{password},</if>
+            <if test="host != null">`host` = #{host},</if>
+            <if test="port != null">`port` = #{port},</if>
+            <if test="rootpath != null">`rootpath` = #{rootpath},</if>
+            <if test="origin != null">`origin` = #{origin},</if>
+            <if test="remark != null">`remark` = #{remark}</if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <delete id="delete">
+		delete from sys_ftp_config where id = #{value}
+	</delete>
+
+    <delete id="deleteBatch">
+        delete from sys_ftp_config where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

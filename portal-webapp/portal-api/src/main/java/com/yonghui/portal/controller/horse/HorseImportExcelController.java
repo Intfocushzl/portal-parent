@@ -51,7 +51,7 @@ public class HorseImportExcelController {
     /**
      * 允许上传的扩展名
      */
-    private static final String[] extensionPermit = {"xsl", "xlsx"};
+    private static final String[] extensionPermit = {"xls", "xlsx"};
 
     /**
      * 赛马运营分数导入
@@ -883,16 +883,17 @@ public class HorseImportExcelController {
                     // 判断是否为空
                     boolean isNull = StringUtils.isEmpty(cell.getStringCellValue().trim());
                     if (isNull) {
-                        throw new Exception("填写的数据含有空值");
+                        throw new Exception("填写的数据含有空值！！"+"第"+r+"行"+(c+1)+"列有空值");
                     }
                     // 判断是否全部是数字
-                    boolean isNum = StringUtils.isNumeric(cell.getStringCellValue().trim());
-                    if (!isNum) {
-                        throw new Exception("表格中有非数字的数据");
+                    try {
+                        isNumber(cell.getStringCellValue().trim());
+                    } catch (Exception e) {
+                        throw new Exception("表格中有非数字的数据！！"+"第"+r+"行"+(c+1)+"列有非数字的数据");
                     }
                     if (c == 0) {
                         if (cell.getStringCellValue().trim().length() != 6) {
-                            throw new Exception("请填写正确的六位数日期，例如201704");
+                            throw new Exception("请填写正确的六位数日期，例如201704！！"+"第"+r+"行"+(c+1)+"日期格式不对");
                         }
                         score.setSdate(cell.getStringCellValue().trim());
                     } else if (c == 1) {
@@ -902,6 +903,8 @@ public class HorseImportExcelController {
                     } else if (c == 3) {
                         score.setThevalue(Double.valueOf(cell.getStringCellValue().trim()));
                     }
+                }else{
+                    throw new Exception("填写的数据含有空值！！"+"第"+r+"行"+(c+1)+"列有空值");
                 }
             }
             // 添加数据
@@ -958,5 +961,9 @@ public class HorseImportExcelController {
             result = year + "0" + month;
         }
         return result;
+    }
+
+    public  Double isNumber(String str) {
+        return Double.parseDouble(str);
     }
 }

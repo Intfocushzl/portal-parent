@@ -16,8 +16,6 @@
                 	<input type="text" class="form-control" v-model="portalDataSource.title" @keyup.enter="query" placeholder="标题">
                 </div>
                 <a class="btn btn-primary" @click="query">查询</a>
-            <!--</div>
-			<div class="grid-btn">-->
 				#if($shiro.hasPermission("portaldatasource:save"))
 				<a class="btn btn-primary" @click="add"><i class="fa fa-plus"></i>&nbsp;新增</a>
 				#end
@@ -27,6 +25,7 @@
 				#if($shiro.hasPermission("portaldatasource:delete"))
 				<a class="btn btn-primary" @click="del"><i class="fa fa-trash-o"></i>&nbsp;删除</a>
 				#end
+				<a class="btn btn-primary" @click="addRedis">一键缓存</a>
 			</div>
 		</div>
 	    <table id="jqGrid"></table>
@@ -37,9 +36,10 @@
 		<div class="panel-heading">{{title}}</div>
 		<form class="form-horizontal">
 			<div class="form-group">
-			   	<div class="col-sm-2 control-label">数据源唯一编码</div>
+			   	<div class="col-sm-2 control-label">唯一编码</div>
 			   	<div class="col-sm-10">
-			        <input type="text" class="form-control" v-model="portalDataSource.code" placeholder="数据源唯一编码"/>
+			        <input type="text" name="code" class="form-control" v-model="portalDataSource.code"
+						   placeholder="数据源唯一编码(格式例：PRO_000001)"/>
 					<input type="hidden" class="form-control" v-model="portalDataSource.codeOld" placeholder="sql语句唯一编码"/>
 			    </div>
 			</div>
@@ -50,13 +50,14 @@
 			    </div>
 			</div>
 			<div class="form-group">
-			   	<div class="col-sm-2 control-label">数据源连接地址,包含数据库名称</div>
+			   	<div class="col-sm-2 control-label">连接地址</div>
 			   	<div class="col-sm-10">
-			        <input type="text" class="form-control" v-model="portalDataSource.url" placeholder="数据源连接地址,包含数据库名称"/>
+			        <!--<input type="text" class="form-control" v-model="portalDataSource.url" placeholder="数据源连接地址,包含数据库名称"/>-->
+					<textarea class="form-control" v-model="portalDataSource.url" placeholder="数据源连接地址,包含数据库名称"></textarea>
 			    </div>
 			</div>
 			<div class="form-group">
-			   	<div class="col-sm-2 control-label">数据库类型驱动</div>
+			   	<div class="col-sm-2 control-label">类型驱动</div>
 			   	<div class="col-sm-10">
 			        <input type="text" class="form-control" v-model="portalDataSource.jdbcDriver" placeholder="数据库类型驱动"/>
 			    </div>
@@ -74,64 +75,28 @@
 			    </div>
 			</div>
 			<div class="form-group">
-			   	<div class="col-sm-2 control-label">连接池最小连接（指针度连接池）</div>
+			   	<div class="col-sm-2 control-label">连接池最小连接</div>
 			   	<div class="col-sm-10">
 			        <input type="text" class="form-control" v-model="portalDataSource.minConnectionsPerPartition" placeholder="连接池最小连接（指针度连接池）"/>
 			    </div>
 			</div>
 			<div class="form-group">
-			   	<div class="col-sm-2 control-label">连接池最大连接（指针度连接池）</div>
+			   	<div class="col-sm-2 control-label">连接池最大连接</div>
 			   	<div class="col-sm-10">
 			        <input type="text" class="form-control" v-model="portalDataSource.maxConnectionsPerPartition" placeholder="连接池最大连接（指针度连接池）"/>
 			    </div>
 			</div>
-			<div class="form-group">
-			   	<div class="col-sm-2 control-label">1,从连接池获取连接。2新建数据库连接（目前只有一个连接池，其他都为2）</div>
+			<!--<div class="form-group">
+			   	<div class="col-sm-2 control-label">连接选项</div>
 			   	<div class="col-sm-10">
 			        <input type="text" class="form-control" v-model="portalDataSource.connectionTag" placeholder="1,从连接池获取连接。2新建数据库连接（目前只有一个连接池，其他都为2）"/>
 			    </div>
-			</div>
+			</div>-->
 			<div class="form-group">
 			   	<div class="col-sm-2 control-label">说明</div>
-			   	<div class="col-sm-10">
-			        <input type="text" class="form-control" v-model="portalDataSource.remark" placeholder="说明"/>
-			    </div>
-			</div>
-			<div class="form-group">
-			   	<div class="col-sm-2 control-label">创建人</div>
-			   	<div class="col-sm-10">
-			        <input type="text" class="form-control" v-model="portalDataSource.creater" placeholder="创建人"/>
-			    </div>
-			</div>
-			<div class="form-group">
-			   	<div class="col-sm-2 control-label">创建时间</div>
-			   	<div class="col-sm-10">
-			        <input type="text" class="form-control" v-model="portalDataSource.createTime" placeholder="创建时间"/>
-			    </div>
-			</div>
-			<div class="form-group">
-			   	<div class="col-sm-2 control-label">修改人</div>
-			   	<div class="col-sm-10">
-			        <input type="text" class="form-control" v-model="portalDataSource.modifier" placeholder="修改人"/>
-			    </div>
-			</div>
-			<div class="form-group">
-			   	<div class="col-sm-2 control-label">修改时间</div>
-			   	<div class="col-sm-10">
-			        <input type="text" class="form-control" v-model="portalDataSource.modifyTime" placeholder="修改时间"/>
-			    </div>
-			</div>
-			<div class="form-group">
-			   	<div class="col-sm-2 control-label">启用,禁用(0启用，1禁用)</div>
-			   	<div class="col-sm-10">
-			        <input type="text" class="form-control" v-model="portalDataSource.disabled" placeholder="启用,禁用(0启用，1禁用)"/>
-			    </div>
-			</div>
-			<div class="form-group">
-			   	<div class="col-sm-2 control-label">版本号</div>
-			   	<div class="col-sm-10">
-			        <input type="text" class="form-control" v-model="portalDataSource.version" placeholder="版本号"/>
-			    </div>
+				<div class="col-sm-10">
+					<textarea class="form-control" v-model="portalDataSource.remark" placeholder="说明"></textarea>
+				</div>
 			</div>
 			<div class="form-group">
 				<div class="col-sm-2 control-label"></div> 

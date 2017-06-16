@@ -32,4 +32,9 @@ public class EveryDayHorseRacingServiceImpl implements EveryDayHorseRacingServic
     public List<EveryDayHorseRacingNew> shopHorse(Map<String, Object> map) {
         return everyDayHorseRacingMapper.shopHorse(map);
     }
+
+    //商行赛马指标明细下载
+    public List<Map<String, Object>> groupHorse(String sdate){
+       return everyDayHorseRacingMapper.groupHorse(sdate);
+    }
 }

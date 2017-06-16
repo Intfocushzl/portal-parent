@@ -1,6 +1,7 @@
 package com.yonghui.portal.model.report;
 
 import com.yonghui.portal.model.base.AuditAuto;
+import com.yonghui.portal.util.report.columns.Children;
 
 /**
  * @author zhanghai
@@ -11,8 +12,8 @@ public class ReportMeasureRelation extends AuditAuto {
 
     //报表唯一编码
     private String reportcode;
-    //父id
-    private String parentid;
+    //父节点编号
+    private Long parentid;
     //是否子节点，0不是，1是
     private String isleaf;
     //id层级
@@ -29,6 +30,65 @@ public class ReportMeasureRelation extends AuditAuto {
     private String themename;
     //
     private String unittype;
+    //标题每行列数
+    private int childrenCount = 0;
+    //节点层次（标题行数）
+    private int lineCount = 1;
+
+    /**
+     * 孩子节点列表
+     */
+    private Children children = new Children();
+
+    // 先序遍历，拼接JSON字符串
+    public String toString() {
+        String result = "";
+        if (getId() == 0 || getParentid() == -1) {
+            // 根节点
+            result = "{"
+                    + "content : '报表标题'"
+                    + ", lineCount : '" + getLineCount() + "'"
+                    + ", childrenCount : '" + getChildrenCount() + "'";
+        } else {
+            // 标题
+            result = "{"
+                    + "id : '" + getId() + "'"
+                    + ", parentid : '" + getParentid() + "'"
+                    + ", zindex : '" + getLineCount() + "'"
+                    + ", treecode : '" + getTreecode() + "'"
+                    + ", sortid : '" + getSortid() + "'"
+                    + ", measurelab : '" + getMeasurelab() + "'"
+                    + ", measurename : '" + getMeasurename() + "'"
+                    + ", childrenCount : '" + getChildrenCount() + "'";
+        }
+        if (children != null && children.getSize() != 0) {
+            result += ", isleaf : false";
+            result += ", children : " + children.toString();
+        } else {
+            result += ", isleaf : true";
+        }
+
+        return result + "}";
+    }
+
+    /**
+     * 兄弟节点横向排序
+     */
+    public void sortChildren() {
+        if (children != null && children.getSize() != 0) {
+            // 排序
+            children.sortChildren();
+        }
+    }
+
+    /**
+     * 添加孩子节点
+     *
+     * @param node
+     */
+    public void addChild(ReportMeasureRelation node) {
+        this.children.addChild(node);
+    }
 
     /**
      * 设置：报表唯一编码
@@ -47,14 +107,14 @@ public class ReportMeasureRelation extends AuditAuto {
     /**
      * 设置：父id
      */
-    public void setParentid(String parentid) {
+    public void setParentid(Long parentid) {
         this.parentid = parentid;
     }
 
     /**
      * 获取：父id
      */
-    public String getParentid() {
+    public Long getParentid() {
         return parentid;
     }
 
@@ -170,4 +230,27 @@ public class ReportMeasureRelation extends AuditAuto {
         return unittype;
     }
 
+    public Children getChildren() {
+        return children;
+    }
+
+    public void setChildren(Children children) {
+        this.children = children;
+    }
+
+    public int getLineCount() {
+        return lineCount;
+    }
+
+    public void setLineCount(int lineCount) {
+        this.lineCount = lineCount;
+    }
+
+    public int getChildrenCount() {
+        return childrenCount;
+    }
+
+    public void setChildrenCount(int childrenCount) {
+        this.childrenCount = childrenCount;
+    }
 }

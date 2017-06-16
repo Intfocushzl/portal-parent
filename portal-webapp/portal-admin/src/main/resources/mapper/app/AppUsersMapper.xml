@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.yonghui.portal.mapper.app.AppUsersMapper">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap id="appUsersMap" type="com.yonghui.portal.model.app.AppUsers">
+        <result property="id" column="id"/>
+        <result property="userName" column="user_name"/>
+        <result property="userNum" column="user_num"/>
+        <result property="email" column="email"/>
+        <result property="mobile" column="mobile"/>
+        <result property="tel" column="tel"/>
+        <result property="joinDate" column="join_date"/>
+        <result property="position" column="position"/>
+        <result property="deptId" column="dept_id"/>
+        <result property="deptName" column="dept_name"/>
+        <result property="activeFlag" column="active_flag"/>
+        <result property="createUser" column="create_user"/>
+        <result property="updateUser" column="update_user"/>
+        <result property="memo" column="memo"/>
+        <result property="loadTime" column="load_time"/>
+        <result property="createdAt" column="created_at"/>
+        <result property="updatedAt" column="updated_at"/>
+        <result property="lastLoginAt" column="last_login_at"/>
+        <result property="lastLoginIp" column="last_login_ip"/>
+        <result property="lastLoginBrowser" column="last_login_browser"/>
+        <result property="signInCount" column="sign_in_count"/>
+        <result property="lastLoginVersion" column="last_login_version"/>
+        <result property="accessToken" column="access_token"/>
+        <result property="storeIds" column="store_ids"/>
+    </resultMap>
+
+	<select id="queryObject" resultType="com.yonghui.portal.model.app.AppUsers">
+		select * from appauthority.sys_users where id = #{value}
+	</select>
+
+	<select id="queryList" resultType="com.yonghui.portal.model.app.AppUsers">
+		select * from appauthority.sys_users
+        <where>
+            <if test="id != null and id !=''">
+                and id = #{id}
+            </if>
+            <if test="userName != null and userName !=''">
+                and user_name like concat('%',#{userName},'%')
+            </if>
+			<if test="userNum != null and userNum !=''">
+				and user_num like concat('%',#{userNum},'%')
+			</if>
+        </where>
+        <choose>
+            <when test="sidx != null and sidx.trim() != ''">
+                order by ${sidx} ${order}
+            </when>
+			<otherwise>
+                order by id desc
+			</otherwise>
+        </choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="queryTotal" resultType="int">
+		select count(*) from appauthority.sys_users
+        <where>
+            <if test="id != null and id !=''">
+                and id = #{id}
+            </if>
+            <if test="userName != null and userName !=''">
+                and user_name like concat('%',#{userName},'%')
+            </if>
+        </where>
+	</select>
+
+    <insert id="save" parameterType="com.yonghui.portal.model.app.AppUsers" useGeneratedKeys="true" keyProperty="id">
+		insert into appauthority.sys_users
+		(
+			`user_name`, 
+			`user_num`, 
+			`email`,
+			`mobile`, 
+			`tel`, 
+			`join_date`, 
+			`position`, 
+			`dept_id`, 
+			`dept_name`, 
+			`active_flag`, 
+			`create_user`, 
+			`memo`,
+			`load_time`, 
+			`created_at`, 
+			`last_login_at`,
+			`last_login_ip`, 
+			`last_login_browser`, 
+			`sign_in_count`, 
+			`last_login_version`, 
+			`access_token`, 
+			`store_ids`
+		)
+		values
+		(
+			#{userName}, 
+			#{userNum}, 
+			#{email},
+			#{mobile}, 
+			#{tel}, 
+			#{joinDate}, 
+			#{position}, 
+			#{deptId}, 
+			#{deptName}, 
+			#{activeFlag}, 
+			#{createUser}, 
+			#{memo},
+			#{loadTime}, 
+			now(),
+			#{lastLoginAt},
+			#{lastLoginIp}, 
+			#{lastLoginBrowser}, 
+			#{signInCount}, 
+			#{lastLoginVersion}, 
+			#{accessToken}, 
+			#{storeIds}
+		)
+	</insert>
+
+    <update id="update" parameterType="com.yonghui.portal.model.app.AppUsers">
+        update appauthority.sys_users
+        <set>
+			<if test="userName != null">`user_name` = #{userName}, </if>
+			<if test="userNum != null">`user_num` = #{userNum}, </if>
+			<if test="email != null">`email` = #{email}, </if>
+			<if test="mobile != null">`mobile` = #{mobile}, </if>
+			<if test="tel != null">`tel` = #{tel}, </if>
+			<if test="joinDate != null">`join_date` = #{joinDate}, </if>
+			<if test="position != null">`position` = #{position}, </if>
+			<if test="deptId != null">`dept_id` = #{deptId}, </if>
+			<if test="deptName != null">`dept_name` = #{deptName}, </if>
+			<if test="activeFlag != null">`active_flag` = #{activeFlag}, </if>
+			<if test="updateUser != null">`update_user` = #{updateUser}, </if>
+			<if test="memo != null">`memo` = #{memo}, </if>
+			<if test="loadTime != null">`load_time` = #{loadTime}, </if>
+			<if test="lastLoginAt != null">`last_login_at` = #{lastLoginAt}, </if>
+			<if test="lastLoginIp != null">`last_login_ip` = #{lastLoginIp}, </if>
+			<if test="lastLoginBrowser != null">`last_login_browser` = #{lastLoginBrowser}, </if>
+			<if test="signInCount != null">`sign_in_count` = #{signInCount}, </if>
+			<if test="lastLoginVersion != null">`last_login_version` = #{lastLoginVersion}, </if>
+			<if test="accessToken != null">`access_token` = #{accessToken}, </if>
+			<if test="storeIds != null">`store_ids` = #{storeIds},</if>
+			`updated_at` = now()
+        </set>
+        where id = #{id}
+    </update>
+	
+	<delete id="delete">
+		delete from appauthority.sys_users where id = #{value}
+	</delete>
+	
+	<delete id="deleteBatch">
+		delete from appauthority.sys_users where id in
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+</mapper>

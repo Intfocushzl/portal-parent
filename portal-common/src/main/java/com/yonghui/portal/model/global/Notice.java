@@ -15,14 +15,23 @@ public class Notice implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private Long id;
+	//标题
 	private String title;
+	//简介
 	private String introduction;
+	//内容
 	private String content;
+	//发布人
 	private Integer userid;
+	//新建时间
 	private String createtime;
+	//修改时间
 	private String updatetime;
+	//位置
 	private Integer position;
+	//是否隐藏，0：显示;1:隐藏
 	private Integer ishide;
+
 	private String month;
 	private String day;
 

@@ -66,9 +66,10 @@ public class HorseExcelUtil {
                         throw new Exception("填写的数据含有空值");
                     }
                     // 判断是否全部是数字
-                    boolean isNum = StringUtils.isNumeric(cell.getStringCellValue().trim());
-                    if (!isNum) {
-                        throw new Exception("表格中有非数字的数据");
+                    try {
+                        isNumber(cell.getStringCellValue().trim());
+                    } catch (Exception e) {
+                        throw new Exception("填写的数据含有非法字符");
                     }
                     if (c == 0) {
                         if (cell.getStringCellValue().trim().length() != 6) {
@@ -102,7 +103,7 @@ public class HorseExcelUtil {
         // 得到Excel的行数
         int totalRows = sheet.getLastRowNum();// 所有行
         // 得到Excel的最大的一列(前提是有行数)
-        if (totalRows >= 2 && sheet.getRow(0) != null) {
+        if (totalRows >= 1 && sheet.getRow(0) != null) {
             this.totalCells = sheet.getRow(0).getPhysicalNumberOfCells();
         } else {
             throw new Exception("请按照模板填写数据后上传");
@@ -128,14 +129,18 @@ public class HorseExcelUtil {
                     // 判断是否为空
                     boolean isNull = StringUtils.isEmpty(cell.getStringCellValue().trim());
                     if (isNull) {
-                        throw new Exception("填写的数据含有空值");
+                        throw new Exception("填写的数据含有空值！！" + "第" + r + "行" + (c + 1) + "列有空值");
                     }
                     // 判断是否全部是数字
-                    boolean isNum = StringUtils.isNumeric(cell.getStringCellValue().trim());
-                    if (!isNum) {
-                        throw new Exception("填写的数据含有非法字符");
+                    try {
+                        isNumber(cell.getStringCellValue().trim());
+                    } catch (Exception e) {
+                        throw new Exception("表格中有非数字的数据！！" + "第" + r + "行" + (c + 1) + "列有非数字的数据");
                     }
                     if (c == 0) {
+                        if (cell.getStringCellValue().trim().length() != 6) {
+                            throw new Exception("请填写正确的六位数日期，例如201704！！" + "第" + r + "行" + c + "列有空值");
+                        }
                         pay.setSdate(cell.getStringCellValue().trim());
                     } else if (c == 1) {
                         pay.setSapshopid(cell.getStringCellValue().trim());
@@ -146,11 +151,17 @@ public class HorseExcelUtil {
                     } else if (c == 4) {
                         pay.setNumber(Double.valueOf(cell.getStringCellValue().trim()));
                     }
+                } else {
+                    throw new Exception("填写的数据含有空值！！" + "第" + r + "行" + (c + 1) + "列有空值");
                 }
             }
             // 添加数据
             payTruely.add(pay);
         }
         return payTruely;
+    }
+
+    public Double isNumber(String str) {
+        return Double.parseDouble(str);
     }
 }

@@ -7,11 +7,13 @@ import com.yonghui.portal.service.report.PortalDataSourceService;
 import com.yonghui.portal.util.PageUtils;
 import com.yonghui.portal.util.Query;
 import com.yonghui.portal.util.R;
+import com.yonghui.portal.utils.ShiroUtils;
 import com.yonghui.portal.utils.redis.RedisBizUtilAdmin;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -63,6 +65,7 @@ public class PortalDataSourceController extends AbstractController {
     @RequestMapping("/save")
     @RequiresPermissions("portaldatasource:save")
     public R save(@RequestBody PortalDataSource portalDataSource){
+        portalDataSource.setCreater(ShiroUtils.getUserEntity().getUserId());
 		portalDataSourceService.save(portalDataSource);
         redisBizUtilAdmin.setPortalDataSource(portalDataSource.getCodeOld(), portalDataSource.getCode(), JSONObject.toJSONString(portalDataSource));
         return R.success();
@@ -74,6 +77,7 @@ public class PortalDataSourceController extends AbstractController {
     @RequestMapping("/update")
     @RequiresPermissions("portaldatasource:update")
     public R update(@RequestBody PortalDataSource portalDataSource){
+        portalDataSource.setCreater(ShiroUtils.getUserEntity().getUserId());
 		portalDataSourceService.update(portalDataSource);
         redisBizUtilAdmin.setPortalDataSource(portalDataSource.getCodeOld(), portalDataSource.getCode(), JSONObject.toJSONString(portalDataSource));
         return R.success();
@@ -88,6 +92,24 @@ public class PortalDataSourceController extends AbstractController {
         portalDataSourceService.deleteBatchByCodes(codes);
         for (String c:codes) {
             redisBizUtilAdmin.removePortalDataSource(c);
+        }
+        return R.success();
+    }
+
+    @RequestMapping("/dataSourceList")
+    @ResponseBody
+    public R dataSourceList(){
+        Map<String,Object> map = new HashMap<>();
+        List<PortalDataSource> portalDataSourceList = portalDataSourceService.queryList(map);
+        return R.success().put("dataSourceList",portalDataSourceList);
+    }
+
+    //一键缓存
+    @RequestMapping("/addRedis")
+    public R addRedis(@RequestBody String[] codes){
+        for (String code:codes) {
+            PortalDataSource portalDataSource = portalDataSourceService.queryObjectByCode(code);
+            redisBizUtilAdmin.setPortalDataSource(code, code, JSONObject.toJSONString(portalDataSource));
         }
         return R.success();
     }

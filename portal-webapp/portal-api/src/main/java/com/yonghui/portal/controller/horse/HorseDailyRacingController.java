@@ -7,6 +7,7 @@ import com.yonghui.portal.model.horse.EveryDayHorseRacingNew;
 import com.yonghui.portal.service.horse.EveryDayHorseRacingService;
 import com.yonghui.portal.util.R;
 import com.yonghui.portal.util.YhJsonUtils;
+import com.yonghui.portal.util.horse.groupHorseExport;
 import com.yonghui.portal.util.horse.horseDailyRacingExport;
 import org.apache.log4j.Logger;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
@@ -140,4 +141,27 @@ public class HorseDailyRacingController {
             log.error("导出excel异常", e);
         }
     }
+
+
+    @RequestMapping(value = "groupHorseExcel", method = RequestMethod.GET)
+    public void groupHorseExcel(HttpServletRequest req, HttpServletResponse response , String sdate) {
+        response.setHeader("Access-Control-Allow-Origin", "*");
+        response.setContentType("text/html;charset=UTF-8");
+
+        try {
+            List<Map<String, Object>> list = everyDayHorseRacingService.groupHorse(sdate);
+            groupHorseExport export = new groupHorseExport();
+            HSSFWorkbook workbook = export.exportByHydBudget(list);
+            String filename = "groupHorseExcel.xls";
+            response.setContentType("application/x-msdownload");
+            response.setHeader("Content-disposition", "attachment;filename=" + filename);
+            OutputStream ouputStream = response.getOutputStream();
+            workbook.write(ouputStream);
+            ouputStream.flush();
+            ouputStream.close();
+        } catch (Exception e) {
+            log.error("导出excel异常", e);
+        }
+    }
+
 }

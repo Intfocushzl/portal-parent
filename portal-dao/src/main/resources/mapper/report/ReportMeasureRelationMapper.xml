@@ -38,6 +38,9 @@
             <if test="remark != null and remark !=''">
                 and remark like concat('%',#{remark},'%')
             </if>
+            <if test="reportcode != null and reportcode !=''">
+                and reportcode = #{reportcode}
+            </if>
         </where>
         <choose>
             <when test="sidx != null and sidx.trim() != ''">
@@ -50,6 +53,10 @@
         <if test="offset != null and limit != null">
             limit #{offset}, #{limit}
         </if>
+    </select>
+
+    <select id="queryListByReportCode" resultType="com.yonghui.portal.model.report.ReportMeasureRelation">
+        select * from report_measure_relation where reportcode = #{reportcode} order by sortid asc
     </select>
 
     <select id="queryTotal" resultType="int">

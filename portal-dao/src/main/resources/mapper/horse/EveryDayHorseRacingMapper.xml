@@ -158,4 +158,9 @@
         call saima.daily_score_mx(#{sapshopid},#{group_id})
     </select>
 
+    <!--商行赛马指标明细下载-->
+    <select id="groupHorse" resultType="Map" parameterType="String">
+        select * from saima.data_basic_group a where a.sdate=#{sdate}
+    </select>
+
 </mapper>

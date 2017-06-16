@@ -7,10 +7,12 @@ $(function () {
             {label: 'id', name: 'id', index: 'id', width: 50, hidden: true },
             {label: '编码', name: 'procode', index: 'procode', width: 80, key: true },
             {label: '标题', name: 'title', index: 'title', width: 80 },
-            {label: '数据源编码', name: 'dataSourceCode', index: 'data_source_code', width: 80 },
-            {label: '存储过程名称', name: 'proname', index: 'proname', width: 80 },
-            {label: '执行参数，格式如aa@@bb@@cc', name: 'parameter', index: 'parameter', width: 80 },
-            {label: '数据库', name: 'prodb', index: 'prodb', width: 80 }
+            {label: '数据源编码', name: 'data_source_code', index: 'data_source_code', width: 80 },
+            {label: '存储过程名', name: 'proname', index: 'proname', width: 80 },
+            /*{label: '执行参数', name: 'parameter', index: 'parameter', width: 80 },*/
+            {label: '数据库', name: 'prodb', index: 'prodb', width: 80 },
+            {label: '创建人', name: 'username', index: 'username', width: 80 },
+            {label: '创建时间', name: 'create_time', index: 'create_time', width: 80 },
         ],
         viewrecords: true,     // 是否显示行号，默认值是false，不显示
         height: 385,            // 表格高度
@@ -54,7 +56,7 @@ var vm = new Vue({
             $("#jqGrid").jqGrid('setGridParam', {
                 postData: {
                     procode: vm.portalProcedure.procode,
-                    remark: vm.portalProcedure.remark
+                    title: vm.portalProcedure.title
                 },
                 page: 1
             }).trigger("reloadGrid");
@@ -63,6 +65,8 @@ var vm = new Vue({
             vm.showList = false;
             vm.title = "新增";
             vm.portalProcedure = {};
+            vm.getDataSourceList();
+            $("input[name='code']").removeAttr("readonly");
         },
         update: function (event) {
             var procode = getSelectedRow();
@@ -72,10 +76,30 @@ var vm = new Vue({
             vm.showList = false;
             vm.title = "修改";
 
-            vm.getInfo(procode)
+            vm.getDataSourceList();
+            vm.getInfo(procode);
+            $("input[name='code']").attr("readonly","readonly");
         },
         saveOrUpdate: function (event) {
+            var code = vm.portalProcedure.procode;
+            var id = vm.portalProcedure.id;
             var url = vm.portalProcedure.id == null ? "../portalprocedure/save" : "../portalprocedure/update";
+            if(id == null){
+                $.get("../portalprocedure/info/"+code,function(r){
+                    console.log(r);
+                    if(r.portalProcedure != null){
+                        alert("唯一编码已存在，请重新输入");
+                    }else{
+                        vm.addAndUpdate(url);
+                    }
+                })
+            }else{
+                vm.addAndUpdate(url);
+            }
+        },
+        addAndUpdate:function (url) {
+            var url = vm.portalProcedure.id == null ? "../portalprocedure/save" : "../portalprocedure/update";
+            vm.portalProcedure.dataSourceCode  = $("#dataList").val();
             $.ajax({
                 type: "POST",
                 url: url,
@@ -84,7 +108,7 @@ var vm = new Vue({
                     if(r.code === 0){
                         alert('操作成功', function(index){
                             vm.reload();
-                     });
+                        });
                     }else{
                         alert(r.msg);
                     }
@@ -120,12 +144,40 @@ var vm = new Vue({
                 vm.portalProcedure.procodeOld = vm.portalProcedure.procode;
             });
         },
+        getDataSourceList:function(){
+            $("#dataList").empty();
+            $.get("../portaldatasource/dataSourceList/", function(r){
+                for(var i = 0;i < r.dataSourceList.length;i++){
+                    $("#dataList").append("<option value='"+r.dataSourceList[i].code+"'>"+r.dataSourceList[i].code+"<===>"+r.dataSourceList[i].title+"</option>");
+                }
+            });
+        },
         reload: function (event) {
             vm.showList = true;
             var page = $("#jqGrid").jqGrid('getGridParam','page');
             $("#jqGrid").jqGrid('setGridParam',{
                 page:page
             }).trigger("reloadGrid");
+        },
+        addRedis: function () {
+            var codes = getSelectedRows();
+            if(codes == null){
+                return ;
+            }
+            $.ajax({
+                type:"POST",
+                url:"../portalprocedure/addRedis",
+                data: JSON.stringify(codes),
+                success: function(r){
+                    if(r.code == 0){
+                        alert('操作成功', function(index){
+                            $("#jqGrid").trigger("reloadGrid");
+                        });
+                    }else{
+                        alert(r.msg);
+                    }
+                }
+            });
         }
     }
 });

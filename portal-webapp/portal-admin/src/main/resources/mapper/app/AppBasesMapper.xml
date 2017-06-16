@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.yonghui.portal.mapper.app.AppBasesMapper">
+	<!-- 可根据自己的需求，是否要使用 -->
+	<resultMap id="appBasesMap" type="com.yonghui.portal.model.app.AppMenu">
+		<result property="id" column="id"/>
+		<result property="menuId" column="menuId"/>
+		<result property="name" column="name"/>
+		<result property="subName" column="subName"/>
+		<result property="url" column="url"/>
+		<result property="createUser" column="create_user"/>
+		<result property="updateUser" column="update_user"/>
+		<result property="updateAt" column="update_at"/>
+		<result property="memo" column="memo"/>
+		<result property="loadTime" column="load_time"/>
+		<result property="createdAt" column="created_at"/>
+		<result property="updatedAt" column="updated_at"/>
+		<result property="groupOrder" column="group_order"/>
+		<result property="itemOrder" column="item_order"/>
+		<result property="type" column="type"/>
+	</resultMap>
+
+	<select id="queryObject" resultType="com.yonghui.portal.model.app.AppMenu">
+		select
+		`group_id` as menuId,
+		`group_name` as `name`,
+		`name` as subName,
+		`url_path` as url,
+		`create_user`,
+		`update_user`,
+		`update_at`,
+		`memo`,
+		`load_time`,
+		`created_at`,
+		`updated_at`,
+		`group_order`,
+		`item_order`,
+		3 as type
+		from appauthority.app_bases where group_id = #{value}
+	</select>
+
+	<select id="queryList" resultType="com.yonghui.portal.model.app.AppMenu">
+		select
+		`group_id` as menuId,
+		`group_name` as `name`,
+		`name` as subName,
+		`url_path` as url,
+		`create_user`,
+		`update_user`,
+		`update_at`,
+		`memo`,
+		`load_time`,
+		`created_at`,
+		`updated_at`,
+		`group_order`,
+		`item_order`,
+		3 as type
+		from appauthority.app_bases
+		<where>
+			<if test="menuId != null and menuId !=''">
+				and group_id = #{menuId}
+			</if>
+			<if test="name != null and name !=''">
+				and `name` like concat('%',#{name},'%')
+			</if>
+			<if test="subName != null and subName !=''">
+				and group_name like concat('%',#{subName},'%')
+			</if>
+		</where>
+		<choose>
+			<when test="sidx != null and sidx.trim() != ''">
+				order by ${sidx} ${order}
+			</when>
+			<otherwise>
+				order by id ASC
+			</otherwise>
+		</choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+
+	<select id="queryTotal" resultType="int">
+		select count(*) from appauthority.app_bases
+		<where>
+			<if test="menuId != null and menuId !=''">
+				and group_id = #{menuId}
+			</if>
+			<if test="name != null and name !=''">
+				and `name` like concat('%',#{name},'%')
+			</if>
+			<if test="subName != null and subName !=''">
+				and group_name like concat('%',#{subName},'%')
+			</if>
+		</where>
+	</select>
+
+	<insert id="save" parameterType="com.yonghui.portal.model.app.AppMenu">
+		insert into appauthority.app_bases
+		(
+		`group_id`,
+		`group_name`,
+		`name`,
+		`url_path`,
+		`create_user`,
+		`memo`,
+		`load_time`,
+		`created_at`,
+		`group_order`,
+		`item_order`
+		)
+		values
+		(
+		#{menuId},
+		#{subName},
+		#{name},
+		#{url},
+		#{createUser},
+		#{memo},
+		#{loadTime},
+		now(),
+		#{groupOrder},
+		#{itemOrder}
+		)
+	</insert>
+
+	<update id="update" parameterType="com.yonghui.portal.model.app.AppMenu">
+		update appauthority.app_bases
+		<set>
+			<if test="subName != null">`group_name` = #{subName},</if>
+			<if test="name != null">`name` = #{name},</if>
+			<if test="url != null">`url_path` = #{url},</if>
+			<if test="updateUser != null">`update_user` = #{updateUser},</if>
+			<if test="memo != null">`memo` = #{memo},</if>
+			<if test="loadTime != null">`load_time` = #{loadTime},</if>
+			<if test="groupOrder != null">`group_order` = #{groupOrder},</if>
+			<if test="itemOrder != null">`item_order` = #{itemOrder}</if>
+			`update_at` = #{updateAt}
+		</set>
+		where group_id = #{menuId}
+	</update>
+
+	<delete id="delete">
+		delete from appauthority.app_bases where group_id = #{value}
+	</delete>
+
+	<delete id="deleteBatch">
+		delete from appauthority.app_bases where group_id in
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+
+</mapper>

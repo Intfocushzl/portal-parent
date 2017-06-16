@@ -17,6 +17,14 @@ public interface ReportMeasureRelationService {
 
     List<ReportMeasureRelation> queryList(Map<String, Object> map);
 
+    /**
+     * 根据报表编码获取所有列
+     *
+     * @param reportcode
+     * @return
+     */
+    List<ReportMeasureRelation> queryListByReportCode(String reportcode);
+
     int queryTotal(Map<String, Object> map);
 
     void save(ReportMeasureRelation reportMeasureRelation);
@@ -26,4 +34,5 @@ public interface ReportMeasureRelationService {
     void delete(Long id);
 
     void deleteBatch(Long[] ids);
+
 }

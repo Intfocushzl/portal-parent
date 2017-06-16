@@ -54,6 +54,7 @@
         <commonpool-version>2.3</commonpool-version>
         <fasterxml.jackson.version>2.8.5</fasterxml.jackson.version>
         <quartz-version>2.2.3</quartz-version>
+        <jsch-version>0.1.51</jsch-version>
     </properties>
 
     <build>

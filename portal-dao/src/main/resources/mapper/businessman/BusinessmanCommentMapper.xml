@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.yonghui.portal.mapper.businessman.BusinessmanCommentMapper">
+
+    <!-- 可根据自己的需求，是否要使用 -->
+    <resultMap id="businessmanCommentMap" type="com.yonghui.portal.model.businessman.BusinessmanComment">
+        <result property="id" column="id"/>
+        <result property="userId" column="user_id"/>
+        <result property="acticleId" column="acticle_id"/>
+        <result property="content" column="content"/>
+        <result property="remark" column="REMARK"/>
+        <result property="creater" column="CREATER"/>
+        <result property="createTime" column="CREATE_TIME"/>
+        <result property="modifier" column="MODIFIER"/>
+        <result property="modifyTime" column="MODIFY_TIME"/>
+        <result property="disabled" column="DISABLED"/>
+        <result property="version" column="VERSION"/>
+    </resultMap>
+
+    <select id="queryObject" resultType="com.yonghui.portal.model.businessman.BusinessmanComment">
+		select * from businessman_comment where id = #{value}
+	</select>
+
+    <select id="queryList" resultType="com.yonghui.portal.model.businessman.BusinessmanComment">
+        select * from businessman_comment
+        <where>
+            <if test="id != null and id !=''">
+                and id like concat('%',#{id},'%')
+            </if>
+            <if test="remark != null and remark !=''">
+                and remark like concat('%',#{remark},'%')
+            </if>
+        </where>
+        <choose>
+            <when test="sidx != null and sidx.trim() != ''">
+                order by ${sidx} ${order}
+            </when>
+            <otherwise>
+                order by id desc
+            </otherwise>
+        </choose>
+        <if test="offset != null and limit != null">
+            limit #{offset}, #{limit}
+        </if>
+    </select>
+
+    <select id="queryTotal" resultType="int">
+        select count(*) from businessman_comment
+        <where>
+            <if test="id != null and id !=''">
+                and id = #{id}
+            </if>
+            <if test="remark != null and remark !=''">
+                and remark like concat('%',#{remark},'%')
+            </if>
+        </where>
+    </select>
+
+    <insert id="save" parameterType="com.yonghui.portal.model.businessman.BusinessmanComment" useGeneratedKeys="true"
+            keyProperty="id">
+		insert into businessman_comment
+		(
+		`user_id`,
+		`acticle_id`,
+		`content`,
+		`REMARK`,
+		`CREATER`,
+		`CREATE_TIME`,
+		`MODIFIER`,
+		`MODIFY_TIME`,
+		`DISABLED`,
+		`VERSION`
+		)
+		values
+		(
+		#{userId},
+		#{acticleId},
+		#{content},
+		#{remark},
+		#{creater},
+		#{createTime},
+		#{modifier},
+		NOW(),
+		#{disabled},
+		#{version}
+		)
+	</insert>
+
+    <update id="update" parameterType="com.yonghui.portal.model.businessman.BusinessmanComment">
+        update businessman_comment
+        <set>
+            <if test="userId != null">`user_id` = #{userId},</if>
+            <if test="acticleId != null">`acticle_id` = #{acticleId},</if>
+            <if test="content != null">`content` = #{content},</if>
+            <if test="remark != null">`REMARK` = #{remark},</if>
+            <if test="creater != null">`CREATER` = #{creater},</if>
+            <if test="createTime != null">`CREATE_TIME` = #{createTime},</if>
+            <if test="modifier != null">`MODIFIER` = #{modifier},</if>
+            `MODIFY_TIME` = NOW(),
+            <if test="disabled != null">`DISABLED` = #{disabled},</if>
+            <if test="version != null">`VERSION` = #{version}</if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <delete id="delete">
+		delete from businessman_comment where id = #{value}
+	</delete>
+
+    <delete id="deleteBatch">
+        delete from businessman_comment where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+
+    <select id="commentList" resultType="Map" parameterType="Map">
+        select a.user_id as userId , a.content as content , a.CREATE_TIME as createTime from businessman_comment a
+        <where>
+            <if test="id != null and id !=''">
+                and id like concat('%',#{id},'%')
+            </if>
+            <if test="userId != null and userId !=''">
+                and user_id like concat('%',#{userId},'%')
+            </if>
+            <if test="acticleId != null and acticleId !=''">
+                and acticle_id like concat('%',#{acticleId},'%')
+            </if>
+            <if test="remark != null and remark !=''">
+                and remark like concat('%',#{remark},'%')
+            </if>
+        </where>
+        GROUP BY a.CREATE_TIME DESC
+        <choose>
+            <when test="sidx != null and sidx.trim() != ''">
+                order by ${sidx} ${order}
+            </when>
+            <otherwise>
+                order by id desc
+            </otherwise>
+        </choose>
+        <if test="offset != null and limit != null">
+            limit #{offset}, #{limit}
+        </if>
+    </select>
+
+</mapper>

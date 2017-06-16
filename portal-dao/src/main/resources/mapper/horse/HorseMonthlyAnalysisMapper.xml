@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://www.mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yonghui.portal.mapper.horse.HorseMonthlyAnalysisMapper">
+
+
+	<!-- 门店赛马解读 汇总 liuwei -->
+	<select id="totel" resultType="Map" parameterType="Map">
+			call
+			saima.monthly_analysis_hz(#{sdate},#{sapshopid},#{groupid})
+	</select>
+
+
+	<select id="getShopHorseResultAscByList" resultType="com.yonghui.portal.model.horse.HorseSort">
+		call dw.query_theme_sm_analysis('bottom2',date_format(#{lkpDate},'%Y%m'),#{shopId},#{groupId},1)
+	</select>
+
+</mapper>

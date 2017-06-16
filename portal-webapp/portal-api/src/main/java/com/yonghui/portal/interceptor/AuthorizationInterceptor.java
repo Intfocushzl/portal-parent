@@ -4,7 +4,9 @@ import com.alibaba.dubbo.config.annotation.Reference;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.yonghui.portal.annotation.IgnoreAuth;
+import com.yonghui.portal.annotation.OpenAuth;
 import com.yonghui.portal.model.api.TokenApi;
+import com.yonghui.portal.model.report.PortalOpenapiReport;
 import com.yonghui.portal.model.sys.SysOperationLog;
 import com.yonghui.portal.service.global.UserService;
 import com.yonghui.portal.util.*;
@@ -32,7 +34,7 @@ public class AuthorizationInterceptor extends HandlerInterceptorAdapter {
 
     public static final String LOGIN_USER_JOB_NUMBER = "LOGIN_USER_JOB_NUMBER";
 
-    public static final String LOGIN_USER_OPERATION_LOG= "LOGIN_USER_OPERATION_LOG";
+    public static final String LOGIN_USER_OPERATION_LOG = "LOGIN_USER_OPERATION_LOG";
 
     @Reference
     private UserService userService;
@@ -44,14 +46,66 @@ public class AuthorizationInterceptor extends HandlerInterceptorAdapter {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         IgnoreAuth annotation;
+        OpenAuth openAuthAnnotation;
         if (handler instanceof HandlerMethod) {
             annotation = ((HandlerMethod) handler).getMethodAnnotation(IgnoreAuth.class);
+            openAuthAnnotation = ((HandlerMethod) handler).getMethodAnnotation(OpenAuth.class);
         } else {
             return true;
         }
         // 如果有@IgnoreAuth注解，则不验证token
         if (annotation != null) {
             return true;
+        }
+        //如果有@OpenAuth注解，则校验sign
+        if (openAuthAnnotation != null) {
+            String openApiCode = request.getParameter("openApiCode");
+            String sign = request.getParameter("sign");
+            if (StringUtils.isBlank(openApiCode) || StringUtils.isBlank(sign)) {
+                response.setHeader("Content-type", "text/html;charset=UTF-8");
+                response.getWriter().write(JSON.toJSONString(R.error(ConstantsUtil.ExceptionCode.SIGN_ERROR, "sign不能为空")));
+                return false;
+            }
+            // 从redis中查询key信息
+            String openApiJsonStr = redisBizUtilApi.getPortalOpenApiReport(openApiCode);
+            PortalOpenapiReport portalOpenapiReport = null;
+            if (StringUtils.isBlank(openApiJsonStr)) {
+                response.setHeader("Content-type", "text/html;charset=UTF-8");
+                response.getWriter().write(JSON.toJSONString(R.error(ConstantsUtil.ExceptionCode.SIGN_ERROR, "sign不存在")));
+                return false;
+            } else {
+                portalOpenapiReport = JSONObject.parseObject(openApiJsonStr, PortalOpenapiReport.class);
+                if (portalOpenapiReport == null || portalOpenapiReport.getKey() == null || portalOpenapiReport.getCode() == null) {
+                    response.setHeader("Content-type", "text/html;charset=UTF-8");
+                    response.getWriter().write(JSON.toJSONString(R.error(ConstantsUtil.ExceptionCode.SIGN_ERROR, "sign不存在")));
+                    return false;
+                } else {
+                    //获取请求参数，并转成这种格式“shppID=9318&barcode=2304348000004”,参数为空也要写成“shppID=”这种
+                    String parameter = null;
+                    try {
+                         parameter = HttpContextUtils.getParameterForSign(request,portalOpenapiReport);
+                    } catch (Exception e) {
+                        response.setHeader("Content-type", "text/html;charset=UTF-8");
+                        response.getWriter().write(JSON.toJSONString(R.error(ConstantsUtil.ExceptionCode.SIGN_ERROR, "sign不能为空")));
+                        return false;
+                    }
+                    if (StringUtils.isBlank(parameter)) {
+                        response.setHeader("Content-type", "text/html;charset=UTF-8");
+                        response.getWriter().write(JSON.toJSONString(R.error(ConstantsUtil.ExceptionCode.SIGN_ERROR, "请求参数不能为空")));
+                        return false;
+                    }
+                    Md5Util util = new Md5Util();
+                    //md5加密字符串为：key + parameter + key
+                    String originSign = util.getMd5("MD5", 0, null, portalOpenapiReport.getKey() + parameter + portalOpenapiReport.getKey());
+                    if (!originSign.equals(sign)) {
+                        response.setHeader("Content-type", "text/html;charset=UTF-8");
+                        response.getWriter().write(JSON.toJSONString(R.error(ConstantsUtil.ExceptionCode.SIGN_ERROR, "sign验证失败")));
+                        return false;
+                    } else {
+                        return true;
+                    }
+                }
+            }
         }
         // 从header中获取token
         String token = request.getHeader("token");
@@ -60,19 +114,22 @@ public class AuthorizationInterceptor extends HandlerInterceptorAdapter {
             token = request.getParameter("token");
         }
         if (StringUtils.isBlank(token)) {
-            response.getWriter().write(JSON.toJSONString(ConstantsUtil.ExceptionCode.TO_LOGIN));
+            response.setHeader("Content-type", "text/html;charset=UTF-8");
+            response.getWriter().write(JSON.toJSONString(R.error(ConstantsUtil.ExceptionCode.TO_LOGIN, "token不能为空,请尝试登录")));
             return false;
         }
         // 从redis中查询token信息
         String tokenJsonStr = redisBizUtilApi.getApiToken(token);
         TokenApi tokenApi = null;
         if (StringUtils.isBlank(tokenJsonStr)) {
-            response.getWriter().write(JSON.toJSONString(ConstantsUtil.ExceptionCode.TO_LOGIN));
+            response.setHeader("Content-type", "text/html;charset=UTF-8");
+            response.getWriter().write(JSON.toJSONString(R.error(ConstantsUtil.ExceptionCode.TO_LOGIN, "token不存在，请尝试登录")));
             return false;
         } else {
             tokenApi = JSONObject.parseObject(tokenJsonStr, TokenApi.class);
             if (tokenApi == null || tokenApi.getExpireTime().getTime() < System.currentTimeMillis()) {
-                response.getWriter().write(JSON.toJSONString(ConstantsUtil.ExceptionCode.TO_LOGIN));
+                response.setHeader("Content-type", "text/html;charset=UTF-8");
+                response.getWriter().write(JSON.toJSONString(R.error(ConstantsUtil.ExceptionCode.TO_LOGIN, "token已失效，重新登录")));
                 return false;
             }
         }
@@ -87,7 +144,7 @@ public class AuthorizationInterceptor extends HandlerInterceptorAdapter {
         log.setIp(iputil.getIpAddr(request));
         log.setUrl(request.getRequestURL().toString());
         log.setParameter(HttpContextUtils.getRequestParameter(request));
-        request.setAttribute(LOGIN_USER_OPERATION_LOG,log);
+        request.setAttribute(LOGIN_USER_OPERATION_LOG, log);
         return true;
     }
 

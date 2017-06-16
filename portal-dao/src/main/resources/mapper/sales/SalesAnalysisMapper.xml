@@ -1,0 +1,31 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://www.mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yonghui.portal.mapper.sales.SalesAnalysisMapper">
+    <!-- 门店趋势对比 -->
+    <select id="shopSalesDailyData" parameterType="Map" resultType="Map">
+        CALL orange.query_shop_sale_daily(#{reportLabel},
+        date_format(#{sDate},'%Y%m%d'),#{areaMans},#{shopId},#{groupName},#{className},#{sDate1},#{eDate1})
+    </select>
+
+
+    <!-- 大区趋势对比 -->
+    <select id="areaSalesDailyData" parameterType="Map" resultType="Map">
+        CALL orange.query_area_sale_daily(#{reportLabel},
+        date_format(#{sDate},'%Y%m%d'),#{areaMans},#{shopId},#{groupName},#{className},#{sDate1},#{eDate1})
+    </select>
+
+
+    <!-- 门店趋势对比 -->
+    <select id="shopSalesMonthlyData" parameterType="Map" resultType="Map">
+        CALL orange.query_shop_sale_monthly(#{reportLabel},
+        date_format(#{sDate},'%Y%m%d'),#{areaMans},#{shopId},#{groupName},#{className},#{sDate1},#{eDate1})
+    </select>
+
+
+    <!-- 大区趋势对比 -->
+    <select id="areaSalesMonthlyData" parameterType="Map" resultType="Map">
+        CALL orange.query_area_sale_monthly(#{reportLabel},
+        date_format(#{sDate},'%Y%m%d'),#{areaMans},#{shopId},#{groupName},#{className},#{sDate1},#{eDate1})
+    </select>
+
+</mapper>
