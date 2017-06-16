@@ -80,7 +80,7 @@ public class ApiFavoritesController {
      * @return
      */
     @OpenAuth
-    @RequestMapping(value = "editfavorite" ,  method = RequestMethod.POST)
+    @RequestMapping(value = "editfavorite" ,  method = RequestMethod.GET)
     public R editfavorite(HttpServletRequest req, HttpServletResponse response, @RequestParam Map<String, Object> params) {
         try {
             if (params.get("userId") == null || params.get("acticleId") == null) {
