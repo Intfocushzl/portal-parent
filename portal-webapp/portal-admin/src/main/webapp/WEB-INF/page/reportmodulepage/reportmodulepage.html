@@ -20,15 +20,16 @@
                 <a class="btn btn-primary" @click="query">查询</a>
 
                 #if($shiro.hasPermission("reportmodulepage:save"))
-                <a class="btn btn-primary" @click="add"><i class="fa fa-plus"></i>&nbsp;新增</a>
+                <!--<a class="btn btn-primary" @click="add"><i class="fa fa-plus"></i>&nbsp;新增</a>-->
+                <a class="btn btn-primary" @click="addModule"><i class="fa fa-plus"></i>&nbsp;新增</a>
                 #end
                 #if($shiro.hasPermission("reportmodulepage:update"))
-                <a class="btn btn-primary" @click="update"><i class="fa fa-pencil-square-o"></i>&nbsp;修改</a>
+                <!--<a class="btn btn-primary" @click="update"><i class="fa fa-pencil-square-o"></i>&nbsp;修改</a>-->
+                <a class="btn btn-primary" @click="updateModule"><i class="fa fa-pencil-square-o"></i>&nbsp;修改</a>
                 #end
                 #if($shiro.hasPermission("reportmodulepage:delete"))
                 <a class="btn btn-primary" @click="del"><i class="fa fa-trash-o"></i>&nbsp;删除</a>
                 #end
-                <a class="btn btn-danger" href="report_module.html">模板定义</a>
             </div>
         </div>
         <table id="jqGrid"></table>
