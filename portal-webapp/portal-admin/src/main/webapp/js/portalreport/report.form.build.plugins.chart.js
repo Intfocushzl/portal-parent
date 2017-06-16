@@ -78,6 +78,7 @@ LPB.plugins['chart_line'] = function (active_component, leipiplugins) {
         "config": {
             "chart_type": "line-or-bar",
             "title": "no-set",
+            "dataUrl": "",
             "legend": [],
             "xAxis": [],
             "yAxis": [
@@ -101,6 +102,9 @@ LPB.plugins['chart_line'] = function (active_component, leipiplugins) {
         if (jsonObj.config.title !== undefined) {
             $(popover).find("#chart_config_title").val(jsonObj.config.title);
         }
+        if (jsonObj.config.dataUrl !== undefined) {
+            $(popover).find("#chart_config_data_url").val(jsonObj.config.dataUrl);
+        }
     }
     //右弹form  取消控件
     $(popover).delegate(".btn-danger", "click", function (e) {
@@ -115,6 +119,9 @@ LPB.plugins['chart_line'] = function (active_component, leipiplugins) {
             switch (attr_name) {
                 case 'chart_config_title':
                     jsonObj.config.title = attr_val;
+                    break;
+                case 'chart_config_data_url':
+                    jsonObj.config.dataUrl = attr_val;
                     break;
             }
             active_component.popover("hide");
