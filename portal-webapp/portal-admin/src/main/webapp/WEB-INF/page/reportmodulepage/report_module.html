@@ -19,9 +19,6 @@
           href="${rc.contextPath}/statics/plugins/formbuild/css/bootstrap/css/ie.css?2024">
     <![endif]-->
     <link href="${rc.contextPath}/statics/plugins/formbuild/css/site.css?2024" rel="stylesheet" type="text/css"/>
-    <script type="text/javascript">
-        var _root = 'http://formbuild/index.php?s=/', _controller = 'index';
-    </script>
 
     <style>
 
@@ -203,13 +200,13 @@
         </div>
 
         <!-- 控件 -->
-        #parse("portalreport/portalreport_module_control.html")
+        #parse("reportmodulepage/report_module_control.html")
 
     </div> <!-- row -->
 
 </div> <!-- /container -->
 
-<script src="${rc.contextPath}/js/portalreport/portalreport_module.js?_${date.systemTime}"></script>
+<script src="${rc.contextPath}/js/reportmodulepage/report_module.js?_${date.systemTime}"></script>
 
 <!--使用低版本JQuery更好兼容低版本IE-->
 <script type="text/javascript" charset="utf-8"
@@ -225,11 +222,11 @@
         src="${rc.contextPath}/statics/plugins/formbuild/js/formbuild/leipi.form.build.plugins.js?2024"></script>
 -->
 <script type="text/javascript" charset="utf-8"
-        src="${rc.contextPath}/js/portalreport/report.form.build.plugins.form.js?_${date.systemTime}"></script>
+        src="${rc.contextPath}/js/reportmodulepage/report.form.build.plugins.form.js?_${date.systemTime}"></script>
 <script type="text/javascript" charset="utf-8"
-        src="${rc.contextPath}/js/portalreport/report.form.build.plugins.chart.js?_${date.systemTime}"></script>
+        src="${rc.contextPath}/js/reportmodulepage/report.form.build.plugins.chart.js?_${date.systemTime}"></script>
 <script type="text/javascript" charset="utf-8"
-        src="${rc.contextPath}/js/portalreport/report.form.build.plugins.custom.js?_${date.systemTime}"></script>
+        src="${rc.contextPath}/js/reportmodulepage/report.form.build.plugins.custom.js?_${date.systemTime}"></script>
 
 </body>
 </html>

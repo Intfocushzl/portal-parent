@@ -58,16 +58,6 @@ public class PortalReportController extends AbstractController {
     }
 
     /**
-     * 定义配置信息
-     */
-    @RequestMapping("/module/{code}")
-    @RequiresPermissions("portalreport:module")
-    public R module(@PathVariable("code") String code) {
-        PortalReport portalReport = portalReportService.queryObjectByCode(code);
-        return R.success().put("portalReport", portalReport);
-    }
-
-    /**
      * 保存
      */
     @RequestMapping("/save")
