@@ -147,6 +147,16 @@ var vm = new Vue({
             $("#jqGrid").jqGrid('setGridParam', {
                 page: page
             }).trigger("reloadGrid");
-        }
+        },
+        addModule: function () {
+            window.location.href = "report_module.html?id=";
+        },
+        updateModule: function (event) {
+            var id = getSelectedRow();
+            if (id == null) {
+                return;
+            }
+            window.location.href = "report_module.html?id=" + id;
+        },
     }
 });
