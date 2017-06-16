@@ -1,5 +1,11 @@
 package com.yonghui.portal.util;
 
+
+import com.alibaba.dubbo.common.json.JSON;
+import com.alibaba.fastjson.JSONObject;
+import com.yonghui.portal.model.global.User;
+
+import java.util.Map;
 import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -501,6 +507,17 @@ public class StringUtils {
         return str.substring(0, str.length() - 1);
     }
 
+    public static  String VoFilterToString(String objString) throws Exception{
+        JSONObject jsonObject=JSONObject.parseObject(objString);
+        JSONObject newJsonObject=new JSONObject();
+        for(Map.Entry<String,Object> entry:jsonObject.entrySet()){
+            if (entry.getValue()!=null){
+                newJsonObject.put(entry.getKey(),entry.getValue());
+            }
+        }
+        return  newJsonObject.toJSONString();
+    }
+
     /**
      * 测试封装 存储过程参数，sql语句参数
      *
@@ -529,5 +546,4 @@ public class StringUtils {
         String sqlParameter3 = "category";
         System.out.println(getSqlByParameter(sql3, parameter3, sqlParameter3));
     }*/
-
 }
