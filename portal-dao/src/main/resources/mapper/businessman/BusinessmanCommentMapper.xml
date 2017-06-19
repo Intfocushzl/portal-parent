@@ -18,6 +18,14 @@
         <result property="version" column="VERSION"/>
     </resultMap>
 
+    <update id="updateIsopen" >
+        UPDATE platform.businessman_comment SET DISABLED = #{1} WHERE id = #{0}
+    </update>
+
+    <select id="getListByActicleId" parameterType="Integer" resultType="com.yonghui.portal.model.businessman.BusinessmanComment">
+        SELECT * from platform.businessman_comment WHERE acticle_id = #{id}
+    </select>
+
     <select id="queryObject" resultType="com.yonghui.portal.model.businessman.BusinessmanComment">
 		select * from businessman_comment where id = #{value}
 	</select>

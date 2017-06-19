@@ -20,4 +20,7 @@ public interface BusinessmanFavoritesMapper extends BaseMapper<BusinessmanFavori
     void editfavorite(Map<String, Object> map);
 
     BusinessmanFavorites favoriteDetail(Map<String, Object> map);
+
+    List<BusinessmanFavorites> getListByArticleId(Integer id);
+
 }

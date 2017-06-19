@@ -10,6 +10,7 @@ import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Map;
 
@@ -31,7 +32,7 @@ public class BusinessmanCommentController extends AbstractController {
      */
     @RequestMapping("/list")
     @RequiresPermissions("businessmancomment:list")
-    public R list(@RequestParam Map<String, Object> params){
+    public R list(@RequestParam Map<String, Object> params) {
         //查询列表数据
         Query query = new Query(params);
 
@@ -48,7 +49,7 @@ public class BusinessmanCommentController extends AbstractController {
      */
     @RequestMapping("/info/{id}")
     @RequiresPermissions("businessmancomment:info")
-    public R info(@PathVariable("id") Long id){
+    public R info(@PathVariable("id") Long id) {
         BusinessmanComment businessmanComment = businessmanCommentService.queryObject(id);
         return R.success().put("businessmanComment", businessmanComment);
     }
@@ -58,8 +59,8 @@ public class BusinessmanCommentController extends AbstractController {
      */
     @RequestMapping("/save")
     @RequiresPermissions("businessmancomment:save")
-    public R save(@RequestBody BusinessmanComment businessmanComment){
-		businessmanCommentService.save(businessmanComment);
+    public R save(@RequestBody BusinessmanComment businessmanComment) {
+        businessmanCommentService.save(businessmanComment);
         return R.success();
     }
 
@@ -68,8 +69,8 @@ public class BusinessmanCommentController extends AbstractController {
      */
     @RequestMapping("/update")
     @RequiresPermissions("businessmancomment:update")
-    public R update(@RequestBody BusinessmanComment businessmanComment){
-		businessmanCommentService.update(businessmanComment);
+    public R update(@RequestBody BusinessmanComment businessmanComment) {
+        businessmanCommentService.update(businessmanComment);
         return R.success();
     }
 
@@ -78,9 +79,22 @@ public class BusinessmanCommentController extends AbstractController {
      */
     @RequestMapping("/delete")
     @RequiresPermissions("businessmancomment:delete")
-    public R delete(@RequestBody Long[] ids){
-		businessmanCommentService.deleteBatch(ids);
+    public R delete(@RequestBody Long[] ids) {
+        businessmanCommentService.deleteBatch(ids);
         return R.success();
     }
 
+    @RequestMapping("/getListByActicleId")
+    public R getListByActicleId(@RequestParam Integer id) {
+        List<BusinessmanComment> list = businessmanCommentService.getListByActicleId(id);
+        return R.success().setData(list);
+    }
+
+    @RequestMapping(value = "updateIsopen")
+    public R updateIsopen(HttpServletRequest request) {
+        Integer id = Integer.parseInt(request.getParameter("id"));
+        Integer result = Integer.parseInt(request.getParameter("result"));
+        businessmanCommentService.updateIsopen(id, result);
+        return R.success();
+    }
 }

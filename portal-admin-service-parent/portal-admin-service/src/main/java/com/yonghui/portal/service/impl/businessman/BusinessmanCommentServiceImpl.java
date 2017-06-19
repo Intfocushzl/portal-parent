@@ -49,5 +49,14 @@ public class BusinessmanCommentServiceImpl implements BusinessmanCommentService 
 	public void deleteBatch(Long[] ids){
 		businessmanCommentMapper.deleteBatch(ids);
 	}
-	
+
+	@Override
+	public List<BusinessmanComment> getListByActicleId(Integer id) {
+		return businessmanCommentMapper.getListByActicleId(id);
+	}
+
+	@Override
+	public void updateIsopen(Integer id, Integer status) {
+		businessmanCommentMapper.updateIsopen(id,status);
+	}
 }

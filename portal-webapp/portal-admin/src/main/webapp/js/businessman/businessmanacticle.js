@@ -22,8 +22,9 @@ $(function () {
             {label: '创建时间', name: 'createTime', index: 'CREATE_TIME', width: 80},
             {
                 label: '操作', name: 'operation', with: 100, formatter: function (value, options, row) {
-                return "<span class='label label-success' onclick='vm.logInfo(" + row.id + ")'>阅读日志</span>&nbsp;&nbsp;<span class='label label-success'>收藏</span>" +
-                    "&nbsp;&nbsp;<span class='label label-success'>评论</span>";
+                return "<span class='label label-success' onclick='vm.logInfo(" + row.id + ")'>阅读日志</span>" +
+                    "&nbsp;&nbsp;<span class='label label-success' onclick='vm.collect(" + row.id + ")'>收藏</span>" +
+                    "&nbsp;&nbsp;<span class='label label-success' onclick='vm.comment(" + row.id + ")'>评论</span>";
             }
             }
         ],
@@ -56,50 +57,6 @@ $(function () {
     });
 
 });
-
-
-function logJqGrid(id) {
-    $("#logGqGrid").jqGrid({
-        url: '../businessmanacticlelog/getListByArticleId?id='+id,     // 请求后台json数据的url
-        datatype: "json",                // 后台返回的数据格式
-        // 列表标题及列表模型
-        colModel: [
-            {label: 'ID', name: 'id', index: 'id',key: true},
-            {label: '文章ID', name: 'acticleId', index: 'acticle_id',key: true},
-            {label: '角色编码', name: 'creater', index: 'creater' },
-            {label: '创建时间', name: 'createTime', index: 'CREATE_TIME'},
-        ],
-        viewrecords: true,     // 是否显示行号，默认值是false，不显示
-        height: 100,            // 表格高度
-      //  width: 1000,
-        /* rowNum: 50,             // 一页显示的行记录数
-         rowList: [50, 100],     // 翻页控制条中 每页显示记录数可选集合*/
-        rownumbers: true,
-        /* rownumWidth: 25,*/
-        autowidth: true,
-        autoScroll: true,
-        shrinkToFit: true,
-      /*  multiselect: true,*/
-        /* pager: "#jqGridPager",          // 翻页DOM*/
-        jsonReader: {                   // 重写后台返回数据的属性
-            root: "data"         // 将rows修改为page.list
-            /*page: "page.currPage",      // 将page修改为page.currPage
-             total: "page.totalPage",    // 将total修改为page.totalPage
-             records: "page.totalCount"  // 将records修改为page.totalCount*/
-        },
-        /*  prmNames: {                     // 改写请求参数属性
-         page: "page",
-         rows: "limit",
-         order: "order"
-         },*/
-        gridComplete: function () {
-            // //隐藏grid底部滚动条
-            $("#logGqGrid").closest(".ui-jqgrid-bdiv").css({"overflow-x": "hiden"});
-            // //设置高度
-            // $("#logGqGrid").jqGrid('setGridHeight', getWinH());
-        }
-    });
-}
 
 var vm = new Vue({
     el: '#rrapp',
@@ -214,13 +171,157 @@ var vm = new Vue({
         },
         logInfo: function (id) {
             vm.showList = 3;
-            /*$("#logGqGrid").jqGrid('setGridParam', {
-                id: id
-            }).trigger("reloadGrid");*/
             logJqGrid(id);
+        },
+        collect: function (id) {
+            vm.showList = 4;
+            collectGqGrid(id);
+        },
+        comment: function (id) {
+            vm.showList = 5;
+            commentGqGrid(id);
+        },
+        isopen: function (id, result) {//是否启用
+            $.ajax({
+                type: "POST",
+                url: "../businessmancomment/updateIsopen?id=" + id + "&result=" + result,
+                /*data: {
+                 "id": id,
+                 "result": result
+                 },*/
+                success: function (r) {
+                    if (r.code === 0) {
+                        alert('操作成功', function (index) {
+                            var articleId = $("#commentGqGrid").getCell(1,"acticleId");
+                            console.log(articleId);
+                            commentGqGrid(articleId);
+                        });
+                    } else {
+                        alert(r.msg);
+                    }
+                }
+            });
+        },
+        showDialog: function () {
+            $("#dialog-form").dialog("show");
         }
+
     }
 });
+
+//阅读日志
+function logJqGrid(id) {
+    $("#logGqGrid").jqGrid({
+        url: '../businessmanacticlelog/getListByArticleId?id=' + id,     // 请求后台json数据的url
+        datatype: "json",                // 后台返回的数据格式
+        // 列表标题及列表模型
+        colModel: [
+            {label: 'ID', name: 'id', index: 'id', key: true},
+            {label: '文章ID', name: 'acticleId', index: 'acticle_id', key: true},
+            {label: '角色编码', name: 'creater', index: 'creater'},
+            {label: '创建时间', name: 'createTime', index: 'CREATE_TIME'},
+        ],
+        viewrecords: true,     // 是否显示行号，默认值是false，不显示
+        height: 360,            // 表格高度
+        rownumbers: true,
+        /* rownumWidth: 25,*/
+        autowidth: true,
+        autoScroll: true,
+        shrinkToFit: true,
+        jsonReader: {                   // 重写后台返回数据的属性
+            root: "data"         // 将rows修改为page.list
+        },
+        gridComplete: function () {
+            // //隐藏grid底部滚动条
+            $("#logGqGrid").closest(".ui-jqgrid-bdiv").css({"overflow-x": "hiden"});
+        }
+    });
+}
+//收藏
+function collectGqGrid(id) {
+    $("#collecGqGrid").jqGrid({
+        url: '../businessmanfavorites/getListByArticleId?id=' + id,     // 请求后台json数据的url
+        datatype: "json",                // 后台返回的数据格式
+        // 列表标题及列表模型
+        colModel: [
+            {label: 'ID', name: 'id', index: 'id', key: true},
+            {label: '文章ID', name: 'acticleId', index: 'acticle_id', key: true},
+            {label: '用户ID', name: 'userId', index: 'user_id'},
+            {
+                label: '状态', name: 'status', index: 'status', formatter: function (status) {
+                if (status == 1) {
+                    return "已收藏";
+                } else if (status == 2) {
+                    return "取消收藏";
+                }
+            }
+            },
+            {label: '创建时间', name: 'createTime', index: 'CREATE_TIME'},
+        ],
+        viewrecords: true,     // 是否显示行号，默认值是false，不显示
+        height: 360,            // 表格高度
+        rownumbers: true,
+        /* rownumWidth: 25,*/
+        autowidth: true,
+        autoScroll: true,
+        shrinkToFit: true,
+        jsonReader: {                   // 重写后台返回数据的属性
+            root: "data"         // 将rows修改为page.list
+        },
+        gridComplete: function () {
+            // //隐藏grid底部滚动条
+            $("#collecGqGrid").closest(".ui-jqgrid-bdiv").css({"overflow-x": "hiden"});
+        }
+    });
+}
+//评论
+function commentGqGrid(id) {
+    $("#commentGqGrid").jqGrid({
+        url: '../businessmancomment/getListByActicleId?id=' + id,     // 请求后台json数据的url
+        datatype: "json",                // 后台返回的数据格式
+        // 列表标题及列表模型
+        colModel: [
+            {label: 'ID', name: 'id', index: 'id', key: true},
+            {label: '文章ID', name: 'acticleId', index: 'acticle_id', key: true},
+            {label: '用户ID', name: 'userId', index: 'user_id'},
+            {label: '内容', name: 'content', index: 'content',},
+            {
+                label: '状态', name: 'disabled', index: 'disabled', formatter: function (disabled) {
+                if (disabled == 0) {
+                    return "启用";
+                } else if (disabled == 1) {
+                    return "禁用";
+                }
+            }
+            },
+            {label: '创建时间', name: 'createTime', index: 'CREATE_TIME'},
+            {
+                label: '操作', name: 'operation', formatter: function (value, options, row) {
+                if (row.disabled == 0) {
+                    return "<span class='label label-success' onclick='vm.isopen(" + row.id + "," + 1 + ")'>禁用</span>";
+                } else if (row.disabled == 1) {
+                    return "<span class='label label-success' onclick='vm.isopen(" + row.id + "," + 0 + ")'>启用</span>";
+                }
+            }
+            }
+        ],
+        viewrecords: true,     // 是否显示行号，默认值是false，不显示
+        height: 360,            // 表格高度
+        rownumbers: true,
+        /* rownumWidth: 25,*/
+        autowidth: true,
+        autoScroll: true,
+        shrinkToFit: true,
+        jsonReader: {                   // 重写后台返回数据的属性
+            root: "data"         // 将rows修改为page.list
+        },
+        gridComplete: function () {
+            // //隐藏grid底部滚动条
+            $("#commentGqGrid").closest(".ui-jqgrid-bdiv").css({"overflow-x": "hiden"});
+        }
+    });
+}
+
 
 //编辑器
 var $tab = $('.tab-bar a');

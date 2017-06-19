@@ -28,4 +28,8 @@ public interface BusinessmanCommentService {
 	void delete(Long id);
 	
 	void deleteBatch(Long[] ids);
+
+	List<BusinessmanComment> getListByActicleId(Integer id);
+
+	void updateIsopen(Integer id,Integer status);
 }

@@ -9,6 +9,7 @@ import com.yonghui.portal.utils.redis.RedisBizUtilAdmin;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
@@ -151,20 +152,25 @@ public class FileUploadController {
      * @param response
      */
     @RequestMapping("/removeImg")
-    public void removeImg(HttpServletRequest request, HttpServletResponse response) {
+    @ResponseBody
+    public Integer removeImg(HttpServletRequest request, HttpServletResponse response) {
         String imgPath = request.getParameter("imgPath");
         try {
             if (imgPath != null && !imgPath.equals("")) {
                 SysFtpConfig sysFtpConfig = JSONObject.parseObject(redisBizUtilAdmin.getFtpInfo(1L), SysFtpConfig.class);
-                String directory = sysFtpConfig.getRootpath() + "item/";
+                String directory = sysFtpConfig.getRootpath() + "portal_pic/item/";
                 String deleteFile = imgPath.substring(imgPath.lastIndexOf("/") + 1, imgPath.length());
                 SftpUtil sftp = new SftpUtil(sysFtpConfig);
                 sftp.connect();
                 sftp.delete(directory, deleteFile);
                 sftp.disconnect();
+                return 0;//成功
+            }else{
+                return 2;//图片路径为空
             }
         } catch (Exception e) {
             System.out.println("图片删除失败---->" + imgPath);
+            return 1;
         }
     }
 

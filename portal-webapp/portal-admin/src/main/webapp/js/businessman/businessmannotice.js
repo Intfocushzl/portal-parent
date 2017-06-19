@@ -6,8 +6,8 @@ $(function () {
         colModel: [
             {label: 'id', name: 'id', index: 'id', width: 50, key: true },
             {label: '公告类型', name: 'noticeType', index: 'notice_type', width: 80 },
-            {label: '发布范围角色编码', name: 'noticeRoles', index: 'notice_roles', width: 80 },
-            {label: '发布范围群组编码', name: 'noticeGroups', index: 'notice_groups', width: 80 },
+            {label: '角色编码', name: 'noticeRoles', index: 'notice_roles', width: 80 },
+            {label: '群组编码', name: 'noticeGroups', index: 'notice_groups', width: 80 },
             {label: '是否APP推送', name: 'appPush', index: 'app_push', width: 80 },
             {label: '标题', name: 'title', index: 'title', width: 80 }, 
             /*{label: '正文', name: 'content', index: 'content', width: 80 },
@@ -15,7 +15,7 @@ $(function () {
             {label: '封面图', name: 'coverImg', index: 'cover_img', width: 80 }, */
             {label: '文章状态', name: 'status', index: 'status', width: 80 },
             {label: '阅读数', name: 'pageview', index: 'pageview', width: 80 }, 
-            {label: '过期时间，有效截止期', name: 'expireTime', index: 'expire_time', width: 80 }, 
+            {label: '过期时间', name: 'expireTime', index: 'expire_time', width: 80 },
             {label: '创建时间', name: 'createTime', index: 'CREATE_TIME', width: 80 }, 
         ],
         viewrecords: true,     // 是否显示行号，默认值是false，不显示

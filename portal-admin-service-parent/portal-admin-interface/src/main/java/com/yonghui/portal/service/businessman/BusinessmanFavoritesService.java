@@ -28,4 +28,6 @@ public interface BusinessmanFavoritesService {
 	void delete(Long id);
 	
 	void deleteBatch(Long[] ids);
+
+	List<BusinessmanFavorites> getListByArticleId(Integer id);
 }

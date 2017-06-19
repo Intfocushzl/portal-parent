@@ -49,5 +49,9 @@ public class BusinessmanFavoritesServiceImpl implements BusinessmanFavoritesServ
 	public void deleteBatch(Long[] ids){
 		businessmanFavoritesMapper.deleteBatch(ids);
 	}
-	
+
+	@Override
+	public List<BusinessmanFavorites> getListByArticleId(Integer id) {
+		return businessmanFavoritesMapper.getListByArticleId(id);
+	}
 }

@@ -208,11 +208,13 @@
             <div class="form-group">
                 <div class="col-sm-2 control-label">标签</div>
                 <div class="col-sm-10">
-                    <!--<input type="text" class="form-control" v-model="businessmanActicle.tagInfo"
-                           placeholder="标签：最多三个 如 aa,bb,cc"/>                 multiple data-max-options="3"-->
-                   <select class="selectpicker form-control" data-live-search="true"
+                    <input type="text" class="form-control" v-model="businessmanActicle.tagInfo"
+                           placeholder="标签：最多三个 如 aa,bb,cc" readonly/>
+                    <input style="position:absolute; right: 15px;" type="button" class="btn btn-info" @click="showDialog" value="+"/>
+                    <!--   multiple data-max-options="3"-->
+                   <!--<select class="selectpicker form-control" data-live-search="true"
                             id="tagList"  v-model="businessmanActicle.tagInfo">
-                    </select>
+                    </select>-->
                 </div>
             </div>
             <div class="form-group">
@@ -311,6 +313,19 @@
                 &nbsp;&nbsp;<input type="button" class="btn btn-warning" @click="reload" value="返回"/>
             </div>
         </form>
+
+
+        <div id="dialog-form" title="标签列表" style="overflow:hidden">
+            <!--<p class="validateTips"></p>-->
+            <fieldset class="dialog-fieldset">
+                <div class="fieldset-div">
+                    <label for="cIndexAperture">标签列表</label>
+                    <select id="cIndexAperture" class="selectpicker form-control" data-live-search="true" title="属性定义">
+                    </select>
+                </div>
+            </fieldset>
+        </div>
+
     </div>
 
 
@@ -319,6 +334,15 @@
         <input type="button" class="btn btn-warning" @click="reload" value="返回"/>
     </div>
 
+    <div v-show="showList == 4" class="panel panel-default">
+        <table id="collecGqGrid"></table>
+        <input type="button" class="btn btn-warning" @click="reload" value="返回"/>
+    </div>
+
+    <div v-show="showList == 5" class="panel panel-default">
+        <table id="commentGqGrid"></table>
+        <input type="button" class="btn btn-warning" @click="reload" value="返回"/>
+    </div>
 </div>
 
 <script src="${rc.contextPath}/js/businessman/businessmanacticle.js?_${date.systemTime}"></script>

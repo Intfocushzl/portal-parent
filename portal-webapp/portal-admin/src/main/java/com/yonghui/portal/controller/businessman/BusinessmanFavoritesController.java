@@ -83,4 +83,11 @@ public class BusinessmanFavoritesController extends AbstractController {
         return R.success();
     }
 
+    @RequestMapping("/getListByArticleId")
+    public R getListByArticleId(@RequestParam Integer id){
+        List<BusinessmanFavorites> list = businessmanFavoritesService.getListByArticleId(id);
+        return R.success().setData(list);
+    }
+
+
 }

@@ -18,6 +18,10 @@
         <result property="version" column="VERSION"/>
     </resultMap>
 
+	<select id="getListByArticleId" resultType="com.yonghui.portal.model.businessman.BusinessmanFavorites" parameterType="Integer">
+		SELECT * from platform.businessman_favorites where acticle_id = #{id}
+	</select>
+
 	<select id="queryObject" resultType="com.yonghui.portal.model.businessman.BusinessmanFavorites">
 		select * from businessman_favorites where id = #{value}
 	</select>
