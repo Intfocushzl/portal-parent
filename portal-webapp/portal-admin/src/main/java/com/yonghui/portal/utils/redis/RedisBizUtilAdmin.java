@@ -137,7 +137,10 @@ public class RedisBizUtilAdmin {
     }
 
     /********************openapi接口配置*****************/
-    public void setOpenApiReport(String code, String value) {
+    public void setOpenApiReport(String codeOld , String code, String value) {
+        if (!StringUtils.isEmpty(codeOld) && !codeOld.equals(code)) {
+            redisUtil.remove(String.format("%s:penapi:report", KEY_PREFIX), codeOld);
+        }
         redisUtil.put(String.format("%s:openapi:report", KEY_PREFIX), code, value);
     }
 
@@ -153,7 +156,10 @@ public class RedisBizUtilAdmin {
         return redisUtil.hasKey(String.format("%s:openapi:report", KEY_PREFIX), code);
     }
 
-    public void setRouteReport(String code, String value) {
+    public void setRouteReport(String codeOld , String code, String value) {
+        if (!StringUtils.isEmpty(codeOld) && !codeOld.equals(code)) {
+            redisUtil.remove(String.format("%s:penapi:route", KEY_PREFIX), codeOld);
+        }
         redisUtil.put(String.format("%s:openapi:route", KEY_PREFIX), code, value);
     }
 

@@ -16,8 +16,6 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * 
- *
  * @author zhanghai
  * @email walk_hai@163.com
  * @date 2017-06-01 17:43:38
@@ -36,7 +34,7 @@ public class PortalRouteReportController extends AbstractController {
      */
     @RequestMapping("/list")
     @RequiresPermissions("portalroutereport:list")
-    public R list(@RequestParam Map<String, Object> params){
+    public R list(@RequestParam Map<String, Object> params) {
         //查询列表数据
         Query query = new Query(params);
 
@@ -53,7 +51,7 @@ public class PortalRouteReportController extends AbstractController {
      */
     @RequestMapping("/info/{id}")
     @RequiresPermissions("portalroutereport:info")
-    public R info(@PathVariable("id") Integer id){
+    public R info(@PathVariable("id") Integer id) {
         PortalRouteReport portalRouteReport = portalRouteReportService.queryObject(id);
         return R.success().put("portalRouteReport", portalRouteReport);
     }
@@ -63,9 +61,9 @@ public class PortalRouteReportController extends AbstractController {
      */
     @RequestMapping("/save")
     @RequiresPermissions("portalroutereport:save")
-    public R save(@RequestBody PortalRouteReport portalRouteReport){
-		portalRouteReportService.save(portalRouteReport);
-        redisBizUtilAdmin.setRouteReport(portalRouteReport.getCode(), JSONObject.toJSONString(portalRouteReport));
+    public R save(@RequestBody PortalRouteReport portalRouteReport) {
+        portalRouteReportService.save(portalRouteReport);
+        redisBizUtilAdmin.setRouteReport(portalRouteReport.getCodeOld(), portalRouteReport.getCode(), JSONObject.toJSONString(portalRouteReport));
         return R.success();
     }
 
@@ -74,9 +72,9 @@ public class PortalRouteReportController extends AbstractController {
      */
     @RequestMapping("/update")
     @RequiresPermissions("portalroutereport:update")
-    public R update(@RequestBody PortalRouteReport portalRouteReport){
-		portalRouteReportService.update(portalRouteReport);
-        redisBizUtilAdmin.setRouteReport(portalRouteReport.getCode(), JSONObject.toJSONString(portalRouteReport));
+    public R update(@RequestBody PortalRouteReport portalRouteReport) {
+        portalRouteReportService.update(portalRouteReport);
+        redisBizUtilAdmin.setRouteReport(portalRouteReport.getCodeOld(), portalRouteReport.getCode(), JSONObject.toJSONString(portalRouteReport));
         return R.success();
     }
 
@@ -85,9 +83,9 @@ public class PortalRouteReportController extends AbstractController {
      */
     @RequestMapping("/delete")
     @RequiresPermissions("portalroutereport:delete")
-    public R delete(@RequestBody String[] codes){
-		portalRouteReportService.deleteBatch(codes);
-        for (String c:codes) {
+    public R delete(@RequestBody String[] codes) {
+        portalRouteReportService.deleteBatch(codes);
+        for (String c : codes) {
             redisBizUtilAdmin.removeRouteReport(c);
         }
         return R.success();

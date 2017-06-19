@@ -16,8 +16,6 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * 
- *
  * @author zhanghai
  * @email walk_hai@163.com
  * @date 2017-06-07 14:01:50
@@ -37,7 +35,7 @@ public class PortalOpenapiReportController extends AbstractController {
      */
     @RequestMapping("/list")
     @RequiresPermissions("portalopenapireport:list")
-    public R list(@RequestParam Map<String, Object> params){
+    public R list(@RequestParam Map<String, Object> params) {
         //查询列表数据
         Query query = new Query(params);
 
@@ -54,7 +52,7 @@ public class PortalOpenapiReportController extends AbstractController {
      */
     @RequestMapping("/info/{id}")
     @RequiresPermissions("portalopenapireport:info")
-    public R info(@PathVariable("id") Integer id){
+    public R info(@PathVariable("id") Integer id) {
         PortalOpenapiReport portalOpenapiReport = portalOpenapiReportService.queryObject(id);
         return R.success().put("portalOpenapiReport", portalOpenapiReport);
     }
@@ -64,9 +62,9 @@ public class PortalOpenapiReportController extends AbstractController {
      */
     @RequestMapping("/save")
     @RequiresPermissions("portalopenapireport:save")
-    public R save(@RequestBody PortalOpenapiReport portalOpenapiReport){
-		portalOpenapiReportService.save(portalOpenapiReport);
-        redisBizUtilAdmin.setOpenApiReport(portalOpenapiReport.getCode(), JSONObject.toJSONString(portalOpenapiReport));
+    public R save(@RequestBody PortalOpenapiReport portalOpenapiReport) {
+        portalOpenapiReportService.save(portalOpenapiReport);
+        redisBizUtilAdmin.setOpenApiReport(portalOpenapiReport.getCodeOld(), portalOpenapiReport.getCode(), JSONObject.toJSONString(portalOpenapiReport));
         return R.success();
     }
 
@@ -75,9 +73,9 @@ public class PortalOpenapiReportController extends AbstractController {
      */
     @RequestMapping("/update")
     @RequiresPermissions("portalopenapireport:update")
-    public R update(@RequestBody PortalOpenapiReport portalOpenapiReport){
-		portalOpenapiReportService.update(portalOpenapiReport);
-        redisBizUtilAdmin.setRouteReport(portalOpenapiReport.getCode(), JSONObject.toJSONString(portalOpenapiReport));
+    public R update(@RequestBody PortalOpenapiReport portalOpenapiReport) {
+        portalOpenapiReportService.update(portalOpenapiReport);
+        redisBizUtilAdmin.setOpenApiReport(portalOpenapiReport.getCodeOld(), portalOpenapiReport.getCode(), JSONObject.toJSONString(portalOpenapiReport));
         return R.success();
     }
 
@@ -86,8 +84,8 @@ public class PortalOpenapiReportController extends AbstractController {
      */
     @RequestMapping("/delete")
     @RequiresPermissions("portalopenapireport:delete")
-    public R delete(@RequestBody String[] codes){
-		portalOpenapiReportService.deleteBatch(codes);
+    public R delete(@RequestBody String[] codes) {
+        portalOpenapiReportService.deleteBatch(codes);
         for (String c : codes) {
             redisBizUtilAdmin.removeRouteReport(c);
         }

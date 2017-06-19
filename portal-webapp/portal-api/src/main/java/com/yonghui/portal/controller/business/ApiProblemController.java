@@ -40,6 +40,7 @@ public class ApiProblemController {
     private ApiProblemService apiProblemService;
     @Reference
     public ApiImgsInfoService apiImgsInfoService;
+
     /**
      * 获取用户问题反馈
      *
@@ -96,9 +97,9 @@ public class ApiProblemController {
     public R saveProblem(HttpServletRequest req, HttpServletResponse response, BusinessmanProblem businessmanProblem) {
         try {
             if (businessmanProblem != null && businessmanProblem.getImages() != null) {
-                String[] str = businessmanProblem.getImages().split(",");
+                String[] str = businessmanProblem.getImages().substring(1, businessmanProblem.getImages().length() - 1).split(",");
                 ImgsInfo imgsInfo = null;
-                for(String item : str){
+                for (String item : str) {
                     imgsInfo = new ImgsInfo();
                     imgsInfo.setImgPath(item);
                     imgsInfo.setRemark("App");

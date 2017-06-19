@@ -6,7 +6,10 @@ import com.alibaba.fastjson.JSONObject;
 import com.yonghui.portal.annotation.IgnoreAuth;
 import com.yonghui.portal.model.sys.SysOperationLog;
 import com.yonghui.portal.service.sys.SysoperationLogService;
-import com.yonghui.portal.util.*;
+import com.yonghui.portal.util.HttpContextUtils;
+import com.yonghui.portal.util.IPUtils;
+import com.yonghui.portal.util.R;
+import com.yonghui.portal.util.StringUtils;
 import com.yonghui.portal.util.redis.ReportUtil;
 import com.yonghui.portal.xss.SQLFilter;
 import org.apache.log4j.Logger;
@@ -56,14 +59,16 @@ public class AppQrCodeApiController {
         String result = null;
         JSONObject jsonObject = null;
         List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
+        List<Map<String, Object>> hanaList = new ArrayList<Map<String, Object>>();
         List<Map<String, Object>> shopIdList = new ArrayList<Map<String, Object>>();
+        Map<String, Object> map = null;
         try {
             //首先判断客户端秘钥是否正确
-            Md5Util util = new Md5Util();
+          /*  Md5Util util = new Md5Util();
             String originSign = util.getMd5("MD5", 0, null, yongHuiReportCustomCode + TOKEN);
             if (!originSign.equals(sign)) {
                 return R.error(ConstantsUtil.ExceptionCode.TO_LOGIN, "sign验证失败");
-            }
+            }*/
             //调用自己库查数据
             parameter = HttpContextUtils.getRequestParameter(req);
             SysOperationLog log = new SysOperationLog();
@@ -73,6 +78,23 @@ public class AppQrCodeApiController {
             log.setParameter(parameter);
             //首先根据parameter里面的shopId去查  该门店所在区域下下的所有门店
             shopIdList = reportUtil.jdbcProListResultListMapByParam(SQLFilter.sqlInject("REP_000045"), SQLFilter.sqlInject(parameter));
+            //查hana数据库  查询商品信息
+            hanaList = reportUtil.jdbcProListResultListMapByParam(SQLFilter.sqlInject(yongHuiReportCustomCode), SQLFilter.sqlInject(parameter));
+            String saleDate = "";
+            String saleAmount = "";
+            for (Map<String, Object> item : hanaList) {
+                saleDate = saleDate + item.get("SALEDATE").toString() + ",";
+                saleAmount = saleAmount + item.get("AMOUNT").toString() + ",";
+            }
+            if (saleDate != null && !saleDate.equals("")) {
+                saleDate.substring(0, saleDate.length() - 1);
+            }
+            if (saleAmount != null && !saleAmount.equals("")) {
+                saleAmount.substring(0, saleAmount.length() - 1);
+            }
+            map = new HashMap<String, Object>();
+            map.put("saleDate", saleDate);
+            map.put("saleAmount", saleAmount);
             //将查出来的门店结果，拼接成参数
             StringBuffer newParam = new StringBuffer();
             for (Map<String, Object> item : shopIdList) {
@@ -88,18 +110,20 @@ public class AppQrCodeApiController {
             } else {
                 return R.success(list);
             }
+
+
             Map<String, Object> resMap = new HashMap<String, Object>();
             for (Map<String, Object> item : list) {
-                JSONArray  jsonArray  =  (JSONArray)jsonObject.get("data");
+                JSONArray jsonArray = (JSONArray) jsonObject.get("data");
                 for (int i = 0; i < jsonArray.size(); i++) {
                     JSONObject job = jsonArray.getJSONObject(i);
                     if (item.get("shopID").equals(job.get("shopId"))) {
-                        item.put("totalSalesValue",job.get("totalSalesValue"));
-                        item.put("totalInventoryValue",job.get("totalInventoryValue"));
-                        item.put("totalAmount",job.get("totalAmount"));
-                        item.put("goodsId",job.get("goodsId"));
-                        item.put("totalStock",job.get("totalStock"));
-                        item.put("goodsName",job.get("goodsName"));
+                        item.put("totalSalesValue", job.get("totalSalesValue"));
+                        item.put("totalInventoryValue", job.get("totalInventoryValue"));
+                        item.put("totalAmount", job.get("totalAmount"));
+                        item.put("goodsId", job.get("goodsId"));
+                        item.put("totalStock", job.get("totalStock"));
+                        item.put("goodsName", job.get("goodsName"));
                     }
                 }
             }
@@ -109,6 +133,7 @@ public class AppQrCodeApiController {
         } catch (Exception e) {
             R.error("执行APP报表存储过程报表异常");
         }
+        list.add(0, map);
         return R.success(list);
     }
 }

@@ -63,6 +63,7 @@ var vm = new Vue({
             vm.showList = false;
             vm.title = "新增";
             vm.portalOpenapiReport = {};
+            $("input[name='codeOld']").removeAttr("readonly");
         },
         update: function (event) {
             var id = getSelectedRow();
@@ -72,7 +73,8 @@ var vm = new Vue({
             vm.showList = false;
             vm.title = "修改";
 
-            vm.getInfo(id)
+            vm.getInfo(id);
+            $("input[name='codeOld']").attr("readonly","readonly");
         },
         saveOrUpdate: function (event) {
             var url = vm.portalOpenapiReport.id == null ? "../portalopenapireport/save" : "../portalopenapireport/update";
@@ -117,6 +119,7 @@ var vm = new Vue({
         getInfo: function(id){
             $.get("../portalopenapireport/info/"+id, function(r){
                 vm.portalOpenapiReport = r.portalOpenapiReport;
+                vm.portalOpenapiReport.codeOld = vm.portalOpenapiReport.code;
             });
         },
         reload: function (event) {
