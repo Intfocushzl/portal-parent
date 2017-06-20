@@ -7,6 +7,7 @@ import com.yonghui.portal.util.PageUtils;
 import com.yonghui.portal.util.Query;
 import com.yonghui.portal.util.R;
 import com.yonghui.portal.utils.Constant;
+import org.apache.commons.collections.map.HashedMap;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -49,7 +50,7 @@ public class MenuController extends AbstractController {
      * 选择菜单(添加、修改菜单)
      */
     @RequestMapping("/select")
-    @RequiresPermissions("sys:menu:select")
+    @RequiresPermissions("menu:select")
     public R select(@RequestParam Map<String, Object> params){
         //查询列表数据
         List<Menu> menuList = menuService.queryList(params);
@@ -69,7 +70,7 @@ public class MenuController extends AbstractController {
      * 角色授权菜单
      */
     @RequestMapping("/perms")
-    @RequiresPermissions("sys:menu:perms")
+    @RequiresPermissions("menu:perms")
     public R perms(){
         //查询列表数据
         List<Menu> menuList = null;
@@ -122,6 +123,36 @@ public class MenuController extends AbstractController {
     public R delete(@RequestBody Integer[] ids) {
         menuService.deleteBatch(ids);
         return R.success();
+    }
+
+
+    @RequestMapping("/getLargeArea")
+    public R getLargeArea(){
+        //查询老大区列表数据
+        List<Map<String,Object>> areaList = menuService.queryLargeAreaList();
+        return R.success().put("largeArea", areaList);
+    }
+    @RequestMapping("/getAreaMans")
+    public R getAreaMans(String district){
+        //查询新大区列表数据
+        List<Map<String,Object>> areaMansList = menuService.queryAreamsList(district);
+        return R.success().put("areaMans", areaMansList);
+    }
+    @RequestMapping("/getFirms")
+    public R getFirms(){
+        //查询商行列表数据
+        List<Map<String,Object>> firmList = menuService.queryFirmsList();
+        return R.success().put("firm", firmList);
+    }
+
+    @RequestMapping("/getBravoShop")
+    public R getBravoShopList(String largeArea,String areaMans){
+        //查询门店列表数据
+        Map<String,Object> map=new HashedMap();
+        map.put("largeArea",largeArea);
+        map.put("areaMans",areaMans);
+        List<Map<String,Object>> shopList = menuService.queryShopsList(map);
+        return R.success().put("shop", shopList);
     }
 
 }

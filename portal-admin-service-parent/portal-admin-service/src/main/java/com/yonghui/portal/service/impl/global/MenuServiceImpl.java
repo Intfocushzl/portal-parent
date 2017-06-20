@@ -4,6 +4,7 @@ import com.yonghui.portal.mapper.global.MenuMapper;
 import com.yonghui.portal.model.global.Menu;
 import com.yonghui.portal.model.global.RoleMenu;
 import com.yonghui.portal.service.global.MenuService;
+import org.apache.commons.collections.map.HashedMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -72,6 +73,25 @@ public class MenuServiceImpl implements MenuService {
     @Override
     public void deleteBatch(Integer[] ids) {
         menuMapper.deleteBatch(ids);
+    }
+
+    public List<Map<String, Object>> queryLargeAreaList() {
+        return menuMapper.getLargeAreaList();
+    }
+
+    public List<Map<String, Object>> queryAreamsList(String largeArea) {
+        Map<String, Object> map=new HashedMap();
+        map.put("largeArea",largeArea);
+        return menuMapper.getNewAreaMansListByLargeArea(map);
+    }
+
+    public List<Map<String, Object>> queryFirmsList() {
+        return menuMapper.getFifthRotation();
+    }
+
+    @Override
+    public List<Map<String, Object>> queryShopsList(Map<String, Object> map) {
+        return menuMapper.getBravoShopList(map);
     }
 
 }

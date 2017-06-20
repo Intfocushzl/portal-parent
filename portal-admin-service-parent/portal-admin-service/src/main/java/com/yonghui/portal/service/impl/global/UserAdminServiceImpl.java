@@ -4,6 +4,7 @@ import com.yonghui.portal.mapper.global.UserMapper;
 import com.yonghui.portal.model.global.User;
 import com.yonghui.portal.service.global.UserAdminService;
 import com.yonghui.portal.util.Md5Util;
+import com.yonghui.portal.util.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -98,5 +99,15 @@ public class UserAdminServiceImpl implements UserAdminService {
         } else {
 
         }
+    }
+
+    @Override
+    public List<User> queryChangeGrantList(Map<String, Object> map) {
+        return userMapper.queryChangeGrantList(map);
+    }
+
+    @Override
+    public int queryChangeGrantTotal(Map<String, Object> map) {
+        return userMapper.queryChangeGrantTotal(map);
     }
 }

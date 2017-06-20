@@ -1,6 +1,7 @@
 package com.yonghui.portal.service.global;
 
 import com.yonghui.portal.model.global.User;
+import com.yonghui.portal.util.Query;
 
 import java.util.List;
 import java.util.Map;
@@ -25,4 +26,8 @@ public interface UserAdminService {
     void deleteBatch(Integer[] ids);
 
     void updateStatus(User user);
+
+    List<User> queryChangeGrantList(Map<String, Object> map);
+
+    int queryChangeGrantTotal(Map<String, Object> map);
 }

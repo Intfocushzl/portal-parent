@@ -41,6 +41,10 @@ public interface MenuMapper extends BaseMapper<Menu>{
      * 查询用户的权限列表
      */
     List<Menu> queryUserList(Long userId);
+
+    List<Map<String,Object>> getBravoShopList(Map<String, Object> map);
+
+    List<Map<String,Object>> getNewAreaMansListByLargeArea(Map<String, Object> map);
 }
 
 

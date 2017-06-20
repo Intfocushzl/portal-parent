@@ -176,10 +176,17 @@ public class UserCenterController {
                 JSONObject jsonObject = JSONObject.parseObject(result);
                 if (jsonObject.getInteger("code") == 201) {
                     log.info(jsonObject.toJSONString());
-                    return R.success().setMsg(jsonObject.getString("message"));
+                    return R.success().setMsg(jsonObject.getString("info"));
                 } else if (jsonObject.getInteger("code") == 200||jsonObject.getInteger("code") == 401) {
                     log.error(jsonObject.toJSONString());
-                    return R.error().setMsg(jsonObject.getString("message"));
+                    String info=jsonObject.getString("info");
+                    if (info.contains("mobile")){
+                        info=info.replace("mobile=","");
+                    }
+                    if (info.contains("user_num")){
+                        info=info.replace("user_num=","");
+                    }
+                    return R.error().setMsg(info);
                 } else {
                     log.error(jsonObject.toJSONString());
                     return R.error().setMsg("获取随机密码失败");
@@ -221,27 +228,58 @@ public class UserCenterController {
             if (StringUtils.isEmpty(jobNumber)) {
                 return R.error().setMsg("员工号不能为空");
             }
+            if (StringUtils.isEmpty(changeRoleId)
+                    &&StringUtils.isEmpty(changeLargeArea)
+                    &&StringUtils.isEmpty(changeAreaMans)
+                    &&StringUtils.isEmpty(changeStoreNumber)
+                    &&StringUtils.isEmpty(changeFirm)) {
+                return R.error().setMsg("您没有提交任何变更信息");
+            }
             User user = new User();
             user.setJobNumber(jobNumber);
             User retUser = userService.getUserByJobNumber(jobNumber);
             if (retUser == null) {
                 return R.error().setMsg("该员工号未注册");
             }
-            if (changeLargeArea.equals("全部")) {
-                user.setChangeLargeArea("ALL");
+            if (changeLargeArea!=null){
+                if (changeLargeArea.equals("全部")) {
+                    user.setChangeLargeArea("ALL");
+                }else {
+                    user.setChangeLargeArea(changeLargeArea);
+                }
             }
-            if (changeAreaMans.equals("全部")) {
-                user.setChangeAreaMans("ALL");
+            if (changeAreaMans!=null){
+                if (changeAreaMans.equals("全部")) {
+                    user.setChangeAreaMans("ALL");
+                }else {
+                    user.setChangeAreaMans(changeAreaMans);
+                }
             }
-            if (changeStoreNumber.equals("全部")) {
-                user.setStoreNumber("ALL");
+            if (changeStoreNumber!=null){
+                if (changeStoreNumber.equals("全部")) {
+                    user.setChangeStoreNumber("ALL");
+                }else {
+                    user.setChangeStoreNumber(changeStoreNumber);
+                }
             }
-            user.setFirm(changeFirm);
-            user.setChangeRoleId(changeRoleId);
+            if (changeFirm!=null){
+                if (changeFirm.equals("全店")) {
+                    user.setChangeFirm("ALL");
+                }else {
+                    user.setChangeFirm(changeFirm);
+                }
+            }
+            if (changeRoleId!=null){
+                if (changeRoleId.equals("全店")) {
+                    user.setChangeRoleId("ALL");
+                }else {
+                    user.setChangeRoleId(changeRoleId);
+                }
+            }
             user.setId(retUser.getId());
             user.setChangeStatus(1);
             user.setRemark(remark);
-
+            log.info(StringUtils.VoFilterToString(JSON.json(user)));
             int res = userService.changeGrant(user);
             if (res == 1) {
                 return R.success().setMsg("权限变更提交成功");

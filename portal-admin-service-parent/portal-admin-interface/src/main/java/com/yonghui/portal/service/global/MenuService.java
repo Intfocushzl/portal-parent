@@ -34,5 +34,11 @@ public interface MenuService {
 
     void deleteBatch(Integer[] ids);
 
+    List<Map<String,Object>> queryLargeAreaList();
 
+    List<Map<String,Object>> queryAreamsList(String district);
+
+    List<Map<String,Object>> queryFirmsList();
+
+    List<Map<String,Object>> queryShopsList(Map<String, Object> map);
 }

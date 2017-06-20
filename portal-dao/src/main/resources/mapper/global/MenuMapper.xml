@@ -17,25 +17,11 @@
         id, name, url, pid, icon, createTime, status
     </sql>
     <!--区域公共部分 begin-->
-    <!-- 新大区 -->
-    <select id="getNewAreaMansList" resultType="Map">
-        select DISTINCT areaMans as areaMans from platform.`d_bravo_shop` WHERE LOCATE('区',areaMans) >0;
-    </select>
-
-    <select id="getNewAreaMansListByUser" resultType="Map">
-        select DISTINCT
-        areaMans as areaMans from platform.`d_bravo_shop` where AreaMans=#{district}
-    </select>
 
     <select id="getLargeAreaListByUser" resultType="Map">
         <!-- select '全部' as district union -->
         select DISTINCT AreaName as district,AreaID from platform.`d_bravo_shop`
         where AreaName=#{district}
-    </select>
-
-    <select id="getLargeAreaList" resultType="Map">
-        <!-- select '全部' as district union -->
-        select DISTINCT AreaName as district,AreaID from platform.`d_bravo_shop`
     </select>
 
     <select id="getNewStoreListByDistrict" resultType="Map">
@@ -101,10 +87,6 @@
         </if>
     </select>
 
-    <select id="getFifthRotation" resultType="Map">
-        select groupId as id,groupName as text from platform.d_grouplist where
-        groupId not in (1) group by groupId
-    </select>
 
     <select id="broveStoreLittleIdNotTwoOneOneList" resultType="Map">
         <if test="list == null ">
@@ -148,13 +130,62 @@
         </if>
     </select>
 
-    <!-- 超级物种 -->
-    <!--<select id="getCJWZStoreUserList" resultType="Map">
-        select'all' as id,'全部' as text
-        union
-        select shop_code as id ,name as text from hyd_dw.dim_shop
-        where 1 = 1 and `name` is not null and channel_type = 2
-    </select>-->
+
+    <!--以下确认有用到-->
+    <select id="getLargeAreaList" resultType="Map">
+        select DISTINCT AreaName as district,AreaID from platform.`d_bravo_shop`
+    </select>
+
+    <select id="getNewAreaMansListByUser"  resultType="Map">
+        select DISTINCT areaMans from platform.`d_bravo_shop`
+        <where>
+            Congou=1
+            <if test="largeArea != null and largeArea !=''">
+                and AreaName = #{largeArea}
+            </if>
+        </where>
+    </select>
+    <!-- 新大区 -->
+    <select id="getNewAreaMansList" resultType="Map">
+        select DISTINCT areaMans from platform.`d_bravo_shop` WHERE Congou=1;
+    </select>
+
+    <select id="getNewAreaMansListByLargeArea" parameterType="Map"  resultType="Map">
+        select DISTINCT areaMans from platform.`d_bravo_shop`
+        <where>
+            Congou=1
+            <if test="largeArea != null and largeArea !=''">
+                and AreaName = #{largeArea}
+            </if>
+        </where>
+    </select>
+
+
+    <select id="getFifthRotation"  resultType="Map">
+        select groupId as id,gName as text from platform.d_grouplist_sm group by groupId
+    </select>
+
+    <select id="getBravoShopList" parameterType="Map" resultType="Map">
+        select  sap_shopId as id, SName as text
+        from platform.d_bravo_shop
+        <where>
+            Congou=1
+            <if test="largeArea != null and largeArea !='' and largeArea!='ALL'">
+                and AreaName = #{largeArea}
+            </if>
+            <if test="areaMans != null and areaMans !='' and areaMans!='ALL'">
+                and AreaMans = #{areaMans}
+            </if>
+            <if test="province != null and province !='' and province!='ALL'">
+                and province = #{province}
+            </if>
+            <if test="city != null and city !='' and city!='ALL'">
+                and city = #{city}
+            </if>
+        </where>
+       order by AreaName,AreaMans;
+    </select>
+    <!--以上确认有用到-->
     <!--区域公共部分 end-->
 
     <!--用户角色菜单 begin-->

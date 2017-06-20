@@ -85,7 +85,6 @@ public class UserController {
             return R.success().setMsg("修改用户信息成功");
         } else {
             return R.error().setMsg("修改用户信息失败");
-
         }
     }
 

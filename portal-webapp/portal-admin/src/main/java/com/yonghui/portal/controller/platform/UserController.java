@@ -1,6 +1,5 @@
 package com.yonghui.portal.controller.platform;
 
-import com.yonghui.portal.annotation.IgnoreAuth;
 import com.yonghui.portal.controller.AbstractController;
 import com.yonghui.portal.model.global.User;
 import com.yonghui.portal.service.global.UserAdminService;
@@ -35,8 +34,6 @@ public class UserController extends AbstractController {
     /**
      * 列表
      */
-    @ResponseBody
-    @IgnoreAuth
     @RequestMapping("/list")
     @RequiresPermissions("user:list")
     public R list(HttpServletResponse response, @RequestParam Map<String, Object> params) {
@@ -57,8 +54,6 @@ public class UserController extends AbstractController {
     /**
      * 信息
      */
-    @ResponseBody
-    @IgnoreAuth
     @RequestMapping("/info/{id}")
     @RequiresPermissions("user:info")
     public R info(HttpServletResponse response, @PathVariable("id") Integer id) {
@@ -71,8 +66,6 @@ public class UserController extends AbstractController {
     /**
      * 保存
      */
-    @ResponseBody
-    @IgnoreAuth
     @RequestMapping("/save")
     @RequiresPermissions("user:save")
     public R save(HttpServletResponse response, HttpServletRequest request, @RequestBody User user) {
@@ -85,8 +78,6 @@ public class UserController extends AbstractController {
     /**
      * 修改
      */
-    @ResponseBody
-    @IgnoreAuth
     @RequestMapping("/update")
     @RequiresPermissions("user:update")
     public R update(HttpServletResponse response, @RequestBody User user) {
@@ -99,8 +90,6 @@ public class UserController extends AbstractController {
     /**
      * 修改
      */
-    @ResponseBody
-    @IgnoreAuth
     @RequestMapping("/delete")
     @RequiresPermissions("user:delete")
     public R delete(HttpServletResponse response, @RequestBody Integer[] ids) {
@@ -108,6 +97,21 @@ public class UserController extends AbstractController {
         response.setContentType("text/html;charset=UTF-8");
         userAdminService.deleteBatch(ids);
         return R.success();
+    }
+
+
+
+    @RequestMapping("/changeGrant/list")
+    public R changeGrantList(HttpServletResponse response, @RequestParam Map<String, Object> params) {
+        //查询列表数据
+        Query query = new Query(params);
+
+        List<User> userList = userAdminService.queryChangeGrantList(query);
+        int total = userAdminService.queryChangeGrantTotal(query);
+
+        PageUtils pageUtil = new PageUtils(userList, total, query.getLimit(), query.getPage());
+
+        return R.success().put("page", pageUtil);
     }
 
 }

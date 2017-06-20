@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<head>
+    <title>用户权限变更申请表</title>
+    #parse("sys/header.html")
+</head>
+<body>
+<div id="rrapp" v-cloak>
+    <div v-show="showList">
+        <div id="queryDiv" class="queryDiv">
+            <div class="grid-btn">
+                <div class="form-group col-sm-2">
+                    <input type="text" class="form-control" v-model="user.jobNumber" @keyup.enter="query"
+                           placeholder="员工号">
+                </div>
+                <div class="form-group col-sm-2">
+                    <input type="text" class="form-control" v-model="user.name" @keyup.enter="query" placeholder="用户名">
+                </div>
+                <a class="btn btn-primary" @click="query">查询</a>
+                #if($shiro.hasPermission("user:update"))
+                <a class="btn btn-primary" @click="update"><i class="fa fa-pencil-square-o"></i>&nbsp;修改</a>
+                #end
+            </div>
+        </div>
+        <table id="jqGrid"></table>
+        <div id="jqGridPager"></div>
+    </div>
+    <div v-show="!showList" class="panel panel-default">
+        <div class="panel-heading">{{title}}</div>
+        <form class="form-horizontal">
+            <div class="form-group">
+                <div class="col-sm-2 control-label">员工号</div>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" v-model="user.jobNumber" readonly placeholder="生成唯一账号"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">员工姓名</div>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" v-model="user.name" readonly placeholder=""/>
+                </div>
+            </div>
+           <div class="form-group">
+                <div class="col-sm-2 control-label">原角色</div>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" v-model="user.roleName" readonly placeholder=""/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">欲变更角色</div>
+                <div class="col-sm-10">
+                    <select class="form-control" name="changeRoleId" v-model='user.changeRoleId' >
+                        <template v-for="role in roleList">
+                            <option :value="role.id" >
+                                {{ role.name }}
+                            </option>
+                        </template>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">原大区</div>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" v-model="user.largeArea" readonly placeholder="原大区"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">欲变更大区</div>
+                <div class="col-sm-10">
+                    <select class="form-control" name="largeArea" v-model='user.largeArea'placeholder="欲变更大区" @change="onLargeAreaChange" >
+                        <template v-for="largeArea in largeAreaList">
+                            <option :value="largeArea.district" >
+                                {{ largeArea.district }}
+                            </option>
+                        </template>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">原片区</div>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" v-model="user.areaMans" readonly placeholder="原片区"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">欲变更片区</div>
+                <div class="col-sm-10">
+                    <select class="form-control" name="areaMans" v-model='user.changeAreaMans' placeholder="欲变更片区" @change="onAreaMansChange">
+                        <template v-for="areaMans in areaMansList">
+                            <option :value="areaMans.areaMans" >
+                                {{ areaMans.areaMans }}
+                            </option>
+                        </template>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">原门店</div>
+                <div class="col-sm-10">
+                    <select class="selectpicker form-control" name="storeNumber" id="storeNumber" multiple disabled="disabled"  placeholder="原门店">
+                        <template v-for="shop in shopList">
+                            <option :value="shop.id" >
+                                {{ shop.text }}
+                            </option>
+                        </template>
+                   </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">欲变更门店</div>
+                <div class="col-sm-10">
+                    <select class="selectpicker form-control" name="changeStoreNumber" id="changeStoreNumber" multiple  placeholder="欲变更门店">
+                        <template v-for="shop in shopList">
+                            <option :value="shop.id" >
+                                {{ shop.text }}
+                            </option>
+                        </template>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">原商行</div>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" v-model="user.firm" readonly placeholder="拥有所属商行逗号隔开, ALL默认全部"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">欲变更商行</div>
+                <div class="col-sm-10">
+                    <select class="form-control" name="firm" v-model='user.changeFirm' placeholder="欲变更商行">
+                        <template v-for="firm in firmList">
+                            <option :value="firm.id" >
+                                {{ firm.text }}
+                            </option>
+                        </template>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">变更说明</div>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" v-model="user.remark" placeholder="变更说明"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">状态</div>
+                <label class="radio-inline">
+                    <input type="radio" name="changeStatus" value="-1" v-model="user.changeStatus"/> 拒绝
+                </label>
+                <label class="radio-inline">
+                    <input type="radio" name="changeStatus" value="0" v-model="user.changeStatus"/> 通过
+                </label>
+                <label class="radio-inline">
+                    <input type="radio" name="changeStatus" value="1" v-model="user.changeStatus"/> 申请中
+                </label>
+            </div>
+
+            <div class="form-group">
+                <div class="col-sm-2 control-label"></div>
+                <input type="button" class="btn btn-primary" @click="saveOrUpdate" value="确定"/>
+                &nbsp;&nbsp;<input type="button" class="btn btn-warning" @click="reload" value="返回"/>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script src="${rc.contextPath}/js/platform/changegrant.js?_${date.systemTime}"></script>
+</body>
+</html>

@@ -4,6 +4,7 @@ import com.yonghui.portal.mapper.base.BaseMapper;
 import com.yonghui.portal.model.global.User;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.List;
 import java.util.Map;
 
 public interface UserMapper  extends BaseMapper<User> {
@@ -23,4 +24,8 @@ public interface UserMapper  extends BaseMapper<User> {
     int updateInfoByJobNumber(Map<String, Object> map);
 
     int changeGrant(User record) throws Exception;
+
+    List<User> queryChangeGrantList(Map<String, Object> map);
+
+    int queryChangeGrantTotal(Map<String, Object> map);
 }

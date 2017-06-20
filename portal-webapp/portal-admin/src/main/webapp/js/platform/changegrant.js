@@ -1,36 +1,18 @@
-var baseUrl = "..";
 $(function () {
     $("#jqGrid").jqGrid({
-        url: baseUrl + '/forfront/user/list',     // 请求后台json数据的url
+        url: '../forfront/user/changeGrant/list',     // 请求后台json数据的url
         datatype: "json",                // 后台返回的数据格式
         // 列表标题及列表模型
         colModel: [
-            {label: '账号', name: 'account', index: 'account', width: 80},
+            {label: '员工号', name: 'jobNumber', index: 'jobNumber', width: 80},
             {label: '用户名', name: 'name', index: 'name', width: 80},
             {label: '角色名', name: 'roleName', index: 'roleName', width: 80},
-            {label: '备注', name: 'remark', index: 'remark', width: 80},
+            {label: '变更说明', name: 'remark', index: 'remark', width: 80},
             {label: '用户ID', name: 'id', index: 'id', width: 50, key: true},
-            {
-                label: '业态', name: 'type', index: 'type', width: 80, formatter: function (value) {
-                if (value === 0) {
-                    return '会员店';
-                }
-                if (value === 1) {
-                    return 'Bravo';
-                }
-                if (value === 2) {
-                    return '平台';
-                }
-                if (value === 3) {
-                    return '其他';
-                }
-            }
-            },
             {label: '大区', name: 'largeArea', index: 'largeArea', width: 80},
             {label: '新大区', name: 'areaMans', index: 'areaMans', width: 80},
-            {label: '省份', name: 'province', index: 'province', width: 80},
-            {label: '城市', name: 'city', index: 'city', width: 80},
-            {label: '员工号', name: 'jobNumber', index: 'jobNumber', width: 80},
+            {label: '门店', name: 'storeNumber', index: 'storeNumber', width: 80},
+            {label: '商行', name: 'firm', index: 'firm', width: 80},
             {
                 label: '状态', name: 'status', index: 'status', width: 80, formatter: function (value) {
                 if (value === -1) {
@@ -41,9 +23,13 @@ $(function () {
                 }
             }
             },
-            {label: '门店', name: 'storeNumber', index: 'storeNumber', width: 80},
-            {label: '商行', name: 'firm', index: 'firm', width: 80},
-            {label: '创建时间', name: 'createTime', index: 'createTime', width: 80}
+            {
+                label: '操作', name: 'operation', with: 100, formatter: function (value, options, row) {
+                return "<span class='label label-success' onclick='vm.userInfo(" + row.id + ")'>查看</span>&nbsp;&nbsp;<span class='label label-success'>同意</span>" +
+                    "&nbsp;&nbsp;<span class='label label-success'>拒绝</span>";
+            }
+            },
+            {label: '申请时间', name: 'changeTime', index: 'createTime', width: 80}
         ],
 
         viewrecords: true,
@@ -83,6 +69,12 @@ var vm = new Vue({
         showList: true,
         title: null,
         roleList: {},
+        largeAreaList: {},
+        areaMansList: {},
+        firmList: {},
+        shopList: {},
+        multiStoreNumberSelect: [],
+        multiChangeStoreNumberSelect: [],
         user: {
             roleIdList: []
         }
@@ -116,22 +108,29 @@ var vm = new Vue({
             vm.getInfo(id);
         },
         saveOrUpdate: function (event) {
-            var url = vm.user.id == null ? baseUrl + "/forfront/user/save" : baseUrl + "/forfront/user/update";
+            if ($("#storeNumber").val()!=null){
+                vm.user.storeNumber=$("#storeNumber").val()+"";
+            }
+            if ($("#changeStoreNumber").val()!=null){
+                vm.user.changeStoreNumber=$("#changeStoreNumber").val()+"";
+            }
+
+            var url = vm.user.id == null ? "../forfront/user/save" : "../forfront/user/update";
             console.log(vm.user);
-            $.ajax({
-                type: "POST",
-                url: url,
-                data: JSON.stringify(vm.user),
-                success: function (r) {
-                    if (r.code === 0) {
-                        alert('操作成功', function (index) {
-                            vm.reload();
-                        });
-                    } else {
-                        alert(r.msg);
-                    }
-                }
-            });
+            // $.ajax({
+            //     type: "POST",
+            //     url: url,
+            //     data: JSON.stringify(vm.user),
+            //     success: function (r) {
+            //         if (r.code === 0) {
+            //             alert('操作成功', function (index) {
+            //                 vm.reload();
+            //             });
+            //         } else {
+            //             alert(r.msg);
+            //         }
+            //     }
+            // });
         },
         del: function (event) {
             var ids = getSelectedRows();
@@ -142,7 +141,7 @@ var vm = new Vue({
             confirm('确定要删除选中的记录？', function () {
                 $.ajax({
                     type: "POST",
-                    url: baseUrl + "/forfront/user/delete",
+                    url: "../forfront/user/delete",
                     data: JSON.stringify(ids),
                     success: function (r) {
                         if (r.code == 0) {
@@ -157,8 +156,20 @@ var vm = new Vue({
             });
         },
         getInfo: function (id) {
-            $.get(baseUrl + "/forfront/user/info/" + id, function (r) {
+            $.get("../forfront/user/info/" + id, function (r) {
                 vm.user = r.user;
+                if (r.user.storeNumber != null && r.user.storeNumber != "ALL") {
+                    vm.multiStoreNumberSelect = r.user.storeNumber.split(",");
+                }
+
+                if (r.user.changeStoreNumber != null && r.user.changeStoreNumber != "ALL") {
+                    vm.multiChangeStoreNumberSelect = r.user.changeStoreNumber.split(",");
+                }
+                console.log(vm.user);
+                $("#storeNumber").selectpicker('val', vm.multiStoreNumberSelect);
+                $("#storeNumber").selectpicker('refresh');
+                $("#changeStoreNumber").selectpicker('val', vm.multiChangeStoreNumberSelect);
+                $("#changeStoreNumber").selectpicker('refresh');
                 var o = new Object();
                 o.type = vm.user.type;
                 vm.getRoleList(o);
@@ -182,10 +193,48 @@ var vm = new Vue({
             vm.getRoleList(o);
         },
         getLargeArea: function () {
-            // $.get("/yhportal/api/portal/custom?yongHuiReportCustomCode=REP_000030", function (data) {
-            //     console.log(data);
-            // });
-        }
+            $.get("../forfront/menu/getLargeArea", function (data) {
+                vm.largeAreaList = data.largeArea;
+            });
+        },
+        onLargeAreaChange: function () {
+            var o = new Object();
+            o.district = $("select[name='largeArea']").val();
+            vm.getAreaMans(o);
+        },
+        getAreaMans: function (params) {
+            $.get("../forfront/menu/getAreaMans", params, function (data) {
+                vm.areaMansList = data.areaMans;
+            });
+        },
+        onAreaMansChange: function () {
+            var o = new Object();
+            o.largeArea = $("select[name='largeArea']").val();
+            o.areaMans = $("select[name='areaMans']").val();
+            vm.getShop(o);
+        },
+        getFirm: function () {
+            $.get("../forfront/menu/getFirms", function (data) {
+                vm.firmList = data.firm;
+            });
+        },
+        getShop: function (params) {
+            $.get("../forfront/menu/getBravoShop", params, function (data) {
+                vm.shopList = data.shop;
+            });
+        },
+        userInfo: function (id) {
+            if (id == null) {
+                return;
+            }
+            vm.showList = false;
+            vm.title = "审核";
+
+            vm.getInfo(id);
+        },
     }
 });
 vm.getLargeArea();
+vm.getAreaMans(null);
+vm.getFirm();
+vm.getShop(null);
