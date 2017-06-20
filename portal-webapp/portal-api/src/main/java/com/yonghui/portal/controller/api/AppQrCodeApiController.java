@@ -3,13 +3,10 @@ package com.yonghui.portal.controller.api;
 import com.alibaba.dubbo.config.annotation.Reference;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.yonghui.portal.annotation.IgnoreAuth;
+import com.yonghui.portal.annotation.OpenAuth;
 import com.yonghui.portal.model.sys.SysOperationLog;
 import com.yonghui.portal.service.sys.SysoperationLogService;
-import com.yonghui.portal.util.HttpContextUtils;
-import com.yonghui.portal.util.IPUtils;
-import com.yonghui.portal.util.R;
-import com.yonghui.portal.util.StringUtils;
+import com.yonghui.portal.util.*;
 import com.yonghui.portal.util.redis.ReportUtil;
 import com.yonghui.portal.xss.SQLFilter;
 import org.apache.log4j.Logger;
@@ -40,8 +37,6 @@ public class AppQrCodeApiController {
     @Autowired
     private ReportUtil reportUtil;
 
-    public static final String TOKEN = "yhappQKXYfkjqn8Yq6ojACkwXRnt35322896dfd9419f9d2c4080b064d89a";
-
     public static final String URL = "http://10.0.12.15:32128/api/v1/businessman/search/scene2";
 
     /**
@@ -50,25 +45,20 @@ public class AppQrCodeApiController {
      *
      * @return
      */
-    @IgnoreAuth
+    @OpenAuth
     @RequestMapping(value = "qrCode", method = RequestMethod.GET)
     @ResponseBody
-    public R portalCustom(HttpServletRequest req, HttpServletResponse response, String yongHuiReportCustomCode,
-                          String sign, String shopID, String barcode) {
+    public R portalCustom(HttpServletRequest req, HttpServletResponse response, String shopID, String barcode) {
         String parameter = null;
         String result = null;
         JSONObject jsonObject = null;
+        JSONArray jsonArrayResult =null;
         List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
         List<Map<String, Object>> hanaList = new ArrayList<Map<String, Object>>();
         List<Map<String, Object>> shopIdList = new ArrayList<Map<String, Object>>();
         Map<String, Object> map = null;
+        List<Object> dateList = new ArrayList<Object>();
         try {
-            //首先判断客户端秘钥是否正确
-          /*  Md5Util util = new Md5Util();
-            String originSign = util.getMd5("MD5", 0, null, yongHuiReportCustomCode + TOKEN);
-            if (!originSign.equals(sign)) {
-                return R.error(ConstantsUtil.ExceptionCode.TO_LOGIN, "sign验证失败");
-            }*/
             //调用自己库查数据
             parameter = HttpContextUtils.getRequestParameter(req);
             SysOperationLog log = new SysOperationLog();
@@ -79,12 +69,14 @@ public class AppQrCodeApiController {
             //首先根据parameter里面的shopId去查  该门店所在区域下下的所有门店
             shopIdList = reportUtil.jdbcProListResultListMapByParam(SQLFilter.sqlInject("REP_000045"), SQLFilter.sqlInject(parameter));
             //查hana数据库  查询商品信息
-            hanaList = reportUtil.jdbcProListResultListMapByParam(SQLFilter.sqlInject(yongHuiReportCustomCode), SQLFilter.sqlInject(parameter));
+            hanaList = reportUtil.jdbcProListResultListMapByParam("REP_000099", SQLFilter.sqlInject(parameter));
             String saleDate = "";
             String saleAmount = "";
+            String goodsName = "";
             for (Map<String, Object> item : hanaList) {
                 saleDate = saleDate + item.get("SALEDATE").toString() + ",";
                 saleAmount = saleAmount + item.get("AMOUNT").toString() + ",";
+                goodsName = item.get("GOODSNAME").toString();
             }
             if (saleDate != null && !saleDate.equals("")) {
                 saleDate.substring(0, saleDate.length() - 1);
@@ -95,37 +87,33 @@ public class AppQrCodeApiController {
             map = new HashMap<String, Object>();
             map.put("saleDate", saleDate);
             map.put("saleAmount", saleAmount);
+            map.put("goodsName",goodsName);
             //将查出来的门店结果，拼接成参数
             StringBuffer newParam = new StringBuffer();
             for (Map<String, Object> item : shopIdList) {
                 newParam.append("'" + item.get("shopId") + "',");
             }
             String newParamStr = "shopID=" + newParam.toString().substring(1, newParam.toString().length() - 2) + "@@barcode=" + barcode;
-            //注意此处code  admin配置的是98  为了给app扫码统一code（REP_000043）
+            //查非实时数据（我们自己的库），注意此处code  admin配置的是98  为了给app扫码统一code（REP_000043）
             list = reportUtil.jdbcProListResultListMapByParam(SQLFilter.sqlInject("REP_000043"), newParamStr);
             //调用外部接口获取数据
             result = reportUtil.qRResultByParam(SQLFilter.sqlInject(newParamStr), URL);
             if (!StringUtils.isEmpty(result)) {
                 jsonObject = JSONObject.parseObject(result);
             } else {
-                return R.success(list);
+                return R.error();
             }
-
-
             Map<String, Object> resMap = new HashMap<String, Object>();
-            for (Map<String, Object> item : list) {
-                JSONArray jsonArray = (JSONArray) jsonObject.get("data");
-                for (int i = 0; i < jsonArray.size(); i++) {
-                    JSONObject job = jsonArray.getJSONObject(i);
-                    if (item.get("shopID").equals(job.get("shopId"))) {
-                        item.put("totalSalesValue", job.get("totalSalesValue"));
-                        item.put("totalInventoryValue", job.get("totalInventoryValue"));
-                        item.put("totalAmount", job.get("totalAmount"));
-                        item.put("goodsId", job.get("goodsId"));
-                        item.put("totalStock", job.get("totalStock"));
-                        item.put("goodsName", job.get("goodsName"));
-                    }
-                }
+            JSONArray jsonArray = (JSONArray) jsonObject.get("data");
+            //第一个hana销售量；第二个实时数据；第三部分非实时数据
+            dateList.add(0, map);
+            dateList.add(1, jsonArray);
+            dateList.add(2, list);
+            QrCodeUtil util = new QrCodeUtil();
+            if(dateList != null && dateList.size()>0){
+                jsonArrayResult = util.createJsonTemplate(dateList , shopID);
+            }else{
+                return R.success(jsonArrayResult);
             }
             log.setEndTime(new Date());
             log.setRemark("app@@qrCode");
@@ -133,7 +121,6 @@ public class AppQrCodeApiController {
         } catch (Exception e) {
             R.error("执行APP报表存储过程报表异常");
         }
-        list.add(0, map);
-        return R.success(list);
+        return R.success(jsonArrayResult);
     }
 }

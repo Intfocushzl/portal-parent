@@ -65,7 +65,7 @@ public class AuthorizationInterceptor extends HandlerInterceptorAdapter {
             String sign = request.getParameter("sign");
             if (StringUtils.isBlank(openApiCode) || StringUtils.isBlank(sign)) {
                 response.setHeader("Content-type", "text/html;charset=UTF-8");
-                response.getWriter().write(JSON.toJSONString(R.error(ConstantsUtil.ExceptionCode.SIGN_ERROR, "sign不能为空")));
+                response.getWriter().write(JSON.toJSONString(R.error(ConstantsUtil.ExceptionCode.SIGN_ERROR, "sign或者code不能为空")));
                 return false;
             }
             // 从redis中查询key信息
