@@ -11,6 +11,9 @@
     <!-- uploadify -->
     <link type="text/css" rel="stylesheet" href="${rc.contextPath}/statics/uploadify/uploadify.css"/>
     <script type="text/javascript" src="${rc.contextPath}/statics/uploadify/jquery.uploadify.js"></script>
+    <!-- 图片自适应大小 -->
+    <script type="text/javascript"
+            src="${rc.contextPath}/statics/plugins/jquery-autoimg/jQuery.autoIMG.min.js"></script>
 
     <style type="text/css">
         .file-btn {
@@ -126,6 +129,41 @@
             max-width: 700px;
             min-width: 600px;;
         }
+
+        #tabs {
+            margin: 0;
+            padding: 0;
+            list-style: none;
+            overflow: hidden;
+        }
+
+        #tabs li {
+            float: left;
+            display: block;
+            padding: 5px;
+            background-color: #00a65a;
+            margin-right: 5px;
+        }
+
+        #tabs li span {
+            color: #fff;
+            text-decoration: none;
+        }
+
+        #tabs li.current {
+            background-color: #00a65a;
+        }
+
+        #tabs li.current span {
+            color: #fff;
+            text-decoration: none;
+        }
+
+        #tabs li span.remove {
+            color: #f00;
+            margin-left: 10px;
+        }
+
     </style>
 </head>
 <body>
@@ -166,13 +204,17 @@
                 <!--<div class="col-sm-10">
                     <input type="text" class="form-control" v-model="businessmanActicle.acticleType"
                            placeholder="文章类型 1：文章 2：视频"/>
-                </div>-->
+                </div>--><!-- @click="getTagList(1)"    @click="getTagList(2)" -->
                 <label class="radio-inline">
-                    <input type="radio" @click="getTagList(1)" name="type" value="1" v-model="businessmanActicle.acticleType"/>
+                    <input type="radio" name="type" value="1" v-model="businessmanActicle.acticleType"/>
+                    <input type="radio" @click="getTagList(1)" name="type" value="1"
+                           v-model="businessmanActicle.acticleType"/>
                     文章
                 </label>
                 <label class="radio-inline">
-                    <input type="radio" @click="getTagList(2)" name="type" value="2" v-model="businessmanActicle.acticleType"/>
+                    <input type="radio" name="type" value="2" v-model="businessmanActicle.acticleType"/>
+                    <input type="radio" @click="getTagList(2)" name="type" value="2"
+                           v-model="businessmanActicle.acticleType"/>
                     视频
                 </label>
             </div>
@@ -208,10 +250,15 @@
             <div class="form-group">
                 <div class="col-sm-2 control-label">标签</div>
                 <div class="col-sm-10">
-                    <input type="text" class="form-control" v-model="businessmanActicle.tagInfo"
-                           placeholder="标签：最多三个 如 aa,bb,cc" readonly/>
-                    <input style="position:absolute; right: 15px;" type="button" class="btn btn-info" @click="showDialog" value="+"/>
-                    <!--   multiple data-max-options="3"-->
+                    <ul id="tabs">
+                        <!--<li><a href="#" class="tab">标签1</a><a href="#" class="remove">x</a><input name="" type="hidden"/></li>
+                        <li><a href="#" class="tab">标签2</a><a href="#" class="remove">x</a></li>
+                        <li><a href="#" class="tab">标签3</a><a href="#" class="remove">x</a></li>-->
+                    </ul>
+                    <!--<input name="count" type="hidden" />
+-->
+                    <input style="position:absolute; right: 300px;top: -1px;" type="button" class="btn btn-info" @click="showDialog" value="+"/>
+                    <!--   multiple data-max-options="3"    v-model="businessmanActicle.tagInfo"-->
                    <!--<select class="selectpicker form-control" data-live-search="true"
                             id="tagList"  v-model="businessmanActicle.tagInfo">
                     </select>-->
@@ -250,8 +297,8 @@
                         </a>
                     </div>
                     <div style="width: 100%;">
-                        <img src="" width="230" height="90" alt="" class="pic-upload-show"
-                             style="background-color: #ccc;" id="cover_pic_show">
+                        <img src="" alt="" class="pic-upload-show"
+                             style="background-color: #ccc;max-height: 100px;" id="cover_pic_show">
                         <a href="javascript:void(0)">删除</a>
                         <p class="explain">图片请选择jpg,jpeg,gif,png格式</p>
                     </div>
@@ -319,8 +366,8 @@
             <!--<p class="validateTips"></p>-->
             <fieldset class="dialog-fieldset">
                 <div class="fieldset-div">
-                    <label for="cIndexAperture">标签列表</label>
-                    <select id="cIndexAperture" class="selectpicker form-control" data-live-search="true" title="属性定义">
+                    <label for="tagList">标签列表</label>
+                    <select id="tagList" class="selectpicker form-control" data-live-search="true" title="标签定义">
                     </select>
                 </div>
             </fieldset>
