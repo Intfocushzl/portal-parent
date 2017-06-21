@@ -192,7 +192,7 @@ var vm = new Vue({
                 success: function (r) {
                     if (r.code === 0) {
                         alert('操作成功', function (index) {
-                            var articleId = $("#commentGqGrid").getCell(1,"acticleId");
+                            var articleId = $("#commentGqGrid").getCell(1, "acticleId");
                             console.log(articleId);
                             commentGqGrid(articleId);
                         });
@@ -445,4 +445,9 @@ $('#input_file').uploadify({
         alert('文件:' + file.name + '上传失败!');
     }
 
+});
+
+// 图片自适应
+$(function () {
+    $("img").autoIMG();
 });
