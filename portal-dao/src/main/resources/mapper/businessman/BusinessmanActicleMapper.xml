@@ -55,13 +55,13 @@
     </select>
 
     <select id="acticleList" resultType="Map" parameterType="Map">
-        SELECT a.id,a.tag_info tagInfo,a.title,a.CREATE_TIME as createTime,
+        SELECT a.id , IFNULL(a.tag_info,'') AS tagInfo , a.title , a.CREATE_TIME as createTime,
         case c.fav WHEN '0' then '1'
         else '0' end as favorite
         from platform.businessman_acticle a LEFT JOIN (
         SELECT a.id, 0 as fav from platform.businessman_acticle a,platform.businessman_favorites b where a.id =
         b.acticle_id and b.user_id = #{userId} and b.`status`=1
-        ) c on a.id = c.id  WHERE
+        ) c on a.id = c.id WHERE
         <if test="keyWord != null and keyWord !=''">
             a.tag_info LIKE concat('%',#{keyWord},'%') OR a.title LIKE concat('%',#{keyWord},'%') AND
         </if>
