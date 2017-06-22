@@ -8,10 +8,10 @@ $(function () {
     module_id = getQueryString("id");
     if (getStringValue(module_id) != "") {
         $.get("../reportmodulepage/info/" + module_id, function (r) {
+            console.log(r);
             var r_obj = JSON.parse(r);
             reportModulePage = r_obj.reportModulePage;
             contentJsonObj = JSON.parse(reportModulePage.content);
-            console.log(reportModulePage.content);
 
             $("#jsonstr").val(JSON.stringify(reportModulePage.content));
         });
@@ -34,9 +34,9 @@ $("#btnBack").click(function () {
 // 保存
 $("#saveOrUpdateModule").click(function () {
     // 标题
-    reportModulePage.title = "标题";
+    reportModulePage.title = $("#form_name").val();
     // json 字符串
-    reportModulePage.content = "{}";
+    reportModulePage.content = JSON.stringify(selfModuleJson());
     // 专题类型 0：PC专题 1：APP专题
     reportModulePage.pageType = 1;
     var url = module_id == null ? "../reportmodulepage/save" : "../reportmodulepage/update";
@@ -60,6 +60,11 @@ $("#saveOrUpdateModule").click(function () {
 
 // 显示json字符串
 $("#jsonstrtab").click(function () {
+    $("#jsonstr").val(JSON.stringify(selfModuleJson()));
+});
+
+// 封装控件为json
+function selfModuleJson() {
     var fromName = $("#form_name").val();
     var jsonObj = [
         {
@@ -74,7 +79,7 @@ $("#jsonstrtab").click(function () {
             jsonObj[0].parts.push(JSON.parse($this.val()));
         }
     });
-    $("#jsonstr").val(JSON.stringify(jsonObj));
-});
+    return jsonObj;
+}
 
 
