@@ -114,6 +114,7 @@ var vm = new Vue({
             KindEditor.instances[0].html("");
             KindEditor.instances[1].html("");
             $("#cover_pic_show").prop("src", "");
+            $("#tabs").html("");
         },
         update: function (event) {
             var id = getSelectedRow();
@@ -128,16 +129,14 @@ var vm = new Vue({
         saveOrUpdate: function (status) {
             var url = vm.businessmanActicle.id == null ? "../businessmanacticle/save" : "../businessmanacticle/update";
 
-            var tagLen = $("#tabs li").length;
-            var tag = 0;
-            for (var i = 0; i < tagLen; i++) {
-                tag += $("#tabs li span")[i].html() + ",";
+            var tagLen = $(".tab").length;
+            var tag = "";
+            for(var i = 0 ;i < tagLen;i++){
+                tag += $(".tab").eq(i).html()+",";
             }
-
-            vm.businessmanActicle.tagInfo = tag.substr(1, tag.length - 1);
+            vm.businessmanActicle.tagInfo = tag.substr(0,tag.length-1);
             vm.businessmanActicle.abstracts = KindEditor.instances[0].html();
             vm.businessmanActicle.content = KindEditor.instances[1].html();
-            vm.businessmanActicle.tagInfo = $("#tagList").val();
             vm.businessmanActicle.status = status;
             console.log(vm.businessmanActicle);
             $.ajax({
