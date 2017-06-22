@@ -68,9 +68,9 @@ $(function () {
 
                 var tagLen = $("#tabs li").length;
 
-                $("#tabs").append('<li><span class="tab">'+$("#tagList").val()+'</span> &nbsp;<span class="remove">x</span>' +
+                $("#tabs").append('<li><span class="tab">' + $("#tagList").val() + '</span> &nbsp;<span class="remove">x</span>' +
                     '</li>');
-    //<input name="tag_'+tagLen+'" value="'+$("#tagList").val()+'" type="hidden"/>
+                //<input name="tag_'+tagLen+'" value="'+$("#tagList").val()+'" type="hidden"/>
                 // 关闭窗口
                 $(this).dialog("close");
             },
@@ -84,7 +84,7 @@ $(function () {
 
 });
 
-function removeTag(obj){
+function removeTag(obj) {
     $(obj).parent().remove();
 }
 
@@ -130,11 +130,11 @@ var vm = new Vue({
 
             var tagLen = $("#tabs li").length;
             var tag = 0;
-            for(var i = 0 ;i < tagLen;i++){
-                tag += $("#tabs li span")[i].html()+",";
+            for (var i = 0; i < tagLen; i++) {
+                tag += $("#tabs li span")[i].html() + ",";
             }
 
-            vm.businessmanActicle.tagInfo = tag.substr(1,tag.length-1);
+            vm.businessmanActicle.tagInfo = tag.substr(1, tag.length - 1);
             vm.businessmanActicle.abstracts = KindEditor.instances[0].html();
             vm.businessmanActicle.content = KindEditor.instances[1].html();
             vm.businessmanActicle.tagInfo = $("#tagList").val();
@@ -187,12 +187,18 @@ var vm = new Vue({
                 $("#attachFile").val(vm.businessmanActicle.attachFile);
                 vm.getTagList(vm.businessmanActicle.acticleType);
                 vm.businessmanActicle.oldContent = vm.businessmanActicle.content;
-                if(vm.businessmanActicle.tagInfo) {
+                if (vm.businessmanActicle.tagInfo) {
                     var tags = vm.businessmanActicle.tagInfo.split(",");
                     for (var i = 0; i < tags.length; i++) {
                         $("#tabs").append('<li><span class="tab">' + tags[i] + '</span>&nbsp;<span onclick="removeTag(this)" class="remove">x</span>' +
                             '</li>');
                     }
+                }
+                if (vm.businessmanActicle.attachFile) {
+                    $("#id_del_file").css('display', 'block');
+                }
+                if (vm.businessmanActicle.coverImg) {
+                    $("#id_del_cover").css('display', 'block');
                 }
 
             });
@@ -238,8 +244,8 @@ var vm = new Vue({
                 success: function (r) {
                     if (r.code === 0) {
                         alert('操作成功', function (index) {
-                            var articleId = $("#commentGqGrid").getCell(1,"acticleId");
-                          //  console.log(articleId);
+                            var articleId = $("#commentGqGrid").getCell(1, "acticleId");
+                            //  console.log(articleId);
                             commentGqGrid(articleId);
                         });
                     } else {
@@ -256,13 +262,13 @@ var vm = new Vue({
                     typevalue = type[i].value;
                 }
             }
-           var tagLen = $("#tabs li").length;
+            var tagLen = $("#tabs li").length;
 
-           if(!typevalue){
+            if (!typevalue) {
                 alert("请先选择文章类型");
-            }else if(tagLen >= 3){
+            } else if (tagLen >= 3) {
                 alert("标签最多可选3个");
-           }else{
+            } else {
                 $("#dialog-form").dialog("open");
                 vm.getTagList(typevalue);
             }
@@ -471,6 +477,7 @@ $('#input_cover').uploadify({
             $("#coverImg").val(url);
             vm.businessmanActicle.coverImg = url;
             alert('上传成功', function (index) {
+                $("#id_del_cover").css('display', 'block');
             });
         }
     },
@@ -500,6 +507,7 @@ $('#input_file').uploadify({
             $("#attachFile").val(url);
             vm.businessmanActicle.attachFile = url;
             alert('上传成功', function (index) {
+                $("#id_del_file").css('display', 'block');
             });
         }
     },

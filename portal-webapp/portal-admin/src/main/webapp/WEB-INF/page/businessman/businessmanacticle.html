@@ -164,6 +164,9 @@
             margin-left: 10px;
         }
 
+        .a_del {
+            display: none;
+        }
     </style>
 </head>
 <body>
@@ -257,11 +260,12 @@
                     </ul>
                     <!--<input name="count" type="hidden" />
 -->
-                    <input style="position:absolute; right: 300px;top: -1px;" type="button" class="btn btn-info" @click="showDialog" value="+"/>
+                    <input style="position:absolute; right: 300px;top: -1px;" type="button" class="btn btn-info"
+                           @click="showDialog" value="+"/>
                     <!--   multiple data-max-options="3"    v-model="businessmanActicle.tagInfo"-->
-                   <!--<select class="selectpicker form-control" data-live-search="true"
-                            id="tagList"  v-model="businessmanActicle.tagInfo">
-                    </select>-->
+                    <!--<select class="selectpicker form-control" data-live-search="true"
+                             id="tagList"  v-model="businessmanActicle.tagInfo">
+                     </select>-->
                 </div>
             </div>
             <div class="form-group">
@@ -280,7 +284,7 @@
                         </a>
                     </div>
                     <div style="width: 100%">
-                        <a href="javascript:void(0)">删除</a>
+                        <a href="javascript:void(0)" id="id_del_file" class="a_del">删除</a>
                         <input type="text" readonly class="form-control" v-model="businessmanActicle.attachFile"
                                id="attachFile"
                                placeholder="附件地址"/>
@@ -299,7 +303,7 @@
                     <div style="width: 100%;">
                         <img src="" alt="" class="pic-upload-show"
                              style="background-color: #ccc;max-height: 100px;" id="cover_pic_show">
-                        <a href="javascript:void(0)">删除</a>
+                        <a href="javascript:void(0)" id="id_del_cover" class="a_del">删除</a>
                         <p class="explain">图片请选择jpg,jpeg,gif,png格式</p>
                     </div>
                 </div>
@@ -338,13 +342,13 @@
             </div>
 
 
-           <!-- <div class="form-group">
-                <div class="col-sm-2 control-label">状态</div>
-                <div class="col-sm-10">
-                    <input type="text" class="form-control" v-model="businessmanActicle.status"
-                           placeholder="1：草稿 2：已发布"/>
-                </div>
-            </div>-->
+            <!-- <div class="form-group">
+                 <div class="col-sm-2 control-label">状态</div>
+                 <div class="col-sm-10">
+                     <input type="text" class="form-control" v-model="businessmanActicle.status"
+                            placeholder="1：草稿 2：已发布"/>
+                 </div>
+             </div>-->
             <div class="form-group">
                 <div class="col-sm-2 control-label">说明</div>
                 <div class="col-sm-10">
