@@ -8,12 +8,9 @@ $(function () {
     module_id = getQueryString("id");
     if (getStringValue(module_id) != "") {
         $.get("../reportmodulepage/info/" + module_id, function (r) {
-            console.log(r);
             var r_obj = JSON.parse(r);
             reportModulePage = r_obj.reportModulePage;
-            contentJsonObj = JSON.parse(reportModulePage.content);
-
-            $("#jsonstr").val(JSON.stringify(reportModulePage.content));
+            rendererModule(reportModulePage);
         });
     }
 });
@@ -82,4 +79,20 @@ function selfModuleJson() {
     return jsonObj;
 }
 
+// 初始化渲染模板
+function rendererModule(reportModulePage) {
+    contentJsonObj = JSON.parse(reportModulePage.content)[0];
+
+    // 设置标题
+    if (contentJsonObj.title !== undefined) {
+        $("#form_name").val(contentJsonObj.title);
+        $(".leipiplugins-orgvalue").html(contentJsonObj.title);
+    }
+
+    // 循环遍历控件
+    if (contentJsonObj.parts !== undefined) {
+        var partsObj = contentJsonObj.parts;
+        console.log(JSON.stringify(partsObj));
+    }
+}
 
