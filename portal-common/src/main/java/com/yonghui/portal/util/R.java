@@ -8,6 +8,10 @@ import java.util.HashMap;
 public class R extends HashMap<String, Object> {
     private static final long serialVersionUID = 1L;
 
+    public R() {
+        put("code", 0);
+    }
+
     /**
      * 请求结果信息
      *

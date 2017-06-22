@@ -27,13 +27,14 @@ public class ConstantsUtil {
     public abstract class CommonMessage {
         public static final String SUCCESS_MESSAGE = "请求数据成功!";     //获取数据失败
         public static final String ERROR_MESSAGE = "请求数据出错!!";      //获取数据出错!
+        public static final String INTERNAL_MESSAGE = "内部错误,请联系工程师!!";       //内部错误!
     }
 
     //自定义错误消息
     public abstract class ExceptionCode {
         public static final int TO_LOGIN = -99;                // 跳转到登录
         public static final int INTERNAL_ERROR = 500;          // 内部错误
-        public static final int SIGN_ERROR = -98;          // openApi请求sign校验错误
+        public static final int SIGN_ERROR = -98;              // openApi请求sign校验错误
     }
 
     //获取数据方式

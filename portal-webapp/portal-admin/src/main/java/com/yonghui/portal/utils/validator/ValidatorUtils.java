@@ -1,7 +1,7 @@
 package com.yonghui.portal.utils.validator;
 
 
-import com.yonghui.portal.utils.RRException;
+import com.yonghui.portal.util.RRException;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;

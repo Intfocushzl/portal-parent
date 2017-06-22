@@ -1,7 +1,7 @@
 package com.yonghui.portal.utils.schedule;
 
+import com.yonghui.portal.util.RRException;
 import com.yonghui.portal.util.SpringContextUtil;
-import com.yonghui.portal.utils.RRException;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.util.ReflectionUtils;
 

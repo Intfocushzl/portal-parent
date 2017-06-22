@@ -65,7 +65,7 @@ public class ApiController {
             log.setEndTime(new Date());
             sysoperationLogService.SaveLog(log);
         } catch (Exception e) {
-            R.error("执行统一报表程序异常");
+            return R.error(e.getMessage());
         }
 
         return R.success(list);

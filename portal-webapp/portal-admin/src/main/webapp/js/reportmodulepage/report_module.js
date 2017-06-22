@@ -9,6 +9,7 @@ $(function () {
             var r_obj = JSON.parse(r);
             reportModulePage = r_obj.reportModulePage;
             contentJsonObj = JSON.parse(reportModulePage.content);
+            console.log(reportModulePage.content);
 
             $("#jsonstr").val(JSON.stringify(reportModulePage.content));
         });
@@ -37,10 +38,12 @@ $("#saveOrUpdateModule").click(function () {
     // 专题类型 0：PC专题 1：APP专题
     reportModulePage.pageType = 1;
     var url = module_id == null ? "../reportmodulepage/save" : "../reportmodulepage/update";
+
     $.ajax({
         type: "POST",
+        contentType : 'application/json',
         url: url,
-        data: reportModulePage,
+        data: JSON.stringify(reportModulePage),
         success: function (r) {
             if (r.code === 0) {
                 alert('操作成功', function (index) {
