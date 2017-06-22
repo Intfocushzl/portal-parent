@@ -64,7 +64,7 @@ public class AuthorizationInterceptor extends HandlerInterceptorAdapter {
             String openApiCode = request.getParameter("openApiCode");
             String sign = request.getParameter("sign");
             if (StringUtils.isBlank(openApiCode) || StringUtils.isBlank(sign)) {
-                response.setHeader("Content-type", "text/html;charset=UTF-8");
+                response.setHeader("Content-type", "application/json;charset=UTF-8");
                 response.getWriter().write(JSON.toJSONString(R.error(ConstantsUtil.ExceptionCode.SIGN_ERROR, "sign或者code不能为空")));
                 return false;
             }
@@ -78,7 +78,7 @@ public class AuthorizationInterceptor extends HandlerInterceptorAdapter {
             } else {
                 portalOpenapiReport = JSONObject.parseObject(openApiJsonStr, PortalOpenapiReport.class);
                 if (portalOpenapiReport == null || portalOpenapiReport.getKey() == null || portalOpenapiReport.getCode() == null) {
-                    response.setHeader("Content-type", "text/html;charset=UTF-8");
+                    response.setHeader("Content-type", "application/json;charset=UTF-8");
                     response.getWriter().write(JSON.toJSONString(R.error(ConstantsUtil.ExceptionCode.SIGN_ERROR, "sign不存在")));
                     return false;
                 } else {
@@ -87,12 +87,12 @@ public class AuthorizationInterceptor extends HandlerInterceptorAdapter {
                     try {
                          parameter = HttpContextUtils.getParameterForSign(request,portalOpenapiReport);
                     } catch (Exception e) {
-                        response.setHeader("Content-type", "text/html;charset=UTF-8");
+                        response.setHeader("Content-type", "application/json;charset=UTF-8");
                         response.getWriter().write(JSON.toJSONString(R.error(ConstantsUtil.ExceptionCode.SIGN_ERROR, "sign不能为空")));
                         return false;
                     }
                     if (StringUtils.isBlank(parameter)) {
-                        response.setHeader("Content-type", "text/html;charset=UTF-8");
+                        response.setHeader("Content-type", "application/json;charset=UTF-8");
                         response.getWriter().write(JSON.toJSONString(R.error(ConstantsUtil.ExceptionCode.SIGN_ERROR, "请求参数不能为空")));
                         return false;
                     }
@@ -100,7 +100,7 @@ public class AuthorizationInterceptor extends HandlerInterceptorAdapter {
                     //md5加密字符串为：key + parameter + key
                     String originSign = util.getMd5("MD5", 0, null, portalOpenapiReport.getKey() + parameter + portalOpenapiReport.getKey());
                     if (!originSign.equals(sign)) {
-                        response.setHeader("Content-type", "text/html;charset=UTF-8");
+                        response.setHeader("Content-type", "application/json;charset=UTF-8");
                         response.getWriter().write(JSON.toJSONString(R.error(ConstantsUtil.ExceptionCode.SIGN_ERROR, "sign验证失败")));
                         return false;
                     } else {
@@ -116,7 +116,7 @@ public class AuthorizationInterceptor extends HandlerInterceptorAdapter {
             token = request.getParameter("token");
         }
         if (StringUtils.isBlank(token)) {
-            response.setHeader("Content-type", "text/html;charset=UTF-8");
+            response.setHeader("Content-type", "application/json;charset=UTF-8");
             response.getWriter().write(JSON.toJSONString(R.error(ConstantsUtil.ExceptionCode.TO_LOGIN, "token不能为空,请尝试登录")));
             return false;
         }
@@ -124,13 +124,13 @@ public class AuthorizationInterceptor extends HandlerInterceptorAdapter {
         String tokenJsonStr = redisBizUtilApi.getApiToken(token);
         TokenApi tokenApi = null;
         if (StringUtils.isBlank(tokenJsonStr)) {
-            response.setHeader("Content-type", "text/html;charset=UTF-8");
+            response.setHeader("Content-type", "application/json;charset=UTF-8");
             response.getWriter().write(JSON.toJSONString(R.error(ConstantsUtil.ExceptionCode.TO_LOGIN, "token不存在，请尝试登录")));
             return false;
         } else {
             tokenApi = JSONObject.parseObject(tokenJsonStr, TokenApi.class);
             if (tokenApi == null || tokenApi.getExpireTime().getTime() < System.currentTimeMillis()) {
-                response.setHeader("Content-type", "text/html;charset=UTF-8");
+                response.setHeader("Content-type", "application/json;charset=UTF-8");
                 response.getWriter().write(JSON.toJSONString(R.error(ConstantsUtil.ExceptionCode.TO_LOGIN, "token已失效，重新登录")));
                 return false;
             }

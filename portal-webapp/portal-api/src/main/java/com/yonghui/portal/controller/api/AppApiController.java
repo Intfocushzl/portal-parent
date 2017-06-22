@@ -1,12 +1,18 @@
 package com.yonghui.portal.controller.api;
 
 import com.alibaba.dubbo.config.annotation.Reference;
-import com.yonghui.portal.annotation.IgnoreAuth;
+import com.alibaba.fastjson.JSONObject;
+import com.yonghui.portal.annotation.OpenAuth;
+import com.yonghui.portal.model.report.PortalOpenapiReport;
 import com.yonghui.portal.model.sys.SysOperationLog;
 import com.yonghui.portal.service.sys.SysoperationLogService;
-import com.yonghui.portal.util.*;
+import com.yonghui.portal.util.HttpContextUtils;
+import com.yonghui.portal.util.IPUtils;
+import com.yonghui.portal.util.R;
+import com.yonghui.portal.util.redis.RedisBizUtilApi;
 import com.yonghui.portal.util.redis.ReportUtil;
 import com.yonghui.portal.xss.SQLFilter;
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -35,8 +41,9 @@ public class AppApiController {
     private SysoperationLogService sysoperationLogService;
     @Autowired
     private ReportUtil reportUtil;
+    @Autowired
+    private RedisBizUtilApi redisBizUtilApi;
 
-    public static final String TOKEN = "yhappQKXYfkjqn8Yq6ojACkwXRnt35322896dfd9419f9d2c4080b064d89a";
 
 
     /**
@@ -44,24 +51,18 @@ public class AppApiController {
      *
      * @param req
      * @param response
-     * @param yongHuiReportCustomCode 报表编码,字段名唯一，且不允许修改
+     * @param openApiCode 报表编码,字段名唯一，且不允许修改
      * @param sign                    报表和token生成sign
      * @return
      */
-    @IgnoreAuth
+    @OpenAuth
     @RequestMapping(value = "report", method = RequestMethod.GET)
     @ResponseBody
-    public R portalCustom(HttpServletRequest req, HttpServletResponse response, String yongHuiReportCustomCode,
+    public R portalCustom(HttpServletRequest req, HttpServletResponse response, String openApiCode,
                           String sign, String shopID , String barcode) {
         String parameter = null;
         List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
         try {
-            //首先判断客户端秘钥是否正确
-            Md5Util util = new Md5Util();
-            String originSign = util.getMd5("MD5", 0, null, yongHuiReportCustomCode + TOKEN);
-            if (!originSign.equals(sign)) {
-                return R.error(ConstantsUtil.ExceptionCode.TO_LOGIN, "sign验证失败");
-            }
             parameter = HttpContextUtils.getRequestParameter(req);
             //记录日志
             SysOperationLog log = new SysOperationLog();
@@ -70,7 +71,20 @@ public class AppApiController {
             log.setUrl(req.getRequestURL().toString());
             log.setParameter(HttpContextUtils.getParameterForLog(req));
             log.setRemark("App");
-            list = reportUtil.jdbcProListResultListMapByParam(SQLFilter.sqlInject(yongHuiReportCustomCode), SQLFilter.sqlInject(parameter));
+            String openApiJsonStr = redisBizUtilApi.getPortalOpenApiReport(openApiCode);
+            PortalOpenapiReport portalOpenapiReport = null;
+            String reportCode = "";
+            if (StringUtils.isBlank(openApiJsonStr)) {
+                reportCode = openApiCode;
+            } else {
+                portalOpenapiReport = JSONObject.parseObject(openApiJsonStr, PortalOpenapiReport.class);
+                if(portalOpenapiReport == null || portalOpenapiReport.getReportcode() == null){
+                    reportCode = openApiCode;
+                }else{
+                    reportCode = portalOpenapiReport.getReportcode();
+                }
+            }
+            list = reportUtil.jdbcProListResultListMapByParam(SQLFilter.sqlInject(reportCode), SQLFilter.sqlInject(parameter));
             log.setEndTime(new Date());
             sysoperationLogService.SaveLog(log);
         } catch (Exception e) {

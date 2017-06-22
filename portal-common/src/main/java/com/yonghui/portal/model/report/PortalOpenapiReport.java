@@ -11,6 +11,9 @@ public class PortalOpenapiReport extends AuditAuto {
 
     //报表唯一编码，api接口请求必须参数
     private String code;
+    //对应的报表编码
+    private String reportcode;
+
     //请求外部接口key值
     private String key;
     //请求外部系统url
@@ -98,5 +101,13 @@ public class PortalOpenapiReport extends AuditAuto {
 
     public void setCodeOld(String codeOld) {
         this.codeOld = codeOld;
+    }
+
+    public String getReportcode() {
+        return reportcode;
+    }
+
+    public void setReportcode(String reportcode) {
+        this.reportcode = reportcode;
     }
 }

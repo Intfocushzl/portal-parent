@@ -2,12 +2,16 @@ package com.yonghui.portal.controller.api;
 
 import com.alibaba.dubbo.config.annotation.Reference;
 import com.alibaba.fastjson.JSONObject;
-import com.yonghui.portal.annotation.IgnoreAuth;
+import com.yonghui.portal.annotation.OpenAuth;
 import com.yonghui.portal.model.report.PortalRouteReport;
 import com.yonghui.portal.model.sys.SysOperationLog;
 import com.yonghui.portal.service.sys.SysoperationLogService;
-import com.yonghui.portal.util.*;
+import com.yonghui.portal.util.HttpContextUtils;
+import com.yonghui.portal.util.IPUtils;
+import com.yonghui.portal.util.R;
+import com.yonghui.portal.util.redis.RedisBizUtilApi;
 import com.yonghui.portal.util.redis.ReportUtil;
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -38,14 +42,18 @@ public class AppRouteApiController {
     @Autowired
     private ReportUtil reportUtil;
 
+    @Autowired
+    private RedisBizUtilApi redisBizUtilApi;
+
+
 
     /**
      * APP报表存储过程报表路由外部系统统一入口
      */
-    @IgnoreAuth
+    @OpenAuth
     @RequestMapping(value = "report", method = RequestMethod.GET)
     @ResponseBody
-    public R portalCustom(HttpServletRequest req, HttpServletResponse response, String yongHuiReportCustomCode,
+    public R portalCustom(HttpServletRequest req, HttpServletResponse response, String openApiCode,
                           String sign) {
         String parameter = null;
         List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
@@ -53,13 +61,7 @@ public class AppRouteApiController {
         JSONObject jsonObject = null;
         try {
             //根据code从redis查报表信息
-            PortalRouteReport report = reportUtil.getPortalRouteReport(yongHuiReportCustomCode);
-            //首先判断客户端秘钥是否正确
-            Md5Util util = new Md5Util();
-            String originSign = util.getMd5("MD5", 0, null, yongHuiReportCustomCode + report.getKey());
-            if (!originSign.equals(sign)) {
-                return R.error(ConstantsUtil.ExceptionCode.TO_LOGIN, "sign验证失败");
-            }
+            PortalRouteReport report = reportUtil.getPortalRouteReport(openApiCode);
             parameter = HttpContextUtils.getParameterForLog(req);
             SysOperationLog log = new SysOperationLog();
             IPUtils iputil = new IPUtils();
@@ -67,8 +69,21 @@ public class AppRouteApiController {
             log.setStartTime(new Date());
             log.setUrl(req.getRequestURL().toString());
             log.setParameter(parameter);
+            String openApiJsonStr = redisBizUtilApi.getPortalRouteReport(openApiCode);
+            PortalRouteReport portalRouteReport = null;
+            String reportCode = "";
+            if (StringUtils.isBlank(openApiJsonStr)) {
+                reportCode = openApiCode;
+            } else {
+                portalRouteReport = JSONObject.parseObject(openApiJsonStr, PortalRouteReport.class);
+                if(portalRouteReport == null || portalRouteReport.getReportcode() == null){
+                    reportCode = openApiCode;
+                }else{
+                    reportCode = portalRouteReport.getReportcode();
+                }
+            }
             //调用外部接口获取数据
-            result = reportUtil.routeResultByParam(yongHuiReportCustomCode, parameter, report.getUrl(), report.getKey());
+            result = reportUtil.routeResultByParam(reportCode, parameter, report.getUrl(), report.getKey());
             log.setEndTime(new Date());
             log.setRemark("route");
             sysoperationLogService.SaveLog(log);

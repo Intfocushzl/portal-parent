@@ -5,11 +5,12 @@ $(function () {
         // 列表标题及列表模型
         colModel: [
             {label: 'id', name: 'id', index: 'id', width: 50, key: true },
-            {label: '报表唯一编码，api接口请求必须参数', name: 'code', index: 'code', width: 80 }, 
-            {label: '请求外部接口key值', name: 'key', index: 'key', width: 80 }, 
-            {label: '请求外部系统url', name: 'url', index: 'url', width: 80 }, 
-            {label: '执行参数，格式如aa@@bb@@cc', name: 'parameter', index: 'parameter', width: 80 }, 
-            {label: '请求外部系统名称', name: 'name', index: 'name', width: 80 }, 
+            {label: '编码', name: 'code', index: 'code', width: 80 },
+            {label: '对应报表编码', name: 'reportcode', index: 'reportCode', width: 80 },
+            {label: 'key值', name: 'key', index: 'key', width: 80 },
+            {label: 'url', name: 'url', index: 'url', width: 80 },
+            {label: '执行参数', name: 'parameter', index: 'parameter', width: 80 },
+            {label: '名称', name: 'name', index: 'name', width: 80 },
             {label: '创建时间', name: 'createTime', index: 'create_time', width: 80 }, 
         ],
         viewrecords: true,     // 是否显示行号，默认值是false，不显示

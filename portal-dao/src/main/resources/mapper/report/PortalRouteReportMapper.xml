@@ -7,6 +7,7 @@
     <resultMap id="portalRouteReportMap" type="com.yonghui.portal.model.report.PortalRouteReport">
         <result property="id" column="id"/>
         <result property="code" column="code"/>
+		<result property="reportcode" column="reportCode"/>
         <result property="key" column="key"/>
         <result property="requestType" column="request_type"/>
         <result property="url" column="url"/>
@@ -63,7 +64,8 @@
     <insert id="save" parameterType="com.yonghui.portal.model.report.PortalRouteReport" useGeneratedKeys="true" keyProperty="id">
 		insert into portal_route_report
 		(
-			`code`, 
+			`code`,
+			`reportCode`,
 			`key`, 
 			`request_type`, 
 			`url`, 
@@ -79,7 +81,8 @@
 		)
 		values
 		(
-			#{code}, 
+			#{code},
+			#{reportcode},
 			#{key}, 
 			#{requestType}, 
 			#{url}, 
@@ -99,6 +102,7 @@
         update portal_route_report
         <set>
 			<if test="code != null">`code` = #{code}, </if>
+			<if test="reportcode != null">`reportCode` = #{reportcode}, </if>
 			<if test="key != null">`key` = #{key}, </if>
 			<if test="requestType != null">`request_type` = #{requestType}, </if>
 			<if test="url != null">`url` = #{url}, </if>

@@ -11,6 +11,8 @@ public class PortalRouteReport extends AuditAuto {
 
     //报表唯一编码，api接口请求必须参数
     private String code;
+    //对应的报表code
+    private String reportcode;
     //请求外部接口key值
     private String key;
     //请求方式；1代表get，2代表post
@@ -114,5 +116,13 @@ public class PortalRouteReport extends AuditAuto {
 
     public void setCodeOld(String codeOld) {
         this.codeOld = codeOld;
+    }
+
+    public String getReportcode() {
+        return reportcode;
+    }
+
+    public void setReportcode(String reportcode) {
+        this.reportcode = reportcode;
     }
 }

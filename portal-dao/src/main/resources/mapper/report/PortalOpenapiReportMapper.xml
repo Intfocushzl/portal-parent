@@ -7,6 +7,7 @@
     <resultMap id="portalOpenapiReportMap" type="com.yonghui.portal.model.report.PortalOpenapiReport">
         <result property="id" column="id"/>
         <result property="code" column="code"/>
+		<result property="reportcode" column="reportCode"/>
         <result property="key" column="key"/>
         <result property="url" column="url"/>
         <result property="parameter" column="parameter"/>
@@ -62,7 +63,8 @@
     <insert id="save" parameterType="com.yonghui.portal.model.report.PortalOpenapiReport" useGeneratedKeys="true" keyProperty="id">
 		insert into portal_openapi_report
 		(
-			`code`, 
+			`code`,
+			`reportCode`,
 			`key`, 
 			`url`, 
 			`parameter`, 
@@ -77,7 +79,8 @@
 		)
 		values
 		(
-			#{code}, 
+			#{code},
+			#{reportcode},
 			#{key}, 
 			#{url}, 
 			#{parameter}, 
@@ -96,6 +99,7 @@
         update portal_openapi_report
         <set>
 			<if test="code != null">`code` = #{code}, </if>
+			<if test="reportcode != null">`reportCode` = #{reportcode}, </if>
 			<if test="key != null">`key` = #{key}, </if>
 			<if test="url != null">`url` = #{url}, </if>
 			<if test="parameter != null">`parameter` = #{parameter}, </if>
