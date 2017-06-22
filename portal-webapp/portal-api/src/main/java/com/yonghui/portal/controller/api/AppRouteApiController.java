@@ -93,7 +93,7 @@ public class AppRouteApiController {
                 return R.success();
             }
         } catch (Exception e) {
-            R.error("执行App统一报表路由程序异常");
+          return  R.error("执行App统一报表路由程序异常");
         }
         return R.success(jsonObject.get("data"));
     }

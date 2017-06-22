@@ -88,7 +88,7 @@ public class AppApiController {
             log.setEndTime(new Date());
             sysoperationLogService.SaveLog(log);
         } catch (Exception e) {
-            R.error("执行APP报表存储过程报表异常");
+          return  R.error("执行APP报表存储过程报表异常");
         }
         return R.success(list);
     }
