@@ -77,7 +77,7 @@ public class ReportModulePageController extends AbstractController {
     }
 
     /**
-     * 修改
+     * 删除
      */
     @RequestMapping("/delete")
     @RequiresPermissions("reportmodulepage:delete")

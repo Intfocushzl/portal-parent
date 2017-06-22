@@ -2,6 +2,7 @@ var reportModulePage = {};
 var contentJsonObj = [];
 var module_id;
 var returnJsonObj;
+
 // 初始化
 $(function () {
     module_id = getQueryString("id");

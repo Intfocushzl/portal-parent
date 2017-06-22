@@ -78,7 +78,7 @@ public class ${className}Controller extends AbstractController {
     }
 
     /**
-     * 修改
+     * 删除
      */
     @RequestMapping("/delete")
     @RequiresPermissions("${pathName}:delete")
