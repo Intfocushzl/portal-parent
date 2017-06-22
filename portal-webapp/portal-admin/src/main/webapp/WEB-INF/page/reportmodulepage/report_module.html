@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>定时任务日志</title>
+    <title>报表模板定义</title>
     #parse("sys/header.html")
 
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
@@ -200,8 +200,8 @@
 
             <div class="form-group">
                 <div class="col-sm-2 control-label" style="width: 10px;"></div>
-                <input type="button" id="saveOrUpdateModule" class="btn btn-primary" value="确定"/>
-                &nbsp;&nbsp;<input type="button" id="btnBack" class="btn btn-warning" value="返回"/>
+                <input type="button" id="saveOrUpdateModule" class="btn btn-primary" @click="saveOrUpdateModule" value="确定"/>
+                &nbsp;&nbsp;<input type="button" id="btnBack" class="btn btn-warning" @click="btnBack" value="返回"/>
             </div>
 
         </div>

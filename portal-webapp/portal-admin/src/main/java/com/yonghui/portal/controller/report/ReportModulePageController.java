@@ -3,6 +3,7 @@ package com.yonghui.portal.controller.report;
 import com.yonghui.portal.controller.AbstractController;
 import com.yonghui.portal.model.report.ReportModulePage;
 import com.yonghui.portal.service.report.ReportModulePageService;
+import com.yonghui.portal.util.GzipUtils;
 import com.yonghui.portal.util.PageUtils;
 import com.yonghui.portal.util.Query;
 import com.yonghui.portal.util.R;
@@ -31,7 +32,7 @@ public class ReportModulePageController extends AbstractController {
      */
     @RequestMapping("/list")
     @RequiresPermissions("reportmodulepage:list")
-    public R list(@RequestParam Map<String, Object> params){
+    public R list(@RequestParam Map<String, Object> params) {
         //查询列表数据
         Query query = new Query(params);
 
@@ -48,7 +49,7 @@ public class ReportModulePageController extends AbstractController {
      */
     @RequestMapping("/info/{id}")
     @RequiresPermissions("reportmodulepage:info")
-    public R info(@PathVariable("id") Long id){
+    public R info(@PathVariable("id") Long id) {
         ReportModulePage reportModulePage = reportModulePageService.queryObject(id);
         return R.success().put("reportModulePage", reportModulePage);
     }
@@ -58,8 +59,10 @@ public class ReportModulePageController extends AbstractController {
      */
     @RequestMapping("/save")
     @RequiresPermissions("reportmodulepage:save")
-    public R save(@RequestBody ReportModulePage reportModulePage){
-		reportModulePageService.save(reportModulePage);
+    public R save(@RequestBody ReportModulePage reportModulePage) {
+        reportModulePage.setDesignStructrue(GzipUtils.gzip(reportModulePage.getContent()));
+        reportModulePage.setOnlineStructrue(reportModulePage.getDesignStructrue());
+        reportModulePageService.save(reportModulePage);
         return R.success();
     }
 
@@ -68,8 +71,8 @@ public class ReportModulePageController extends AbstractController {
      */
     @RequestMapping("/update")
     @RequiresPermissions("reportmodulepage:update")
-    public R update(@RequestBody ReportModulePage reportModulePage){
-		reportModulePageService.update(reportModulePage);
+    public R update(@RequestBody ReportModulePage reportModulePage) {
+        reportModulePageService.update(reportModulePage);
         return R.success();
     }
 
@@ -78,8 +81,8 @@ public class ReportModulePageController extends AbstractController {
      */
     @RequestMapping("/delete")
     @RequiresPermissions("reportmodulepage:delete")
-    public R delete(@RequestBody Long[] ids){
-		reportModulePageService.deleteBatch(ids);
+    public R delete(@RequestBody Long[] ids) {
+        reportModulePageService.deleteBatch(ids);
         return R.success();
     }
 

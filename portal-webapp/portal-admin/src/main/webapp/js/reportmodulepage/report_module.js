@@ -1,6 +1,7 @@
 var reportModulePage = {};
 var contentJsonObj = [];
 var module_id;
+var returnJsonObj;
 // 初始化
 $(function () {
     module_id = getQueryString("id");
@@ -38,19 +39,19 @@ $("#saveOrUpdateModule").click(function () {
     // 专题类型 0：PC专题 1：APP专题
     reportModulePage.pageType = 1;
     var url = module_id == null ? "../reportmodulepage/save" : "../reportmodulepage/update";
-
     $.ajax({
         type: "POST",
-        contentType : 'application/json',
+        contentType: 'application/json',
         url: url,
         data: JSON.stringify(reportModulePage),
         success: function (r) {
-            if (r.code === 0) {
+            returnJsonObj = JSON.parse(r);
+            if (returnJsonObj === 0) {
                 alert('操作成功', function (index) {
                     vm.reload();
                 });
             } else {
-                alert(r.msg);
+                alert(returnJsonObj.msg);
             }
         }
     });
