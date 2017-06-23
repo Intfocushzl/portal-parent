@@ -74,7 +74,7 @@ LPB.plugins['chart_line'] = function (active_component, leipiplugins) {
     var popover = $(".popover");
     var jsonStr = $(leipiplugins).val();
     var jsonObj = {
-        "type": "chart",
+        "type": "chart_line",
         "config": {
             "chart_type": "line-or-bar",
             "title": "no-set",
@@ -100,10 +100,10 @@ LPB.plugins['chart_line'] = function (active_component, leipiplugins) {
         jsonObj = JSON.parse($(leipiplugins).val());
         //右弹form  初始化值
         if (jsonObj.config.title !== undefined) {
-            $(popover).find("#chart_config_title").val(jsonObj.config.title);
+            $(popover).find("#chart_line_config_title").val(jsonObj.config.title);
         }
         if (jsonObj.config.dataUrl !== undefined) {
-            $(popover).find("#chart_config_data_url").val(jsonObj.config.dataUrl);
+            $(popover).find("#chart_line_config_data_url").val(jsonObj.config.dataUrl);
         }
     }
     //右弹form  取消控件
@@ -117,10 +117,10 @@ LPB.plugins['chart_line'] = function (active_component, leipiplugins) {
             var attr_name = $(e).attr("id");//属性名称
             var attr_val = $(e).val();
             switch (attr_name) {
-                case 'chart_config_title':
+                case 'chart_line_config_title':
                     jsonObj.config.title = attr_val;
                     break;
-                case 'chart_config_data_url':
+                case 'chart_line_config_data_url':
                     jsonObj.config.dataUrl = attr_val;
                     break;
             }
