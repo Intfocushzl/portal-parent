@@ -27,7 +27,16 @@ public class QrCodeUtil {
         // 第三部分非实时数据
         List<Map<String, Object>> datalist = (List<Map<String, Object>>)list.get(2);
         String saleDate = map.get("saleDate").toString();
+        String[] saleDate1 = new String[50];
+        if(saleDate!=null && saleDate!=""){
+             saleDate1 = saleDate.split(",");
+        }
+        String[] saleAmount1 = new String[50];
         String saleAmount = map.get("saleAmount").toString();
+        if(saleAmount!=null && saleAmount!=""){
+            saleAmount1 = saleAmount.split(",");
+        }
+
         String goodsName = map.get("goodsName").toString();
         //实时数据
         for (int i = 0; i < jsonArray.size(); i++) {
@@ -77,7 +86,7 @@ public class QrCodeUtil {
         node3.put("title", "no-set");
         node3.put("chart_type", "line-or-bar");
         node3.put("legend", goodsName + "前14天销售额趋势");
-        node3.put("xAxis", saleDate);
+        node3.put("xAxis", saleDate1);
         //================销售额标题
         JSONArray jsonAry11 = new JSONArray();
         JSONObject node11 = new JSONObject();
@@ -90,7 +99,7 @@ public class QrCodeUtil {
         JSONObject node12 = new JSONObject();
         node12.put("name", goodsName + "前14天销售额趋势");
         node12.put("type", "line");
-        node12.put("data", saleAmount);
+        node12.put("data", saleAmount1);
         jsonAry12.add(node12);
         node3.put("series", jsonAry12);
         jsonAry4.add(node3);
