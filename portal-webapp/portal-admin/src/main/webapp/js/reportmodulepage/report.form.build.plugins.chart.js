@@ -160,9 +160,9 @@ LPB.plugins['tables_v3'] = function (active_component, leipiplugins) {
     var jsonConfigObj;
     var document;
     //右弹form  初始化值
-    $(popover).find("#orgname").val(jsonObj.name);
     if (getStringValue(jsonStr) != "") {
         jsonObj = JSON.parse($(leipiplugins).val());
+        $(popover).find("#orgname").val(jsonObj.name);
         if (jsonObj.config.length > 0) {
             $.each(jsonObj.config, function (n, value) {
                 // 创建tab
@@ -190,6 +190,7 @@ LPB.plugins['tables_v3'] = function (active_component, leipiplugins) {
     });
     //右弹form  确定控件
     $(popover).delegate(".btn-info", "click", function (e) {
+        // 获取控件名称
         var inputs = $(popover).find("input");
         $.each(inputs, function (i, e) {
             var attr_name = $(e).attr("id");//属性名称
