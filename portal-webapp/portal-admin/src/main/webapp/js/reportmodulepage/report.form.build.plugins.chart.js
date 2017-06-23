@@ -10,6 +10,7 @@ LPB.plugins['banner'] = function (active_component, leipiplugins) {
     var jsonStr = $(leipiplugins).val();
     var jsonObj = {
         "type": "banner",
+        "name": "",
         "config": {
             "title": "",
             "subtitle": "",
@@ -20,6 +21,7 @@ LPB.plugins['banner'] = function (active_component, leipiplugins) {
     if (getStringValue(jsonStr) != "") {
         jsonObj = JSON.parse($(leipiplugins).val());
         //右弹form  初始化值
+        $(popover).find("#orgname").val(jsonObj.name);
         if (jsonObj.config.title !== undefined) {
             $(popover).find("#banner_config_title").val(jsonObj.config.title);
         }
@@ -56,6 +58,10 @@ LPB.plugins['banner'] = function (active_component, leipiplugins) {
                 case 'banner_config_info':
                     jsonObj.config.info = attr_val;
                     break;
+                case 'orgname':
+                    jsonObj.name = attr_val;
+                    active_component.find(".leipiplugins-orgname").text(attr_val);
+                    break;
             }
             active_component.popover("hide");
             LPB.genSource();//重置源代码
@@ -75,6 +81,7 @@ LPB.plugins['chart_line'] = function (active_component, leipiplugins) {
     var jsonStr = $(leipiplugins).val();
     var jsonObj = {
         "type": "chart_line",
+        "name": "",
         "config": {
             "chart_type": "line-or-bar",
             "title": "no-set",
@@ -99,6 +106,7 @@ LPB.plugins['chart_line'] = function (active_component, leipiplugins) {
     if (getStringValue(jsonStr) != "") {
         jsonObj = JSON.parse($(leipiplugins).val());
         //右弹form  初始化值
+        $(popover).find("#orgname").val(jsonObj.name);
         if (jsonObj.config.title !== undefined) {
             $(popover).find("#chart_line_config_title").val(jsonObj.config.title);
         }
@@ -123,6 +131,10 @@ LPB.plugins['chart_line'] = function (active_component, leipiplugins) {
                 case 'chart_line_config_data_url':
                     jsonObj.config.dataUrl = attr_val;
                     break;
+                case 'orgname':
+                    jsonObj.name = attr_val;
+                    active_component.find(".leipiplugins-orgname").text(attr_val);
+                    break;
             }
             active_component.popover("hide");
             LPB.genSource();//重置源代码
@@ -142,11 +154,13 @@ LPB.plugins['tables_v3'] = function (active_component, leipiplugins) {
     var jsonStr = $(leipiplugins).val();
     var jsonObj = {
         "type": "tables_v3",
+        "name": "",
         "config": []
     };
     var jsonConfigObj;
     var document;
     //右弹form  初始化值
+    $(popover).find("#orgname").val(jsonObj.name);
     if (getStringValue(jsonStr) != "") {
         jsonObj = JSON.parse($(leipiplugins).val());
         if (jsonObj.config.length > 0) {
@@ -176,10 +190,22 @@ LPB.plugins['tables_v3'] = function (active_component, leipiplugins) {
     });
     //右弹form  确定控件
     $(popover).delegate(".btn-info", "click", function (e) {
+        var inputs = $(popover).find("input");
+        $.each(inputs, function (i, e) {
+            var attr_name = $(e).attr("id");//属性名称
+            var attr_val = $(e).val();
+            switch (attr_name) {
+                case 'orgname':
+                    jsonObj.name = attr_val;
+                    active_component.find(".leipiplugins-orgname").text(attr_val);
+                    break;
+            }
+        });
+
         //清空config数组
         jsonObj.config = [];
         var tabDocuments = $(".tab_document");
-        // 遍历所有tab div
+        //遍历所有tab div
         $.each(tabDocuments, function (j, tabDoc) {
             document = $(tabDoc).attr("document");//tab_div 随机码
             jsonConfigObj = {
@@ -192,11 +218,13 @@ LPB.plugins['tables_v3'] = function (active_component, leipiplugins) {
             };
             // 遍历 所有input内容
             var inputs = $(tabDoc).find("input");
+            var nameString = "";
             $.each(inputs, function (i, e) {
                 var attr_name = $(e).attr("id");//属性名称
                 var attr_val = $(e).val();
                 switch (attr_name) {
                     case 'tables_v3_config_title_' + document:
+                        nameString = nameString + "_" + attr_val;
                         jsonConfigObj.title = attr_val;
                         break;
                     case 'tables_v3_config_data_url_' + document:
@@ -204,7 +232,7 @@ LPB.plugins['tables_v3'] = function (active_component, leipiplugins) {
                         break;
                 }
                 active_component.popover("hide");
-                LPB.genSource();//重置源代码
+                LPB.genSource();    //重置源代码
             });
             jsonObj.config[j] = jsonConfigObj;
         });

@@ -114,6 +114,7 @@ function rendererModule(reportModulePage) {
             // 设置值
             $("#" + moduleObjTempNewId + " textarea").val(JSON.stringify(moduleObj));
             $("#" + moduleObjTempNewId + " textarea").html(JSON.stringify(moduleObj));
+            $("#" + moduleObjTempNewId).children(".leipiplugins-orgname").html(moduleObj.name);
         }
     }
 }
