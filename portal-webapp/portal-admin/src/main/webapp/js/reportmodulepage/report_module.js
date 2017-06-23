@@ -92,7 +92,28 @@ function rendererModule(reportModulePage) {
     // 循环遍历控件
     if (contentJsonObj.parts !== undefined) {
         var partsObj = contentJsonObj.parts;
-        console.log(JSON.stringify(partsObj));
+        //console.log(JSON.stringify(partsObj));
+        var moduleObj;
+        var moduleObjTemp;
+        var moduleObjTempId;
+        var moduleObjTempNewId;
+        for (var i = 0, len = partsObj.length; i < len; i++) {
+            moduleObj = partsObj[i];
+            //console.log(JSON.stringify(moduleObj));
+            // 遍历所有属性
+            /*for (var key in moduleObj) {
+             console.log(key + ':' + moduleObj[key]);
+             }*/
+            moduleObjTemp = $("#" + moduleObj.type).append("\n\n\ \ \ \ ");
+            moduleObjTempId = moduleObjTemp.attr("id");
+            moduleObjTempNewId = moduleObjTempId + "_" + RndNum(6);
+            moduleObjTemp.attr("id", moduleObjTempNewId);
+            $("#target fieldset").append(moduleObjTemp.prop("outerHTML"));
+            $("#" + moduleObjTempNewId + " textarea").val(JSON.stringify(moduleObj));
+            $("#" + moduleObjTempNewId + " textarea").html(JSON.stringify(moduleObj));
+            // 还原模板原始id
+            moduleObjTemp.attr("id", moduleObjTempId);
+        }
     }
 }
 
