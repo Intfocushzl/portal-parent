@@ -99,21 +99,21 @@ function rendererModule(reportModulePage) {
         var moduleObjTempNewId;
         for (var i = 0, len = partsObj.length; i < len; i++) {
             moduleObj = partsObj[i];
-            //console.log(JSON.stringify(moduleObj));
             // 遍历所有属性
             /*for (var key in moduleObj) {
              console.log(key + ':' + moduleObj[key]);
              }*/
             moduleObjTemp = $("#" + moduleObj.type).append("\n\n\ \ \ \ ");
             moduleObjTempId = moduleObjTemp.attr("id");
-
+            moduleObjTempNewId = moduleObjTempId + "_" + RndNum(6);
             moduleObjTemp.attr("id", moduleObjTempNewId);
+            console.log(moduleObjTempNewId);
             $("#target fieldset").append(moduleObjTemp.prop("outerHTML"));
-            $("#" + moduleObjTempNewId + " textarea").val(JSON.stringify(moduleObj));
-            $("#" + moduleObjTempNewId + " textarea").html(JSON.stringify(moduleObj));
-
             // 还原模板原始id
             moduleObjTemp.attr("id", moduleObjTempId);
+            // 设置值
+            $("#" + moduleObjTempNewId + " textarea").val(JSON.stringify(moduleObj));
+            $("#" + moduleObjTempNewId + " textarea").html(JSON.stringify(moduleObj));
         }
     }
 }
