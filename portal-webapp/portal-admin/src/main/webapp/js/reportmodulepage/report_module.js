@@ -106,11 +106,12 @@ function rendererModule(reportModulePage) {
              }*/
             moduleObjTemp = $("#" + moduleObj.type).append("\n\n\ \ \ \ ");
             moduleObjTempId = moduleObjTemp.attr("id");
-            moduleObjTempNewId = moduleObjTempId + "_" + RndNum(6);
+
             moduleObjTemp.attr("id", moduleObjTempNewId);
             $("#target fieldset").append(moduleObjTemp.prop("outerHTML"));
             $("#" + moduleObjTempNewId + " textarea").val(JSON.stringify(moduleObj));
             $("#" + moduleObjTempNewId + " textarea").html(JSON.stringify(moduleObj));
+
             // 还原模板原始id
             moduleObjTemp.attr("id", moduleObjTempId);
         }
