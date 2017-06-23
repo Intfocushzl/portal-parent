@@ -141,7 +141,7 @@ LPB.plugins['tables_v3'] = function (active_component, leipiplugins) {
     var popover = $(".popover");
     var jsonStr = $(leipiplugins).val();
     var jsonObj = {
-        "type": "tables#v3",
+        "type": "tables_v3",
         "config": []
     };
     var jsonConfigObj;

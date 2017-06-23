@@ -179,20 +179,22 @@
                 <div id="build">
                     <form id="target" class="form-horizontal">
                         <fieldset>
+
+                            <!-- 模板标题 -->
                             <div id="legend" class="component" rel="popover" title="编辑属性" trigger="manual"
-                                 data-content="
-                <form class='form'>
-                  <div class='controls'>
-                    <label class='control-label'>报表标题</label> <input type='text' id='orgvalue' placeholder='请输入报表标题'>
-                    <hr/>
-                    <button class='btn btn-info' type='button'>确定</button><button class='btn btn-danger' type='button'>取消</button>
-                  </div>
-                </form>"
-                            >
-                                <input type="hidden" id="form_name" name="form_name" value="" class="leipiplugins"
-                                       leipiplugins="form_name"/>
+                                 data-content="<form class='form'>
+                                                  <div class='controls'>
+                                                    <label class='control-label'>报表标题</label> <input type='text' id='orgvalue' placeholder='请输入报表标题'>
+                                                    <hr/>
+                                                    <button class='btn btn-info' type='button'>确定</button><button class='btn btn-danger' type='button'>取消</button>
+                                                  </div>
+                                                </form>">
+                                <input type="hidden" id="form_name" name="form_name" value="" class="leipiplugins" leipiplugins="form_name"/>
                                 <legend class="leipiplugins-orgvalue">点击填写报表标题</legend>
                             </div>
+
+                            <!-- 追加其他模板 -->
+
                         </fieldset>
                     </form>
                 </div>
