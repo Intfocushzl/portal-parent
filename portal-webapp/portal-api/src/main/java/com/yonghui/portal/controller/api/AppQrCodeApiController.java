@@ -69,7 +69,7 @@ public class AppQrCodeApiController {
             //首先根据parameter里面的shopId去查  该门店所在区域下下的所有门店
             shopIdList = reportUtil.jdbcProListResultListMapByParam(SQLFilter.sqlInject("REP_000045"), SQLFilter.sqlInject(parameter));
             //查hana数据库  查询商品信息
-            hanaList = reportUtil.jdbcProListResultListMapByParam("REP_000099", SQLFilter.sqlInject(parameter));
+            hanaList = reportUtil.jdbcProListResultListMapByParam("REP_000046", SQLFilter.sqlInject(parameter));
             String saleDate = "";
             String saleAmount = "";
             String goodsName = "";

@@ -65,7 +65,6 @@ public class QrCodeUtil {
         //=======================================================
         JSONObject node1 = new JSONObject();
         node1.put("type", "banner");
-        JSONArray jsonAry3 = new JSONArray();
         JSONObject node2 = new JSONObject();
         node2.put("title", "");
         node2.put("subtitle", "");
@@ -75,9 +74,8 @@ public class QrCodeUtil {
         node2.put("date", date);
         node2.put("info",
                 "（1）趋势图，展示前14天的销售额的趋势\\u003cbr/\\u003e（2）时间点，为了告知实时销售的数据的截止时间\\u003cbr/\\u003e\\u003cbr\\u003e\\u003csmall\\u003e数据更新时间:" + format1.format(new Date().getTime()) + "+0800\u003c/small\u003e");
-        jsonAry3.add(node2);
 
-        node1.put("config", jsonAry3);
+        node1.put("config", node2);
         //=======================================================
         JSONObject node4 = new JSONObject();
         node4.put("type", "chart");
@@ -85,7 +83,8 @@ public class QrCodeUtil {
         JSONObject node3 = new JSONObject();
         node3.put("title", "no-set");
         node3.put("chart_type", "line-or-bar");
-        node3.put("legend", goodsName + "前14天销售额趋势");
+        String[] legend = {goodsName + "前14天销售额趋势"};
+        node3.put("legend", legend);
         node3.put("xAxis", saleDate1);
         //================销售额标题
         JSONArray jsonAry11 = new JSONArray();
@@ -113,20 +112,16 @@ public class QrCodeUtil {
         String[] aa = {"自身ID", "父ID", "门店", "实时销售", "实时销售额", "实时库存量", "实时库存金额"};
         node5.put("head", aa);
         node5.put("data", dataPastList);
-        JSONArray jsonAry6 = new JSONArray();
-        jsonAry6.add(node5);
         JSONObject node7 = new JSONObject();
-        node7.put("table", jsonAry6);
+        node7.put("table", node5);
         node7.put("title", "实时");
 
         JSONObject node8 = new JSONObject();
         String[] aa1 = {"自身ID", "父ID", "门店", "正常售价", "含税成本价", "DMS", "前14天日均销售", "本月销售额", "同比销售额", "环比销售额"};
         node8.put("head", aa1);
         node8.put("data", dataCurrentList);
-        JSONArray jsonAry8 = new JSONArray();
-        jsonAry8.add(node8);
         JSONObject node9 = new JSONObject();
-        node9.put("table", jsonAry8);
+        node9.put("table", node8);
         node9.put("title", "销售概况");
 
         jsonAry5.add(node7);
