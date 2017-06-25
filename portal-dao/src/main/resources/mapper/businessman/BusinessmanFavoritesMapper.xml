@@ -145,4 +145,32 @@
 		</foreach>
 	</delete>
 
+	<insert id="addFavorites" parameterType="Map" useGeneratedKeys="true" keyProperty="id">
+		insert into businessman_favorites
+		(
+		`user_id`,
+		`acticle_id`,
+		`status`,
+		`REMARK`,
+		`CREATER`,
+		`CREATE_TIME`,
+		`MODIFIER`,
+		`MODIFY_TIME`,
+		`DISABLED`,
+		`VERSION`
+		)
+		values
+		(
+		#{userId},
+		#{acticleId},
+		#{status},
+		#{remark},
+		#{creater},
+		#{createTime},
+		#{modifier},
+		NOW(),
+		#{disabled},
+		#{version}
+		)
+	</insert>
 </mapper>

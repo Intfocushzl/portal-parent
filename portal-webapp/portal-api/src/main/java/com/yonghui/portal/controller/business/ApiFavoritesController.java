@@ -89,6 +89,8 @@ public class ApiFavoritesController {
                 BusinessmanFavorites favorites = apiFavoritesService.favoriteDetail(params);
                 if(favorites!=null && favorites.getStatus().toString().equals(params.get("status").toString())){
                     return R.error("参数有误");
+                }else if(favorites == null){
+                    apiFavoritesService.addFavorites(params);
                 }else{
                     apiFavoritesService.editfavorite(params);
                 }

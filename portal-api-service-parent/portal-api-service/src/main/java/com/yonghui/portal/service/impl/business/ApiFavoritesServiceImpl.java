@@ -61,4 +61,8 @@ public class ApiFavoritesServiceImpl implements ApiFavoritesService {
 	public BusinessmanFavorites favoriteDetail(Map<String, Object> map){
 		return businessmanFavoritesMapper.favoriteDetail(map);
 	}
+
+	public void addFavorites(Map<String, Object> map){
+		 businessmanFavoritesMapper.addFavorites(map);
+	}
 }
