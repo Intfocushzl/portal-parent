@@ -36,7 +36,7 @@ $("#saveOrUpdateModule").click(function () {
     reportModulePage.content = JSON.stringify(selfModuleJson());
     // 专题类型 0：PC专题 1：APP专题
     reportModulePage.pageType = 1;
-    var url = module_id == null ? "../reportmodulepage/save" : "../reportmodulepage/update";
+    var url = (module_id == null || module_id == "") ? "../reportmodulepage/save" : "../reportmodulepage/update";
     $.ajax({
         type: "POST",
         contentType: 'application/json',
