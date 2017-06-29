@@ -28,6 +28,7 @@ public class SftpUtil {
     private int port = 22;      // 端口
     private String username = "";   // 用户名
     private String password = "";   // 密码
+    private Integer connecttime = 1;    // 登录超时时间 默认1分钟
 
     public String getHost() {
         return host;
@@ -45,11 +46,25 @@ public class SftpUtil {
         return password;
     }
 
+    public Integer getConnecttime() {
+        return connecttime;
+    }
+
+    public void setConnecttime(Integer connecttime) {
+        this.connecttime = connecttime;
+    }
+
+    /**
+     * 初始化连接信息
+     *
+     * @param sysFtpConfig
+     */
     public SftpUtil(SysFtpConfig sysFtpConfig) {
         this.host = sysFtpConfig.getHost();
         this.port = sysFtpConfig.getPort();
         this.username = sysFtpConfig.getUsername();
         this.password = sysFtpConfig.getPassword();
+        this.connecttime = sysFtpConfig.getConnecttime() != null ? sysFtpConfig.getConnecttime() : 1;
     }
 
     /**
@@ -67,7 +82,7 @@ public class SftpUtil {
         Properties sshConfig = new Properties();
         sshConfig.put("StrictHostKeyChecking", "no");
         sshSession.setConfig(sshConfig);
-        sshSession.connect(5 * 60000);    //	设置登陆超时时间 5分钟
+        sshSession.connect(connecttime * 60000);    //	设置登陆超时时间 分钟
         logger.debug(SftpUtil.class + " Session connected.");
 
         logger.debug(SftpUtil.class + " Opening Channel.");
@@ -78,6 +93,7 @@ public class SftpUtil {
     }
 
     /**
+     * 关闭连接
      * Disconnect with server
      *
      * @throws Exception

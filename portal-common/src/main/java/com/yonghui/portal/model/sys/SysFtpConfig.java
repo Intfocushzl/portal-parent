@@ -19,10 +19,19 @@ public class SysFtpConfig extends AuditAuto {
     private String host;
     //端口
     private Integer port;
+    private Integer connecttime;
 
     private String rootpath;
 
     private String origin;
+
+    public Integer getConnecttime() {
+        return connecttime;
+    }
+
+    public void setConnecttime(Integer connecttime) {
+        this.connecttime = connecttime;
+    }
 
     public String getOrigin() {
         return origin;

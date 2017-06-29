@@ -1,0 +1,145 @@
+.file-btn {
+    position: relative !important;
+}
+
+.tab-bar {
+    overflow: hidden;
+    border-bottom: 1px solid #ccc;
+}
+
+.tab-bar a {
+    display: block;
+    float: left;
+    padding: 5px 10px;
+    border: 1px solid #ccc;
+    background-color: #eee;
+    margin-bottom: -1px;
+    border-left: none;
+}
+
+.tab-bar a:first-child {
+    border-left: 1px solid #ccc;
+}
+
+.tab-bar a.active {
+    background-color: #fff;
+    border-bottom: 1px solid #fff;
+}
+
+.pc-des {
+    display: none;
+    margin-top: 15px;
+}
+
+.pc-des textarea, .pc-des input {
+    border: 1px solid #ccc;
+    line-height: 22px;
+    text-indent: 4px;
+}
+
+.pc-des input {
+    height: 22px;
+    width: 20em;
+}
+
+.pc-des fieldset {
+    border: 1px solid #ccc;
+}
+
+.pc-des legend {
+    margin-left: 10px;
+}
+
+.pc-des legend span {
+    display: block;
+    margin: 0 5px;
+}
+
+.pc-des fieldset div {
+    margin-bottom: .5em;
+    padding: .5em;
+    text-align: left;
+}
+
+.pc-des label {
+    display: inline-block;
+    width: 8em;
+    text-align: left;
+    vertical-align: top;
+}
+
+.pc-des textarea {
+    width: 400px;
+    height: 100px;
+}
+
+.ke-dialog-body .swfupload {
+    position: static;
+}
+
+#tabs {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    overflow: hidden;
+}
+
+#tabs li {
+    float: left;
+    display: block;
+    padding: 5px;
+    background-color: #00a65a;
+    margin-right: 5px;
+}
+
+#tabs li span {
+    color: #fff;
+    text-decoration: none;
+}
+
+#tabs li.current {
+    background-color: #00a65a;
+}
+
+#tabs li.current span {
+    color: #fff;
+    text-decoration: none;
+}
+
+#tabs li span.remove {
+    color: #f00;
+    margin-left: 10px;
+}
+
+.a_del {
+    display: none;
+}
+
+/** fileinput **/
+.krajee-default.file-preview-frame .kv-file-content {
+    height: auto !important;
+}
+
+.krajee-default.file-preview-frame .file-thumbnail-footer {
+    height: auto !important;
+}
+
+.krajee-default .file-upload-indicator {
+    display: none;
+}
+
+.krajee-default .file-actions {
+    display: none;
+}
+
+.krajee-default .file-thumb-progress {
+    display: none;
+}
+
+video {
+    width: 100%;
+}
+
+#attachFile {
+    margin-bottom: 5px;
+}

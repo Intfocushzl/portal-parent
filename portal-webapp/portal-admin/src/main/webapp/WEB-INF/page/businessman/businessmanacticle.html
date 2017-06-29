@@ -8,166 +8,22 @@
     <link rel="stylesheet" href="${rc.contextPath}/statics/plugins/kindeditor/themes/default/default.css"/>
     <script charset="utf-8" src="${rc.contextPath}/statics/plugins/kindeditor/kindeditor-min.js"></script>
     <script charset="utf-8" src="${rc.contextPath}/statics/plugins/kindeditor/lang/zh_CN.js"></script>
-    <!-- uploadify -->
-    <link type="text/css" rel="stylesheet" href="${rc.contextPath}/statics/uploadify/uploadify.css"/>
-    <script type="text/javascript" src="${rc.contextPath}/statics/uploadify/jquery.uploadify.js"></script>
+    <!-- fileinput -->
+    <link rel="stylesheet" href="${rc.contextPath}/statics/plugins/fileinput/css/fileinput.min.css"/>
+    <script charset="utf-8" src="${rc.contextPath}/statics/plugins/fileinput/js/fileinput.min.js"></script>
+    <!--
+    <link rel="stylesheet" href="${rc.contextPath}/statics/plugins/fileinput/css/fileinput-rtl.min.css"/>
+    <script charset="utf-8" src="${rc.contextPath}/statics/plugins/fileinput/js/plugins/piexif.min.js"></script>
+    <script charset="utf-8" src="${rc.contextPath}/statics/plugins/fileinput/js/plugins/purify.min.js"></script>
+    <script charset="utf-8" src="${rc.contextPath}/statics/plugins/fileinput/js/plugins/sortable.min.js"></script>
+     -->
+    <script charset="utf-8" src="${rc.contextPath}/statics/plugins/fileinput/js/locales/zh.js"></script>
+
     <!-- 图片自适应大小 -->
     <script type="text/javascript"
             src="${rc.contextPath}/statics/plugins/jquery-autoimg/jQuery.autoIMG.min.js"></script>
 
-    <style type="text/css">
-        .file-btn {
-            position: relative !important;
-        }
-
-        .tab-bar {
-            overflow: hidden;
-            border-bottom: 1px solid #ccc;
-        }
-
-        .tab-bar a {
-            display: block;
-            float: left;
-            padding: 5px 10px;
-            border: 1px solid #ccc;
-            background-color: #eee;
-            margin-bottom: -1px;
-            border-left: none;
-        }
-
-        .tab-bar a:first-child {
-            border-left: 1px solid #ccc;
-        }
-
-        .tab-bar a.active {
-            background-color: #fff;
-            border-bottom: 1px solid #fff;
-        }
-
-        .pc-des {
-            display: none;
-            margin-top: 15px;
-        }
-
-        .pc-des textarea, .pc-des input {
-            border: 1px solid #ccc;
-            line-height: 22px;
-            text-indent: 4px;
-        }
-
-        .pc-des input {
-            height: 22px;
-            width: 20em;
-        }
-
-        .pc-des fieldset {
-            border: 1px solid #ccc;
-        }
-
-        .pc-des legend {
-            margin-left: 10px;
-        }
-
-        .pc-des legend span {
-            display: block;
-            margin: 0 5px;
-        }
-
-        .pc-des fieldset div {
-            margin-bottom: .5em;
-            padding: .5em;
-            text-align: left;
-        }
-
-        .pc-des label {
-            display: inline-block;
-            width: 8em;
-            text-align: left;
-            vertical-align: top;
-        }
-
-        .pc-des textarea {
-            width: 400px;
-            height: 100px;
-        }
-
-        .ke-dialog-body .swfupload {
-            position: static;
-        }
-
-        .file-btn {
-            position: relative;
-        }
-
-        .swfupload {
-            left: 0px;
-            height: 30px;
-        }
-
-        .uploadify {
-            position: absolute !important;
-            left: -10px;
-            top: 0;
-            z-index: 10;
-            /* older safari/Chrome browsers */
-            -webkit-opacity: 0;
-            /* Netscape and Older than Firefox 0.9 */
-            -moz-opacity: 0;
-            /* Safari 1.x (pre WebKit!) 老式khtml内核的Safari浏览器*/
-            -khtml-opacity: 0;
-            /* IE9 + etc...modern browsers */
-            opacity: 0;
-            /* IE 4-9 */
-            filter: alpha(opacity=50);
-            /*This works in IE 8 & 9 too*/
-            -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
-            /*IE4-IE9*/
-            filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=0);
-        }
-
-        .uploadify-queue-item {
-            max-width: 700px;
-            min-width: 600px;;
-        }
-
-        #tabs {
-            margin: 0;
-            padding: 0;
-            list-style: none;
-            overflow: hidden;
-        }
-
-        #tabs li {
-            float: left;
-            display: block;
-            padding: 5px;
-            background-color: #00a65a;
-            margin-right: 5px;
-        }
-
-        #tabs li span {
-            color: #fff;
-            text-decoration: none;
-        }
-
-        #tabs li.current {
-            background-color: #00a65a;
-        }
-
-        #tabs li.current span {
-            color: #fff;
-            text-decoration: none;
-        }
-
-        #tabs li span.remove {
-            color: #f00;
-            margin-left: 10px;
-        }
-
-        .a_del {
-            display: none;
-        }
-    </style>
+    <link rel="stylesheet" href="${rc.contextPath}/statics/css/businessman/businessmanacticle.css"/>
 </head>
 <body>
 <div id="rrapp" v-cloak>
@@ -204,10 +60,6 @@
         <form class="form-horizontal">
             <div class="form-group">
                 <div class="col-sm-2 control-label">文章类型</div>
-                <!--<div class="col-sm-10">
-                    <input type="text" class="form-control" v-model="businessmanActicle.acticleType"
-                           placeholder="文章类型 1：文章 2：视频"/>
-                </div>--><!-- @click="getTagList(1)"    @click="getTagList(2)" -->
                 <label class="radio-inline">
                     <input type="radio" name="type" value="1" v-model="businessmanActicle.acticleType"/>
                     <input type="radio" @click="getTagList(1)" name="type" value="1"
@@ -237,10 +89,6 @@
             </div>
             <div class="form-group">
                 <div class="col-sm-2 control-label">是否APP推送</div>
-                <!--<div class="col-sm-10">
-                    <input type="text" class="form-control" v-model="businessmanActicle.appPush"
-                           placeholder="是否APP推送 0:推送 1：不推送"/>
-                </div>-->
                 <label class="radio-inline">
                     <input type="radio" name="appPush" value="0" v-model="businessmanActicle.appPush"/>
                     推送
@@ -277,49 +125,30 @@
             <div class="form-group">
                 <div class="col-sm-2 control-label">附件</div>
                 <div class="col-sm-10">
-                    <div style="width: 100%;">
-                        <a href="javascript:void(0);" class="btn file-btn" style="height: 30px;">
-                            <i class="icon-cloud-upload"></i>上传附件
-                            <input type="file" id="input_file" name="inputFile" class="pic-upload-input"/>
-                        </a>
-                    </div>
-                    <div style="width: 100%">
-                        <a href="javascript:void(0)" id="id_del_file" class="a_del">删除</a>
-                        <input type="text" readonly class="form-control" v-model="businessmanActicle.attachFile"
-                               id="attachFile"
-                               placeholder="附件地址"/>
+                    <input type="text" readonly class="form-control" v-model="businessmanActicle.attachFile"
+                           id="attachFile"
+                           placeholder="附件地址"/>
+                    <div class="form-group" id="form-group-file-attachment">
+                        <input id="file-attachment" type="file" class="file-loading">
                     </div>
                 </div>
             </div>
             <div class="form-group">
                 <div class="col-sm-2 control-label">封面图</div>
                 <div class="col-sm-10">
-                    <div style="width: 100%;">
-                        <a href="javascript:void(0);" class="btn file-btn">
-                            <i class="icon-cloud-upload"></i>上传图片
-                            <input type="file" id="input_cover" name="inputCover" class="pic-upload-input">
-                        </a>
+                    <div class="form-group" id="form-group-file-cover">
+                        <input id="file-cover" type="file" class="file-loading">
                     </div>
-                    <div style="width: 100%;">
-                        <img src="" alt="" class="pic-upload-show"
-                             style="background-color: #ccc;max-height: 100px;" id="cover_pic_show">
-                        <a href="javascript:void(0)" id="id_del_cover" class="a_del">删除</a>
-                        <p class="explain">图片请选择jpg,jpeg,gif,png格式</p>
-                    </div>
-                </div>
-            </div>
-            <!--<div class="form-group">
-                   <div class="col-sm-2 control-label">正文</div>
-                   <div class="col-sm-10">
-                    <input type="text" class="form-control" v-model="businessmanActicle.content" placeholder="正文"/>
                 </div>
             </div>
             <div class="form-group">
-                   <div class="col-sm-2 control-label">摘要</div>
-                   <div class="col-sm-10">
-                    <input type="text" class="form-control" v-model="businessmanActicle.abstracts" placeholder="摘要"/>
+                <div class="col-sm-2 control-label">视频文件</div>
+                <div class="col-sm-10">
+                    <div class="form-group" id="form-group-file-video">
+                        <input id="file-video" type="file" class="file-loading">
+                    </div>
                 </div>
-            </div>-->
+            </div>
             <div class="form-group">
                 <div class="col-sm-2 control-label"></div>
                 <div class="col-sm-10">
@@ -334,8 +163,9 @@
                               placeholder="摘要" id="abstracts" name="abstracts"></textarea>
                         </div>
                         <div class="pc-des">
-                    <textarea style="width:100%;height:200px;" kindEditor="true" v-model="businessmanActicle.content"
-                              placeholder="正文" id="content" name="content"></textarea>
+                    <textarea style="width:100%;height:200px;" kindEditor="true"
+                              v-model="businessmanActicle.contentManuscript"
+                              placeholder="正文" id="contentManuscript" name="contentManuscript"></textarea>
                         </div>
                     </div>
                 </div>
@@ -397,5 +227,6 @@
 </div>
 
 <script src="${rc.contextPath}/js/businessman/businessmanacticle.js?_${date.systemTime}"></script>
+<script src="${rc.contextPath}/js/businessman/businessmanacticlefileinput.js?_${date.systemTime}"></script>
 </body>
 </html>

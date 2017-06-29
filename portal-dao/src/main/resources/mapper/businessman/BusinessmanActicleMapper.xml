@@ -98,6 +98,7 @@
 			`content_manuscript`,
 			`abstracts`, 
 			`cover_img`,
+			`attach_video`,
 			`attach_file`,
 			`status`, 
 			`pageview`, 
@@ -121,6 +122,7 @@
 			#{contentManuscript},
 			#{abstracts}, 
 			#{coverImg},
+			#{attachVideo},
 			#{attachFile},
 			#{status}, 
 			#{pageview}, 
@@ -147,6 +149,7 @@
             <if test="contentManuscript != null">content_manuscript = #{contentManuscript},</if>
             <if test="abstracts != null">`abstracts` = #{abstracts},</if>
             <if test="coverImg != null">`cover_img` = #{coverImg},</if>
+            <if test="attachVideo != null">`attach_video` = #{attachVideo},</if>
             <if test="attachFile != null">`attach_file` = #{attachFile},</if>
             <if test="status != null">`status` = #{status},</if>
             <if test="pageview != null">`pageview` = #{pageview},</if>

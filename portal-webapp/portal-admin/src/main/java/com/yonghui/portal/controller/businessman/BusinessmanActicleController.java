@@ -63,7 +63,7 @@ public class BusinessmanActicleController extends AbstractController {
     @RequestMapping("/save")
     @RequiresPermissions("businessmanacticle:save")
     public R save(@RequestBody BusinessmanActicle businessmanActicle) {
-        businessmanActicle.setContent(businessmanActicle.getContent().replace("\\\"", "'").replace("	", "").replace("\\r\\n", "<br/>"));
+        businessmanActicle.setContentManuscript(businessmanActicle.getContentManuscript().replace("\\\"", "'").replace("	", "").replace("\\r\\n", "<br/>"));
         businessmanActicleService.save(businessmanActicle);
         return R.success();
     }
@@ -74,7 +74,7 @@ public class BusinessmanActicleController extends AbstractController {
     @RequestMapping("/update")
     @RequiresPermissions("businessmanacticle:update")
     public R update(@RequestBody BusinessmanActicle businessmanActicle) {
-        businessmanActicle.setContent(businessmanActicle.getContent().replace("\\\"", "'").replace("	", "").replace("\\r\\n", "<br/>"));
+        businessmanActicle.setContentManuscript(businessmanActicle.getContentManuscript().replace("\\\"", "'").replace("	", "").replace("\\r\\n", "<br/>"));
         businessmanActicleService.update(businessmanActicle);
         return R.success();
     }

@@ -115,6 +115,13 @@ var vm = new Vue({
             KindEditor.instances[1].html("");
             $("#cover_pic_show").prop("src", "");
             $("#tabs").html("");
+            // 在 ajax中 初始化 fileinput 配置参数是不起作用的  需要 先销毁，再初始化
+            $("#file-cover").fileinput('destroy');
+            $("#file-attachment").fileinput('destroy');
+            $("#file-video").fileinput('destroy');
+            initCoverImgNew();
+            initattachFileNew();
+            initVideoNew();
         },
         update: function (event) {
             var id = getSelectedRow();
@@ -131,12 +138,12 @@ var vm = new Vue({
 
             var tagLen = $(".tab").length;
             var tag = "";
-            for(var i = 0 ;i < tagLen;i++){
-                tag += $(".tab").eq(i).html()+",";
+            for (var i = 0; i < tagLen; i++) {
+                tag += $(".tab").eq(i).html() + ",";
             }
-            vm.businessmanActicle.tagInfo = tag.substr(0,tag.length-1);
+            vm.businessmanActicle.tagInfo = tag.substr(0, tag.length - 1);
             vm.businessmanActicle.abstracts = KindEditor.instances[0].html();
-            vm.businessmanActicle.content = KindEditor.instances[1].html();
+            vm.businessmanActicle.contentManuscript = KindEditor.instances[1].html();
             vm.businessmanActicle.status = status;
             console.log(vm.businessmanActicle);
             $.ajax({
@@ -181,11 +188,10 @@ var vm = new Vue({
             $.get("../businessmanacticle/info/" + id, function (r) {
                 vm.businessmanActicle = r.businessmanActicle;
                 KindEditor.instances[0].html(vm.businessmanActicle.abstracts);
-                KindEditor.instances[1].html(vm.businessmanActicle.content);
+                KindEditor.instances[1].html(vm.businessmanActicle.contentManuscript);
                 $("#cover_pic_show").prop("src", vm.businessmanActicle.coverImg);
                 $("#attachFile").val(vm.businessmanActicle.attachFile);
                 vm.getTagList(vm.businessmanActicle.acticleType);
-                vm.businessmanActicle.oldContent = vm.businessmanActicle.content;
                 if (vm.businessmanActicle.tagInfo) {
                     var tags = vm.businessmanActicle.tagInfo.split(",");
                     for (var i = 0; i < tags.length; i++) {
@@ -193,13 +199,13 @@ var vm = new Vue({
                             '</li>');
                     }
                 }
-                if (vm.businessmanActicle.attachFile) {
-                    $("#id_del_file").css('display', 'block');
-                }
-                if (vm.businessmanActicle.coverImg) {
-                    $("#id_del_cover").css('display', 'block');
-                }
-
+                // 在 ajax中 初始化 fileinput 配置参数是不起作用的  需要 先销毁，再初始化
+                $("#file-cover").fileinput('destroy');
+                $("#file-attachment").fileinput('destroy');
+                $("#file-video").fileinput('destroy');
+                initCoverImg(vm.businessmanActicle.coverImg);
+                initattachFile(vm.businessmanActicle.attachFile);
+                initVideo(vm.businessmanActicle.attachVideo);
             });
         },
         reload: function (event) {
@@ -388,133 +394,6 @@ function commentGqGrid(id) {
         }
     });
 }
-
-
-//编辑器
-var $tab = $('.tab-bar a');
-var $pcDes = $('.pc-des');
-$pcDes.eq(0).css('display', 'block')
-$tab.click(function () {
-    var num = $(this).index();
-    $(this).addClass('active').siblings().removeClass('active');
-    $pcDes.eq(num).css('display', 'block').siblings('.pc-des').css('display', 'none')
-});
-
-initkindEditor();
-//初始化富文本
-function initkindEditor() {
-    KindEditor.ready(function (K) {
-        vm.editor1 = K.create('textarea[kindEditor="true"]', {
-            themeType: "simple",
-            uploadJson: '../upload/kindEditorImgUpload',  //指定上传图片的服务器端程序
-            fileManagerJson: '',                //指定浏览远程图片的服务器端程序
-            allowFileManager: true,             //true时显示浏览服务器图片功能。服务器图片就是我们上传的图片所在的目录。
-            resizeType: 1,
-            pasteType: 2,
-            syncType: "",
-            filterMode: true,
-            allowPreviewEmoticons: false,
-            //先注释页面查看所有图标的data-name
-            items: [
-                'source', 'undo', 'redo', 'plainpaste', 'wordpaste', 'clearhtml', 'quickformat',
-                'selectall', 'fullscreen', 'fontname', 'fontsize', '|', 'forecolor', 'hilitecolor',
-                'bold', 'italic', 'underline', 'hr', 'removeformat', '|', 'justifyleft', 'justifycenter',
-                'justifyright', 'insertorderedlist', 'insertunorderedlist', '|', 'link', 'image', 'multiimage',
-                'unlink', 'baidumap', 'emoticons'
-            ],
-            //设置编辑器创建后执行的回调函数
-            afterCreate: function () {
-                var self = this;
-                K.ctrl(document, 13, function () {
-                    self.sync();
-                });
-                K.ctrl(self.edit.doc, 13, function () {
-                    self.sync();
-                });
-            }, afterBlur: function () {
-                this.sync();
-            },
-            afterChange: function () {
-                //富文本输入区域的改变事件，一般用来编写统计字数等判断
-                K('.word_count1').html("最多20个字符,已输入" + this.count() + "个字符");
-            },
-            afterUpload: function (url) {
-                //上传图片后的代码
-            },
-            allowFileManager: false,
-            allowFlashUpload: false,
-            allowMediaUpload: false,
-            allowFileUpload: false
-        });
-        //可以调整高度，但不能调整宽度
-        /*vm.editor1.show({
-         resizeMode: 1
-         });*/
-    });
-}
-
-
-//上传封面图
-$('#input_cover').uploadify({
-    'swf': rcContextPath + '/statics/uploadify/uploadify.swf',
-    'uploader': '../upload/itemImgUpload',
-    'height': 25,
-    'whith': 120,
-    'auto': true,
-    'fileDataName': 'file',
-    'buttonText': '',
-    'fileTypeExts': '*.gif; *.jpg;*.png;*.jpeg',
-    'multi': false,
-    'method': 'post',
-    'debug': false,
-    'onUploadSuccess': function (file, data, response) {
-        var $showImage = $("#cover_pic_show");
-        var data = eval("(" + data + ")");
-        if (data.RetCode == 0) {
-            var url = data.RetUrl;
-            $showImage.prop("src", url);
-            $("#coverImg").val(url);
-            vm.businessmanActicle.coverImg = url;
-            alert('上传成功', function (index) {
-                $("#id_del_cover").css('display', 'block');
-            });
-        }
-    },
-    'onUploadError': function (file, errorCode, errorMsg, errorString) {
-        alert('文件:' + file.name + '上传失败!');
-    }
-});
-
-//上传附件
-$('#input_file').uploadify({
-    'successTimeout': 5 * 60000,
-    'swf': rcContextPath + '/statics/uploadify/uploadify.swf',
-    'uploader': '../upload/itemImgUpload',
-    'height': 20,
-    'whith': 120,
-    'auto': true,
-    'fileDataName': 'file',
-    'buttonText': '',
-    'fileTypeExts': '*.pdf;*.avi;*.mp4;*.png;*.jpg;*.doc;*.docx',
-    'multi': false,
-    'method': 'post',
-    'debug': false,
-    'onUploadSuccess': function (file, data, response) {
-        var data = eval("(" + data + ")");
-        if (data.RetCode == 0) {
-            var url = data.RetUrl;
-            $("#attachFile").val(url);
-            vm.businessmanActicle.attachFile = url;
-            alert('上传成功', function (index) {
-                $("#id_del_file").css('display', 'block');
-            });
-        }
-    },
-    'onUploadError': function (file, errorCode, errorMsg, errorString) {
-        alert('文件:' + file.name + '上传失败!');
-    }
-
-});
 
 // 图片自适应
 $(function () {

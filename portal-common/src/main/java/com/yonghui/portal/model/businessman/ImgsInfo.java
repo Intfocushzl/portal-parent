@@ -23,6 +23,16 @@ public class ImgsInfo extends AuditAuto {
     private String imgPath;
     //目录ID
     private String directoryId;
+    //1图片，2附件，3音频
+    private Long tag;
+
+    public Long getTag() {
+        return tag;
+    }
+
+    public void setTag(Long tag) {
+        this.tag = tag;
+    }
 
     /**
      * 设置：图片名称
