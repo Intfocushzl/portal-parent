@@ -14,7 +14,7 @@ function initkindEditor() {
     KindEditor.ready(function (K) {
         vm.editor1 = K.create('textarea[kindEditor="true"]', {
             themeType: "simple",
-            uploadJson: '../upload/kindEditorImgUpload',  //指定上传图片的服务器端程序
+            uploadJson: '../upload/kindEditorImgUpload?tag=4',  //指定上传图片的服务器端程序
             fileManagerJson: '',                //指定浏览远程图片的服务器端程序
             allowFileManager: true,             //true时显示浏览服务器图片功能。服务器图片就是我们上传的图片所在的目录。
             resizeType: 1,

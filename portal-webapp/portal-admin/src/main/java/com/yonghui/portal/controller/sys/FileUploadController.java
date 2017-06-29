@@ -42,6 +42,8 @@ public class FileUploadController {
      */
     @RequestMapping("/kindEditorImgUpload")
     public void kindEditorImgUpload(HttpServletRequest request, HttpServletResponse response) {
+        // 1,图片，2附件，3，视频,4，插图
+        Long tag = Long.parseLong(request.getParameter("tag"));
         PrintWriter out;
         JSONObject json = new JSONObject();
         try {
@@ -63,6 +65,7 @@ public class FileUploadController {
 
                         //原图
                         imgsInfo = new ImgsInfo();
+                        imgsInfo.setTag(tag);
                         imgsInfo.setName(fileName);
                         imgsInfo.setSysName(sysName);
                         imgsInfo.setImgSize(file.getSize() + "");
@@ -102,7 +105,7 @@ public class FileUploadController {
      */
     @RequestMapping("/itemUpload")
     public void itemUpload(HttpServletRequest request, HttpServletResponse response) {
-        // 1,图片，2附件，3，视频
+        // 1,图片，2附件，3，视频,4，插图
         Long tag = Long.parseLong(request.getParameter("tag"));
         JSONObject json = new JSONObject();
         json.put("ErrMsg", "上传失败!");
