@@ -86,7 +86,7 @@ function rendererModule(reportModulePage) {
     // 设置标题
     if (contentJsonObj.title !== undefined) {
         $("#form_name").val(contentJsonObj.title);
-        $(".leipiplugins-orgvalue").html(contentJsonObj.title);
+        $("#legend .leipiplugins-orgvalue").html(contentJsonObj.title);
     }
 
     // 循环遍历控件

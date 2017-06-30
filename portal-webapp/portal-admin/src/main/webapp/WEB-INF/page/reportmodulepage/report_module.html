@@ -22,6 +22,10 @@
 
     <style>
 
+        .leipiplugins {
+            cursor: move;
+        }
+
         .tab-content {
             overflow: hidden !important;
         }
@@ -31,13 +35,32 @@
         }
 
         #target {
-            min-height: 200px;
+            min-height: 400px;
             border: 1px solid #ccc;
             padding: 5px;
         }
 
         #target .component {
-            border: 1px solid #fff;
+            /*border: 1px solid #fff;*/
+            border: 1px dashed #ccc;
+            padding: 10px 0px;
+        }
+
+        #temp .component {
+            border: none !important;
+        }
+
+        .module-left {
+            max-width: 400px;
+            margin-right: 30px;
+        }
+
+        #build {
+            max-width: 400px;
+        }
+
+        #legend {
+            border: 1px solid #fff !important;
         }
 
         #temp {
@@ -69,10 +92,6 @@
             min-height: 500px;
         }
 
-        .span6 {
-            width: 50%;
-        }
-
         .container {
             width: 100%;
         }
@@ -83,6 +102,10 @@
 
         [class*="span"] {
             margin-left: 0px;
+        }
+
+        .controls {
+            cursor: pointer;
         }
 
         .controls .plugjsonstr {
@@ -158,6 +181,10 @@
             width: 100%;
         }
 
+        .container {
+            min-width: 1000px;
+        }
+
         /*.radio input[type="radio"], .checkbox input[type="checkbox"] {
             margin-left: 20px !important;
         }*/
@@ -172,7 +199,7 @@
 <div class="container">
     <div class="row clearfix">
 
-        <div class="span6">
+        <div class="span6 module-left">
             <div class="clearfix">
                 <h2>模板定义</h2>
                 <hr>
@@ -189,7 +216,8 @@
                                                     <button class='btn btn-info' type='button'>确定</button><button class='btn btn-danger' type='button'>取消</button>
                                                   </div>
                                                 </form>">
-                                <input type="hidden" id="form_name" name="form_name" value="" class="leipiplugins" leipiplugins="form_name"/>
+                                <input type="hidden" id="form_name" name="form_name" value="" class="leipiplugins"
+                                       leipiplugins="form_name"/>
                                 <legend class="leipiplugins-orgvalue">点击填写报表标题</legend>
                             </div>
 
