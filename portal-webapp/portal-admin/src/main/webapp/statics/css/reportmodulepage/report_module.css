@@ -1,0 +1,167 @@
+.leipiplugins {
+    cursor: move;
+}
+
+.tab-content {
+    overflow: hidden !important;
+}
+
+#components {
+    min-height: 600px;
+}
+
+#target {
+    min-height: 400px;
+    border: 1px solid #ccc;
+    padding: 5px;
+}
+
+#target .component {
+    /*border: 1px solid #fff;*/
+    border: 1px dashed #ccc;
+    padding: 10px 0px;
+}
+
+#temp .component {
+    border: none !important;
+}
+
+.module-left {
+    max-width: 400px;
+    margin-right: 30px;
+}
+
+#build {
+    max-width: 400px;
+}
+
+#legend {
+    border: 1px solid #fff !important;
+}
+
+#temp {
+    width: 500px;
+    background: white;
+    border: 1px dotted #ccc;
+    border-radius: 10px;
+}
+
+.popover {
+    width: 450px;
+    max-width: 500px !important;
+    margin-left: -10px !important;
+}
+
+.popover-content form {
+    margin: 0 auto;
+    width: 100%;
+}
+
+.popover-content form .btn {
+    margin-right: 10px
+}
+
+#source {
+    min-height: 500px;
+}
+
+#jsonstr {
+    min-height: 500px;
+}
+
+.container {
+    width: 100%;
+}
+
+.row {
+    margin-left: 0px;
+}
+
+[class*="span"] {
+    margin-left: 0px;
+}
+
+.controls {
+    cursor: pointer;
+}
+
+.controls .plugjsonstr {
+    /*display: none;*/
+}
+
+.form-horizontal .control-label {
+    width: 110px !important;
+}
+
+.form-horizontal .controls {
+    padding-left: 120px;
+    margin-left: 0px !important;
+}
+
+/*.leipiplugins {
+    width: 100% !important;
+}*/
+
+/* tabs */
+#tabs {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    overflow: hidden;
+}
+
+#tabs li {
+    float: left;
+    display: block;
+    padding: 5px;
+    background-color: rgb(60, 118, 61);
+    margin-right: 5px;
+}
+
+#tabs li a {
+    color: #fff;
+    text-decoration: none;
+}
+
+#tabs li.current {
+    background-color: #00a65a;
+}
+
+#tabs li.current a {
+    color: #fff;
+    text-decoration: none;
+}
+
+#tabs li a.remove {
+    color: #f00;
+    margin-left: 10px;
+}
+
+#content {
+    border: 1px solid #00a65a;
+    min-height: 230px;
+    padding: 10px;
+    margin-top: 5px;
+}
+
+#content p {
+    margin: 0;
+    padding: 20px 20px 100px 20px;
+}
+
+#documents {
+    margin: 0;
+    padding: 0;
+}
+
+#wrapper {
+    width: 100%;
+}
+
+.container {
+    min-width: 1000px;
+}
+
+/*.radio input[type="radio"], .checkbox input[type="checkbox"] {
+    margin-left: 20px !important;
+}*/
