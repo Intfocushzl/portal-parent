@@ -46,6 +46,16 @@
         </where>
     </select>
 
+    <select id="getNewMaxCode" parameterType="map" resultType="string">
+        SELECT
+            CONCAT(
+                'REP_',
+                LPAD(SUBSTR(max(CODE), 5) + 1, 6, 0)
+            )
+        FROM
+            portal_report
+    </select>
+
     <insert id="save" parameterType="com.yonghui.portal.model.report.PortalReport">
 		insert into portal_report
 		(

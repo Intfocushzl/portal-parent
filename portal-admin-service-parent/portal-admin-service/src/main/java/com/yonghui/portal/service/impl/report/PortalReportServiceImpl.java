@@ -58,4 +58,9 @@ public class PortalReportServiceImpl implements PortalReportService {
 	public void deleteBatchByCodes(String[] codes) {
 		portalReportMapper.deleteBatchByCodes(codes);
 	}
+
+	@Override
+	public String getNewMaxCode() {
+		return portalReportMapper.getNewMaxCode();
+	}
 }

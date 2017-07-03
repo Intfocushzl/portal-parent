@@ -80,6 +80,7 @@ var vm = new Vue({
             vm.title = "新增";
             vm.portalReport = {};
             $("input[name='code']").removeAttr("readonly");
+            vm.getNewMaxCode();
         },
         update: function (event) {
             var code = getSelectedRow();
@@ -302,7 +303,14 @@ var vm = new Vue({
                     hot.getCellMeta(i, k).readOnly = true;
                 }
             }
-        }
+        },
+        getNewMaxCode: function () {
+            $.get("../portalreport/getNewMaxCode/", function (r) {
+                console.info(r.newMaxCode);
+                $("#code").val(r.newMaxCode);
+                vm.portalReport.code = r.newMaxCode;
+            });
+        },
 
     }
 });

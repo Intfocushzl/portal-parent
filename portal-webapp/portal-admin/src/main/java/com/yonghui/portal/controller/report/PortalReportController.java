@@ -111,4 +111,13 @@ public class PortalReportController extends AbstractController {
         return R.success();
     }
 
+    /**
+     * 产生新的编码
+     */
+    @RequestMapping("/getNewMaxCode")
+    public R getNewMaxCode() {
+        return R.success().put("newMaxCode", portalReportService.getNewMaxCode());
+    }
+
+
 }

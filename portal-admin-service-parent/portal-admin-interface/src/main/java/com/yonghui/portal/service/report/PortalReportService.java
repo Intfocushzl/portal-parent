@@ -32,4 +32,11 @@ public interface PortalReportService {
 	void deleteBatch(Integer[] ids);
 
 	void deleteBatchByCodes(String[] codes);
+
+	/**
+	 * 产生新的编码
+	 *
+	 * @return
+	 */
+	String getNewMaxCode();
 }
