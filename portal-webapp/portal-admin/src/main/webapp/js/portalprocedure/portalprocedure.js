@@ -85,17 +85,19 @@ var vm = new Vue({
             var code = vm.portalProcedure.procode;
             var id = vm.portalProcedure.id;
             var url = vm.portalProcedure.id == null ? "../portalprocedure/save" : "../portalprocedure/update";
-            if (id == null) {
-                $.get("../portalprocedure/info/" + code, function (r) {
-                    console.log(r);
-                    if (r.portalProcedure != null) {
-                        alert("唯一编码已存在，请重新输入");
-                    } else {
-                        vm.addAndUpdate(url);
-                    }
-                })
-            } else {
-                vm.addAndUpdate(url);
+            if (vm.checkForm()) {
+                if (id == null) {
+                    $.get("../portalprocedure/info/" + code, function (r) {
+                        console.log(r);
+                        if (r.portalProcedure != null) {
+                            alert("唯一编码已存在，请重新输入");
+                        } else {
+                            vm.addAndUpdate(url);
+                        }
+                    })
+                } else {
+                    vm.addAndUpdate(url);
+                }
             }
         },
         addAndUpdate: function (url) {
@@ -153,13 +155,6 @@ var vm = new Vue({
                 }
             });
         },
-        getNewMaxCode: function () {
-            $.get("../portalprocedure/getNewMaxCode/", function (r) {
-                console.info(r.newMaxCode);
-                $("#procode").val(r.newMaxCode);
-                vm.portalProcedure.procode = r.newMaxCode;
-            });
-        },
         reload: function (event) {
             vm.showList = true;
             var page = $("#jqGrid").jqGrid('getGridParam', 'page');
@@ -186,6 +181,22 @@ var vm = new Vue({
                     }
                 }
             });
+        },
+        getNewMaxCode: function () {
+            $.get("../portalprocedure/getNewMaxCode/", function (r) {
+                console.info(r.newMaxCode);
+                $("#procode").val(r.newMaxCode);
+                vm.portalProcedure.procode = r.newMaxCode;
+            });
+        },
+        checkForm: function () {
+            if (getStringValue($("#procode").val) != "") {
+                if ($("#procode").val().substr(0, 4) != "PRO_" || $("#procode").val().length != 10) {
+                    alert("编码错误，正确格式如：PRO_000001");
+                    return false;
+                }
+            }
+            return true;
         }
     }
 });
