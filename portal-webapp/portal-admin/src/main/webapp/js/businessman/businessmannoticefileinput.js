@@ -22,6 +22,7 @@ function initkindEditor() {
             syncType: "",
             filterMode: true,
             allowPreviewEmoticons: false,
+            height: "300px",
             //先注释页面查看所有图标的data-name
             items: [
                 'source', 'undo', 'redo', 'plainpaste', 'wordpaste', 'clearhtml', 'quickformat',
