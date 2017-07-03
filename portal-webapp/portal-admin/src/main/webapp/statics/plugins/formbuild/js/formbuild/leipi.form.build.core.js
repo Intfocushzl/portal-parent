@@ -67,14 +67,14 @@ $(document).ready(function () {
 
         md.preventDefault();
         var tops = [];
-        var mouseX = md.pageX;
-        var mouseY = md.pageY;
+        var mouseX = md.pageX;  // 相对于文档的左边缘
+        var mouseY = md.pageY;  // 相对于文档的上边缘
         var $temp;
         var timeout;
         var $this = $(this);
         var delays = {
             main: 0,
-            form: 120
+            form: 500
         }
         var type;
 
@@ -83,13 +83,14 @@ $(document).ready(function () {
         } else {
             type = "form";
         }
+        console.info("====type:===" + type);
 
         var delayed = setTimeout(function () {
             if (type === "main") {
-                $temp = $("<form class='form-horizontal span6' id='temp' style='width: 400px'></form>").append($this.clone());
+                $temp = $("<form class='form-horizontal span6' id='temp' style='width: 360px'></form>").append($this.clone());
             } else {
                 if ($this.attr("id") !== "legend") {
-                    $temp = $("<form class='form-horizontal span6' id='temp' style='width: 400px'></form>").append($this);
+                    $temp = $("<form class='form-horizontal span6' id='temp' style='width: 360px'></form>").append($this);
                 }
             }
 
@@ -109,11 +110,11 @@ $(document).ready(function () {
             }).show()
 
             /**
-             * 当鼠标指针在指定的元素中移动时
+             * 当鼠标指针在指定的元素中移动时 上下移动
              */
             $(document).delegate("body", "mousemove", function (mm) {
-                var mm_mouseX = mm.pageX;
-                var mm_mouseY = mm.pageY;
+                var mm_mouseX = mm.pageX;   // 相对于文档的左边缘
+                var mm_mouseY = mm.pageY;   // 相对于文档的上边缘
 
                 $temp.css({
                     "top": mm_mouseY - half_box_height + "px",
@@ -132,7 +133,7 @@ $(document).ready(function () {
                 console.info("tar_pos.top + $target.height() + $temp.height():" + tar_pos.top + $target.height() + $temp.height());
                 console.info("==================mousemove========");
                 if (mm_mouseX > tar_pos.left &&
-                    mm_mouseX < tar_pos.left + $target.width() + half_box_width &&
+                    mm_mouseX < tar_pos.left + $target.width() &&
                     mm_mouseY > tar_pos.top &&
                     mm_mouseY < tar_pos.top + $target.height() + $temp.height()
                 ) {
@@ -148,15 +149,17 @@ $(document).ready(function () {
                             $($target_component[$target_component.length - 1]).css("border-bottom", "1px solid #22aaff");
                         }
                     }
+                    console.info("==================mousemove tops.length:" + tops.length + "========");
                 } else {
                     $("#target").css("background-color", "#fff");
                     $target_component.css({"border-top": "1px dashed #ccc", "border-bottom": "1px dashed #ccc"});
                     $target.css("background-color", "#fff");
+                    console.info("==================mousemove not========");
                 }
             });
 
             /**
-             * 当松开鼠标按钮时
+             * 当松开鼠标按钮时 添加移除
              */
             $("body").delegate("#temp", "mouseup", function (mu) {
                 mu.preventDefault();
@@ -182,8 +185,8 @@ $(document).ready(function () {
                 console.info("====================mouseup======");
 
                 // acting only if mouse is in right place
-                if (mu_mouseX + half_box_width > tar_pos.left &&
-                    mu_mouseX - half_box_width < tar_pos.left + $target.width() &&
+                if (mu_mouseX > tar_pos.left &&
+                    mu_mouseX < tar_pos.left + $target.width() &&
                     mu_mouseY + half_box_height > tar_pos.top &&
                     mu_mouseY - half_box_height < tar_pos.top + $target.height()
                 ) {
@@ -194,10 +197,12 @@ $(document).ready(function () {
                     } else {
                         $("#target fieldset").append($temp.append("\n\n\ \ \ \ ").html());
                     }
+                    console.info("==================== mouseup tops.length:" + tops.length + "======");
                 } else {
                     // no add
                     $("#target .component").css({"border-top": "1px dashed #ccc", "border-bottom": "none"});
                     tops = [];
+                    console.info("==================== mouseup remove ======");
                 }
 
                 //clean up & add popover
