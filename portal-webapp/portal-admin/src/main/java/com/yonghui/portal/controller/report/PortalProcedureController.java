@@ -98,7 +98,7 @@ public class PortalProcedureController extends AbstractController {
     @RequestMapping("/proList")
     @ResponseBody
     public R proList() {
-        Map<String,Object> map = new HashMap<>();
+        Map<String, Object> map = new HashMap<>();
         List<PortalProcedure> portalExecuteProList = portalProcedureService.queryList(map);
         return R.success().put("proList", portalExecuteProList);
     }
@@ -111,6 +111,15 @@ public class PortalProcedureController extends AbstractController {
             redisBizUtilAdmin.setPortalProcedure(code, code, JSONObject.toJSONString(portalProcedure));
         }
         return R.success();
+    }
+
+
+    /**
+     * 产生新的编码
+     */
+    @RequestMapping("/getNewMaxCode")
+    public R getNewMaxCode() {
+        return R.success().put("newMaxCode", portalProcedureService.getNewMaxCode());
     }
 
 }

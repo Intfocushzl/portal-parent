@@ -54,5 +54,9 @@ public class PortalProcedureServiceImpl implements PortalProcedureService {
 	public void deleteBatch(String[] procodes){
 		portalProcedureMapper.deleteBatchByProcodes(procodes);
 	}
-	
+
+	@Override
+	public String getNewMaxCode() {
+		return portalProcedureMapper.getNewMaxCode();
+	}
 }

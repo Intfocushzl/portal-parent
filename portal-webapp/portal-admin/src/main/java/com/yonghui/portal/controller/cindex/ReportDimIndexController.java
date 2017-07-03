@@ -45,7 +45,6 @@ public class ReportDimIndexController extends AbstractController {
      * 列表
      */
     @RequestMapping("/listOpt")
-    @RequiresPermissions("reportdimindex:list")
     public R listOpt(@RequestParam Map<String, Object> params) {
         List<ReportDimIndex> reportDimIndexList = reportDimIndexService.queryListOpt();
         return R.success(reportDimIndexList);

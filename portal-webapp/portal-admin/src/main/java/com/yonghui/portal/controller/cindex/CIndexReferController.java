@@ -45,7 +45,6 @@ public class CIndexReferController extends AbstractController {
      * 列表
      */
     @RequestMapping("/listOpt")
-    @RequiresPermissions("cindexrefer:list")
     public R listOpt(@RequestParam Map<String, Object> params) {
         List<CIndexRefer> cIndexReferList = cIndexReferService.queryListOpt();
         return R.success(cIndexReferList);
