@@ -8,7 +8,7 @@ $(function () {
             {label: '唯一编码', name: 'code', index: 'code', width: 80, key: true},
             {label: '标题简介', name: 'title', index: 'title', width: 80},
             {
-                label: '执行唯一编码',
+                label: '数据脚本',
                 name: 'execute_code',
                 index: 'execute_code',
                 width: 80
