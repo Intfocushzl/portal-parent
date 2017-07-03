@@ -66,6 +66,7 @@ var vm = new Vue({
             vm.portalExecuteSql = {};
             vm.getDataSourceList();
             $("input[name='sqlcode']").removeAttr("readonly");
+            vm.getNewMaxCode();
         },
         update: function (event) {
             var sqlcode = getSelectedRow();
@@ -175,6 +176,13 @@ var vm = new Vue({
                     }
                 }
             });
-        }
+        },
+        getNewMaxCode: function () {
+            $.get("../portalexecutesql/getNewMaxCode/", function (r) {
+                console.info(r.newMaxCode);
+                $("#sqlcode").val(r.newMaxCode);
+                vm.portalExecuteSql.sqlcode = r.newMaxCode;
+            });
+        },
     }
 });

@@ -53,5 +53,9 @@ public class PortalExecuteSqlServiceImpl implements PortalExecuteSqlService {
 	public void deleteBatchBySqlcodes(String[] sqlcodes){
 		portalExecuteSqlMapper.deleteBatchBySqlcodes(sqlcodes);
 	}
-	
+
+	@Override
+	public String getNewMaxCode() {
+		return portalExecuteSqlMapper.getNewMaxCode();
+	}
 }

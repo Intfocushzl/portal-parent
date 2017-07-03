@@ -46,6 +46,20 @@
         </where>
     </select>
 
+    <select id="getNewMaxCode" parameterType="map" resultType="string">
+        SELECT
+            CONCAT(
+                'SQL_',
+                LPAD(
+                    SUBSTR(max(sqlcode), 5) + 1,
+                    6,
+                    0
+                )
+            )
+        FROM
+            portal_execute_sql
+    </select>
+
     <insert id="save" parameterType="com.yonghui.portal.model.report.PortalExecuteSql">
 		insert into portal_execute_sql
 		(

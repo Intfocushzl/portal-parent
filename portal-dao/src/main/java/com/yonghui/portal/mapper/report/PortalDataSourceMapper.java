@@ -19,4 +19,11 @@ public interface PortalDataSourceMapper extends BaseMapper<PortalDataSource> {
     PortalDataSource queryObjectByCode(@Param("code") String code);
 
     void deleteBatchByCodes( String[] code);
+
+    /**
+     * 产生新的编码
+     *
+     * @return
+     */
+    String getNewMaxCode();
 }
