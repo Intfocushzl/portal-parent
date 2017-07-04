@@ -43,6 +43,9 @@
                 var attr_name = $(e).attr("id");//属性名称
                 var attr_val = $("#" + attr_name).val();
                 if (attr_name == 'orgvalue') {
+                    if (getStringValue(attr_val) == ""){
+                        attr_val = "请输入报表标题";
+                    }
                     $(leipiplugins).attr("value", attr_val);
                     active_component.find(".leipiplugins-orgvalue").text(attr_val);
                 }
