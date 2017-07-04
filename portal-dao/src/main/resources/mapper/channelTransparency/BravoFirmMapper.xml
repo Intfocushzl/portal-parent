@@ -1,0 +1,100 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://www.mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yonghui.portal.mapper.channelTransparency.FirmMapper">
+
+	<select id="broveStoreLittleIdList" resultType="Map">
+
+		select DISTINCT groupid as id ,groupname as text,gname from
+		platform.d_grouplist
+	</select>
+	
+	<select id="getGroupByGroupId" resultType="Map">
+
+		select groupid,groupname from
+		platform.d_grouplist where groupid = #{groupid}
+	</select>
+	
+	
+	<select id="bravoAreaMansByList" resultType="Map">
+	
+		select areaMans as id, areaMans as text from dw.d_bravo_shop 
+		where 1=1
+		<if test="areaId != null and areaId != '' ">
+			and areaId=#{areaId}
+		</if>
+		group by areaMans
+	</select>
+	
+	
+	<select id="salesTargetBroveStoreLittleIdList" resultType="Map">
+		select 55 as id ,'全店' as text 
+		union 
+		select groupid as id ,gname as text  from platform.d_grouplist_sm  where groupid not in (55,211,212,991,992,995,996,997)
+	</select>
+	
+	<select id="broveByFirmList" resultType="Map">
+		select 0 as id, '全部' as text
+		union
+		select groupid as id ,gname as text  from platform.d_grouplist_sm  where groupid!=55
+	</select>
+	
+	<select id="noAllBroveByFirmList" resultType="Map">
+		select groupid as id ,gname as text  from platform.d_grouplist_sm  where groupid!=55
+	</select>
+	
+	<select id="broveFirmByClassList" resultType="Map">
+		select 0 as classId, '全部' as className
+		union
+		select classId,className from dw.d_category where 1=1
+			<if test="groupId != null and groupId != '' and groupId != 0 ">
+				and groupid=#{groupId}
+			</if>
+		  group by classid
+	</select>
+	
+	
+	<select id="getLargeAreaList" resultType="Map">
+
+
+		 select '全部' as district,0 as AreaID
+		union
+		select DISTINCT AreaName as district,AreaID from dw.`d_bravo_shop`
+	</select>
+	
+	<select id="getLargeAreaListNotAll" resultType="Map">
+		select DISTINCT AreaName as district,AreaID from dw.`d_bravo_shop`
+	</select>
+	
+	
+	
+	<select id="secondClusterList" resultType="com.yonghui.portal.vo.bravo.Shop">
+
+	SELECT
+		'ALL' as id, '全部' as text
+		union
+		SELECT
+		sap_shopId as id, SName as text
+		FROM
+		dw.`d_bravo_shop`
+		WHERE
+		1=1
+		<if test="district != '' ">
+			and AreaName = #{district}
+		</if>
+		<if test="province!=null and province!='' ">
+					and province = #{province}
+		</if>
+		<if test="list != null ">
+			and sap_shopId in
+			<foreach collection="list" item="item" open="(" separator=","
+				close=")">
+				'${item}'
+			</foreach>
+		</if>
+
+	</select>
+	
+	
+	
+	
+</mapper>

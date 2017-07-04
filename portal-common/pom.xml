@@ -128,7 +128,11 @@
             <artifactId>commons-codec</artifactId>
             <version>${commons-codec-version}</version>
         </dependency>
-
+        <dependency>
+            <groupId>commons-net</groupId>
+            <artifactId>commons-net</artifactId>
+            <version>${commons-net-version}</version>
+        </dependency>
         <dependency>
             <groupId>org.sitemesh</groupId>
             <artifactId>sitemesh</artifactId>
