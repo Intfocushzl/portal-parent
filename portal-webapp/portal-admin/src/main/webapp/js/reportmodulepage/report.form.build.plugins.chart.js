@@ -61,7 +61,7 @@ LPB.plugins['banner'] = function (active_component, leipiplugins) {
                 case 'orgname':
                     attr_val = getAttrVal(attr_val, "banner");
                     jsonObj.name = attr_val;
-                    active_component.find(".leipiplugins-orgname").text(attr_val);
+                    active_component.find(".leipiplugins-orgname").html(attr_val);
                     break;
             }
             active_component.popover("hide");
@@ -135,7 +135,7 @@ LPB.plugins['chart_line'] = function (active_component, leipiplugins) {
                 case 'orgname':
                     attr_val = getAttrVal(attr_val, "chart_line");
                     jsonObj.name = attr_val;
-                    active_component.find(".leipiplugins-orgname").text(attr_val);
+                    active_component.find(".leipiplugins-orgname").html(attr_val);
                     break;
             }
             active_component.popover("hide");
@@ -201,7 +201,7 @@ LPB.plugins['tables_v3'] = function (active_component, leipiplugins) {
                 case 'orgname':
                     attr_val = getAttrVal(attr_val, "tables_v3");
                     jsonObj.name = attr_val;
-                    active_component.find(".leipiplugins-orgname").text(attr_val);
+                    active_component.find(".leipiplugins-orgname").html(attr_val);
                     break;
             }
         });
@@ -302,8 +302,8 @@ function onchangeTabTitle(obj) {
  * @param jsonObj
  */
 function setLeipipluginsVal(leipiplugins, jsonObj) {
-    /*$(leipiplugins).val(JSON.stringify(jsonObj));
-     $(leipiplugins).text(JSON.stringify(jsonObj));*/
+    $(leipiplugins).val(JSON.stringify(jsonObj));
+    $(leipiplugins).text(JSON.stringify(jsonObj));
     $(leipiplugins).html(JSON.stringify(jsonObj));
 }
 
@@ -314,8 +314,8 @@ function setLeipipluginsVal(leipiplugins, jsonObj) {
  * @returns {*}
  */
 function getAttrVal(attr_val, attr_name) {
-    if (getStringValue(attr_val) == "") {
-        return $("#" + attr_name).attr("title");
+    if (getStringValue(attr_val) != "") {
+        return attr_val;
     }
-    return "请输入控件名称";
+    return $("#" + attr_name).attr("title");
 }
