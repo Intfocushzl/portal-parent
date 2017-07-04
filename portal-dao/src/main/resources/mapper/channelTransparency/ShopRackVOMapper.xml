@@ -69,7 +69,7 @@
 		delete from platform.shop_rack
 		where id = #{id,jdbcType=BIGINT}
 	</delete>
-	<insert id="insert" parameterType="com.yonghui.portal.vo.bravo.ShopRackVO">
+	<insert id="insert" parameterType="com.yonghui.portal.model.channelTransparency.ShopRackVO">
 		insert into shop_rack (id, shopId, shopName,
 		groupId, groupName, disType,
 		imgUrl, rackNo, area
@@ -81,7 +81,7 @@
 		#{area,jdbcType=DOUBLE}
 		)
 	</insert>
-	<insert id="insertSelective" parameterType="com.yonghui.portal.vo.bravo.ShopRackVO">
+	<insert id="insertSelective" parameterType="com.yonghui.portal.model.channelTransparency.ShopRackVO">
 		insert into platform.shop_rack
 		<trim prefix="(" suffix=")" suffixOverrides=",">
 			<if test="id != null">
@@ -174,7 +174,7 @@
 
 
 
-	<update id="updateByPrimaryKeySelective" parameterType="com.yonghui.portal.vo.bravo.ShopRackVO">
+	<update id="updateByPrimaryKeySelective" parameterType="com.yonghui.portal.model.channelTransparency.ShopRackVO">
 		update platform.shop_rack
 		<set>
 			<if test="shopid != null">
@@ -210,7 +210,7 @@
 		</set>
 		where id = #{id,jdbcType=BIGINT}
 	</update>
-	<update id="updateByPrimaryKey" parameterType="com.yonghui.portal.vo.bravo.ShopRackVO">
+	<update id="updateByPrimaryKey" parameterType="com.yonghui.portal.model.channelTransparency.ShopRackVO">
 		update shop_rack
 		set shopId = #{shopid,jdbcType=VARCHAR},
 		shopName = #{shopname,jdbcType=VARCHAR},

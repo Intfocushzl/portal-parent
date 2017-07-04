@@ -17,7 +17,7 @@
     where shopid = #{shopid,jdbcType=VARCHAR}
   </select>
   
-  <update id="updateByShopid" parameterType="com.yonghui.portal.vo.bravo.ShopPlanVO" >
+  <update id="updateByShopid" parameterType="com.yonghui.portal.model.channelTransparency.ShopPlanVO" >
     update platform.shop_plan
     <set >
       <if test="url != null" >
@@ -30,13 +30,13 @@
      where shopid = #{shopid,jdbcType=VARCHAR}
   </update>
   
-  <insert id="insert" parameterType="com.yonghui.portal.vo.bravo.ShopPlanVO" >
+  <insert id="insert" parameterType="com.yonghui.portal.model.channelTransparency.ShopPlanVO" >
     insert into shop_plan (shopid, url, updatedate
       )
     values (#{shopid,jdbcType=VARCHAR}, #{url,jdbcType=VARCHAR}, #{updatedate,jdbcType=TIMESTAMP}
       )
   </insert>
-  <insert id="insertSelective" parameterType="com.yonghui.portal.vo.bravo.ShopPlanVO" >
+  <insert id="insertSelective" parameterType="com.yonghui.portal.model.channelTransparency.ShopPlanVO" >
     insert into shop_plan
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="shopid != null" >

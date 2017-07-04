@@ -43,13 +43,13 @@
     delete from shop_dis
     where id = #{id,jdbcType=BIGINT}
   </delete>
-  <insert id="insert" parameterType="com.yonghui.portal.vo.bravo.ShopDisVO" >
+  <insert id="insert" parameterType="com.yonghui.portal.model.channelTransparency.ShopDisVO" >
     insert into platform.shop_dis (id, shopid, groupid, 
       dateno, rackno,imgurl,updatedate)
     values (#{id,jdbcType=BIGINT}, #{shopid,jdbcType=VARCHAR}, #{groupid,jdbcType=VARCHAR}, 
       #{dateno,jdbcType=VARCHAR}, #{rackno,jdbcType=VARCHAR},#{imgurl,jdbcType=VARCHAR},#{updatedate,jdbcType=TIMESTAMP})
   </insert>
-  <insert id="insertSelective" parameterType="com.yonghui.portal.vo.bravo.ShopDisVO" >
+  <insert id="insertSelective" parameterType="com.yonghui.portal.model.channelTransparency.ShopDisVO" >
     insert into platform.shop_dis
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -117,7 +117,7 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.yonghui.portal.vo.bravo.ShopDisVO" >
+  <update id="updateByPrimaryKeySelective" parameterType="com.yonghui.portal.model.channelTransparency.ShopDisVO" >
     update platform.shop_dis
     <set >
       <if test="shopid != null" >
@@ -151,7 +151,7 @@
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.yonghui.portal.vo.bravo.ShopDisVO" >
+  <update id="updateByPrimaryKey" parameterType="com.yonghui.portal.model.channelTransparency.ShopDisVO" >
     update platform.shop_dis
     set shopid = #{shopid,jdbcType=VARCHAR},
       	groupid = #{groupid,jdbcType=VARCHAR},

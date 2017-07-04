@@ -7,7 +7,7 @@ import org.apache.ibatis.annotations.Param;
 
 import com.yonghui.portal.model.channelTransparency.Menu;
 
-public interface MenuMapper {
+public interface ChanelMenuMapper {
 	
     int deleteByPrimaryKey(Integer id) throws Exception ;
 

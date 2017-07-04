@@ -30,13 +30,13 @@
     delete from platform.shop_img
     where id = #{id,jdbcType=BIGINT}
   </delete>
-  <insert id="insert" parameterType="com.yonghui.portal.vo.bravo.ShopImgVO" >
+  <insert id="insert" parameterType="com.yonghui.portal.model.channelTransparency.ShopImgVO" >
     insert into platform.shop_img (id, shopid, imgurl
       )
     values (#{id,jdbcType=BIGINT}, #{shopid,jdbcType=VARCHAR}, #{imgurl,jdbcType=VARCHAR}
       )
   </insert>
-  <insert id="insertSelective" parameterType="com.yonghui.portal.vo.bravo.ShopImgVO" >
+  <insert id="insertSelective" parameterType="com.yonghui.portal.model.channelTransparency.ShopImgVO" >
     insert into platform.shop_img
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -73,7 +73,7 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.yonghui.portal.vo.bravo.ShopImgVO" >
+  <update id="updateByPrimaryKeySelective" parameterType="com.yonghui.portal.model.channelTransparency.ShopImgVO" >
     update shop_img
     <set >
       <if test="shopid != null" >
@@ -85,7 +85,7 @@
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.yonghui.portal.vo.bravo.ShopImgVO" >
+  <update id="updateByPrimaryKey" parameterType="com.yonghui.portal.model.channelTransparency.ShopImgVO" >
     update shop_img
     set shopid = #{shopid,jdbcType=VARCHAR},
       imgurl = #{imgurl,jdbcType=VARCHAR}
