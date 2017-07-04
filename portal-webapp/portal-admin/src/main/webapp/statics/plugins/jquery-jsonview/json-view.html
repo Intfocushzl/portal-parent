@@ -3,8 +3,30 @@
 <head>
     <meta charset="UTF-8">
     <title>JQuery JSONView</title>
+
+    <link rel="shortcut icon" href="/statics/css/img/logo40X40.png"/>
+    <link rel="stylesheet" href="/statics/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/statics/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/statics/plugins/jqgrid/ui.jqgrid-bootstrap.css">
+    <link rel="stylesheet" href="/statics/plugins/ztree/css/metroStyle/metroStyle.css">
+    <link rel="stylesheet" href="/statics/css/main.css">
+    <link rel="stylesheet" href="/statics/css/query.css">
+    <link rel="stylesheet" href="/statics/plugins/jqueryui/jquery-ui.min.css">
     <link rel="stylesheet" href="/statics/plugins/jquery-jsonview/jquery.jsonview.css"/>
+
     <script src="/statics/libs/jquery.min.js"></script>
+    <script src="/statics/plugins/layer/layer.js"></script>
+    <script src="/statics/libs/bootstrap.min.js"></script>
+    <script src="/statics/libs/vue.min.js"></script>
+    <script src="/statics/plugins/jqgrid/grid.locale-cn.js"></script>
+    <script src="/statics/plugins/jqgrid/jquery.jqGrid.min.js"></script>
+    <script src="/statics/plugins/ztree/jquery.ztree.all.min.js"></script>
+    <script src="/js/common.js"></script>
+    <script src="/js/commonUtils.js"></script>
+    <script src="/statics/plugins/jqueryui/jquery-ui.min.js"></script>
+    <link rel="stylesheet" href="/statics/plugins/bootstrap-select/dist/css/bootstrap-select.css">
+    <script src="/statics/plugins/bootstrap-select/dist/js/bootstrap-select.js"></script>
+
     <script src="/statics/plugins/jquery-jsonview/jquery.jsonview.js"></script>
 
     <script type="text/javascript">
@@ -48,14 +70,20 @@
     </script>
 </head>
 <body>
-<div class="container" style="padding: 20px 20px;">
-    <button id="toggle-btn">展开</button>
-    <button id="toggle-level1-btn">一级</button>
-    <button id="toggle-level2-btn">二级</button>
-    <button id="toggle-level3-btn">三级</button>
-    <button id="toggle-level4-btn">四级</button>
-    <button id="toggle-level5-btn">五级</button>
-    <div id="json"></div>
+<div id="rrapp">
+    <div class="panel panel-default" style="padding: 20px 20px;">
+        <div class="form-group">
+            <div style="padding: 20px;">
+                <button id="toggle-btn" class="btn btn-primary">　展　开　</button>
+                <button id="toggle-level1-btn" class="btn btn-danger">　一　级　</button>
+                <button id="toggle-level2-btn" class="btn btn-danger">　二　级　</button>
+                <button id="toggle-level3-btn" class="btn btn-danger">　三　级　</button>
+                <button id="toggle-level4-btn" class="btn btn-danger">　四　级　</button>
+                <button id="toggle-level5-btn" class="btn btn-danger">　五　级　</button>
+            </div>
+            <div id="json" style="border: 1px solid #3b5998; padding: 20px;"></div>
+        </div>
+    </div>
 </div>
 </body>
 </html>
