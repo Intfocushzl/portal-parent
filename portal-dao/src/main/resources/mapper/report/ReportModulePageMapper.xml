@@ -103,7 +103,7 @@
             <if test="title != null">`title` = #{title},</if>
             <if test="content != null">`content` = #{content},</if>
             <if test="designStructrue != null">`design_structrue` = #{designStructrue},</if>
-            <if test="onlineStructrue != null">`online_structrue` = #{onlineStructrue},</if>
+            <if test="onlineStructrue != null and status ==2 ">`online_structrue` = #{onlineStructrue},</if>
             <if test="status != null">`status` = #{status},</if>
             <if test="remark != null">`REMARK` = #{remark},</if>
             <if test="creater != null">`CREATER` = #{creater},</if>

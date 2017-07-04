@@ -29,7 +29,8 @@ $("#btnBack").click(function () {
 });
 
 // 保存
-$("#saveOrUpdateModule").click(function () {
+$(".saveOrUpdate").click(function () {
+    reportModulePage.status = $(this).attr("status");
     // 标题
     reportModulePage.title = $("#form_name").val();
     // json 字符串

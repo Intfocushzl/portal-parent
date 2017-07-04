@@ -61,7 +61,9 @@ public class ReportModulePageController extends AbstractController {
     @RequiresPermissions("reportmodulepage:save")
     public R save(@RequestBody ReportModulePage reportModulePage) {
         reportModulePage.setDesignStructrue(GzipUtils.gzip(reportModulePage.getContent()));
-        reportModulePage.setOnlineStructrue(reportModulePage.getDesignStructrue());
+        if (reportModulePage.getStatus() == 2) {
+            reportModulePage.setOnlineStructrue(reportModulePage.getDesignStructrue());
+        }
         reportModulePageService.save(reportModulePage);
         return R.success();
     }
@@ -72,6 +74,10 @@ public class ReportModulePageController extends AbstractController {
     @RequestMapping("/update")
     @RequiresPermissions("reportmodulepage:update")
     public R update(@RequestBody ReportModulePage reportModulePage) {
+        reportModulePage.setDesignStructrue(GzipUtils.gzip(reportModulePage.getContent()));
+        if (reportModulePage.getStatus() == 2) {
+            reportModulePage.setOnlineStructrue(reportModulePage.getDesignStructrue());
+        }
         reportModulePageService.update(reportModulePage);
         return R.success();
     }
