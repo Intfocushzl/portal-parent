@@ -74,7 +74,7 @@ $(document).ready(function () {
         var $this = $(this);
         var delays = {
             main: 0,
-            form: 500
+            form: 400
         }
         var type;
 
@@ -171,7 +171,7 @@ $(document).ready(function () {
                     }
                 } else {
                     // no add
-                    $("#target .component").css({"border-top": "1px dashed #ccc", "border-bottom": "none"});
+                    $("#target .component").css({"border-top": "1px dashed #ccc", "border-bottom": "1px dashed #ccc;"});
                     tops = [];
                 }
 

@@ -66,7 +66,7 @@ LPB.plugins['banner'] = function (active_component, leipiplugins) {
             active_component.popover("hide");
             LPB.genSource();//重置源代码
         });
-        $(leipiplugins).val(JSON.stringify(jsonObj));
+        setLeipipluginsVal(leipiplugins, jsonObj);
     });
 }
 
@@ -139,7 +139,7 @@ LPB.plugins['chart_line'] = function (active_component, leipiplugins) {
             active_component.popover("hide");
             LPB.genSource();//重置源代码
         });
-        $(leipiplugins).val(JSON.stringify(jsonObj));
+        setLeipipluginsVal(leipiplugins, jsonObj);
     });
 }
 
@@ -237,7 +237,7 @@ LPB.plugins['tables_v3'] = function (active_component, leipiplugins) {
             });
             jsonObj.config[j] = jsonConfigObj;
         });
-        $(leipiplugins).val(JSON.stringify(jsonObj));
+        setLeipipluginsVal(leipiplugins, jsonObj);
         // 删除 tab div
         $("#content div").html("");
     });
@@ -291,4 +291,15 @@ function addTab() {
 // 修改tab标题
 function onchangeTabTitle(obj) {
     $("#a_" + $(obj).attr("document")).html($(obj).val());
+}
+
+/**
+ * 生成的json赋给控件
+ * @param leipiplugins
+ * @param jsonObj
+ */
+function setLeipipluginsVal(leipiplugins, jsonObj) {
+    /*$(leipiplugins).val(JSON.stringify(jsonObj));
+     $(leipiplugins).text(JSON.stringify(jsonObj));*/
+    $(leipiplugins).html(JSON.stringify(jsonObj));
 }
