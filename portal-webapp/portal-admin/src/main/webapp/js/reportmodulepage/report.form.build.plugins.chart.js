@@ -59,6 +59,7 @@ LPB.plugins['banner'] = function (active_component, leipiplugins) {
                     jsonObj.config.info = attr_val;
                     break;
                 case 'orgname':
+                    attr_val = getAttrVal(attr_val, "banner");
                     jsonObj.name = attr_val;
                     active_component.find(".leipiplugins-orgname").text(attr_val);
                     break;
@@ -132,6 +133,7 @@ LPB.plugins['chart_line'] = function (active_component, leipiplugins) {
                     jsonObj.config.dataUrl = attr_val;
                     break;
                 case 'orgname':
+                    attr_val = getAttrVal(attr_val, "chart_line");
                     jsonObj.name = attr_val;
                     active_component.find(".leipiplugins-orgname").text(attr_val);
                     break;
@@ -197,6 +199,7 @@ LPB.plugins['tables_v3'] = function (active_component, leipiplugins) {
             var attr_val = $(e).val();
             switch (attr_name) {
                 case 'orgname':
+                    attr_val = getAttrVal(attr_val, "tables_v3");
                     jsonObj.name = attr_val;
                     active_component.find(".leipiplugins-orgname").text(attr_val);
                     break;
@@ -302,4 +305,17 @@ function setLeipipluginsVal(leipiplugins, jsonObj) {
     /*$(leipiplugins).val(JSON.stringify(jsonObj));
      $(leipiplugins).text(JSON.stringify(jsonObj));*/
     $(leipiplugins).html(JSON.stringify(jsonObj));
+}
+
+/**
+ * 获取控件名称
+ * @param attr_val
+ * @param attr_name
+ * @returns {*}
+ */
+function getAttrVal(attr_val, attr_name) {
+    if (getStringValue(attr_val) == "") {
+        return $("#" + attr_name).attr("title");
+    }
+    return "请输入控件名称";
 }
