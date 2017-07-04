@@ -153,4 +153,9 @@
     <bean id="apiImgsInfoService" class="com.yonghui.portal.service.impl.sys.ApiImgsInfoServiceImpl"/>
     <dubbo:service interface="com.yonghui.portal.service.sys.ApiImgsInfoService" ref="apiImgsInfoService"
                    timeout="300000"/>
+
+    <!-- 海报上传  -->
+    <bean id="PosterImportervice" class="com.yonghui.portal.service.impl.sys.PosterImportServiceImpl"/>
+    <dubbo:service interface="com.yonghui.portal.service.sys.PosterImportService" ref="PosterImportervice"
+                   timeout="300000"/>
 </beans>

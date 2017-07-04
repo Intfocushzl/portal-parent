@@ -52,12 +52,13 @@ public class AppQrCodeApiController {
         String parameter = null;
         String result = null;
         JSONObject jsonObject = null;
-        JSONArray jsonArrayResult =null;
+        JSONArray jsonArrayResult = null;
         List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
         List<Map<String, Object>> hanaList = new ArrayList<Map<String, Object>>();
         List<Map<String, Object>> shopIdList = new ArrayList<Map<String, Object>>();
         Map<String, Object> map = null;
         List<Object> dateList = new ArrayList<Object>();
+        QrCodeUtil util = new QrCodeUtil();
         try {
             //调用自己库查数据
             parameter = HttpContextUtils.getRequestParameter(req);
@@ -80,6 +81,8 @@ public class AppQrCodeApiController {
             }
             if (saleDate != null && !saleDate.equals("")) {
                 saleDate.substring(0, saleDate.length() - 1);
+            } else {
+                saleDate = util.getDate();
             }
             if (saleAmount != null && !saleAmount.equals("")) {
                 saleAmount.substring(0, saleAmount.length() - 1);
@@ -87,7 +90,7 @@ public class AppQrCodeApiController {
             map = new HashMap<String, Object>();
             map.put("saleDate", saleDate);
             map.put("saleAmount", saleAmount);
-            map.put("goodsName",goodsName);
+            map.put("goodsName", goodsName);
             //将查出来的门店结果，拼接成参数
             StringBuffer newParam = new StringBuffer();
             for (Map<String, Object> item : shopIdList) {
@@ -109,17 +112,17 @@ public class AppQrCodeApiController {
             dateList.add(0, map);
             dateList.add(1, jsonArray);
             dateList.add(2, list);
-            QrCodeUtil util = new QrCodeUtil();
-            if(dateList != null && dateList.size()>0){
-                jsonArrayResult = util.createJsonTemplate(dateList , shopID);
-            }else{
+            if (dateList != null && dateList.size() > 0) {
+                jsonArrayResult = util.createJsonTemplate(dateList, shopID);
+            } else {
                 return R.success(jsonArrayResult);
             }
             log.setEndTime(new Date());
             log.setRemark("app@@qrCode");
             sysoperationLogService.SaveLog(log);
         } catch (Exception e) {
-          return  R.error("执行APP报表存储过程报表异常");
+            log.error(e);
+            return R.error("执行APP报表存储过程报表异常");
         }
         return R.success(jsonArrayResult);
     }
