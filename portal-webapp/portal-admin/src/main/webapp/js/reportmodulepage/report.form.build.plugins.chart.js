@@ -66,7 +66,7 @@ LPB.plugins['banner'] = function (active_component, leipiplugins) {
             active_component.popover("hide");
             LPB.genSource();//重置源代码
         });
-        $(leipiplugins).text(JSON.stringify(jsonObj));
+        $(leipiplugins).val(JSON.stringify(jsonObj));
     });
 }
 
@@ -139,7 +139,7 @@ LPB.plugins['chart_line'] = function (active_component, leipiplugins) {
             active_component.popover("hide");
             LPB.genSource();//重置源代码
         });
-        $(leipiplugins).text(JSON.stringify(jsonObj));
+        $(leipiplugins).val(JSON.stringify(jsonObj));
     });
 }
 
@@ -237,7 +237,7 @@ LPB.plugins['tables_v3'] = function (active_component, leipiplugins) {
             });
             jsonObj.config[j] = jsonConfigObj;
         });
-        $(leipiplugins).text(JSON.stringify(jsonObj));
+        $(leipiplugins).val(JSON.stringify(jsonObj));
         // 删除 tab div
         $("#content div").html("");
     });

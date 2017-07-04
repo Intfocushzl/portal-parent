@@ -83,7 +83,6 @@ $(document).ready(function () {
         } else {
             type = "form";
         }
-        console.info("====type:===" + type);
 
         var delayed = setTimeout(function () {
             if (type === "main") {
@@ -121,17 +120,6 @@ $(document).ready(function () {
                     "left": mm_mouseX - half_box_width + "px"
                 });
 
-                console.info("==================mousemove========");
-                console.info("mm_mouseX:" + mm_mouseX);
-                console.info("tar_pos.left:" + tar_pos.left);
-                console.info("$target.width():" + $target.width());
-                console.info("half_box_width:" + half_box_width);
-                console.info("mm_mouseY:" + mm_mouseY);
-                console.info("tar_pos.top:" + tar_pos.top);
-                console.info("$target.height():" + $target.height());
-                console.info("$temp.height():" + $temp.height());
-                console.info("tar_pos.top + $target.height() + $temp.height():" + tar_pos.top + $target.height() + $temp.height());
-                console.info("==================mousemove========");
                 if (mm_mouseX > tar_pos.left &&
                     mm_mouseX < tar_pos.left + $target.width() &&
                     mm_mouseY > tar_pos.top &&
@@ -149,12 +137,10 @@ $(document).ready(function () {
                             $($target_component[$target_component.length - 1]).css("border-bottom", "1px solid #22aaff");
                         }
                     }
-                    console.info("==================mousemove tops.length:" + tops.length + "========");
                 } else {
                     $("#target").css("background-color", "#fff");
                     $target_component.css({"border-top": "1px dashed #ccc", "border-bottom": "1px dashed #ccc"});
                     $target.css("background-color", "#fff");
-                    console.info("==================mousemove not========");
                 }
             });
 
@@ -170,20 +156,6 @@ $(document).ready(function () {
 
                 $("#target .component").css({"border-top": "1px dashed #ccc", "border-bottom": "1px dashed #ccc"});
 
-                console.info("====================mouseup======");
-                console.info("mu_mouseX:" + mu_mouseX);
-                console.info("half_box_width:" + half_box_width);
-                console.info("tar_pos.left:" + tar_pos.left);
-                console.info("$target.width():" + $target.width());
-                console.info("移动高度 mm_mouseY:" + mu_mouseY);
-                console.info("模板高度 half_box_height:" + half_box_height);
-                console.info("mu_mouseY + half_box_height:" + (mu_mouseY + half_box_height));
-                console.info("mu_mouseY - half_box_height:" + (mu_mouseY - half_box_height));
-                console.info("target相对高度 tar_pos.top:" + tar_pos.top);
-                console.info("target高度 $target.height():" + $target.height());
-                console.info("tar_pos.top + $target.height():" + (tar_pos.top + $target.height()));
-                console.info("====================mouseup======");
-
                 // acting only if mouse is in right place
                 if (mu_mouseX > tar_pos.left &&
                     mu_mouseX < tar_pos.left + $target.width() &&
@@ -197,12 +169,10 @@ $(document).ready(function () {
                     } else {
                         $("#target fieldset").append($temp.append("\n\n\ \ \ \ ").html());
                     }
-                    console.info("==================== mouseup tops.length:" + tops.length + "======");
                 } else {
                     // no add
                     $("#target .component").css({"border-top": "1px dashed #ccc", "border-bottom": "none"});
                     tops = [];
-                    console.info("==================== mouseup remove ======");
                 }
 
                 //clean up & add popover
@@ -227,6 +197,7 @@ $(document).ready(function () {
 
     //activate legend popover
     $("#target .component").popover({trigger: "manual"});
+    //单击弹出编辑框
     //popover on click event
     $("#target").delegate(".component", "click", function (e) {
         e.preventDefault();
@@ -245,6 +216,11 @@ $(document).ready(function () {
         } else {
             alert("控件有误或不存在，请与我们联系！");
         }
+
+        //console.info("=============e.currentTarget.id:" + e.currentTarget.id);
+        //移除所有的绑定事件
+        $("#" + e.currentTarget.id).unbind();
+        //$("#" + e.currentTarget.id).unbind('mouseover');
 
     });
 });
