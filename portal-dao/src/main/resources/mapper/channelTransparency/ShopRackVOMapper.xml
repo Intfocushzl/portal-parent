@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yonghui.portal.mapper.channelTransparency.ShopRackVOMapper">
+	<!-- <cache type="org.mybatis.caches.redis.RedisCache" /> -->
+	<resultMap id="BaseResultMap" type="com.yonghui.portal.model.channelTransparency.ShopRackVO">
+		<id column="id" property="id" jdbcType="BIGINT" />
+		<result column="shopId" property="shopid" jdbcType="VARCHAR" />
+		<result column="shopName" property="shopname" jdbcType="VARCHAR" />
+		<result column="groupId" property="groupid" jdbcType="VARCHAR" />
+		<result column="groupName" property="groupname" jdbcType="VARCHAR" />
+		<result column="disType" property="distype" jdbcType="VARCHAR" />
+		<result column="imgUrl" property="imgurl" jdbcType="VARCHAR" />
+		<result column="disNum" property="disNum" jdbcType="INTEGER" />
+		<result column="rackNo" property="rackno" jdbcType="VARCHAR" />
+		<result column="area" property="area" jdbcType="VARCHAR" />
+		<result column="updateDate" property="updateDate" jdbcType="TIMESTAMP" />
+	</resultMap>
+
+	<sql id="Base_Column_List">
+		id, shopId, shopName, groupId, groupName, disType, imgUrl, rackNo,
+		disNum,area,updateDate
+	</sql>
+
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.Long">
+		select
+		<include refid="Base_Column_List" />
+		from platform.shop_rack
+		where id = #{id,jdbcType=BIGINT}
+	</select>
+
+	<select id="queryRacks" parameterType="Map" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+
+		from platform.shop_rack where 1=1
+
+		<if test="area !=null and  area != '' ">
+			and area=#{area}
+		</if>
+
+		<if test="shopid !=null and  shopid != '' ">
+			and shopId=#{shopid}
+		</if>
+
+		<if test="groupid !=null and  groupid != '' ">
+			and groupId=#{groupid}
+		</if>
+		
+		<if test="rackNo !=null and  rackNo != '' ">
+			and rackNo=#{rackNo}
+		</if>
+
+	</select>
+
+	<select id="getShopRackVOSByshopId" resultMap="BaseResultMap"
+		parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		from platform.shop_rack
+		where 1 = 1
+		<!-- <if test="shopid != null and shopid != ''" > -->
+		and shopId = #{shopid,jdbcType=VARCHAR}
+		<!-- </if> -->
+	</select>
+
+
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+		delete from platform.shop_rack
+		where id = #{id,jdbcType=BIGINT}
+	</delete>
+	<insert id="insert" parameterType="com.yonghui.portal.vo.bravo.ShopRackVO">
+		insert into shop_rack (id, shopId, shopName,
+		groupId, groupName, disType,
+		imgUrl, rackNo, area
+		)
+		values (#{id,jdbcType=BIGINT}, #{shopid,jdbcType=VARCHAR},
+		#{shopname,jdbcType=VARCHAR},
+		#{groupid,jdbcType=VARCHAR}, #{groupname,jdbcType=VARCHAR}, #{distype,jdbcType=VARCHAR},
+		#{imgurl,jdbcType=VARCHAR}, #{rackno,jdbcType=VARCHAR},
+		#{area,jdbcType=DOUBLE}
+		)
+	</insert>
+	<insert id="insertSelective" parameterType="com.yonghui.portal.vo.bravo.ShopRackVO">
+		insert into platform.shop_rack
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="shopid != null">
+				shopId,
+			</if>
+			<if test="shopname != null">
+				shopName,
+			</if>
+			<if test="groupid != null">
+				groupId,
+			</if>
+			<if test="groupname != null">
+				groupName,
+			</if>
+			<if test="distype != null">
+				disType,
+			</if>
+			<if test="imgurl != null">
+				imgUrl,
+			</if>
+			<if test="rackno != null">
+				rackNo,
+			</if>
+			<if test="area != null">
+				area,
+			</if>
+
+			<if test="disNum != null">
+				disNum,
+			</if>
+			<if test="updateDate != null">
+				updateDate,
+			</if>
+
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=BIGINT},
+			</if>
+			<if test="shopid != null">
+				#{shopid,jdbcType=VARCHAR},
+			</if>
+			<if test="shopname != null">
+				#{shopname,jdbcType=VARCHAR},
+			</if>
+			<if test="groupid != null">
+				#{groupid,jdbcType=VARCHAR},
+			</if>
+			<if test="groupname != null">
+				#{groupname,jdbcType=VARCHAR},
+			</if>
+			<if test="distype != null">
+				#{distype,jdbcType=VARCHAR},
+			</if>
+			<if test="imgurl != null">
+				#{imgurl,jdbcType=VARCHAR},
+			</if>
+			<if test="rackno != null">
+				#{rackno,jdbcType=VARCHAR},
+			</if>
+			<if test="area != null">
+				#{area,jdbcType=VARCHAR},
+			</if>
+			<if test="disNum != null">
+				#{disNum,jdbcType=INTEGER},
+			</if>
+			<if test="updateDate != null">
+				#{updateDate,jdbcType=DATE}
+			</if>
+		</trim>
+	</insert>
+
+
+	<insert id="insertlist" parameterType="java.util.List">
+		insert into platform.shop_rack (shopId, shopName, groupId,
+		groupName, rackNo,
+		disType, updateDate)
+		values
+		<foreach collection="list" item="item" index="index"
+			separator=",">
+			(#{item.shopid,jdbcType=VARCHAR}, #{item.shopname,jdbcType=VARCHAR}, #{item.groupid,jdbcType=VARCHAR},
+			#{item.groupname,jdbcType=DATE}, #{item.rackno,jdbcType=VARCHAR},
+			#{item.distype,jdbcType=VARCHAR},
+			#{item.updateDate,jdbcType=DATE})
+		</foreach>
+	</insert>
+
+
+
+	<update id="updateByPrimaryKeySelective" parameterType="com.yonghui.portal.vo.bravo.ShopRackVO">
+		update platform.shop_rack
+		<set>
+			<if test="shopid != null">
+				shopId = #{shopid,jdbcType=VARCHAR},
+			</if>
+			<if test="shopname != null">
+				shopName = #{shopname,jdbcType=VARCHAR},
+			</if>
+			<if test="groupid != null">
+				groupId = #{groupid,jdbcType=VARCHAR},
+			</if>
+			<if test="groupname != null">
+				groupName = #{groupname,jdbcType=VARCHAR},
+			</if>
+			<if test="distype != null">
+				disType = #{distype,jdbcType=VARCHAR},
+			</if>
+			<if test="imgurl != null">
+				imgUrl = #{imgurl,jdbcType=VARCHAR},
+			</if>
+			<if test="rackno != null">
+				rackNo = #{rackno,jdbcType=VARCHAR},
+			</if>
+			<if test="area != null">
+				area = #{area,jdbcType=VARCHAR},
+			</if>
+			<if test="disNum != null">
+				disNum = #{disNum,jdbcType=INTEGER},
+			</if>
+			<if test="updateDate != null">
+				updateDate = #{updateDate,jdbcType=DATE},
+			</if>
+		</set>
+		where id = #{id,jdbcType=BIGINT}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.yonghui.portal.vo.bravo.ShopRackVO">
+		update shop_rack
+		set shopId = #{shopid,jdbcType=VARCHAR},
+		shopName = #{shopname,jdbcType=VARCHAR},
+		groupId = #{groupid,jdbcType=VARCHAR},
+		groupName = #{groupname,jdbcType=VARCHAR},
+		disType = #{distype,jdbcType=VARCHAR},
+		imgUrl = #{imgurl,jdbcType=VARCHAR},
+		rackNo = #{rackno,jdbcType=VARCHAR},
+		disNum = #{disNum,jdbcType=INTEGER},
+		area = #{area,jdbcType=VARCHAR}
+		where id = #{id,jdbcType=BIGINT}
+	</update>
+</mapper>

@@ -153,4 +153,9 @@
     <bean id="apiImgsInfoService" class="com.yonghui.portal.service.impl.sys.ApiImgsInfoServiceImpl"/>
     <dubbo:service interface="com.yonghui.portal.service.sys.ApiImgsInfoService" ref="apiImgsInfoService"
                    timeout="300000"/>
+
+    <!-- 门店陈列信息服务类  -->
+    <bean id="  " class="com.yonghui.portal.service.impl.channelTransparency.ShopRackServiceImpl"/>
+    <dubbo:service interface="com.yonghui.portal.service.channelTransparency.ShopRackService" ref="shopRackService"
+                   timeout="300000"/>
 </beans>

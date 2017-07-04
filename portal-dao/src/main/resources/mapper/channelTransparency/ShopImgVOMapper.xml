@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yonghui.portal.mapper.channelTransparency.ShopImgVOMapper" >
+  <resultMap id="BaseResultMap" type="com.yonghui.portal.model.channelTransparency.ShopImgVO" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="shopid" property="shopid" jdbcType="VARCHAR" />
+    <result column="imgurl" property="imgurl" jdbcType="VARCHAR" />
+    <result column="title" property="title" jdbcType="VARCHAR" />
+    <result column="updatedate" property="updatedate" jdbcType="TIMESTAMP" />
+    
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, shopid, imgurl,title,updatedate
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from platform.shop_img
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  
+    <select id="selectByShopid" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from platform.shop_img
+    where shopid = #{shopid,jdbcType=VARCHAR}
+  </select>
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from platform.shop_img
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.yonghui.portal.vo.bravo.ShopImgVO" >
+    insert into platform.shop_img (id, shopid, imgurl
+      )
+    values (#{id,jdbcType=BIGINT}, #{shopid,jdbcType=VARCHAR}, #{imgurl,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.yonghui.portal.vo.bravo.ShopImgVO" >
+    insert into platform.shop_img
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="shopid != null" >
+        shopid,
+      </if>
+      <if test="imgurl != null" >
+        imgurl,
+      </if>
+      <if test="title != null" >
+        title,
+      </if>
+      <if test="updatedate != null" >
+        updatedate,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="shopid != null" >
+        #{shopid,jdbcType=VARCHAR},
+      </if>
+      <if test="imgurl != null" >
+        #{imgurl,jdbcType=VARCHAR},
+      </if>
+       <if test="title != null" >
+        #{title,jdbcType=VARCHAR},
+      </if>
+        <if test="updatedate != null" >
+        #{updatedate,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.yonghui.portal.vo.bravo.ShopImgVO" >
+    update shop_img
+    <set >
+      <if test="shopid != null" >
+        shopid = #{shopid,jdbcType=VARCHAR},
+      </if>
+      <if test="imgurl != null" >
+        imgurl = #{imgurl,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.yonghui.portal.vo.bravo.ShopImgVO" >
+    update shop_img
+    set shopid = #{shopid,jdbcType=VARCHAR},
+      imgurl = #{imgurl,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  
+  
+  
+   <insert id="insertlist" parameterType="java.util.List" >
+   insert into platform.shop_img(shopid, imgurl,title,updatedate)
+    values
+     <foreach collection="list" item="item" index="index"  
+        separator=",">
+     (#{item.shopid,jdbcType=VARCHAR}, #{item.imgurl,jdbcType=VARCHAR}, #{title,jdbcType=VARCHAR},#{updatedate,jdbcType=TIMESTAMP})
+      </foreach>
+  </insert>
+</mapper>

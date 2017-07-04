@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yonghui.portal.mapper.channelTransparency.ShopPlanVOMapper" >
+  <resultMap id="BaseResultMap" type="com.yonghui.portal.model.channelTransparency.ShopPlanVO" >
+    <result column="shopid" property="shopid" jdbcType="VARCHAR" />
+    <result column="url" property="url" jdbcType="VARCHAR" />
+    <result column="updatedate" property="updatedate" jdbcType="TIMESTAMP" />
+  </resultMap>
+  
+   <sql id="Base_Column_List" >
+    shopid, url, updatedate
+  </sql>
+  <select id="selectByShopid" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from platform.shop_plan
+    where shopid = #{shopid,jdbcType=VARCHAR}
+  </select>
+  
+  <update id="updateByShopid" parameterType="com.yonghui.portal.vo.bravo.ShopPlanVO" >
+    update platform.shop_plan
+    <set >
+      <if test="url != null" >
+        url = #{url,jdbcType=VARCHAR},
+      </if>
+      <if test="updatedate != null" >
+        updatedate = #{updatedate,jdbcType=TIMESTAMP},
+      </if>
+     </set>
+     where shopid = #{shopid,jdbcType=VARCHAR}
+  </update>
+  
+  <insert id="insert" parameterType="com.yonghui.portal.vo.bravo.ShopPlanVO" >
+    insert into shop_plan (shopid, url, updatedate
+      )
+    values (#{shopid,jdbcType=VARCHAR}, #{url,jdbcType=VARCHAR}, #{updatedate,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.yonghui.portal.vo.bravo.ShopPlanVO" >
+    insert into shop_plan
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="shopid != null" >
+        shopid,
+      </if>
+      <if test="url != null" >
+        url,
+      </if>
+      <if test="updatedate != null" >
+        updatedate,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="shopid != null" >
+        #{shopid,jdbcType=VARCHAR},
+      </if>
+      <if test="url != null" >
+        #{url,jdbcType=VARCHAR},
+      </if>
+      <if test="updatedate != null" >
+        #{updatedate,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+</mapper>
