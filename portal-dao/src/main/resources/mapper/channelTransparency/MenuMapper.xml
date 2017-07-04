@@ -1,0 +1,557 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://www.mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yonghui.portal.mapper.channelTransparency.MenuMapper">
+	<resultMap id="BaseResultMap" type="com.yonghui.portal.model.channelTransparency.Menu">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="name" property="name" jdbcType="VARCHAR" />
+		<result column="url" property="url" jdbcType="VARCHAR" />
+		<result column="pid" property="pid" jdbcType="INTEGER" />
+		<result column="icon" property="icon" jdbcType="VARCHAR" />
+		<result column="createTime" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="status" property="status" jdbcType="INTEGER" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, name, url, pid, icon, createTime, status
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		from platform.menu
+		where id = #{id,jdbcType=INTEGER}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from
+		platform.menu
+		where id = #{id,jdbcType=INTEGER} or
+		pid=#{id,jdbcType=INTEGER}
+	</delete>
+	<insert id="insert" parameterType="com.yonghui.portal.vo.Menu">
+		insert into platform.menu (id,
+		name, url,
+		pid, icon, createTime,
+		status)
+		values (#{id,jdbcType=INTEGER},
+		#{name,jdbcType=VARCHAR},
+		#{url,jdbcType=VARCHAR},
+		#{pid,jdbcType=INTEGER}, #{icon,jdbcType=VARCHAR},
+		#{createTime,jdbcType=TIMESTAMP},
+		#{status,jdbcType=INTEGER})
+	</insert>
+	<insert id="insertSelective" parameterType="com.yonghui.portal.vo.Menu">
+		insert into platform.menu
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="name != null">
+				name,
+			</if>
+			<if test="url != null">
+				url,
+			</if>
+			<if test="pid != null">
+				pid,
+			</if>
+			<if test="icon != null">
+				icon,
+			</if>
+			<if test="createTime != null">
+				createTime,
+			</if>
+			<if test="status != null">
+				status,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=INTEGER},
+			</if>
+			<if test="name != null">
+				#{name,jdbcType=VARCHAR},
+			</if>
+			<if test="url != null">
+				#{url,jdbcType=VARCHAR},
+			</if>
+			<if test="pid != null">
+				#{pid,jdbcType=INTEGER},
+			</if>
+			<if test="icon != null">
+				#{icon,jdbcType=VARCHAR},
+			</if>
+			<if test="createTime != null">
+				#{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="status != null">
+				#{status,jdbcType=INTEGER},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.yonghui.portal.vo.Menu">
+		update platform.menu
+		<set>
+			<if test="name != null">
+				name = #{name,jdbcType=VARCHAR},
+			</if>
+			<if test="url != null">
+				url = #{url,jdbcType=VARCHAR},
+			</if>
+			<if test="pid != null">
+				pid = #{pid,jdbcType=INTEGER},
+			</if>
+			<if test="icon != null">
+				icon = #{icon,jdbcType=VARCHAR},
+			</if>
+			<if test="createTime != null">
+				createTime = #{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="status != null">
+				status = #{status,jdbcType=INTEGER},
+			</if>
+			<if test="sort != null">
+				sort = #{sort,jdbcType=INTEGER},
+			</if>
+			
+		</set>
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.yonghui.portal.vo.Menu">
+		update
+		platform.menu
+		set name = #{name,jdbcType=VARCHAR},
+		url =
+		#{url,jdbcType=VARCHAR},
+		pid = #{pid,jdbcType=INTEGER},
+		icon =
+		#{icon,jdbcType=VARCHAR},
+		createTime =
+		#{createTime,jdbcType=TIMESTAMP},
+		status = #{status,jdbcType=INTEGER}
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+
+	<select id="listMenu" resultMap="BaseResultMap">
+		select * from platform.menu order by sort asc
+	</select>
+
+
+	<select id="listRoleMenu" parameterType="List" resultMap="BaseResultMap">
+		select *,1 as checked from platform.menu
+		<if test="null != list ">
+			where id in
+			<foreach collection="list" item="list" index="index" open="("
+				close=")" separator=",">
+				#{list}
+			</foreach>
+		</if>
+		order by sort asc
+	</select>
+
+
+	<select id="storeList" resultType="Map">
+		select shop_code as id ,name as text from hyd_dw.dim_shop 
+		where 1 = 1 and `name` is not null and channel_type = 0
+		order by shop_code asc
+	</select>
+
+	<select id="storeName" resultType="String" parameterType="String">
+		select name as shop_name from hyd_dw.dim_shop 
+		where 1 = 1 and `name` is not null and channel_type = 0 and  shop_code=#{shopcode}
+	</select>
+
+
+	<select id="storeUserList" resultType="Map" parameterType="List">
+
+		select shop_code as id ,name as text from hyd_dw.dim_shop 
+		where 1 = 1 and `name` is not null and channel_type = 0
+		shop_code in
+		<foreach collection="list" item="list" index="index" open="("
+			close=")" separator=",">
+			#{list}
+		</foreach>
+
+	</select>
+
+
+	<select id="getShopByShopCode" resultType="Map" parameterType="String">
+		select
+		`oldShopID` as 门店ID,
+		`shopName` as 门店,
+		`employeeNo` as 店长工号,
+		`shopper` as 店长名称,
+		`tel` as 店长电话 from bravo_shopper_info where
+		oldShopID=#{shopcode} limit 1
+		<!-- select * from dw.d_shop_mapping where shopcode=#{shopcode} -->
+	</select>
+
+	<select id="broveStoreList" resultType="Map">
+		select DISTINCT sap_shopId as id ,SName as text from dw.d_bravo_shop
+		<!-- select DISTINCT ShopID as id ,SName as text from dw.d_bravo_shop -->
+		where 1=1
+		<if test="list != null ">
+			and sap_shopId in
+			<foreach collection="list" item="item" open="(" separator=","
+				close=")">
+				'${item}'
+			</foreach>
+		</if>
+
+		<if test="areaNameList != null  ">
+			and areaName in
+			<foreach collection="areaNameList" item="item" open="("
+				separator="," close=")">
+				'${item}'
+			</foreach>
+		</if>
+
+		order by sap_shopId asc
+	</select>
+	<select id="broveStoreLittleIdList" resultType="Map">
+
+		<if test="list == null ">
+			select 'ALL' as id,'全部' as text ,'全部' as gname
+			union
+		</if>
+		select DISTINCT groupid as id ,groupname as text,gname from
+		platform.d_grouplist
+
+		where 1=1
+
+		<if test="list != null ">
+			and groupid in
+			<foreach collection="list" item="item" open="(" separator=","
+				close=")">
+				${item}
+			</foreach>
+		</if>
+	</select>
+	
+	<select id="broveStoreLittleIdNotTwoOneOneList" resultType="Map">
+		<if test="list == null ">
+			select 'ALL' as id,'全部' as text ,'全部' as gname
+			union
+		</if>
+		select distinct groupid as id,groupname as text,gname from platform.d_grouplist where groupid !=211
+	</select>
+
+	<select id="broveStoreLittleIdListByFinance" resultType="Map">
+
+		<if test="list == null ">
+			select 'ALL' as id,'全部' as text ,'全部' as gname
+			union
+		</if>
+		select DISTINCT groupid as id ,groupname as text,gname from
+		platform.d_grouplist
+
+		where 1=1
+		and type=1
+		<if test="list != null ">
+			and groupid in
+			<foreach collection="list" item="item" open="(" separator=","
+				close=")">
+				${item}
+			</foreach>
+		</if>
+	</select>
+
+
+
+	<select id="broveStoreById" resultType="Map">
+		select DISTINCT groupid as littleNumber ,groupname as littleShop from
+		platform.d_grouplist where groupid=#{littleId}
+		<!-- select DISTINCT littleNumber ,littleShop from platform.d_hr_bonus_rule 
+			where littleNumber=#{littleId} order by littleNumber asc -->
+	</select>
+
+	<select id="secondClusterList" resultType="Map">
+
+		<!-- SELECT 'ALL' as id, '全部' as text union -->
+		SELECT
+		sap_shopId as id, SName as text
+		FROM
+		dw.`d_bravo_shop`
+		WHERE
+		1=1
+		<if test="district != '' ">
+			<!-- and AreaName = #{district} -->
+			and AreaName IN ('广东', '北京', '华东', '华西','福建','四川','河北','东北')
+
+		</if>
+		<if test="province!=null and province!='' ">
+			and province = #{province}
+		</if>
+		<!-- <choose> <when test="province!=null and province!='' "> and province 
+			= #{province} </when> <when test="areaName !=null and areaName !=''"> and 
+			AreaName = #{district} </when> </choose> -->
+
+
+		<!-- SELECT store_id as id, store_name as text store_id as id,concat(district,province, 
+			store_name) as text FROM `dim_store` WHERE 1=1 <if test="district != ''"> 
+			and district IN ('广东', '北京', '华东') </if> order by district -->
+	</select>
+
+	<select id="getStoreListByDistrict" resultType="Map">
+
+
+		SELECT
+		sap_shopId as id, SName as text
+		FROM
+		dw.`d_bravo_shop`
+		WHERE
+		1=1
+		<if test="district != '' and district != null  and district != 'ALL' and district !='全部'">
+			and AreaName = #{district}
+		</if>
+
+		<if test="list != null ">
+			and sap_shopId in
+			<foreach collection="list" item="item" open="(" separator=","
+				close=")">
+				'${item}'
+			</foreach>
+		</if>
+		order by AreaName
+
+		<!-- SELECT store_id as id,store_name as text FROM `dim_store` WHERE 1=1 
+			<if test="district != '' and district != null and district != 'ALL' and district 
+			!='全部'"> and district = #{district} </if> order by district -->
+	</select>
+	
+	<select id="getStoreListByDistrictHaveAll" resultType="Map">
+		select 'all' as id,'全部' as text union 
+		SELECT sap_shopId as id, SName as text 
+		FROM dw.`d_bravo_shop` WHERE areaname =#{district}
+	</select>
+	
+	<select id="getStoreListByDistrictNotAll"  resultType="Map">
+		SELECT sap_shopId as id, SName as text 
+		FROM dw.`d_bravo_shop` WHERE areaname =#{district}
+	</select>
+	<select id="getStoreListByDistrictAndStoreIdNotAll" parameterType="java.util.Map"  resultType="Map">
+		SELECT sap_shopId as id, SName as text 
+		FROM dw.`d_bravo_shop` WHERE areaname =#{district}  
+		and sap_shopId like #{storeId}"%"		
+	</select>
+	<select id="getStoreListByDistrictIdNotAll" resultType="Map">
+		SELECT sap_shopId as id, SName as text 
+		FROM dw.`d_bravo_shop` WHERE AreaID =#{district}
+	</select>
+
+
+
+	<select id="getDepartmentList" resultType="Map">
+		select id, name as
+		text from dim_department where type=#{type}
+	</select>
+
+
+	<select id="getDepartmentPositionList" resultType="Map">
+		select id,
+		name as text from dim_department_position where type=#{type}
+	</select>
+
+	<select id="getFirmList" resultType="Map">
+		select DISTINCT groupId as
+		id, concat(groupName,'小店') as text from
+		dw.dim_groups
+	</select>
+
+
+	<select id="getFifthRotation" resultType="Map">
+		select groupId as id,groupName as text from platform.d_grouplist where
+		groupId not in (1) group by groupId
+	</select>
+
+
+	<!-- <select id="getLargeAreaListByUser" resultType="Map"> select '全部' as 
+		district union select DISTINCT district from dim_store </select> -->
+
+
+	<select id="getAllBroveStoreList" resultType="Map"> 
+		select'all' as id,'全部' as text union 
+			select DISTINCT sap_shopId as id ,SName as text 
+			from dw.d_bravo_shop
+	</select>
+	
+	<select id="getHydStoreUserList" resultType="Map"> 
+		select'all' as id,'全部' as text 
+		union 	
+		select shop_code as id ,name as text from hyd_dw.dim_shop 
+		where 1 = 1 and `name` is not null and channel_type = 0	
+	</select>
+
+	<select id="getLargeAreaList" resultType="Map">
+		<!-- select '全部' as district union -->
+		select DISTINCT AreaName as district,AreaID from dw.`d_bravo_shop`
+	</select>
+
+
+	<select id="getLargeAreaListByUser" resultType="Map">
+		<!-- select '全部' as district union -->
+		select DISTINCT AreaName as district,AreaID from dw.`d_bravo_shop`
+		where AreaName=#{district}
+	</select>
+
+
+	<select id="getProvinceList" resultType="Map">
+
+		<!-- select '全部' as province union -->
+		 select DISTINCT province from dw.`d_bravo_shop` where AreaName
+		=#{district} 
+
+	</select>
+	
+	<select id="getProvinceListByNewAreamans" resultType="Map">
+		select DISTINCT province from dw.`d_bravo_shop` where AreaMans =#{district};
+	</select>
+	
+	<select id="getProvinceAllList" resultType="Map">
+		select 'ALL' as province union
+		select DISTINCT province from dw.`d_bravo_shop` where AreaName
+		=#{district}
+	</select>
+	
+	<select id="getCityList" resultType="Map">
+
+		<!-- select '全部' as city union -->
+		select DISTINCT city from dw.`d_bravo_shop` where 1=1
+		<choose>
+			<when test="province!=null and province!='' ">
+				and province = #{province}
+			</when>
+			<otherwise>
+				and AreaName = #{district}
+			</otherwise>
+		</choose>
+
+
+	</select>
+
+
+	<!-- 第二集群地区 -->
+	<select id="getProvinceListByBrova" resultType="Map">
+		<!-- select 'ALL' as areaId , '全部' as province union select DISTINCT areaId 
+			, province from dim_store -->
+
+		select 'ALL' as AreaID , '全部' as province
+		union
+		select DISTINCT areaId ,
+		province from dw.`d_bravo_shop`
+
+
+
+	</select>
+
+	<!-- 第二集群地区对应二级地区 -->
+	<select id="broveStoreListProvinceByCityArea" resultType="Map">
+
+		select '全部' as areamans
+		union
+		select DISTINCT
+		left(areamans,LOCATE('(',areamans)-1) areamans from
+		dw.`d_bravo_shop`
+		where 1=1
+		<if test="areaId !=null and  areaId != '' and areaId != 'ALL' ">
+			and areaId=#{areaId}
+		</if>
+
+		<!-- select '全部' as areamans union select DISTINCT left(areamans,LOCATE('(',areamans)-1) 
+			areamans from dim_store where 1=1 <if test="areaId !=null and areaId != '' 
+			and areaId != 'ALL' "> and areaId=#{areaId} </if> -->
+	</select>
+
+
+	<!-- 对应门店 -->
+	<select id="broveStoreListByAreamans" resultType="Map">
+
+
+		select DISTINCT sap_shopId as id ,SName as text from dw.`d_bravo_shop`
+		where 1=1
+
+		<if test="areamans !=null and  areamans != '' and areamans !='全部' ">
+			and left(areamans,LOCATE('(',areamans)-1)=#{areamans}
+		</if>
+
+		order by sap_shopId asc
+
+
+		<!-- select DISTINCT store_id as id ,store_name as text from dim_store 
+			where 1=1 <if test="areamans !=null and areamans != '' and areamans !='全部' 
+			"> and left(areamans,LOCATE('(',areamans)-1)=#{areamans} </if> order by store_id 
+			asc -->
+	</select>
+
+
+	<select id="findMenuByName" resultType="Map">
+		select id,name from
+		platform.menu where pid=(select id from platform.menu where
+		name=#{name})
+	</select>
+
+
+	<select id="getBigClass" resultType="Map">
+		select bdeptid, bdeptname
+		from dw.d_category where groupid=#{id} group by bdeptid
+	</select>
+	
+	<!-- 进价群 -->
+	<select id="getShopGroupDatas" resultType="Map">
+		select DISTINCT shopGroupID as shopGroupId,shopGroupName  from dw.d_bravo_shop
+	</select>
+	<!-- 进价群and物流 -->
+	<select id="getShopGroupAndLogisticsDatas" resultType="Map">
+		select DISTINCT shopGroupID as shopGroupId,shopGroupName  from dw.d_bravo_shop
+		union
+		select DISTINCT shopGroupID as shopGroupId,shopGroupName from dw.logistics_vender
+	</select>
+
+	<!-- 新大区 -->
+	<select id="getNewAreaMansList" resultType="Map">
+		select DISTINCT	 areaMans as areaMans from dw.`d_bravo_shop` WHERE LOCATE('区',areaMans) >0;
+	</select>
+
+	<select id="getNewAreaMansListByUser" resultType="Map">
+		select DISTINCT
+		areaMans as areaMans from dw.`d_bravo_shop` where AreaMans=#{district}
+	</select>
+
+	<select id="getNewStoreListByDistrict" resultType="Map">
+		SELECT sap_shopId as id, SName as text FROM dw.`d_bravo_shop` WHERE
+		1=1
+		<if
+			test="district != '' and district != null  and district != 'ALL' and district !='全部'">
+			and areaMans = #{district}
+		</if>
+
+		<if test="list != null ">
+			and sap_shopId in
+			<foreach collection="list" item="item" open="(" separator=","
+				close=")">
+				'${item}'
+			</foreach>
+		</if>
+		order by areaMans
+	</select>
+	
+	<select id="getNewStoreListByDistrictNotUser" resultType="Map">
+		SELECT sap_shopId as id, SName as text FROM dw.`d_bravo_shop` WHERE areaMans =#{district}
+	</select>
+	
+	<select id="getShopByShopId" resultType="Map">
+		SELECT sap_shopId as id, SName as text FROM dw.`d_bravo_shop` WHERE SAP_ShopID =#{shopid}
+	</select>
+	
+	<!-- 超级物种 -->
+	<select id="getCJWZStoreUserList" resultType="Map"> 
+		select'all' as id,'全部' as text 
+		union 	
+		select shop_code as id ,name as text from hyd_dw.dim_shop 
+		where 1 = 1 and `name` is not null and channel_type = 2	
+	</select>
+</mapper>
+
+
+
+
+
+

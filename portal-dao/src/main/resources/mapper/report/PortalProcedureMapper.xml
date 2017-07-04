@@ -11,7 +11,8 @@
     </select>
 
     <select id="queryList" parameterType="map" resultType="Map">
-        select a.procode,a.title,a.data_source_code,a.proname,a.prodb,a.creater,a.create_time,b.username from portal_procedure a LEFT JOIN sys_user b ON a.creater = b.user_id
+        select a.procode,a.title,a.data_source_code,a.proname,a.prodb,a.creater,a.create_time,b.username from
+        portal_procedure a LEFT JOIN sys_user b ON a.creater = b.user_id
         <where>
             <if test="procode != null and procode !=''">
                 and procode like concat('%',#{procode},'%')
@@ -35,6 +36,20 @@
 
     <select id="queryTotal" parameterType="map" resultType="int">
         select count(*) from portal_procedure
+    </select>
+
+    <select id="getNewMaxCode" parameterType="map" resultType="string">
+        SELECT
+            CONCAT(
+                'PRO_',
+                LPAD(
+                    SUBSTR(max(procode), 5) + 1,
+                    6,
+                    0
+                )
+            )
+        FROM
+            portal_procedure
     </select>
 
     <insert id="save" parameterType="com.yonghui.portal.model.report.PortalProcedure">
@@ -77,22 +92,22 @@
     <update id="update" parameterType="com.yonghui.portal.model.report.PortalProcedure">
         update portal_procedure
         <set>
-            <if test="procode != null">`procode` = #{procode}, </if>
-            <if test="title != null">`title` = #{title}, </if>
-            <if test="dataSourceCode != null">`data_source_code` = #{dataSourceCode}, </if>
-            <if test="proname != null">`proname` = #{proname}, </if>
-            <if test="parameter != null">`parameter` = #{parameter}, </if>
-            <if test="prodb != null">`prodb` = #{prodb}, </if>
-            <if test="remark != null">`remark` = #{remark}, </if>
-            <if test="creater != null">`creater` = #{creater}, </if>
-            <if test="createTime != null">`create_time` = #{createTime}, </if>
-            <if test="modifier != null">`modifier` = #{modifier}, </if>
+            <if test="procode != null">`procode` = #{procode},</if>
+            <if test="title != null">`title` = #{title},</if>
+            <if test="dataSourceCode != null">`data_source_code` = #{dataSourceCode},</if>
+            <if test="proname != null">`proname` = #{proname},</if>
+            <if test="parameter != null">`parameter` = #{parameter},</if>
+            <if test="prodb != null">`prodb` = #{prodb},</if>
+            <if test="remark != null">`remark` = #{remark},</if>
+            <if test="creater != null">`creater` = #{creater},</if>
+            <if test="createTime != null">`create_time` = #{createTime},</if>
+            <if test="modifier != null">`modifier` = #{modifier},</if>
             `modify_time` = NOW(),
-            <if test="disabled != null">`disabled` = #{disabled}, </if>
+            <if test="disabled != null">`disabled` = #{disabled},</if>
             <if test="version != null">`version` = #{version}</if>
         </set>
         where procode = #{procodeOld}
-	</update>
+    </update>
 
     <delete id="delete">
         delete from portal_procedure where id = #{value}
@@ -109,9 +124,11 @@
     <select id="callProResultMap" statementType="CALLABLE" resultType="map" parameterType="java.util.HashMap">
         <![CDATA[
 
+
 		    {
 		      call ${proname}(${parameter})
 		    }
+
 
         ]]>
     </select>
@@ -119,9 +136,11 @@
     <select id="callProListResultListMap" statementType="CALLABLE" resultType="map" parameterType="java.util.HashMap">
         <![CDATA[
 
+
 		    {
 		      call ${proname}(${parameter})
 		    }
+
 
         ]]>
     </select>
@@ -129,19 +148,24 @@
     <select id="callProResultMapByParam" statementType="CALLABLE" resultType="map" parameterType="java.util.HashMap">
         <![CDATA[
 
+
 		    {
 		      call ${proname}(${parameter})
 		    }
+
 
         ]]>
     </select>
 
-    <select id="callProListResultListMapByParam" statementType="CALLABLE" resultType="map" parameterType="java.util.HashMap">
+    <select id="callProListResultListMapByParam" statementType="CALLABLE" resultType="map"
+            parameterType="java.util.HashMap">
         <![CDATA[
+
 
 		    {
 		      call ${proname}(${parameter})
 		    }
+
 
         ]]>
     </select>

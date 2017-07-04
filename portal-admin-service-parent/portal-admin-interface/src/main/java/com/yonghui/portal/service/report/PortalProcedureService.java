@@ -29,4 +29,11 @@ public interface PortalProcedureService {
 	void delete(Integer id);
 	
 	void deleteBatch(String[] procodes);
+
+	/**
+	 * 产生新的编码
+	 *
+	 * @return
+	 */
+	String getNewMaxCode();
 }

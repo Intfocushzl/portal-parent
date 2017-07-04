@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yonghui.portal.mapper.channelTransparency.ShopDisVOMapper" >
+  <resultMap id="BaseResultMap" type="com.yonghui.portal.model.channelTransparency.ShopDisVO" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="shopid" property="shopid" jdbcType="VARCHAR" />
+    <result column="groupid" property="groupid" jdbcType="VARCHAR" />
+    <result column="dateno" property="dateno" jdbcType="VARCHAR" />
+    <result column="rackno" property="rackno" jdbcType="VARCHAR" />
+    <result column="imgurl" property="imgurl" jdbcType="VARCHAR" />
+     <result column="shopname" property="shopname" jdbcType="VARCHAR" />
+      <result column="groupname" property="groupname" jdbcType="VARCHAR" />
+        <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="updatedate" property="updatedate" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, shopid, groupid, dateno, rackno,imgurl,updatedate,shopname,groupname,remark
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from platform.shop_dis
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  
+    <select id="selectByShopidAndGroupidAndShopid" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from platform.shop_dis
+    where 1 = 1
+    <if test="dateno != null and dateno != ''" >
+        and dateno = #{dateno,jdbcType=VARCHAR}
+     </if>
+     <if test="groupid != null and groupid != ''" >
+        and groupid = #{groupid,jdbcType=VARCHAR}
+      </if>
+      <if test="shopid != null and shopid != ''" >
+        and shopid = #{shopid,jdbcType=VARCHAR}
+      </if>
+  </select>
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from shop_dis
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.yonghui.portal.vo.bravo.ShopDisVO" >
+    insert into platform.shop_dis (id, shopid, groupid, 
+      dateno, rackno,imgurl,updatedate)
+    values (#{id,jdbcType=BIGINT}, #{shopid,jdbcType=VARCHAR}, #{groupid,jdbcType=VARCHAR}, 
+      #{dateno,jdbcType=VARCHAR}, #{rackno,jdbcType=VARCHAR},#{imgurl,jdbcType=VARCHAR},#{updatedate,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.yonghui.portal.vo.bravo.ShopDisVO" >
+    insert into platform.shop_dis
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="shopid != null" >
+        shopid,
+      </if>
+      <if test="groupid != null" >
+        groupid,
+      </if>
+      <if test="dateno != null" >
+        dateno,
+      </if>
+      <if test="rackno != null" >
+        rackno,
+      </if>
+      <if test="shopname != null" >
+        shopname,
+      </if>
+      <if test="imgurl != null" >
+        imgurl,
+      </if>
+      
+      <if test="groupname != null" >
+        groupname,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+      <if test="updatedate != null" >
+        updatedate,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="shopid != null" >
+        #{shopid,jdbcType=VARCHAR},
+      </if>
+      <if test="groupid != null" >
+        #{groupid,jdbcType=VARCHAR},
+      </if>
+      <if test="dateno != null" >
+        #{dateno,jdbcType=VARCHAR},
+      </if>
+      <if test="rackno != null" >
+        #{rackno,jdbcType=VARCHAR},
+      </if>
+       <if test="shopname != null" >
+        #{shopname,jdbcType=VARCHAR},
+      </if>
+      <if test="imgurl != null" >
+         #{imgurl,jdbcType=VARCHAR},
+      </if>
+      <if test="groupname != null" >
+        #{groupname,jdbcType=VARCHAR},
+      </if>
+        <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="updatedate != null" >
+         #{updatedate,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.yonghui.portal.vo.bravo.ShopDisVO" >
+    update platform.shop_dis
+    <set >
+      <if test="shopid != null" >
+        shopid = #{shopid,jdbcType=VARCHAR},
+      </if>
+        <if test="shopname != null" >
+        shopname = #{shopname,jdbcType=VARCHAR},
+      </if>
+      <if test="groupid != null" >
+        groupid = #{groupid,jdbcType=VARCHAR},
+      </if>
+       <if test="groupname != null" >
+        groupname = #{groupname,jdbcType=VARCHAR},
+      </if>
+      <if test="dateno != null" >
+        dateno = #{dateno,jdbcType=VARCHAR},
+      </if>
+      <if test="rackno != null" >
+        rackno = #{rackno,jdbcType=VARCHAR},
+      </if>
+       <if test="imgurl != null" >
+        imgurl = #{imgurl,jdbcType=VARCHAR},
+      </if>
+       <if test="remark != null" >
+       remark = #{remark,jdbcType=VARCHAR},
+      </if>
+       <if test="updatedate != null" >
+        updatedate = #{updatedate,jdbcType=TIMESTAMP},
+      </if>
+      
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.yonghui.portal.vo.bravo.ShopDisVO" >
+    update platform.shop_dis
+    set shopid = #{shopid,jdbcType=VARCHAR},
+      	groupid = #{groupid,jdbcType=VARCHAR},
+      	dateno = #{dateno,jdbcType=VARCHAR},
+     	rackno = #{rackno,jdbcType=VARCHAR},
+       	imgurl = #{imgurl,jdbcType=VARCHAR},
+        updatedate = #{updatedate,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  
+  
+<!--   <select id="listGroup" resultType="Map">
+		select id as id ,name as text  from platform.dateno_group where type = 'group'
+  </select> -->
+	
+	
+ <select id="listDateNo" resultType="Map">
+		select DQTXT as id ,DQTXT as text  from ods.f_dq
+ </select>
+	
+</mapper>

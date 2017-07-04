@@ -23,6 +23,7 @@ public interface PortalProcedureMapper extends BaseMapper<PortalProcedure> {
 
     /**
      * 根据编码查询
+     *
      * @param procode
      * @return
      */
@@ -37,7 +38,6 @@ public interface PortalProcedureMapper extends BaseMapper<PortalProcedure> {
     Map<String, Object> callProResultMapByParam(@Param("proname") String proname, @Param("parameter") String parameter);
 
 
-
     /**
      * 调用存储过程
      * parameter 如：aa,bb,cc
@@ -45,5 +45,12 @@ public interface PortalProcedureMapper extends BaseMapper<PortalProcedure> {
      * @return
      */
     List<Map> callProListResultListMapByParam(@Param("proname") String proname, @Param("parameter") String parameter);
+
+    /**
+     * 产生新的编码
+     *
+     * @return
+     */
+    String getNewMaxCode();
 
 }

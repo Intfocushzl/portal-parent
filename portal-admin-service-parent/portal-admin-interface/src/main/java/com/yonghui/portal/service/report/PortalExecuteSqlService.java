@@ -28,4 +28,11 @@ public interface PortalExecuteSqlService {
     void delete(Integer id);
 
     void deleteBatchBySqlcodes(String[] sqlcodes);
+
+    /**
+     * 产生新的编码
+     *
+     * @return
+     */
+    String getNewMaxCode();
 }

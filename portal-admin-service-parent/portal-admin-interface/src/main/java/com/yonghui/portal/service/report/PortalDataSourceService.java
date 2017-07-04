@@ -32,4 +32,11 @@ public interface PortalDataSourceService {
     void deleteBatchByCodes(String[] codes);
 
     PortalDataSource queryObjectByCode(String code);
+
+	/**
+	 * 产生新的编码
+	 *
+	 * @return
+	 */
+	String getNewMaxCode();
 }

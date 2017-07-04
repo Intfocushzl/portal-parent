@@ -41,6 +41,20 @@
         </if>
     </select>
 
+    <select id="getNewMaxCode" parameterType="map" resultType="string">
+        SELECT
+            CONCAT(
+                'DATA_',
+                LPAD(
+                    SUBSTR(max(code), 6) + 1,
+                    6,
+                    0
+                )
+            )
+        FROM
+            portal_data_source
+    </select>
+
     <insert id="save" parameterType="com.yonghui.portal.model.report.PortalDataSource">
 		insert into portal_data_source
 		(

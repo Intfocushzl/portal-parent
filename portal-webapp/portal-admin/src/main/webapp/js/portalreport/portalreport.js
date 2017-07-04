@@ -8,7 +8,7 @@ $(function () {
             {label: '唯一编码', name: 'code', index: 'code', width: 80, key: true},
             {label: '标题简介', name: 'title', index: 'title', width: 80},
             {
-                label: '执行唯一编码',
+                label: '数据脚本',
                 name: 'execute_code',
                 index: 'execute_code',
                 width: 80
@@ -55,90 +55,153 @@ $(function () {
 });
 
 var vm = new Vue({
-    el: '#rrapp',
-    data: {
-        showList: true,
-        title: null,
-        headersFormatNew: {},
-        selectOption: null,
-        executeCodeOld: null,
-        portalReport: {}
-    },
-    methods: {
-        query: function () {
-            //vm.reload();
-            $("#jqGrid").jqGrid('setGridParam', {
-                postData: {
-                    code: vm.portalReport.code,
-                    remark: vm.portalReport.remark
-                },
-                page: 1
-            }).trigger("reloadGrid");
+        el: '#rrapp',
+        data: {
+            showList: true,
+            title: null,
+            headersFormatNew: {},
+            selectOption: null,
+            executeCodeOld: null,
+            portalReport: {}
         },
-        add: function () {
-            vm.showList = false;
-            vm.title = "新增";
-            vm.portalReport = {};
-            $("input[name='code']").removeAttr("readonly");
-        },
-        update: function (event) {
-            var code = getSelectedRow();
-            if (code == null) {
-                return;
-            }
-            vm.showList = false;
-            vm.title = "修改";
-            vm.getInfo(code);
-            $("input[name='code']").attr("readonly", "readonly");
-            // 根据单元格选中值默认选中
-            /*vm.bindCindexAperture("Profit");
-             vm.bindReportDimIndex("tm");
-             vm.bindCindexRefer("tb");*/
-        },
-        saveOrUpdate: function () {
-            var code = vm.portalReport.code;
-            var id = vm.portalReport.id;
-            var url = vm.portalReport.id == null ? "../portalreport/save" : "../portalreport/update";
-            if (id == null) {
-                $.get("../portalreport/info/" + code, function (r) {
-                    console.log(r);
-                    if (r.portalReport != null) {
-                        alert("唯一编码已存在，请重新输入");
+        methods: {
+            query: function () {
+                //vm.reload();
+                $("#jqGrid").jqGrid('setGridParam', {
+                    postData: {
+                        code: vm.portalReport.code,
+                        remark: vm.portalReport.remark
+                    },
+                    page: 1
+                }).trigger("reloadGrid");
+            },
+            add: function () {
+                vm.showList = false;
+                vm.title = "新增";
+                vm.portalReport = {};
+                $("input[name='code']").removeAttr("readonly");
+                vm.getNewMaxCode();
+            },
+            update: function (event) {
+                var code = getSelectedRow();
+                if (code == null) {
+                    return;
+                }
+                vm.showList = false;
+                vm.title = "修改";
+                vm.getInfo(code);
+                $("input[name='code']").attr("readonly", "readonly");
+                // 根据单元格选中值默认选中
+                /*vm.bindCindexAperture("Profit");
+                 vm.bindReportDimIndex("tm");
+                 vm.bindCindexRefer("tb");*/
+            },
+            saveOrUpdate: function () {
+                var code = vm.portalReport.code;
+                var id = vm.portalReport.id;
+                var url = vm.portalReport.id == null ? "../portalreport/save" : "../portalreport/update";
+                if (vm.checkForm()) {
+                    if (id == null) {
+                        $.get("../portalreport/info/" + code, function (r) {
+                            console.log(r);
+                            if (r.portalReport != null) {
+                                alert("唯一编码已存在，请重新输入");
+                            } else {
+                                vm.addAndUpdate(url);
+                            }
+                        })
                     } else {
                         vm.addAndUpdate(url);
                     }
-                })
-            } else {
-                vm.addAndUpdate(url);
-            }
-        },
-        addAndUpdate: function (url) {
-            vm.portalReport.executeCode = $("#onlycode").val();
-            $.ajax({
-                type: "POST",
-                url: url,
-                data: JSON.stringify(vm.portalReport),
-                success: function (r) {
-                    if (r.code === 0) {
-                        alert('操作成功', function (index) {
-                            vm.reload();
-                        });
-                    } else {
-                        alert(r.msg);
-                    }
                 }
-            });
-        },
-        del: function (event) {
-            var codes = getSelectedRows();
-            if (codes == null) {
-                return;
-            }
-
-            confirm('确定要删除选中的记录？', function () {
+            },
+            addAndUpdate: function (url) {
+                vm.portalReport.executeCode = $("#onlycode").val();
                 $.ajax({
                     type: "POST",
-                    url: "../portalreport/delete",
+                    url: url,
+                    data: JSON.stringify(vm.portalReport),
+                    success: function (r) {
+                        if (r.code === 0) {
+                            alert('操作成功', function (index) {
+                                vm.reload();
+                            });
+                        } else {
+                            alert(r.msg);
+                        }
+                    }
+                });
+            },
+            del: function (event) {
+                var codes = getSelectedRows();
+                if (codes == null) {
+                    return;
+                }
+
+                confirm('确定要删除选中的记录？', function () {
+                    $.ajax({
+                        type: "POST",
+                        url: "../portalreport/delete",
+                        data: JSON.stringify(codes),
+                        success: function (r) {
+                            if (r.code == 0) {
+                                alert('操作成功', function (index) {
+                                    $("#jqGrid").trigger("reloadGrid");
+                                });
+                            } else {
+                                alert(r.msg);
+                            }
+                        }
+                    });
+                });
+            },
+            getInfo: function (code) {
+                $.get("../portalreport/info/" + code, function (r) {
+                    vm.portalReport = r.portalReport;
+                    vm.portalReport.codeOld = vm.portalReport.code;
+                    vm.executeCodeOld = vm.portalReport.executeCode;
+                    if (vm.portalReport.executeType == 1) {
+                        vm.getProCode(vm.executeCodeOld);
+                    } else if (vm.portalReport.executeType == 2) {
+                        vm.getSqlCode(vm.executeCodeOld);
+                    }
+
+                    // 清除单元格格式
+                    getMergeDataClear();
+                    // 延迟加载1秒
+                    clearTimeout(autosaveNotification);
+                    autosaveNotification = setTimeout(function () {
+
+                    }, 1000);
+                    var reportHotDataArr = eval(vm.portalReport.reportHotData);
+                    // 渲染合并单元格
+                    var mergedCellInfoCollectionJsonArray = eval('(' + vm.portalReport.reportMergedCellInfoCollection + ')');
+                    for (var i in mergedCellInfoCollectionJsonArray) {
+                        hot.mergeCells.mergedCellInfoCollection.push(mergedCellInfoCollectionJsonArray[i]);
+                    }
+                    // 加载hansontable数据
+                    hot.loadData(reportHotDataArr);
+                    // 渲染表格
+                    hot.render();
+                    // 只显示名称
+                    getDataHtml();
+                });
+            },
+            reload: function (event) {
+                vm.showList = true;
+                var page = $("#jqGrid").jqGrid('getGridParam', 'page');
+                $("#jqGrid").jqGrid('setGridParam', {
+                    page: page
+                }).trigger("reloadGrid");
+            },
+            addRedis: function () {
+                var codes = getSelectedRows();
+                if (codes == null) {
+                    return;
+                }
+                $.ajax({
+                    type: "POST",
+                    url: "../portalreport/addRedis",
                     data: JSON.stringify(codes),
                     success: function (r) {
                         if (r.code == 0) {
@@ -150,159 +213,116 @@ var vm = new Vue({
                         }
                     }
                 });
-            });
-        },
-        getInfo: function (code) {
-            $.get("../portalreport/info/" + code, function (r) {
-                vm.portalReport = r.portalReport;
-                vm.portalReport.codeOld = vm.portalReport.code;
-                vm.executeCodeOld = vm.portalReport.executeCode;
-                if (vm.portalReport.executeType == 1) {
-                    vm.getProCode(vm.executeCodeOld);
-                } else if (vm.portalReport.executeType == 2) {
-                    vm.getSqlCode(vm.executeCodeOld);
+            },
+            onlycodeshow: function () {
+                var type = $("input[name='type']");
+                var typevalue = null;
+                for (var i = 0; i < type.length; i++) {
+                    if (type[i].checked == true) {
+                        typevalue = type[i].value;
+                    }
                 }
+                if (typevalue == 1) {
+                    this.getProCode(vm.executeCodeOld);
+                } else if (typevalue == 2) {
+                    this.getSqlCode(vm.executeCodeOld);
+                }
+            },
+            getSqlCode: function (executeCodeOld) {
+                $("#onlycode").empty();
+                $.get("../portalexecutesql/sqlList/", function (r) {
+                    for (var i = 0; i < r.sqlList.length; i++) {
+                        vm.selectOption = "<option value='" + r.sqlList[i].sqlcode + "'";
+                        if (executeCodeOld == r.sqlList[i].sqlcode) {
+                            vm.selectOption = vm.selectOption + " selected = 'selected'";
+                        }
+                        vm.selectOption = vm.selectOption + " >" + r.sqlList[i].sqlcode + "<==>" + r.sqlList[i].title + "</option>";
+                        $("#onlycode").append(vm.selectOption);
+                    }
+                    // refresh刷新和render渲染操作，必不可少
+                    $('#onlycode').selectpicker('refresh');
+                    $('#onlycode').selectpicker('render');
+                });
+            },
+            getProCode: function (executeCodeOld) {
+                $("#onlycode").empty();
+                $.get("../portalprocedure/proList/", function (r) {
+                    for (var i = 0; i < r.proList.length; i++) {
+                        vm.selectOption = "<option value='" + r.proList[i].procode + "'";
+                        if (executeCodeOld == r.proList[i].procode) {
+                            vm.selectOption = vm.selectOption + " selected = 'selected'";
+                        }
+                        vm.selectOption = vm.selectOption + " >" + r.proList[i].procode + "<==>" + r.proList[i].title + "</option>";
+                        $("#onlycode").append(vm.selectOption);
+                    }
+                    // refresh刷新和render渲染操作，必不可少
+                    $('#onlycode').selectpicker('refresh');
+                    $('#onlycode').selectpicker('render');
+                });
+            },
+            getCindexAperture: function () {
+                // 属性定义
+                $.get("../cindexaperture/listOpt/", function (r) {
+                    $("#cIndexAperture").append("<option value='' style='text-align: left;padding-right: 20px' >空-请选择</option>");
+                    for (var i = 0; i < r.data.length; i++) {
+                        vm.selectOption = "<option class='" + r.data[i].fieldname + "' value='" + r.data[i].fieldname + ":" + r.data[i].indexname + ":" + r.data[i].indexname + "' style='text-align: left;padding-right: 20px' >" + r.data[i].fieldname + ":" + r.data[i].indexname + "</option>";
+                        $("#cIndexAperture").append(vm.selectOption);
+                    }
+                    // refresh刷新和render渲染操作，必不可少
+                    $('#cIndexAperture').selectpicker('refresh');
+                    $('#cIndexAperture').selectpicker('render');
+                });
+            },
+            getReportDimIndex: function () {
+                // 维度定义
+                $.get("../reportdimindex/listOpt/", function (r) {
+                    $("#reportDimIndex").append("<option value='' style='text-align: left;padding-right: 20px' >空-请选择</option>");
+                    for (var i = 0; i < r.data.length; i++) {
+                        vm.selectOption = "<option class='" + r.data[i].dimlab + "' value='" + r.data[i].dimlab + ":" + r.data[i].dimname + ":" + r.data[i].dimname + "' style='text-align: left;padding-right: 20px' >" + r.data[i].dimlab + ":" + r.data[i].dimname + "</option>";
+                        $("#reportDimIndex").append(vm.selectOption);
+                    }
+                    // refresh刷新和render渲染操作，必不可少
+                    $('#reportDimIndex').selectpicker('refresh');
+                    $('#reportDimIndex').selectpicker('render');
+                });
+            },
+            getCindexRefer: function () {
+                // 指标定义
+                $.get("../cindexrefer/listOpt/", function (r) {
+                    $("#cIndexRefer").append("<option value='' style='text-align: left;padding-right: 20px' >空-请选择</option>");
+                    for (var i = 0; i < r.data.length; i++) {
+                        vm.selectOption = "<option class='" + r.data[i].referchar + "' value='" + r.data[i].referchar + ":" + r.data[i].refername + ":" + r.data[i].def + "' style='text-align: left;padding-right: 20px' >" + r.data[i].referchar + ":" + r.data[i].refername + "</option>";
+                        $("#cIndexRefer").append(vm.selectOption);
+                    }
+                    // refresh刷新和render渲染操作，必不可少
+                    $('#cIndexRefer').selectpicker('refresh');
+                    $('#cIndexRefer').selectpicker('render');
+                });
+            },
+            cellReadOnly: function () {
+                for (var i = 0; i < hot.countRows(); i++) {
+                    for (var k = 0; k < hot.countCols(); k++) {
+                        hot.getCellMeta(i, k).readOnly = true;
+                    }
+                }
+            },
+            getNewMaxCode: function () {
+                $.get("../portalreport/getNewMaxCode/", function (r) {
+                    console.info(r.newMaxCode);
+                    $("#code").val(r.newMaxCode);
+                    vm.portalReport.code = r.newMaxCode;
+                });
+            },
+            checkForm: function () {
+                if (getStringValue($("#code").val) != "") {
+                    if ($("#code").val().substr(0, 4) != "REP_" || $("#code").val().length != 10) {
+                        alert("编码错误，正确格式如：REP_000001");
+                        return false;
+                    }
+                }
+                return true;
+            }
 
-                // 清除单元格格式
-                getMergeDataClear();
-                // 延迟加载1秒
-                clearTimeout(autosaveNotification);
-                autosaveNotification = setTimeout(function () {
-
-                }, 1000);
-                var reportHotDataArr = eval(vm.portalReport.reportHotData);
-                // 渲染合并单元格
-                var mergedCellInfoCollectionJsonArray = eval('(' + vm.portalReport.reportMergedCellInfoCollection + ')');
-                for (var i in mergedCellInfoCollectionJsonArray) {
-                    hot.mergeCells.mergedCellInfoCollection.push(mergedCellInfoCollectionJsonArray[i]);
-                }
-                // 加载hansontable数据
-                hot.loadData(reportHotDataArr);
-                // 渲染表格
-                hot.render();
-                // 只显示名称
-                getDataHtml();
-            });
-        },
-        reload: function (event) {
-            vm.showList = true;
-            var page = $("#jqGrid").jqGrid('getGridParam', 'page');
-            $("#jqGrid").jqGrid('setGridParam', {
-                page: page
-            }).trigger("reloadGrid");
-        },
-        addRedis: function () {
-            var codes = getSelectedRows();
-            if (codes == null) {
-                return;
-            }
-            $.ajax({
-                type: "POST",
-                url: "../portalreport/addRedis",
-                data: JSON.stringify(codes),
-                success: function (r) {
-                    if (r.code == 0) {
-                        alert('操作成功', function (index) {
-                            $("#jqGrid").trigger("reloadGrid");
-                        });
-                    } else {
-                        alert(r.msg);
-                    }
-                }
-            });
-        },
-        onlycodeshow: function () {
-            var type = $("input[name='type']");
-            var typevalue = null;
-            for (var i = 0; i < type.length; i++) {
-                if (type[i].checked == true) {
-                    typevalue = type[i].value;
-                }
-            }
-            if (typevalue == 1) {
-                this.getProCode(vm.executeCodeOld);
-            } else if (typevalue == 2) {
-                this.getSqlCode(vm.executeCodeOld);
-            }
-        },
-        getSqlCode: function (executeCodeOld) {
-            $("#onlycode").empty();
-            $.get("../portalexecutesql/sqlList/", function (r) {
-                for (var i = 0; i < r.sqlList.length; i++) {
-                    vm.selectOption = "<option value='" + r.sqlList[i].sqlcode + "'";
-                    if (executeCodeOld == r.sqlList[i].sqlcode) {
-                        vm.selectOption = vm.selectOption + " selected = 'selected'";
-                    }
-                    vm.selectOption = vm.selectOption + " >" + r.sqlList[i].sqlcode + "<==>" + r.sqlList[i].title + "</option>";
-                    $("#onlycode").append(vm.selectOption);
-                }
-                // refresh刷新和render渲染操作，必不可少
-                $('#onlycode').selectpicker('refresh');
-                $('#onlycode').selectpicker('render');
-            });
-        },
-        getProCode: function (executeCodeOld) {
-            $("#onlycode").empty();
-            $.get("../portalprocedure/proList/", function (r) {
-                for (var i = 0; i < r.proList.length; i++) {
-                    vm.selectOption = "<option value='" + r.proList[i].procode + "'";
-                    if (executeCodeOld == r.proList[i].procode) {
-                        vm.selectOption = vm.selectOption + " selected = 'selected'";
-                    }
-                    vm.selectOption = vm.selectOption + " >" + r.proList[i].procode + "<==>" + r.proList[i].title + "</option>";
-                    $("#onlycode").append(vm.selectOption);
-                }
-                // refresh刷新和render渲染操作，必不可少
-                $('#onlycode').selectpicker('refresh');
-                $('#onlycode').selectpicker('render');
-            });
-        },
-        getCindexAperture: function () {
-            // 属性定义
-            $.get("../cindexaperture/listOpt/", function (r) {
-                $("#cIndexAperture").append("<option value='' style='text-align: left;padding-right: 20px' >空-请选择</option>");
-                for (var i = 0; i < r.data.length; i++) {
-                    vm.selectOption = "<option class='" + r.data[i].fieldname + "' value='" + r.data[i].fieldname + ":" + r.data[i].indexname + ":" + r.data[i].indexname + "' style='text-align: left;padding-right: 20px' >" + r.data[i].fieldname + ":" + r.data[i].indexname + "</option>";
-                    $("#cIndexAperture").append(vm.selectOption);
-                }
-                // refresh刷新和render渲染操作，必不可少
-                $('#cIndexAperture').selectpicker('refresh');
-                $('#cIndexAperture').selectpicker('render');
-            });
-        },
-        getReportDimIndex: function () {
-            // 维度定义
-            $.get("../reportdimindex/listOpt/", function (r) {
-                $("#reportDimIndex").append("<option value='' style='text-align: left;padding-right: 20px' >空-请选择</option>");
-                for (var i = 0; i < r.data.length; i++) {
-                    vm.selectOption = "<option class='" + r.data[i].dimlab + "' value='" + r.data[i].dimlab + ":" + r.data[i].dimname + ":" + r.data[i].dimname + "' style='text-align: left;padding-right: 20px' >" + r.data[i].dimlab + ":" + r.data[i].dimname + "</option>";
-                    $("#reportDimIndex").append(vm.selectOption);
-                }
-                // refresh刷新和render渲染操作，必不可少
-                $('#reportDimIndex').selectpicker('refresh');
-                $('#reportDimIndex').selectpicker('render');
-            });
-        },
-        getCindexRefer: function () {
-            // 指标定义
-            $.get("../cindexrefer/listOpt/", function (r) {
-                $("#cIndexRefer").append("<option value='' style='text-align: left;padding-right: 20px' >空-请选择</option>");
-                for (var i = 0; i < r.data.length; i++) {
-                    vm.selectOption = "<option class='" + r.data[i].referchar + "' value='" + r.data[i].referchar + ":" + r.data[i].refername + ":" + r.data[i].def + "' style='text-align: left;padding-right: 20px' >" + r.data[i].referchar + ":" + r.data[i].refername + "</option>";
-                    $("#cIndexRefer").append(vm.selectOption);
-                }
-                // refresh刷新和render渲染操作，必不可少
-                $('#cIndexRefer').selectpicker('refresh');
-                $('#cIndexRefer').selectpicker('render');
-            });
-        },
-        cellReadOnly: function () {
-            for (var i = 0; i < hot.countRows(); i++) {
-                for (var k = 0; k < hot.countCols(); k++) {
-                    hot.getCellMeta(i, k).readOnly = true;
-                }
-            }
         }
-
-    }
-});
+    })
+    ;

@@ -45,7 +45,6 @@ public class CIndexApertureController extends AbstractController {
      * 列表
      */
     @RequestMapping("/listOpt")
-    @RequiresPermissions("cindexaperture:list")
     public R listOpt(@RequestParam Map<String, Object> params) {
         List<CIndexAperture> cIndexApertureList = cIndexApertureService.queryListOpt();
         return R.success(cIndexApertureList);

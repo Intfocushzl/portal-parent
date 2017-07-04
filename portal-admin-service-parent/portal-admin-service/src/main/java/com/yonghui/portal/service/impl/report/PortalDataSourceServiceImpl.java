@@ -58,4 +58,9 @@ public class PortalDataSourceServiceImpl implements PortalDataSourceService {
     public void deleteBatchByCodes(String[] codes) {
         portalDataSourceMapper.deleteBatchByCodes(codes);
     }
+
+	@Override
+	public String getNewMaxCode() {
+		return portalDataSourceMapper.getNewMaxCode();
+	}
 }

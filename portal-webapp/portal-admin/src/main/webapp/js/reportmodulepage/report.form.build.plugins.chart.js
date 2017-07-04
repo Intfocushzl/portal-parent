@@ -59,14 +59,15 @@ LPB.plugins['banner'] = function (active_component, leipiplugins) {
                     jsonObj.config.info = attr_val;
                     break;
                 case 'orgname':
+                    attr_val = getAttrVal(attr_val, "banner");
                     jsonObj.name = attr_val;
-                    active_component.find(".leipiplugins-orgname").text(attr_val);
+                    active_component.find(".leipiplugins-orgname").html(attr_val);
                     break;
             }
             active_component.popover("hide");
             LPB.genSource();//重置源代码
         });
-        $(leipiplugins).text(JSON.stringify(jsonObj));
+        setLeipipluginsVal(leipiplugins, jsonObj);
     });
 }
 
@@ -132,14 +133,15 @@ LPB.plugins['chart_line'] = function (active_component, leipiplugins) {
                     jsonObj.config.dataUrl = attr_val;
                     break;
                 case 'orgname':
+                    attr_val = getAttrVal(attr_val, "chart_line");
                     jsonObj.name = attr_val;
-                    active_component.find(".leipiplugins-orgname").text(attr_val);
+                    active_component.find(".leipiplugins-orgname").html(attr_val);
                     break;
             }
             active_component.popover("hide");
             LPB.genSource();//重置源代码
         });
-        $(leipiplugins).text(JSON.stringify(jsonObj));
+        setLeipipluginsVal(leipiplugins, jsonObj);
     });
 }
 
@@ -197,8 +199,9 @@ LPB.plugins['tables_v3'] = function (active_component, leipiplugins) {
             var attr_val = $(e).val();
             switch (attr_name) {
                 case 'orgname':
+                    attr_val = getAttrVal(attr_val, "tables_v3");
                     jsonObj.name = attr_val;
-                    active_component.find(".leipiplugins-orgname").text(attr_val);
+                    active_component.find(".leipiplugins-orgname").html(attr_val);
                     break;
             }
         });
@@ -237,7 +240,7 @@ LPB.plugins['tables_v3'] = function (active_component, leipiplugins) {
             });
             jsonObj.config[j] = jsonConfigObj;
         });
-        $(leipiplugins).text(JSON.stringify(jsonObj));
+        setLeipipluginsVal(leipiplugins, jsonObj);
         // 删除 tab div
         $("#content div").html("");
     });
@@ -291,4 +294,28 @@ function addTab() {
 // 修改tab标题
 function onchangeTabTitle(obj) {
     $("#a_" + $(obj).attr("document")).html($(obj).val());
+}
+
+/**
+ * 生成的json赋给控件
+ * @param leipiplugins
+ * @param jsonObj
+ */
+function setLeipipluginsVal(leipiplugins, jsonObj) {
+    $(leipiplugins).val(JSON.stringify(jsonObj));
+    $(leipiplugins).text(JSON.stringify(jsonObj));
+    $(leipiplugins).html(JSON.stringify(jsonObj));
+}
+
+/**
+ * 获取控件名称
+ * @param attr_val
+ * @param attr_name
+ * @returns {*}
+ */
+function getAttrVal(attr_val, attr_name) {
+    if (getStringValue(attr_val) != "") {
+        return attr_val;
+    }
+    return $("#" + attr_name).attr("title");
 }

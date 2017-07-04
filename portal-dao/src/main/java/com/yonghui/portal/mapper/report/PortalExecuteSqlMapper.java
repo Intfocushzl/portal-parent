@@ -20,4 +20,11 @@ public interface PortalExecuteSqlMapper extends BaseMapper<PortalExecuteSql> {
 
     int deleteBatchBySqlcodes(String[] sqlcods);
 
+    /**
+     * 产生新的编码
+     *
+     * @return
+     */
+    String getNewMaxCode();
+
 }
