@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://www.mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.yonghui.portal.mapper.channelTransparency.MenuMapper">
+<mapper namespace="com.yonghui.portal.mapper.channelTransparency.ChanelMenuMapper">
 	<resultMap id="BaseResultMap" type="com.yonghui.portal.model.channelTransparency.Menu">
 		<id column="id" property="id" jdbcType="INTEGER" />
 		<result column="name" property="name" jdbcType="VARCHAR" />
@@ -26,7 +26,7 @@
 		where id = #{id,jdbcType=INTEGER} or
 		pid=#{id,jdbcType=INTEGER}
 	</delete>
-	<insert id="insert" parameterType="com.yonghui.portal.vo.Menu">
+	<insert id="insert" parameterType="com.yonghui.portal.model.channelTransparency.Menu">
 		insert into platform.menu (id,
 		name, url,
 		pid, icon, createTime,
@@ -38,7 +38,7 @@
 		#{createTime,jdbcType=TIMESTAMP},
 		#{status,jdbcType=INTEGER})
 	</insert>
-	<insert id="insertSelective" parameterType="com.yonghui.portal.vo.Menu">
+	<insert id="insertSelective" parameterType="com.yonghui.portal.model.channelTransparency.Menu">
 		insert into platform.menu
 		<trim prefix="(" suffix=")" suffixOverrides=",">
 			<if test="id != null">
@@ -87,7 +87,7 @@
 			</if>
 		</trim>
 	</insert>
-	<update id="updateByPrimaryKeySelective" parameterType="com.yonghui.portal.vo.Menu">
+	<update id="updateByPrimaryKeySelective" parameterType="com.yonghui.portal.model.channelTransparency.Menu">
 		update platform.menu
 		<set>
 			<if test="name != null">
@@ -115,7 +115,7 @@
 		</set>
 		where id = #{id,jdbcType=INTEGER}
 	</update>
-	<update id="updateByPrimaryKey" parameterType="com.yonghui.portal.vo.Menu">
+	<update id="updateByPrimaryKey" parameterType="com.yonghui.portal.model.channelTransparency.Menu">
 		update
 		platform.menu
 		set name = #{name,jdbcType=VARCHAR},

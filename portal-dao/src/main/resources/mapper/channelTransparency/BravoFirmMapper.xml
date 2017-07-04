@@ -67,7 +67,7 @@
 	
 	
 	
-	<select id="secondClusterList" resultType="com.yonghui.portal.vo.bravo.Shop">
+	<select id="secondClusterList" resultType="com.yonghui.portal.model.channelTransparency.Shop">
 
 	SELECT
 		'ALL' as id, '全部' as text

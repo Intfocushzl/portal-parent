@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.yonghui.portal.mapper.sys.PosterImportMapper">
+
+    <select id="areaTmpJoinList" resultType="Map" parameterType="Map">
+        SELECT  a.id , a.posterId , a.area , a.city FROM platform.imp_poster_area a
+        LEFT JOIN platform.imp_poster_area_tmp b ON a.posterId = b.posterId AND a.area = b.area AND a.city = b.city
+        WHERE a.creater = #{jobNumber}
+    </select>
+
+    <select id="listByArea" resultType="Map" parameterType="Map">
+        SELECT a.posterId , a.area , a.city FROM platform.imp_poster_area a where a.area LIKE concat('%',#{area},'%')
+	</select>
+
+    <select id="areaList" resultType="Map" parameterType="Map">
+        SELECT a.posterId , a.area , a.city FROM platform.imp_poster_area a
+    </select>
+
+    <select id="tmpAreaList" resultType="Map" parameterType="Map">
+        SELECT a.posterId , a.area , a.city FROM platform.imp_poster_area_tmp a WHERE a.creater = #{jobNumber}
+    </select>
+
+    <select id="queryCountry" resultType="int" parameterType="Map">
+        SELECT count(*) AS country FROM platform.countries a WHERE a.CountriesName = #{country}
+    </select>
+
+    <select id="queryVender" resultType="int" parameterType="Map">
+        SELECT count(*) FROM dw.d_vender a  WHERE a.venderid = #{venderid}
+    </select>
+
+    <select id="areamansList" resultType="Map" parameterType="Map">
+        SELECT a.AreaMans AS areamans , a.City AS city FROM platform.d_bravo_shop a
+    </select>
+
+    <insert id="insertPosterImportAreaTmp" parameterType="java.util.List">
+        insert into platform.imp_poster_area_tmp (posterId, area, city,
+        remark,
+        creater, create_time,
+        modifier, modify_time, disabled , version)
+        values
+        <foreach collection="list" item="item" index="index"
+                 separator=",">
+            (#{item.posterId,jdbcType=INTEGER},
+            #{item.area,jdbcType=VARCHAR},
+            #{item.city,jdbcType=INTEGER},
+            '',
+            #{item.jobNumber,jdbcType=VARCHAR},
+            NOW(),
+            NULL,
+            NOW(),
+            '0',
+            NULL
+            )
+        </foreach>
+    </insert>
+
+
+    <delete id="deleteArea" parameterType="java.util.List">
+        DELETE FROM platform.imp_poster_area WHERE id IN
+        <foreach collection="list" index="index" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </delete>
+
+    <insert id="insertArea" parameterType="java.util.List">
+        INSERT INTO platform.imp_poster_area SELECT * FROM platform.imp_poster_area_tmp;
+    </insert>
+
+    <delete id="deleteAreaTmp" parameterType="Map">
+        DELETE FROM  platform.imp_poster_area_tmp  WHERE creater = #{jobNumber}
+    </delete>
+
+
+    <insert id="insertPosterImportGoodsTmp" parameterType="java.util.List">
+        INSERT INTO platform.imp_poster_goods_tmp (posterId, startDate, endDate, theme, groupId,
+        groupName, dmId, dmName, displayMode, goodsAttribute, area, goodsId, barcode, `name`,
+        unit, inPrice, promotionInPrice, salePrice, promotionSalePrice, grossMargin, promotionGrossMargin,
+        estimatedSaleNumber, estimatedSaleAmount, posterFee, country, priceMethod, supplieRating,
+        deliveryMethod, returnFlag, supplierCode, supplierName, remark, creater, create_time, modifier,
+        modify_time, disabled, version) VALUES
+        <foreach collection="list" item="item" index="index"
+                 separator=",">
+            (#{item.posterId,jdbcType=INTEGER},
+            #{item.startDate,jdbcType=VARCHAR},
+            #{item.endDate,jdbcType=VARCHAR},
+            #{item.theme,jdbcType=VARCHAR},
+            #{item.groupId,jdbcType=VARCHAR},
+            #{item.groupName,jdbcType=VARCHAR},
+            #{item.dmId,jdbcType=INTEGER},
+            #{item.dmName,jdbcType=VARCHAR},
+            #{item.displayMode,jdbcType=VARCHAR},
+            #{item.goodsAttribute,jdbcType=VARCHAR},
+            #{item.area,jdbcType=VARCHAR},
+            #{item.goodsId,jdbcType=VARCHAR},
+            #{item.barcode,jdbcType=VARCHAR},
+            #{item.name,jdbcType=VARCHAR},
+            #{item.unit,jdbcType=VARCHAR},
+            #{item.inPrice,jdbcType=VARCHAR},
+            #{item.promotionInPrice,jdbcType=VARCHAR},
+            #{item.salePrice,jdbcType=VARCHAR},
+            #{item.promotionSalePrice,jdbcType=VARCHAR},
+            #{item.grossMargin,jdbcType=VARCHAR},
+            #{item.promotionGrossMargin,jdbcType=VARCHAR},
+            #{item.estimatedSaleNumber,jdbcType=VARCHAR},
+            #{item.estimatedSaleAmount,jdbcType=VARCHAR},
+            #{item.posterFee,jdbcType=VARCHAR},
+            #{item.country,jdbcType=VARCHAR},
+            #{item.priceMethod,jdbcType=VARCHAR},
+            #{item.supplieRating,jdbcType=VARCHAR},
+            #{item.deliveryMethod,jdbcType=VARCHAR},
+            #{item.returnFlag,jdbcType=VARCHAR},
+            #{item.supplierCode,jdbcType=VARCHAR},
+            #{item.supplierName,jdbcType=VARCHAR},
+            '',
+            #{item.jobNumber,jdbcType=VARCHAR},
+            NOW(),
+            NULL,
+            NOW(),
+            '0',
+            NULL
+            )
+        </foreach>
+    </insert>
+
+    <select id="tmpGoodsList" resultType="Map" parameterType="Map">
+        SELECT a.posterId , a.area , a.goodsId FROM platform.imp_poster_goods_tmp a WHERE a.creater = #{jobNumber}
+    </select>
+
+    <select id="goodsList" resultType="Map">
+        SELECT posterId, startDate, endDate, theme, groupId,
+        groupName, dmId, dmName, displayMode, goodsAttribute, area, goodsId, barcode, `name`,
+        unit, inPrice, promotionInPrice, salePrice, promotionSalePrice, grossMargin, promotionGrossMargin,
+        estimatedSaleNumber, estimatedSaleAmount, posterFee, country, priceMethod, supplieRating,
+        deliveryMethod, returnFlag, supplierCode, supplierName
+         FROM platform.imp_poster_goods a WHERE a.posterId = #{0} AND a.area = #{1}
+    </select>
+
+    <select id="goodsTmpJoinList" resultType="Map" parameterType="Map">
+        SELECT  a.id , a.posterId , a.area , a.goodsId FROM platform.imp_poster_goods a
+        LEFT JOIN platform.imp_poster_goods_tmp b ON a.posterId = b.posterId AND a.area = b.area AND a.goodsId = b.goodsId
+        WHERE a.creater = #{jobNumber}
+    </select>
+
+    <delete id="deleteGoods" parameterType="java.util.List">
+        DELETE FROM platform.imp_poster_goods WHERE id IN
+        <foreach collection="list" index="index" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </delete>
+
+    <insert id="insertGoods" parameterType="java.util.List">
+        INSERT INTO platform.imp_poster_goods SELECT * FROM platform.imp_poster_goods_tmp;
+    </insert>
+
+    <delete id="deleteGoodsTmp" parameterType="Map">
+        DELETE FROM platform.imp_poster_goods_tmp  WHERE creater = #{jobNumber};
+    </delete>
+</mapper>

@@ -4,10 +4,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by liuwei on 2017/6/16.
@@ -21,27 +18,29 @@ public class QrCodeUtil {
         //封装非实时数据
         List<String[]> dataCurrentList = new ArrayList<String[]>();
         //第一个hana销售量；
-        Map<String,Object> map = (Map<String,Object>)list.get(0);
+        Map<String, Object> map = (Map<String, Object>) list.get(0);
         // 第二个实时数据；
-        JSONArray jsonArray = (JSONArray)list.get(1);
+        JSONArray jsonArray = (JSONArray) list.get(1);
         // 第三部分非实时数据
-        List<Map<String, Object>> datalist = (List<Map<String, Object>>)list.get(2);
+        List<Map<String, Object>> datalist = (List<Map<String, Object>>) list.get(2);
         String saleDate = map.get("saleDate").toString();
         String[] saleDate1 = new String[50];
-        if(saleDate!=null && saleDate!=""){
-             saleDate1 = saleDate.split(",");
+        if (saleDate != null && saleDate != "") {
+            saleDate1 = saleDate.split(",");
         }
-        String[] saleAmount1 = new String[50];
+        String[] saleAmount1 = null;
         String saleAmount = map.get("saleAmount").toString();
-        if(saleAmount!=null && saleAmount!=""){
+        if (saleAmount != null && saleAmount != "") {
             saleAmount1 = saleAmount.split(",");
+        }else{
+            saleAmount1 = new String[]{"","","","","","","","","","","","","",""};
         }
 
         String goodsName = map.get("goodsName").toString();
         //实时数据
         for (int i = 0; i < jsonArray.size(); i++) {
             JSONObject job = jsonArray.getJSONObject(i);
-            if(job.get("shopId").equals(shopId)){
+            if (job.get("shopId").equals(shopId)) {
                 shopName = formatObj(job.get("shopName")).toString();
             }
             String[] pastStr = {formatObj(job.get("shopName")).toString(), "", formatObj(job.get("shopName")).toString(), formatObj(job.get("totalAmount")).toString(),
@@ -98,7 +97,13 @@ public class QrCodeUtil {
         JSONObject node12 = new JSONObject();
         node12.put("name", goodsName + "前14天销售额趋势");
         node12.put("type", "line");
-        node12.put("data", saleAmount1);
+        System.out.print("================"+saleAmount1);
+        System.out.print("================"+saleAmount1.length);
+        if (saleAmount1 == null || saleAmount1.equals("") || saleAmount1.length == 0) {
+            node12.put("data", "");
+        } else {
+            node12.put("data", saleAmount1);
+        }
         jsonAry12.add(node12);
         node3.put("series", jsonAry12);
         jsonAry4.add(node3);
@@ -142,5 +147,26 @@ public class QrCodeUtil {
             obj = "";
         }
         return obj;
+    }
+
+    public String getDate() {
+        List<String> list = new ArrayList<String>();
+        Date dNow = new Date(); // 当前时间
+        Date dBefore = new Date();
+        for (int i = 1; i <= 14; i++) {
+            Calendar calendar = Calendar.getInstance(); // 得到日历
+            calendar.setTime(dNow);// 把当前时间赋给日历
+            calendar.add(Calendar.DAY_OF_MONTH, -i); // 设置为前一天
+            dBefore = calendar.getTime(); // 得到前一天的时间
+            SimpleDateFormat sdf = new SimpleDateFormat("MM/dd"); // 设置时间格式
+            String defaultStartDate = sdf.format(dBefore); // 格式化前一天
+            list.add(defaultStartDate);
+        }
+        String saleDate = new String();
+        for (int i = list.size() - 1; i >= 0; i--) {
+            saleDate = saleDate + list.get(i) + ",";
+        }
+        saleDate.substring(0, saleDate.length() - 1);
+        return saleDate;
     }
 }

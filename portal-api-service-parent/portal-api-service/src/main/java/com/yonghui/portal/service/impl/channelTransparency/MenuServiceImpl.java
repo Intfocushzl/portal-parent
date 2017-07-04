@@ -1,6 +1,6 @@
 package com.yonghui.portal.service.impl.channelTransparency;
 
-import com.yonghui.portal.mapper.channelTransparency.MenuMapper;
+import com.yonghui.portal.mapper.channelTransparency.ChanelMenuMapper;
 import com.yonghui.portal.service.channelTransparency.MenuService;
 import org.springframework.stereotype.Service;
 
@@ -14,10 +14,10 @@ import java.util.Map;
 public class MenuServiceImpl implements MenuService {
 
     @Resource
-    private MenuMapper menuMapper;
+    private ChanelMenuMapper chanelMenuMapper;
 
     @Override
     public Map<String, Object> getShopByShopId(String shopId) throws Exception {
-        return menuMapper.getShopByShopId(shopId);
+        return chanelMenuMapper.getShopByShopId(shopId);
     }
 }
