@@ -32,6 +32,18 @@
             $('#toggle-level2-btn').on('click', function () {
                 $('#json').JSONView('toggle', 2);
             });
+
+            $('#toggle-level3-btn').on('click', function () {
+                $('#json').JSONView('toggle', 3);
+            });
+
+            $('#toggle-level4-btn').on('click', function () {
+                $('#json').JSONView('toggle', 4);
+            });
+
+            $('#toggle-level5-btn').on('click', function () {
+                $('#json').JSONView('toggle', 5);
+            });
         });
     </script>
 </head>
@@ -39,6 +51,9 @@
 <button id="toggle-btn">展开</button>
 <button id="toggle-level1-btn">一级</button>
 <button id="toggle-level2-btn">二级</button>
+<button id="toggle-level3-btn">三级</button>
+<button id="toggle-level4-btn">四级</button>
+<button id="toggle-level5-btn">五级</button>
 <div id="json"></div>
 </body>
 </html>
