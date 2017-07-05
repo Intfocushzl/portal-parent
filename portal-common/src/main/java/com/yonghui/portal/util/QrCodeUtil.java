@@ -97,8 +97,6 @@ public class QrCodeUtil {
         JSONObject node12 = new JSONObject();
         node12.put("name", goodsName + "前14天销售额趋势");
         node12.put("type", "line");
-        System.out.print("================" + saleAmount1);
-        System.out.print("================" + saleAmount1.length);
         if (saleAmount1 == null || saleAmount1.equals("") || saleAmount1.length == 0) {
             node12.put("data", "");
         } else {
