@@ -5,12 +5,17 @@ import com.alibaba.fastjson.JSONObject;
 import com.yonghui.portal.model.horse.EveryDayHorseRacing;
 import com.yonghui.portal.model.horse.EveryDayHorseRacingNew;
 import com.yonghui.portal.service.horse.EveryDayHorseRacingService;
+import com.yonghui.portal.util.HttpContextUtils;
 import com.yonghui.portal.util.R;
 import com.yonghui.portal.util.YhJsonUtils;
+import com.yonghui.portal.util.horse.groupHorseDetailExport;
 import com.yonghui.portal.util.horse.groupHorseExport;
 import com.yonghui.portal.util.horse.horseDailyRacingExport;
+import com.yonghui.portal.util.redis.ReportUtil;
+import com.yonghui.portal.xss.SQLFilter;
 import org.apache.log4j.Logger;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -32,6 +37,9 @@ import java.util.Map;
 public class HorseDailyRacingController {
 
     Logger log = Logger.getLogger(this.getClass());
+
+    @Autowired
+    private ReportUtil reportUtil;
 
     @Reference
     private EveryDayHorseRacingService everyDayHorseRacingService;
@@ -164,4 +172,26 @@ public class HorseDailyRacingController {
         }
     }
 
+    @RequestMapping(value = "groupHorseDetailExport", method = RequestMethod.GET)
+    public void groupHorseDetailExport(HttpServletRequest req, HttpServletResponse response , String groupid , String yongHuiReportCustomCode) {
+        response.setHeader("Access-Control-Allow-Origin", "*");
+        response.setContentType("text/html;charset=UTF-8");
+        List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
+        String parameter = null;
+        try {
+            parameter = HttpContextUtils.getRequestParameter(req);
+            list = reportUtil.jdbcProListResultListMapByParam(SQLFilter.sqlInject(yongHuiReportCustomCode), SQLFilter.sqlInject(parameter));
+            groupHorseDetailExport export = new groupHorseDetailExport();
+            HSSFWorkbook workbook = export.exportByHydBudget(list);
+            String filename = "groupHorseDetailExport.xls";
+            response.setContentType("application/x-msdownload");
+            response.setHeader("Content-disposition", "attachment;filename=" + filename);
+            OutputStream ouputStream = response.getOutputStream();
+            workbook.write(ouputStream);
+            ouputStream.flush();
+            ouputStream.close();
+        } catch (Exception e) {
+            log.error("导出excel异常", e);
+        }
+    }
 }

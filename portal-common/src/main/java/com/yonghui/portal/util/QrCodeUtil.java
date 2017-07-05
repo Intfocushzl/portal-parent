@@ -32,8 +32,8 @@ public class QrCodeUtil {
         String saleAmount = map.get("saleAmount").toString();
         if (saleAmount != null && saleAmount != "") {
             saleAmount1 = saleAmount.split(",");
-        }else{
-            saleAmount1 = new String[]{"","","","","","","","","","","","","",""};
+        } else {
+            saleAmount1 = new String[]{"", "", "", "", "", "", "", "", "", "", "", "", "", ""};
         }
 
         String goodsName = map.get("goodsName").toString();
@@ -50,10 +50,10 @@ public class QrCodeUtil {
         }
         //非实时数据
         for (int i = 0; i < datalist.size(); i++) {
-            String[] currentStr = {formatObj(datalist.get(i).get("shopName")).toString(), "", formatObj(datalist.get(i).get("shopName")).toString(), formatObj(datalist.get(i).get("normalPrice")).toString(),
+            String[] currentStr = {formatObj(datalist.get(i).get("shopName")).toString(), "", formatObj(datalist.get(i).get("shopName")).toString(), formatObj(datalist.get(i).get("nowPrice")).toString(), formatObj(datalist.get(i).get("normalPrice")).toString(),
                     formatObj(datalist.get(i).get("taxCost")).toString(), formatObj(datalist.get(i).get("DMS")).toString(),
                     formatObj(datalist.get(i).get("avgQty")).toString(), formatObj(datalist.get(i).get("monthAmount")).toString(),
-                    formatObj(datalist.get(i).get("lastYearMonthAmount")).toString(), formatObj(datalist.get(i).get("lastYearMonthAmount")).toString()};
+                    formatObj(datalist.get(i).get("lastYearMonthAmount")).toString(), formatObj(datalist.get(i).get("lastMonthAmount")).toString()};
             dataCurrentList.add(currentStr);
         }
 
@@ -97,8 +97,8 @@ public class QrCodeUtil {
         JSONObject node12 = new JSONObject();
         node12.put("name", goodsName + "前14天销售额趋势");
         node12.put("type", "line");
-        System.out.print("================"+saleAmount1);
-        System.out.print("================"+saleAmount1.length);
+        System.out.print("================" + saleAmount1);
+        System.out.print("================" + saleAmount1.length);
         if (saleAmount1 == null || saleAmount1.equals("") || saleAmount1.length == 0) {
             node12.put("data", "");
         } else {
@@ -122,7 +122,7 @@ public class QrCodeUtil {
         node7.put("title", "实时");
 
         JSONObject node8 = new JSONObject();
-        String[] aa1 = {"自身ID", "父ID", "门店", "正常售价", "含税成本价", "DMS", "前14天日均销售", "本月销售额", "同比销售额", "环比销售额"};
+        String[] aa1 = {"自身ID", "父ID", "门店", "当前售价", "正常售价", "含税成本价", "DMS", "前14天日均销售", "本月销售额", "同比销售额", "环比销售额"};
         node8.put("head", aa1);
         node8.put("data", dataCurrentList);
         JSONObject node9 = new JSONObject();

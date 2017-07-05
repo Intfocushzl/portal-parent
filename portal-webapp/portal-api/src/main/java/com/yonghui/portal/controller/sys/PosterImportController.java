@@ -1,7 +1,7 @@
 package com.yonghui.portal.controller.sys;
 
 import com.alibaba.dubbo.config.annotation.Reference;
-import com.yonghui.portal.annotation.IgnoreAuth;
+import com.alibaba.fastjson.JSONObject;
 import com.yonghui.portal.model.api.TokenApi;
 import com.yonghui.portal.model.sys.PosterImportArea;
 import com.yonghui.portal.model.sys.PosterImportGoods;
@@ -61,8 +61,7 @@ public class PosterImportController {
      * @param token
      * @return
      */
-    @IgnoreAuth
-    @RequestMapping(value = "areaImport", method = RequestMethod.POST)
+    @RequestMapping(value = "areaImport", method = RequestMethod.GET)
     public R areaImport(MultipartHttpServletRequest multipartRequest, HttpServletResponse response,
                         String token) {
         TokenApi tokenApi = null;
@@ -70,13 +69,13 @@ public class PosterImportController {
         List<Map<String, Object>> areaList = null;
         List<PosterImportArea> excellist = new ArrayList<PosterImportArea>();
         try {
-          /*  if (token == null) {
+            if (token == null) {
                 throw new Exception("token不存在");
             } else {
                 String tokenApiJsonStr = redisBizUtilApi.getApiToken(token);
                 tokenApi = JSONObject.parseObject(tokenApiJsonStr, TokenApi.class);
                 jobNumber = tokenApi.getJobNumber();
-            }*/
+            }
             for (Iterator it = multipartRequest.getFileNames(); it.hasNext(); ) {
                 String key = (String) it.next();
                 MultipartFile imgFile = multipartRequest.getFile(key);
@@ -120,20 +119,19 @@ public class PosterImportController {
      * @param token
      * @return
      */
-    @IgnoreAuth
     @RequestMapping(value = "confirmArea", method = RequestMethod.GET)
     public R areaImport(HttpServletRequest request, HttpServletResponse response,
                         String token) {
         TokenApi tokenApi = null;
         String jobNumber = "admin";
         try {
-           /* if (token == null) {
+            if (token == null) {
                 throw new Exception("token不存在");
             } else {
                 String tokenApiJsonStr = redisBizUtilApi.getApiToken(token);
                 tokenApi = JSONObject.parseObject(tokenApiJsonStr, TokenApi.class);
                 jobNumber = tokenApi.getJobNumber();
-            }*/
+            }
             //关联临时表，如果是重新导入，先删除
             List<Map<String, Object>> areaList = posterImportService.areaTmpJoinList(jobNumber);
             List<Integer> areaIdList = new ArrayList<Integer>();
@@ -150,8 +148,7 @@ public class PosterImportController {
     }
 
 
-    @IgnoreAuth
-    @RequestMapping(value = "goodsImport", method = RequestMethod.POST)
+    @RequestMapping(value = "goodsImport", method = RequestMethod.GET)
     public R goodsImport(MultipartHttpServletRequest multipartRequest, HttpServletResponse response,
                          String token) {
         TokenApi tokenApi = null;
@@ -159,13 +156,13 @@ public class PosterImportController {
         List<Map<String, Object>> areaList = null;
         List<PosterImportGoods> excellist = new ArrayList<PosterImportGoods>();
         try {
-          /*  if (token == null) {
+            if (token == null) {
                 throw new Exception("token不存在");
             } else {
                 String tokenApiJsonStr = redisBizUtilApi.getApiToken(token);
                 tokenApi = JSONObject.parseObject(tokenApiJsonStr, TokenApi.class);
                 jobNumber = tokenApi.getJobNumber();
-            }*/
+            }
             for (Iterator it = multipartRequest.getFileNames(); it.hasNext(); ) {
                 String key = (String) it.next();
                 MultipartFile imgFile = multipartRequest.getFile(key);
@@ -212,20 +209,19 @@ public class PosterImportController {
         return R.success(areaList);
     }
 
-    @IgnoreAuth
     @RequestMapping(value = "confirmGoods", method = RequestMethod.GET)
     public R confirmGoods(HttpServletRequest request, HttpServletResponse response,
                           String token) {
         TokenApi tokenApi = null;
         String jobNumber = "admin";
         try {
-           /* if (token == null) {
+            if (token == null) {
                 throw new Exception("token不存在");
             } else {
                 String tokenApiJsonStr = redisBizUtilApi.getApiToken(token);
                 tokenApi = JSONObject.parseObject(tokenApiJsonStr, TokenApi.class);
                 jobNumber = tokenApi.getJobNumber();
-            }*/
+            }
             //关联临时表，如果是重新导入，先删除
             List<Map<String, Object>> goodsList = posterImportService.goodsTmpJoinList(jobNumber);
             List<Integer> goodsIdList = new ArrayList<Integer>();
@@ -259,7 +255,7 @@ public class PosterImportController {
                 for (Map<String, Object> item : list) {
                     if (item.get("area") != null) {
                         if (map.get(item.get("area")) == null) {
-                            map.put((String) item.get("area"), item.get("area"));
+                            map.put((String) item.get("area"), item);
                         }
                     }
                 }
@@ -272,7 +268,6 @@ public class PosterImportController {
         return R.success(list);
     }
 
-    @IgnoreAuth
     @RequestMapping(value = "goodsList", method = RequestMethod.GET)
     public R goodsList(HttpServletRequest request, HttpServletResponse response,String posterId ,  String area) {
         List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
