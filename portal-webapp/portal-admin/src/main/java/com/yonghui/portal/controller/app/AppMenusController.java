@@ -1,5 +1,6 @@
 package com.yonghui.portal.controller.app;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -91,4 +92,55 @@ public class AppMenusController extends AbstractController {
         return R.success();
     }
 
+    @RequestMapping("/select")
+    //@RequiresPermissions("app:menu:select")
+    public R select(){
+        //查询列表数据
+        List<AppMenu> appMenusList = appMenusService.queryAllMenuList();
+
+        List<Map<String,Object>> list=new ArrayList<>();
+
+        Map<String,Object> map1=new HashedMap();
+        map1.put("id",-1);
+        map1.put("name","生意概况");
+        map1.put("type",1);
+        Map<String,Object> map2=new HashedMap();
+        map2.put("id",-2);
+        map2.put("name","报表");
+        map2.put("type",2);
+        Map<String,Object> map3=new HashedMap();
+        map3.put("id",-3);
+        map3.put("name","专题");
+        map3.put("type",3);
+
+        List<Map<String,Object>> list1=new ArrayList<>();
+        List<Map<String,Object>> list2=new ArrayList<>();
+        List<Map<String,Object>> list3=new ArrayList<>();
+
+        for (AppMenu appMenu:appMenusList) {
+            Map<String,Object> node=new HashedMap();
+            node.put("id",appMenu.getMenuId());
+            node.put("name",appMenu.getSubName());
+            node.put("type",appMenu.getType());
+            if (appMenu.getType()==1){
+                list1.add(node);
+            }
+            if (appMenu.getType()==2){
+                list2.add(node);
+            }
+            if (appMenu.getType()==3){
+                list3.add(node);
+            }
+        }
+
+        map1.put("children",list1);
+        map2.put("children",list2);
+        map3.put("children",list3);
+
+        list.add(map1);
+        list.add(map2);
+        list.add(map3);
+
+        return R.success().put("appMenuList", list);
+    }
 }

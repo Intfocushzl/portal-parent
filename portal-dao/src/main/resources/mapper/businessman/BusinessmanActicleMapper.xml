@@ -11,6 +11,8 @@
         <result property="acticleGroups" column="acticle_groups"/>
         <result property="appPush" column="app_push"/>
         <result property="tagInfo" column="tag_info"/>
+        <result property="subjectId" column="subject_id"/>
+        <result property="score" column="score"/>
         <result property="title" column="title"/>
         <result property="content" column="content"/>
         <result property="contentManuscript" column="content_manuscript"/>
@@ -25,6 +27,8 @@
         <result property="modifyTime" column="MODIFY_TIME"/>
         <result property="disabled" column="DISABLED"/>
         <result property="version" column="VERSION"/>
+        <result property="topOrderNum" column="top_order_num"/>
+        <result property="sliderOrderNum" column="slider_order_num"/>
     </resultMap>
 
     <select id="queryObject" resultType="com.yonghui.portal.model.businessman.BusinessmanActicle">
@@ -32,23 +36,26 @@
 	</select>
 
     <select id="queryList" resultType="com.yonghui.portal.model.businessman.BusinessmanActicle">
-        select * from businessman_acticle
+        select x.* from (select a.*
+        , b.order_num as top_order_num
+        , c.order_num as slider_order_num
+        from platform.businessman_acticle as a
+        left join platform.businessman_acticle_recommend as b on b.acticle_id = a.id
+        left join platform.businessman_acticle_slider as c on c.acticle_id = a.id
+        order by if(b.acticle_id is null and c.acticle_id is null,null,-1*b.order_num) desc
+        , if(b.acticle_id is null and c.acticle_id is null,null,-1*c.order_num) desc
+        , if(b.acticle_id is null and c.acticle_id is null,a.id,null) desc) x
         <where>
             <if test="id != null and id !=''">
-                and id like concat('%',#{id},'%')
+                and x.id like concat('%',#{id},'%')
             </if>
             <if test="remark != null and remark !=''">
-                and remark like concat('%',#{remark},'%')
+                and x.remark like concat('%',#{remark},'%')
             </if>
         </where>
-        <choose>
-            <when test="sidx != null and sidx.trim() != ''">
-                order by ${sidx} ${order}
-            </when>
-            <otherwise>
-                order by id desc
-            </otherwise>
-        </choose>
+        <if test="sidx != null and sidx.trim() != ''">
+            order by x.${sidx} ${order}
+        </if>
         <if test="offset != null and limit != null">
             limit #{offset}, #{limit}
         </if>
@@ -92,7 +99,9 @@
 			`acticle_roles`, 
 			`acticle_groups`, 
 			`app_push`, 
-			`tag_info`, 
+			`tag_info`,
+			`subject_id`,
+			`score`,
 			`title`, 
 			`content`,
 			`content_manuscript`,
@@ -116,8 +125,10 @@
 			#{acticleRoles}, 
 			#{acticleGroups}, 
 			#{appPush}, 
-			#{tagInfo}, 
-			#{title}, 
+			#{tagInfo},
+			#{tagInfo},
+			#{subjectId},
+			#{title},
 			#{content},
 			#{contentManuscript},
 			#{abstracts}, 
@@ -144,6 +155,8 @@
             <if test="acticleGroups != null">`acticle_groups` = #{acticleGroups},</if>
             <if test="appPush != null">`app_push` = #{appPush},</if>
             <if test="tagInfo != null">`tag_info` = #{tagInfo},</if>
+            <if test="subjectId != null">`subject_id` = #{subjectId},</if>
+            <if test="score != null">`score` = #{score},</if>
             <if test="title != null">`title` = #{title},</if>
             <if test="content != null">`content` = #{content},</if>
             <if test="contentManuscript != null">content_manuscript = #{contentManuscript},</if>

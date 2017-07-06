@@ -2,6 +2,7 @@ package com.yonghui.portal.model.app;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Author : 杨杨
@@ -52,6 +53,8 @@ public class AppMenu implements Serializable {
     private Date audioUpdatedAt;
 
     private Integer type;
+
+    private List<AppMenu> menuList;
 
     public String getUrl() {
         return url;
@@ -209,5 +212,13 @@ public class AppMenu implements Serializable {
 
     public void setType(Integer type) {
         this.type = type;
+    }
+
+    public List<AppMenu> getMenuList() {
+        return menuList;
+    }
+
+    public void setMenuList(List<AppMenu> menuList) {
+        this.menuList = menuList;
     }
 }

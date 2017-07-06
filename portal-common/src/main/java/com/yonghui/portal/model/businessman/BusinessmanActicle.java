@@ -23,6 +23,10 @@ public class BusinessmanActicle extends AuditAuto {
     private Long appPush;
     //标签：最多三个 如 aa,bb,cc
     private String tagInfo;
+    //专题ID
+    private Long subjectId;
+    //评分
+    private Double score;
     //标题
     private String title;
     //正文
@@ -37,6 +41,11 @@ public class BusinessmanActicle extends AuditAuto {
     private Long pageview;
     private String attachFile;
     private String attachVideo;
+
+    //在置顶中排序
+    private Integer topOrderNum;
+    //在轮播中排序
+    private Integer sliderOrderNum;
 
     public String getAttachFile() {
         return attachFile;
@@ -122,6 +131,22 @@ public class BusinessmanActicle extends AuditAuto {
      */
     public String getTagInfo() {
         return tagInfo;
+    }
+
+    public Long getSubjectId() {
+        return subjectId;
+    }
+
+    public void setSubjectId(Long subjectId) {
+        this.subjectId = subjectId;
+    }
+
+    public Double getScore() {
+        return score;
+    }
+
+    public void setScore(Double score) {
+        this.score = score;
     }
 
     /**
@@ -214,5 +239,31 @@ public class BusinessmanActicle extends AuditAuto {
 
     public void setContentManuscript(String contentManuscript) {
         this.contentManuscript = contentManuscript;
+    }
+
+    public Integer getTopOrderNum() {
+        return topOrderNum;
+    }
+
+    public void setTopOrderNum(Integer topOrderNum) {
+        this.topOrderNum = topOrderNum;
+    }
+
+    public Integer getSliderOrderNum() {
+        return sliderOrderNum;
+    }
+
+    public void setSliderOrderNum(Integer sliderOrderNum) {
+        this.sliderOrderNum = sliderOrderNum;
+    }
+
+    @Override
+    public String toString() {
+        return "BusinessmanActicle{" +
+                "id='" + getId() + '\'' +
+                ", title='" + title + '\'' +
+                ", topOrderNum=" + topOrderNum +
+                ", sliderOrderNum=" + sliderOrderNum +
+                '}';
     }
 }

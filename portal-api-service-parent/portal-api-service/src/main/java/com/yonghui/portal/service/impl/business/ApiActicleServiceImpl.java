@@ -2,8 +2,10 @@ package com.yonghui.portal.service.impl.business;
 
 import com.yonghui.portal.mapper.businessman.BusinessmanActicleLogMapper;
 import com.yonghui.portal.mapper.businessman.BusinessmanActicleMapper;
+import com.yonghui.portal.mapper.businessman.BusinessmanSubjectInfoMapper;
 import com.yonghui.portal.model.businessman.BusinessmanActicle;
 import com.yonghui.portal.model.businessman.BusinessmanActicleLog;
+import com.yonghui.portal.model.businessman.BusinessmanSubjectInfo;
 import com.yonghui.portal.service.business.ApiActicleService;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -15,6 +17,9 @@ public class ApiActicleServiceImpl implements ApiActicleService {
 	private BusinessmanActicleMapper businessmanActicleMapper;
 	@Autowired
 	private BusinessmanActicleLogMapper businessmanActicleLogMapper;
+    @Autowired
+    private BusinessmanSubjectInfoMapper businessmanSubjectInfoMapper;
+
 	@Override
 	public BusinessmanActicle queryObject(Long id){
 		return businessmanActicleMapper.queryObject(id);
@@ -30,11 +35,13 @@ public class ApiActicleServiceImpl implements ApiActicleService {
 		return businessmanActicleMapper.queryTotal(map);
 	}
 
-	public List<Map<String, Object>> acticleList(Map<String, Object> map){
+    @Override
+    public List<Map<String, Object>> acticleList(Map<String, Object> map){
 		return businessmanActicleMapper.acticleList(map);
 	}
 
-	public List<Map<String, Object>> acticleDetail(Map<String, Object> map){
+    @Override
+    public List<Map<String, Object>> acticleDetail(Map<String, Object> map){
 		List<Map<String, Object>> list = businessmanActicleMapper.acticleDetail(map);
 		List<Map<String, Object>> list1= businessmanActicleLogMapper.queryIsSee(map);
 		if(list.size() != 0 && list1.size() != 0){
@@ -46,4 +53,11 @@ public class ApiActicleServiceImpl implements ApiActicleService {
 		}
 		return list;
 	}
+
+    @Override
+    public List<BusinessmanSubjectInfo> acticleSubjectSelected(){
+        return businessmanSubjectInfoMapper.acticleSubjectSelected();
+    }
+
+
 }

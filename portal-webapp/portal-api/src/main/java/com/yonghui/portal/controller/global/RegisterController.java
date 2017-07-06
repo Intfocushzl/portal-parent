@@ -152,11 +152,6 @@ public class RegisterController {
                     user.setStoreNumber(storeNumber);
                 }
             }
-//            if ("全部".equals(province)) {
-//                user.setProvince("ALL");
-//            }else{
-//            user.setProvince(province);
-// }
 
             user.setStatus(0);
 
@@ -164,7 +159,7 @@ public class RegisterController {
 
             user.setPass(Md5Util.getMd5("MD5", 0, null, pass));
 
-            int res = 1;//userService.insertSelective(user);
+            int res = userService.insertSelective(user);
             Map<String, Object> map = new HashMap<String, Object>();
             map.put("api_token", "api_token");
             Map<String, Object> userMap = new HashMap<String, Object>();
@@ -176,40 +171,48 @@ public class RegisterController {
             map.put("user", userMap);
             System.out.println(JSON.json(map));
             if (res == 1) {
-                if (res == 1) {
-                    //TODO: 2017/06/01 调用APP端的创建用户信息接口
-                    HttpMethodUtil httpUtil = new HttpMethodUtil();
-                    try {
-                        String result = "{\"code\":201,\"data\":{\"user_num\":\"60193302\",\"user_name\":\"懒羊羊\",\"mobile\":\"15555555555\",\"created_at\":\"2017-06-14T19:58:27.000+08:00\",\"tel\":\"\",\"id\":100221,\"email\":\"\",\"user_pass\":\"e10adc3949ba59abbe56e057f20f883e\",\"status\":true},\"message\":\"创建用户成功\"} ";//httpUtil.getPostJsonResult(APP_BASE_URL, JSON.json(map));
-                        System.out.println(result);
-                        if (!StringUtils.isEmpty(result)) {
-                            JSONObject jsonObject = JSONObject.parseObject(result);
-                            if (jsonObject.getInteger("code") == 201) {
-                                log.info(jsonObject.toJSONString());
-                                Map<String, Object> newMap = new HashMap<String, Object>();
-                                newMap.put("api_token", "api_token");
-                                newMap.put("role_ids", roleId.split(","));
-                                result = httpUtil.getPostJsonResult(APP_BASE_URL+"/"+jobNumber+"/roles", JSON.json(newMap));
-
-                                return R.success().setMsg(jsonObject.getString("message"));
-                            } else if (jsonObject.getInteger("code") == 200||jsonObject.getInteger("code") == 401) {
-                                log.error(jsonObject.toJSONString());
-                                return R.success().setMsg(jsonObject.getString("message"));
-                            } else {
-                                log.error(jsonObject.toJSONString());
-                                return R.error().setMsg("APP用户信息同步失败");
-                            }
-                        }
-                    } catch (Exception e) {
-                        throw new RRException("调用外部系统出错：" + APP_BASE_URL + "异常信息为：" + e.getMessage());
-                    }
-                    return R.success().setMsg("用户信息修改成功");
-                } else {
-                    return R.error().setMsg("用户信息修改失败");
-                }
+//                if (res == 1) {
+//                    //TODO: 2017/06/01 调用APP端的创建用户信息接口
+//                    HttpMethodUtil httpUtil = new HttpMethodUtil();
+//                    try {
+//                        String result = "{\"code\":201,\"data\":{\"user_num\":\"60193302\",\"user_name\":\"懒羊羊\",\"mobile\":\"15555555555\",\"created_at\":\"2017-06-14T19:58:27.000+08:00\",\"tel\":\"\",\"id\":100221,\"email\":\"\",\"user_pass\":\"e10adc3949ba59abbe56e057f20f883e\",\"status\":true},\"message\":\"创建用户成功\"} ";//httpUtil.getPostJsonResult(APP_BASE_URL, JSON.json(map));
+//                        System.out.println(result);
+//                        if (!StringUtils.isEmpty(result)) {
+//                            JSONObject jsonObject = JSONObject.parseObject(result);
+//                            if (jsonObject.getInteger("code") == 201) {
+//                                log.info(jsonObject.toJSONString());
+//                                Map<String, Object> newMap = new HashMap<String, Object>();
+//                                newMap.put("api_token", "api_token");
+//                                newMap.put("role_ids", roleId.split(","));
+//                                result = httpUtil.getPostJsonResult(APP_BASE_URL+"/"+jobNumber+"/roles", JSON.json(newMap));
+//                                if(!StringUtils.isEmpty(result)) {
+//                                    jsonObject = JSONObject.parseObject(result);
+//                                    if (jsonObject.getInteger("code") == 201) {
+//                                        return R.success().setMsg(jsonObject.getString("message"));
+//                                    }else {
+//                                        return R.success().setMsg(jsonObject.getString("message"));
+//                                    }
+//                                }else {
+//                                    return R.success().setMsg(jsonObject.getString("message"));
+//                                }
+//                            } else if (jsonObject.getInteger("code") == 200||jsonObject.getInteger("code") == 401) {
+//                                log.error(jsonObject.toJSONString());
+//                                return R.success().setMsg(jsonObject.getString("message"));
+//                            } else {
+//                                log.error(jsonObject.toJSONString());
+//                                return R.error().setMsg("APP用户信息同步失败");
+//                            }
+//                        }
+//                    } catch (Exception e) {
+//                        throw new RRException("调用外部系统出错：" + APP_BASE_URL + "异常信息为：" + e.getMessage());
+//                    }
+                    return R.success().setMsg("用户注册成功,请等待审核");
+//                } else {
+//                    return R.error().setMsg("用户注册失败");
+//                }
 
             } else {
-                return R.error(1, "注册异常");
+                return R.error(1, "用户注册失败");
             }
 
         } catch (Exception e) {

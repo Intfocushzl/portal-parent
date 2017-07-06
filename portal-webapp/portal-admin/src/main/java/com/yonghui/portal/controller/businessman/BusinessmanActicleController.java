@@ -2,16 +2,22 @@ package com.yonghui.portal.controller.businessman;
 
 import com.yonghui.portal.controller.AbstractController;
 import com.yonghui.portal.model.businessman.BusinessmanActicle;
+import com.yonghui.portal.model.businessman.BusinessmanActicleRecommend;
+import com.yonghui.portal.model.businessman.BusinessmanActicleSlider;
 import com.yonghui.portal.model.businessman.BusinessmanTagInfo;
+import com.yonghui.portal.service.businessman.BusinessmanActicleRecommendService;
 import com.yonghui.portal.service.businessman.BusinessmanActicleService;
+import com.yonghui.portal.service.businessman.BusinessmanActicleSliderService;
 import com.yonghui.portal.service.businessman.BusinessmanTagInfoService;
 import com.yonghui.portal.util.PageUtils;
 import com.yonghui.portal.util.Query;
 import com.yonghui.portal.util.R;
+import org.apache.commons.collections.map.HashedMap;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -29,6 +35,10 @@ public class BusinessmanActicleController extends AbstractController {
     private BusinessmanActicleService businessmanActicleService;
     @Autowired
     private BusinessmanTagInfoService businessmanTagInfoService;
+    @Autowired
+    private BusinessmanActicleRecommendService businessmanActicleRecommendService;
+    @Autowired
+    private BusinessmanActicleSliderService businessmanActicleSliderService;
 
     /**
      * 列表
@@ -40,6 +50,7 @@ public class BusinessmanActicleController extends AbstractController {
         Query query = new Query(params);
 
         List<BusinessmanActicle> businessmanActicleList = businessmanActicleService.queryList(query);
+
         int total = businessmanActicleService.queryTotal(query);
 
         PageUtils pageUtil = new PageUtils(businessmanActicleList, total, query.getLimit(), query.getPage());
@@ -91,9 +102,48 @@ public class BusinessmanActicleController extends AbstractController {
 
     @RequestMapping("/tagInfoList")
     @ResponseBody
-    public R tagInfoList(@RequestParam Integer type){
+    public R tagInfoList(@RequestParam Integer type) {
         List<BusinessmanTagInfo> list = businessmanTagInfoService.queryByTagType(type);
         return R.success().setData(list);
     }
 
+    @RequestMapping(value = "beTopAndSlider")
+    public R topAndSlider(String topStr, String sliderStr) {
+
+        String[] topStrs = topStr.split("\\|");
+        String[] sliderStrs = sliderStr.split("\\|");
+        List<BusinessmanActicleRecommend> recommendList = new ArrayList<>();
+        List<BusinessmanActicleSlider> sliderList = new ArrayList<>();
+
+        for (int i = 0; i < topStrs.length; i++) {
+            String str = topStrs[i];
+            String[] strs = str.split("-");
+            BusinessmanActicleRecommend recommend = new BusinessmanActicleRecommend();
+            Integer acticleId = Integer.parseInt(strs[0].trim());
+            recommend.setActicleId(acticleId);
+            recommend.setOrderNum(i + 1);
+            Long acticleType = Long.parseLong(strs[2].trim());
+            recommend.setActicleType(acticleType);
+            recommendList.add(recommend);
+        }
+        businessmanActicleRecommendService.deleteAll();
+        Map<String, Object> map = new HashedMap();
+        map.put("recommendList", recommendList);
+        businessmanActicleRecommendService.saveRecommend(map);
+        for (int i = 0; i < sliderStrs.length; i++) {
+            String str = sliderStrs[i];
+            String[] strs = str.split("-");
+            BusinessmanActicleSlider slider = new BusinessmanActicleSlider();
+            Integer acticleId = Integer.parseInt(strs[0].trim());
+            slider.setActicleId(acticleId);
+            slider.setOrderNum(i + 1);
+            Long acticleType = Long.parseLong(strs[2].trim());
+            slider.setActicleType(acticleType);
+            sliderList.add(slider);
+        }
+        businessmanActicleSliderService.deleteAll();
+        map.put("sliderList", sliderList);
+        businessmanActicleSliderService.saveSlider(map);
+        return R.success();
+    }
 }

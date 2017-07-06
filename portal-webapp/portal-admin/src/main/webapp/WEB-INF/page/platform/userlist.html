@@ -5,7 +5,7 @@
 </head>
 <body>
 <div id="rrapp" v-cloak>
-    <div v-show="showList">
+    <div v-show="showList==1">
         <div id="queryDiv" class="queryDiv">
             <div class="grid-btn">
                 <div class="form-group col-sm-2">
@@ -16,6 +16,7 @@
                     <input type="text" class="form-control" v-model="user.name" @keyup.enter="query" placeholder="用户名">
                 </div>
                 <a class="btn btn-primary" @click="query">查询</a>
+                <a class="btn btn-primary" @click="audit"><i class="fa fa-trash-o"></i>&nbsp;新注册列表</a>
                 #if($shiro.hasPermission("user:save"))
                 <a class="btn btn-primary" @click="add"><i class="fa fa-plus"></i>&nbsp;新增</a>
                 #end
@@ -29,9 +30,17 @@
         </div>
         <table id="jqGrid"></table>
         <div id="jqGridPager"></div>
-    </div>
 
-    <div v-show="!showList" class="panel panel-default">
+    </div>
+    <div v-show="showList==3">
+        <div class="panel-heading">{{title}}</div>
+        <table id="jqNewGrid"></table>
+        <div id="jqNewGridPager"></div>
+        <div class="form-group">
+            <input type="button" class="btn btn-warning" @click="reload" value="返回"/>
+        </div>
+    </div>
+    <div v-show="showList==2" class="panel panel-default">
         <div class="panel-heading">{{title}}</div>
         <form class="form-horizontal">
             <div class="form-group">
@@ -113,10 +122,13 @@
             </div>
             <div class="form-group">
                 <div class="col-sm-2 control-label">状态</div>
-                <label class="radio-inline">
+                <label class="radio-inline" v-if="user.status==-5||user.status==null">
+                    <input type="radio" name="status" value="-5" v-model="user.status"/> 待处理
+                </label>
+                <label class="radio-inline" v-if="user.status==-1||user.status==null">
                     <input type="radio" name="status" value="-1" v-model="user.status"/> 禁用
                 </label>
-                <label class="radio-inline">
+                <label class="radio-inline" v-if="user.status==1||user.status==null">
                     <input type="radio" name="status" value="1" v-model="user.status"/> 正常
                 </label>
             </div>
@@ -137,6 +149,101 @@
                 <div class="col-sm-2 control-label"></div>
                 <input type="button" class="btn btn-primary" @click="saveOrUpdate" value="确定"/>
                 &nbsp;&nbsp;<input type="button" class="btn btn-warning" @click="reload" value="返回"/>
+            </div>
+        </form>
+    </div>
+    <div v-show="showList==4" class="panel panel-default">
+        <div class="panel-heading">{{title}}</div>
+        <form class="form-horizontal">
+            <div class="form-group">
+                <div class="col-sm-2 control-label">员工号</div>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" v-model="user.jobNumber" placeholder="生成唯一账号"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">员工姓名</div>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" v-model="user.name" placeholder=""/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">业态</div>
+                <div class="col-sm-10">
+                    <select class="form-control" name="type" v-model='user.type' @change="onTypeChange">
+                        <option value="0">会员店</option>
+                        <option value="1">Bravo</option>
+                        <option value="2">后台</option>
+                        <option value="3">其他</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">角色</div>
+                <div class="col-sm-10">
+                    <select class="form-control" name="roleId" v-model='user.roleId' >
+                        <template v-for="role in roleList">
+                            <option :value="role.id" >
+                                {{ role.name }}
+                            </option>
+                        </template>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">大区</div>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" v-model="user.largeArea" placeholder="大区"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">片区</div>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" v-model="user.areaMans" placeholder="片区"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">省份</div>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" v-model="user.province" placeholder="省份"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">城市</div>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" v-model="user.city" placeholder="城市，ALL默认全部"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">门店</div>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" v-model="user.storeNumber" placeholder="拥有门店逗号隔开,ALL默认全部"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">商行</div>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" v-model="user.firm" placeholder="拥有所属商行逗号隔开, ALL默认全部"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">备注</div>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" v-model="user.remark" placeholder="备注"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">状态</div>
+                <label class="radio-inline" v-if="user.status==0">
+                    <input type="radio" name="status" value="0" v-model="user.status"/> 新注册
+                </label>
+            </div>
+
+            <div class="form-group">
+                <div class="col-sm-2 control-label"></div>
+                <input type="button" class="btn btn-primary" @click="pass(user.id)" value="同意"/>
+                &nbsp;&nbsp;<input type="button" class="btn btn-danger" @click="refuse(user.id)" value="拒绝"/>
+                &nbsp;&nbsp;<input type="button" class="btn btn-warning" @click="newUserReload" value="返回"/>
             </div>
         </form>
     </div>

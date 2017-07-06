@@ -28,4 +28,6 @@ public interface AppMenusService {
 	void delete(Map<String, Object> map);
 	
 	void deleteBatch(Map<String, Object> map);
+
+    List<AppMenu> queryAllMenuList();
 }

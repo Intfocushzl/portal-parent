@@ -415,4 +415,5 @@ public class AppUsers implements Serializable {
     public void setRoleIdList(List<Integer> roleIdList) {
         this.roleIdList = roleIdList;
     }
+
 }

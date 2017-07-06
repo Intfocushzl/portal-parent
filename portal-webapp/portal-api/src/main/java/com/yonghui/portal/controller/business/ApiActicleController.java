@@ -2,11 +2,10 @@ package com.yonghui.portal.controller.business;
 
 import com.alibaba.dubbo.config.annotation.Reference;
 import com.yonghui.portal.annotation.OpenAuth;
+import com.yonghui.portal.model.businessman.BusinessmanSubjectInfo;
 import com.yonghui.portal.service.business.ApiActicleService;
 import com.yonghui.portal.service.sys.SysoperationLogService;
-import com.yonghui.portal.util.ApiQuery;
-import com.yonghui.portal.util.PageUtils;
-import com.yonghui.portal.util.R;
+import com.yonghui.portal.util.*;
 import com.yonghui.portal.util.redis.ReportUtil;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -80,4 +80,38 @@ public class ApiActicleController {
         return R.success(acticleDetail);
     }
 
+    @RequestMapping(value = "getActicleSubjectSelected", method = RequestMethod.GET)
+    public R acticleSubjectSelected() {
+        List<BusinessmanSubjectInfo> list = null;
+        try {
+            list = apiActicleService.acticleSubjectSelected();
+        } catch (Exception e) {
+            return R.error("获取专题类型失败");
+        }
+        List<BusinessmanSubjectInfo> newList=listTreeMenu(list);
+        return R.success(newList);
+    }
+
+    public List<BusinessmanSubjectInfo> listTreeMenu(List<BusinessmanSubjectInfo> list) {
+
+        List<BusinessmanSubjectInfo> nodeList = new ArrayList<BusinessmanSubjectInfo>();
+        for (BusinessmanSubjectInfo node1 : list) {
+            boolean mark = false;
+            for (BusinessmanSubjectInfo node2 : list) {
+                if (node1.getPid() != 0 && node1.getPid()==node2.getId().intValue()) {
+                    mark = true;
+                    if (node2.getChildren() == null)
+                        node2.setChildren(new ArrayList<BusinessmanSubjectInfo>());
+                    node1.setPname(node2.getName());
+                    node2.getChildren().add(node1);
+                    break;
+                }
+            }
+            if (!mark) {
+                node1.setName(node1.getName());
+                nodeList.add(node1);
+            }
+        }
+        return nodeList;
+    }
 }

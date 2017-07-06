@@ -19,14 +19,19 @@ $(function () {
                     return '<span class="label label-warning">冻结</span>';
                 }
                 if (value === 1) {
-                    return '<span class="label label-success">激活</span>';
+                    return '<span class="label label-success">正常</span>';
                 }
             }
             },
             {
-                label: '操作', name: 'operation', with: 100, formatter: function (value, options, row) {
-                return "<span class='label label-success' onclick='vm.userInfo(" + row.id + ")'>查看</span>&nbsp;&nbsp;<span class='label label-success'>同意</span>" +
-                    "&nbsp;&nbsp;<span class='label label-success'>拒绝</span>";
+                label: '操作', name: 'changeStatus', with: 100, formatter: function (value, options, row) {
+                if (value == -1||value==0) {
+                    return "<span class='label label-success' onclick='vm.userInfo(" + row.id + ")'>查看</span>";
+                }
+                if (value == 1) {
+                    return "<span class='label label-success' onclick='vm.userInfo(" + row.id + ")'>查看</span>&nbsp;&nbsp;<span class='label label-success'onclick='vm.pass(" + row.id+ ")'>同意</span>" +
+                        "&nbsp;&nbsp;<span class='label label-success' onclick='vm.refuse(" + row.id + ")'>拒绝</span>";
+                }
             }
             },
             {label: '申请时间', name: 'changeTime', index: 'createTime', width: 80}
@@ -85,7 +90,8 @@ var vm = new Vue({
             $("#jqGrid").jqGrid('setGridParam', {
                 postData: {
                     jobNumber: vm.user.jobNumber,
-                    name: vm.user.name
+                    name: vm.user.name,
+                    changeStatus: $("#selected").val(),
                 },
                 page: 1
             }).trigger("reloadGrid");
@@ -108,29 +114,29 @@ var vm = new Vue({
             vm.getInfo(id);
         },
         saveOrUpdate: function (event) {
-            if ($("#storeNumber").val()!=null){
-                vm.user.storeNumber=$("#storeNumber").val()+"";
+            if ($("#storeNumber").val() != null) {
+                vm.user.storeNumber = $("#storeNumber").val() + "";
             }
-            if ($("#changeStoreNumber").val()!=null){
-                vm.user.changeStoreNumber=$("#changeStoreNumber").val()+"";
+            if ($("#changeStoreNumber").val() != null) {
+                vm.user.changeStoreNumber = $("#changeStoreNumber").val() + "";
             }
 
             var url = vm.user.id == null ? "../forfront/user/save" : "../forfront/user/update";
             console.log(vm.user);
-            // $.ajax({
-            //     type: "POST",
-            //     url: url,
-            //     data: JSON.stringify(vm.user),
-            //     success: function (r) {
-            //         if (r.code === 0) {
-            //             alert('操作成功', function (index) {
-            //                 vm.reload();
-            //             });
-            //         } else {
-            //             alert(r.msg);
-            //         }
-            //     }
-            // });
+            $.ajax({
+                type: "POST",
+                url: url,
+                data: JSON.stringify(vm.user),
+                success: function (r) {
+                    if (r.code === 0) {
+                        alert('操作成功', function (index) {
+                            vm.reload();
+                        });
+                    } else {
+                        alert(r.msg);
+                    }
+                }
+            });
         },
         del: function (event) {
             var ids = getSelectedRows();
@@ -199,8 +205,9 @@ var vm = new Vue({
         },
         onLargeAreaChange: function () {
             var o = new Object();
-            o.district = $("select[name='largeArea']").val();
+            o.largeArea = $("select[name='largeArea']").val();
             vm.getAreaMans(o);
+            vm.getShop(o);
         },
         getAreaMans: function (params) {
             $.get("../forfront/menu/getAreaMans", params, function (data) {
@@ -209,7 +216,6 @@ var vm = new Vue({
         },
         onAreaMansChange: function () {
             var o = new Object();
-            o.largeArea = $("select[name='largeArea']").val();
             o.areaMans = $("select[name='areaMans']").val();
             vm.getShop(o);
         },
@@ -232,6 +238,49 @@ var vm = new Vue({
 
             vm.getInfo(id);
         },
+        pass: function (id) {
+            if (id == null) {
+                return;
+            }
+            $.get("../forfront/user/info/" + id, function (r) {
+                vm.user = r.user;
+                var url =  "../forfront/user/changeGrant/pass" ;
+                $.ajax({
+                    type: "POST",
+                    url: url,
+                    data:JSON.stringify(vm.user),
+                    success: function (r) {
+                        if (r.code === 0) {
+                            alert('操作成功', function (index) {
+                                vm.reload();
+                            });
+                        } else {
+                            alert(r.msg);
+                        }
+                    }
+                });
+            });
+        },
+        refuse: function (id) {
+            if (id == null) {
+                return;
+            }
+            var url =  "../forfront/user/changeGrant/refuse" ;
+            $.ajax({
+                type: "POST",
+                url: url,
+                data:JSON.stringify(id),
+                success: function (r) {
+                    if (r.code === 0) {
+                        alert('操作成功', function (index) {
+                            vm.reload();
+                        });
+                    } else {
+                        alert(r.msg);
+                    }
+                }
+            });
+        }
     }
 });
 vm.getLargeArea();

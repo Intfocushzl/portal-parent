@@ -5,8 +5,6 @@ $(function () {
         // 列表标题及列表模型
         colModel: [
             {label: '群组ID', name: 'id', index: 'id', width: 50, key: true },
-            // {label: '', name: 'groupid', index: 'groupid', width: 80 },
-            {label: '门店ID', name: 'shopid', index: 'shopid', width: 80 },
             {label: '群组名', name: 'groupName', index: 'group_name', width: 80 },
             {label: '备注', name: 'memo', index: 'memo', width: 80 },
             {label: '加载时间', name: 'loadTime', index: 'load_time', width: 80 },

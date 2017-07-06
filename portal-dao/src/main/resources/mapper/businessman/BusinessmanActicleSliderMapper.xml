@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.yonghui.portal.mapper.businessman.BusinessmanActicleSliderMapper">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap id="businessmanActicleSliderMap" type="com.yonghui.portal.model.businessman.BusinessmanActicleSlider">
+        <result property="id" column="id"/>
+        <result property="acticleType" column="acticle_type"/>
+        <result property="acticleId" column="acticle_id"/>
+        <result property="orderNum" column="order_num"/>
+        <result property="remark" column="REMARK"/>
+        <result property="creater" column="CREATER"/>
+        <result property="createTime" column="CREATE_TIME"/>
+        <result property="modifier" column="MODIFIER"/>
+        <result property="modifyTime" column="MODIFY_TIME"/>
+        <result property="disabled" column="DISABLED"/>
+        <result property="version" column="VERSION"/>
+    </resultMap>
+
+	<select id="queryObject" resultType="com.yonghui.portal.model.businessman.BusinessmanActicleSlider">
+		select * from platform.businessman_acticle_slider where id = #{value}
+	</select>
+
+	<select id="queryList" resultType="com.yonghui.portal.model.businessman.BusinessmanActicleSlider">
+		select * from platform.businessman_acticle_slider
+        <where>
+            <if test="id != null and id !=''">
+                and id like concat('%',#{id},'%')
+            </if>
+            <if test="remark != null and remark !=''">
+                and remark like concat('%',#{remark},'%')
+            </if>
+        </where>
+        <choose>
+            <when test="sidx != null and sidx.trim() != ''">
+                order by ${sidx} ${order}
+            </when>
+			<otherwise>
+                order by id desc
+			</otherwise>
+        </choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="queryTotal" resultType="int">
+		select count(*) from platform.businessman_acticle_slider
+        <where>
+            <if test="id != null and id !=''">
+                and id = #{id}
+            </if>
+            <if test="remark != null and remark !=''">
+                and remark like concat('%',#{remark},'%')
+            </if>
+        </where>
+	</select>
+
+    <insert id="save" parameterType="com.yonghui.portal.model.businessman.BusinessmanActicleSlider" useGeneratedKeys="true" keyProperty="id">
+		insert into platform.businessman_acticle_slider
+		(
+			`acticle_type`, 
+			`acticle_id`, 
+			`order_num`, 
+			`REMARK`, 
+			`CREATER`, 
+			`CREATE_TIME`, 
+			`MODIFIER`, 
+			`MODIFY_TIME`, 
+			`DISABLED`, 
+			`VERSION`
+		)
+		values
+		(
+			#{acticleType}, 
+			#{acticleId}, 
+			#{orderNum}, 
+			#{remark}, 
+			#{creater}, 
+			#{createTime}, 
+			#{modifier}, 
+			NOW(), 
+			#{disabled}, 
+			#{version}
+		)
+	</insert>
+
+    <update id="update" parameterType="com.yonghui.portal.model.businessman.BusinessmanActicleSlider">
+        update platform.businessman_acticle_slider
+        <set>
+			<if test="acticleType != null">`acticle_type` = #{acticleType}, </if>
+			<if test="acticleId != null">`acticle_id` = #{acticleId}, </if>
+			<if test="orderNum != null">`order_num` = #{orderNum}, </if>
+			<if test="remark != null">`REMARK` = #{remark}, </if>
+			<if test="creater != null">`CREATER` = #{creater}, </if>
+			<if test="createTime != null">`CREATE_TIME` = #{createTime}, </if>
+			<if test="modifier != null">`MODIFIER` = #{modifier}, </if>
+			`MODIFY_TIME` = NOW(), 
+			<if test="disabled != null">`DISABLED` = #{disabled}, </if>
+			<if test="version != null">`VERSION` = #{version}</if>
+        </set>
+        where id = #{id}
+    </update>
+	
+	<delete id="delete">
+		delete from platform.businessman_acticle_slider where id = #{value}
+	</delete>
+	
+	<delete id="deleteBatch">
+		delete from platform.businessman_acticle_slider where id in 
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+    <delete id="deleteAll">
+        delete from platform.businessman_acticle_slider
+    </delete>
+
+    <select id="queryAllList" resultType="com.yonghui.portal.model.businessman.BusinessmanActicleSlider">
+        select a.*,b.title as title from platform.businessman_acticle_slider as a
+        left join platform.businessman_acticle as b on a.acticle_id = b.id
+        order by a.order_num;
+    </select>
+
+    <insert id="saveSlider" >
+        insert into platform.businessman_acticle_slider
+        (
+        `acticle_type`,
+        `acticle_id`,
+        `order_num`,
+        `CREATER`,
+        `CREATE_TIME`
+        )
+        values
+        <foreach collection="sliderList" item="item" index="index" separator="," >
+            (
+            #{item.acticleType},
+            #{item.acticleId},
+            #{item.orderNum},
+            #{item.creater},
+            NOW()
+            )
+        </foreach>
+    </insert>
+</mapper>

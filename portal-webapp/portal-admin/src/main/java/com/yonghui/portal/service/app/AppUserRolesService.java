@@ -9,7 +9,7 @@ import java.util.List;
  */
 public interface AppUserRolesService {
 
-    void saveOrUpdate(Long userId, List<Integer> roleIdList);
+    void saveOrUpdate(Integer userId, List<Integer> roleIdList);
 
     /**
      * 根据用户ID,获取角色ID列表

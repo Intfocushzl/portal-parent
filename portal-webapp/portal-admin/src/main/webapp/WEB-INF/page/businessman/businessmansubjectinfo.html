@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>专题信息表</title>
+    #parse("sys/header.html")
+    <style type="text/css">
+        .center{
+            text-align: center;
+        }
+        .center > input{
+            display: inline-block;
+        }
+    </style>
+</head>
+<body>
+<div id="rrapp" v-cloak>
+	<div v-show="showList">
+        <div id="queryDiv" class="queryDiv">
+            <div class="grid-btn">
+                <div class="form-group col-sm-2">
+                    <input type="text" class="form-control" v-model="businessmanSubjectInfo.id" @keyup.enter="query" placeholder="主键ID">
+                </div>
+                <div class="form-group col-sm-2">
+                	<input type="text" class="form-control" v-model="businessmanSubjectInfo.remark" @keyup.enter="query" placeholder="备注说明">
+                </div>
+                <a class="btn btn-primary" @click="query">查询</a>
+
+				#if($shiro.hasPermission("businessmansubjectinfo:save"))
+				<a class="btn btn-primary" @click="add"><i class="fa fa-plus"></i>&nbsp;新增</a>
+				#end
+				#if($shiro.hasPermission("businessmansubjectinfo:update"))
+				<a class="btn btn-primary" @click="update"><i class="fa fa-pencil-square-o"></i>&nbsp;修改</a>
+				#end
+				#if($shiro.hasPermission("businessmansubjectinfo:delete"))
+				<a class="btn btn-primary" @click="del"><i class="fa fa-trash-o"></i>&nbsp;删除</a>
+				#end
+			</div>
+		</div>
+	    <table id="jqGrid"></table>
+	    <div id="jqGridPager"></div>
+    </div>
+    
+    <div v-show="!showList" class="panel panel-default">
+		<div class="panel-heading">{{title}}</div>
+		<form class="form-horizontal">
+			<div class="form-group">
+			   	<div class="col-sm-2 control-label">上级菜单</div>
+				<div class="col-sm-10">
+					<input type="text" class="form-control" style="cursor:pointer;" v-model="businessmanSubjectInfo.parentName"
+						   @click="menuTree" readonly="readonly" placeholder="一级菜单"/>
+				</div>
+
+			</div>
+			<div class="form-group">
+			   	<div class="col-sm-2 control-label">专题名称</div>
+			   	<div class="col-sm-10">
+			        <input type="text" class="form-control" v-model="businessmanSubjectInfo.name" placeholder="专题名称"/>
+			    </div>
+			</div>
+			<div class="form-group">
+			   	<div class="col-sm-2 control-label">说明</div>
+			   	<div class="col-sm-10">
+			        <input type="text" class="form-control" v-model="businessmanSubjectInfo.remark" placeholder="说明"/>
+			    </div>
+			</div>
+            <div class="form-group">
+                <div class="center">
+                    <input type="button" class="btn btn-primary"  @click="saveOrUpdate" value="确定"/>
+                    &nbsp;&nbsp;<input type="button" class="btn btn-warning"  @click="reload" value="返回"/>
+                </div>
+            </div>
+		</form>
+	</div>
+</div>
+
+<!-- 选择菜单 -->
+<div id="menuLayer" style="display: none;padding:10px;">
+	<ul id="menuTree" class="ztree"></ul>
+</div>
+
+<script src="${rc.contextPath}/js/businessman/businessmansubjectinfo.js?_${date.systemTime}"></script>
+</body>
+</html>

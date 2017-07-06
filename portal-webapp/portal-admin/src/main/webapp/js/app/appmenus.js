@@ -59,6 +59,7 @@ $(function () {
     });
 });
 
+
 var vm = new Vue({
     el:'#rrapp',
     data:{
@@ -66,7 +67,11 @@ var vm = new Vue({
         title: null,
         appMenu: {
             type:$("input:radio[name=t]:checked").val()==null?1:$("input:radio[name=t]:checked").val()
-        }
+        },
+        kpiList:[],
+        analysisList:[],
+        appList:[],
+        menuList:[]
     },
     methods: {
         query: function () {

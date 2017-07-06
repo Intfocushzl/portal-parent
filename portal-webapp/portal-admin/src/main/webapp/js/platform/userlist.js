@@ -33,11 +33,17 @@ $(function () {
             {label: '员工号', name: 'jobNumber', index: 'jobNumber', width: 80},
             {
                 label: '状态', name: 'status', index: 'status', width: 80, formatter: function (value) {
+                if (value === -5) {
+                    return '<span class="label label-danger">待处理</span>';
+                }
                 if (value === -1) {
                     return '<span class="label label-warning">冻结</span>';
                 }
+                if (value === 0) {
+                    return '<span class="label label-default">新注册</span>';
+                }
                 if (value === 1) {
-                    return '<span class="label label-success">激活</span>';
+                    return '<span class="label label-success">正常</span>';
                 }
             }
             },
@@ -76,11 +82,99 @@ $(function () {
             $("#jqGrid").jqGrid('setGridHeight', getWinH());
         }
     });
+
+    $("#jqNewGrid").jqGrid({
+        url: baseUrl + '/forfront/user/newUserList',     // 请求后台json数据的url
+        datatype: "json",                // 后台返回的数据格式
+        // 列表标题及列表模型
+        colModel: [
+            {label: '账号', name: 'account', index: 'account', width: 100},
+            {label: '用户名', name: 'name', index: 'name', width: 100},
+            {label: '角色名', name: 'roleName', index: 'roleName', width: 100},
+            {label: '备注', name: 'remark', index: 'remark', width: 100},
+            {label: '用户ID', name: 'id', index: 'id', width: 70, key: true},
+            {label: '员工号', name: 'jobNumber', index: 'jobNumber', width: 100},
+            {
+                label: '业态', name: 'type', index: 'type', width: 100, formatter: function (value) {
+                if (value === 0) {
+                    return '会员店';
+                }
+                if (value === 1) {
+                    return 'Bravo';
+                }
+                if (value === 2) {
+                    return '平台';
+                }
+                if (value === 3) {
+                    return '其他';
+                }
+            }
+            }, {
+                label: '状态', name: 'status', index: 'status', width: 100, formatter: function (value) {
+                    if (value === -5) {
+                        return '<span class="label label-danger">待处理</span>';
+                    }
+                    if (value === -1) {
+                        return '<span class="label label-warning">冻结</span>';
+                    }
+                    if (value === 0) {
+                        return '<span class="label label-default">新注册</span>';
+                    }
+                    if (value === 1) {
+                        return '<span class="label label-success">正常</span>';
+                    }
+                }
+            },
+            {
+                label: '操作', name: 'operation', index: 'operation', with: 100, formatter: function (value, options, row) {
+                    return "<span class='label label-success' onclick='vm.userInfo(" + row.id + ")'>查看</span>&nbsp;&nbsp;<span class='label label-success'onclick='vm.pass(" + row.id+ ")'>同意</span>" +
+                        "&nbsp;&nbsp;<span class='label label-success' onclick='vm.refuse(" + row.id + ")'>拒绝</span>";
+            }
+            },
+            {label: '大区', name: 'largeArea', index: 'largeArea', width: 100},
+            {label: '新大区', name: 'areaMans', index: 'areaMans', width: 100},
+            {label: '省份', name: 'province', index: 'province', width: 100},
+            {label: '城市', name: 'city', index: 'city', width: 100},
+            {label: '门店', name: 'storeNumber', index: 'storeNumber', width: 100},
+            {label: '商行', name: 'firm', index: 'firm', width: 100},
+            {label: '创建时间', name: 'createTime', index: 'createTime', width: 100}
+        ],
+
+        viewrecords: true,
+        height: 400,            // 表格高度
+        rowNum: 10,             // 一页显示的行记录数
+        rowList: [10,20,50,100],     // 翻页控制条中 每页显示记录数可选集合
+        rownumbers: true,       // 是否显示行号，默认值是false，不显示
+        autowidth: true,
+        // autoScroll: true,
+        shrinkToFit: true,
+
+        multiselect: true,
+        pager: "#jqNewGridPager",          // 翻页DOM
+        jsonReader: {                   // 重写后台返回数据的属性
+            root: "page.list",          // 将rows修改为page.list
+            page: "page.currPage",      // 将page修改为page.currPage
+            total: "page.totalPage",    // 将total修改为page.totalPage
+            records: "page.totalCount"  // 将records修改为page.totalCount
+        },
+        prmNames: {              // 改写请求参数属性
+            page: "page",
+            rows: "limit",
+            order: "order"
+        },
+        gridComplete: function () {
+            //隐藏grid底部滚动条
+            $("#jqNewGrid").closest(".ui-jqgrid-bdiv").css({"overflow-x": "scroll"});
+            // //设置高度
+            // $("#jqNewGrid").jqGrid('setGridHeight', getWinH());
+        }
+    });
 });
+
 var vm = new Vue({
     el: '#rrapp',
     data: {
-        showList: true,
+        showList: 1,
         title: null,
         roleList: {},
         user: {
@@ -99,7 +193,7 @@ var vm = new Vue({
             }).trigger("reloadGrid");
         },
         add: function () {
-            vm.showList = false;
+            vm.showList = 2;
             vm.title = "新增";
             var o = new Object();
             o.type = (vm.user.type == null ? 1 : vm.user.type);
@@ -110,7 +204,7 @@ var vm = new Vue({
             if (id == null) {
                 return;
             }
-            vm.showList = false;
+            vm.showList = 2;
             vm.title = "修改";
 
             vm.getInfo(id);
@@ -156,6 +250,11 @@ var vm = new Vue({
                 });
             });
         },
+        audit:function () {
+            vm.showList = 3;
+            vm.title = "审核";
+        }
+        ,
         getInfo: function (id) {
             $.get(baseUrl + "/forfront/user/info/" + id, function (r) {
                 vm.user = r.user;
@@ -170,7 +269,7 @@ var vm = new Vue({
             });
         },
         reload: function (event) {
-            vm.showList = true;
+            vm.showList = 1;
             var page = $("#jqGrid").jqGrid('getGridParam', 'page');
             $("#jqGrid").jqGrid('setGridParam', {
                 page: page
@@ -185,6 +284,65 @@ var vm = new Vue({
             // $.get("/yhportal/api/portal/custom?yongHuiReportCustomCode=REP_000030", function (data) {
             //     console.log(data);
             // });
+        },
+        newUserReload: function (event) {
+            vm.showList = 3;
+            var page = $("#jqNewGrid").jqGrid('getGridParam', 'page');
+            $("#jqNewGrid").jqGrid('setGridParam', {
+                page: page
+            }).trigger("reloadGrid");
+        },
+        userInfo: function (id) {
+            if (id == null) {
+                return;
+            }
+            vm.showList = 4;
+            vm.title = "审核";
+
+            vm.getInfo(id);
+        },
+        pass: function (id) {
+            if (id == null) {
+                return;
+            }
+            $.get("../forfront/user/info/" + id, function (r) {
+                vm.user = r.user;
+                var url =  "../forfront/user/newUser/pass" ;
+                $.ajax({
+                    type: "POST",
+                    url: url,
+                    data:JSON.stringify(vm.user),
+                    success: function (r) {
+                        if (r.code === 0) {
+                            alert('操作成功', function (index) {
+                                vm.reload();
+                            });
+                        } else {
+                            alert(r.msg);
+                        }
+                    }
+                });
+            });
+        },
+        refuse: function (id) {
+            if (id == null) {
+                return;
+            }
+            var url =  "../forfront/user/newUser/refuse" ;
+            $.ajax({
+                type: "POST",
+                url: url,
+                data:JSON.stringify(id),
+                success: function (r) {
+                    if (r.code === 0) {
+                        alert('操作成功', function (index) {
+                            vm.reload();
+                        });
+                    } else {
+                        alert(r.msg);
+                    }
+                }
+            });
         }
     }
 });

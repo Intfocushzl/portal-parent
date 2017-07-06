@@ -5,6 +5,7 @@ import com.yonghui.portal.service.app.AppUserRolesService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -17,8 +18,18 @@ public class AppUserRolesServiceImpl implements AppUserRolesService {
 	
 
 	@Override
-	public void saveOrUpdate(Long userId, List<Integer> roleIdList) {
+	public void saveOrUpdate(Integer userId, List<Integer> roleList) {
+        if(roleList.size() == 0){
+            return ;
+        }
+        //先删除角色与菜单关系
+        appUserRolesMapper.delete(userId);
 
+        //保存角色与菜单关系
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("userId", userId);
+        map.put("roleList", roleList);
+        appUserRolesMapper.save(map);
 	}
 
 	@Override

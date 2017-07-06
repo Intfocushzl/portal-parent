@@ -9,7 +9,8 @@
         <result column="name" property="name" jdbcType="VARCHAR"/>
         <result column="email" property="email" jdbcType="VARCHAR"/>
         <result column="mobile" property="mobile" jdbcType="VARCHAR"/>
-        <result column="roleId" property="roleId" jdbcType="INTEGER"/>
+        <result column="roleId" property="roleId" jdbcType="VARCHAR"/>
+        <result column="pass" property="pass" jdbcType="VARCHAR"/>
         <result column="groupId" property="groupId" jdbcType="INTEGER"/>
         <result column="jobNumber" property="jobNumber" jdbcType="VARCHAR"/>
         <result column="storeNumber" property="storeNumber" jdbcType="VARCHAR"/>
@@ -214,6 +215,7 @@
         ,r.name as roleName,r.type as roleType
         from platform.user_forfront as u join platform.role_forfront as r on r.roleId=u.roleId
         <where>
+            (u.`status`=-1 or u.`status`=1 or u.`status`=-5)
             <if test="account != null and account !=''">
                 and  u.account like concat('%',#{account},'%')
             </if>
@@ -232,7 +234,7 @@
                 order by ${sidx} ${order}
             </when>
             <otherwise>
-                order by  u.id asc
+                order by  u.created_at asc
             </otherwise>
         </choose>
         <if test="offset != null and limit != null">
@@ -243,6 +245,7 @@
     <select id="queryTotal" resultType="int">
         select count(*) from platform.user_forfront as u
         <where>
+            (u.`status`=-1 or u.`status`=1 or u.`status`=-5)
             <if test="account != null and account !=''">
                 and  u.account like concat('%',#{account},'%')
             </if>
@@ -328,11 +331,9 @@
     <update id="update" parameterType="com.yonghui.portal.model.global.User">
         update platform.user_forfront
         <set>
-            <if test="account != null">`account` = #{account},</if>
             <if test="name != null">`name` = #{name},</if>
             <if test="email != null">`email` = #{email},</if>
             <if test="roleId != null">`roleId` = #{roleId},</if>
-            <if test="jobNumber != null">`jobNumber` = #{jobNumber},</if>
             <if test="status != null">`status` = #{status},</if>
             <if test="type != null">`type` = #{type},</if>
             <if test="largeArea != null">`largeArea` = #{largeArea},</if>
@@ -417,7 +418,15 @@
         ,r.name as roleName,r.type as roleType
         from platform.user_forfront as u join platform.role_forfront as r on r.roleId=u.roleId
         <where>
-            changeStatus = 1
+            (u.`status`=-1 or u.`status`=1 or u.`status`=-5)
+            <choose>
+                <when test="changeStatus != null and changeStatus!= ''">
+                    and  u.changeStatus= #{changeStatus}
+                </when>
+                <otherwise>
+                    and  u.changeStatus= 1
+                </otherwise>
+            </choose>
             <if test="account != null and account !=''">
                 and  u.account like concat('%',#{account},'%')
             </if>
@@ -436,7 +445,7 @@
                 order by ${sidx} ${order}
             </when>
             <otherwise>
-                order by id asc
+                order by u.created_at asc
             </otherwise>
         </choose>
         <if test="offset != null and limit != null">
@@ -447,7 +456,15 @@
     <select id="queryChangeGrantTotal" resultType="int">
         select count(*) from platform.user_forfront as u
         <where>
-            changeStatus = 1
+            (u.`status`=-1 or u.`status`=1 or u.`status`=-5)
+            <choose>
+                <when test="changeStatus != null and changeStatus!= ''">
+                    and  u.changeStatus= #{changeStatus}
+                </when>
+                <otherwise>
+                    and  u.changeStatus= 1
+                </otherwise>
+            </choose>
             <if test="account != null and account !=''">
                 and  u.account like concat('%',#{account},'%')
             </if>
@@ -462,4 +479,81 @@
             </if>
         </where>
     </select>
+
+    <update id="refuse">
+        update platform.user_forfront
+        SET  `changeStatus` = -1
+        where id = #{id}
+    </update>
+
+
+    <select id="queryObjectAll" resultMap="BaseResultMap">
+        select
+        u.id, u.account, u.`name`,u.email, u.roleId,u.jobNumber, u.storeNumber,u.pass,
+        u.createTime,u.status,u.`type`,u.firm,u.largeArea,
+        u.province,u.city,u.changeRoleId,u. changeType, u.changeLargeArea,
+        u.changeProvince, u.changeCity, u.changeFirm,u. changeStatus,u.changeStoreNumber,u.remark,
+        u.changeTime,u.rold,u.areaMans,u.changeAreaMans
+        ,r.name as roleName,r.type as roleType
+        from platform.user_forfront as u join platform.role_forfront as r on r.roleId=u.roleId where u.id = #{value}
+    </select>
+
+
+
+    <select id="queryNewUserList" resultMap="BaseResultMap">
+        select
+        u.id, u.account, u.`name`,u.email, u.roleId,u.jobNumber, u.storeNumber,
+        u.createTime,u.status,u.`type`,u.firm,u.largeArea,
+        u.province,u.city,u.changeRoleId,u. changeType, u.changeLargeArea,
+        u.changeProvince, u.changeCity, u.changeFirm,u. changeStatus,u.changeStoreNumber,u.remark,
+        u.changeTime,u.rold,u.areaMans,u.changeAreaMans
+        ,r.name as roleName,r.type as roleType
+        from platform.user_forfront as u join platform.role_forfront as r on r.roleId=u.roleId
+        <where>
+            u.`status`= 0
+            <if test="account != null and account !=''">
+                and  u.account like concat('%',#{account},'%')
+            </if>
+            <if test="jobNumber != null and jobNumber !=''">
+                and  u.jobNumber like concat('%',#{jobNumber},'%')
+            </if>
+            <if test="name != null and name !=''">
+                and  u.`name` like concat('%',#{name},'%')
+            </if>
+            <if test="remark != null and remark !=''">
+                and  u.`remark` like concat('%',#{remark},'%')
+            </if>
+        </where>
+        <choose>
+            <when test="sidx != null and sidx.trim() != ''">
+                order by ${sidx} ${order}
+            </when>
+            <otherwise>
+                order by u.created_at asc
+            </otherwise>
+        </choose>
+        <if test="offset != null and limit != null">
+            limit #{offset}, #{limit}
+        </if>
+    </select>
+
+    <select id="queryNewUserTotal" resultType="int">
+        select count(*) from platform.user_forfront as u
+        <where>
+            u.`status`= 0
+            <if test="account != null and account !=''">
+                and  u.account like concat('%',#{account},'%')
+            </if>
+            <if test="jobNumber != null and jobNumber !=''">
+                and  u.jobNumber like concat('%',#{jobNumber},'%')
+            </if>
+            <if test="name != null and name !=''">
+                and  u.`name` like concat('%',#{name},'%')
+            </if>
+            <if test="remark != null and remark !=''">
+                and  u.`remark` like concat('%',#{remark},'%')
+            </if>
+        </where>
+    </select>
+
 </mapper>

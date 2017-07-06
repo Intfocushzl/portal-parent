@@ -133,9 +133,9 @@ public class MenuController extends AbstractController {
         return R.success().put("largeArea", areaList);
     }
     @RequestMapping("/getAreaMans")
-    public R getAreaMans(String district){
+    public R getAreaMans(String largeArea){
         //查询新大区列表数据
-        List<Map<String,Object>> areaMansList = menuService.queryAreamsList(district);
+        List<Map<String,Object>> areaMansList = menuService.queryAreamsList(largeArea);
         return R.success().put("areaMans", areaMansList);
     }
     @RequestMapping("/getFirms")
