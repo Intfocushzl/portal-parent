@@ -124,7 +124,11 @@
     </insert>
 
     <select id="tmpGoodsList" resultType="Map" parameterType="Map">
-        SELECT a.posterId , a.area , a.goodsId FROM platform.imp_poster_goods_tmp a WHERE a.creater = #{jobNumber}
+        SELECT posterId, startDate, endDate, theme, groupId,
+        groupName, dmId, dmName, displayMode, goodsAttribute, area, goodsId, barcode, `name`,
+        unit, inPrice, promotionInPrice, salePrice, promotionSalePrice, grossMargin, promotionGrossMargin,
+        estimatedSaleNumber, estimatedSaleAmount, posterFee, country, priceMethod, supplieRating,
+        deliveryMethod, returnFlag, supplierCode, supplierName FROM platform.imp_poster_goods_tmp a WHERE a.creater = #{jobNumber}
     </select>
 
     <select id="goodsList" resultType="Map">

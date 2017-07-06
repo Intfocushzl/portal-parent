@@ -13,6 +13,8 @@ public interface UserAdminService {
 
     User queryObject(Integer id);
 
+    User queryObjectAll(Long id);
+
     List<User> queryList(Map<String, Object> map);
 
     int queryTotal(Map<String, Object> map);
@@ -25,9 +27,17 @@ public interface UserAdminService {
 
     void deleteBatch(Integer[] ids);
 
-    void updateStatus(User user);
+    int updateStatus(User user);
 
     List<User> queryChangeGrantList(Map<String, Object> map);
 
     int queryChangeGrantTotal(Map<String, Object> map);
+
+    int pass(User user);
+
+    int refuse(String userId);
+
+    List<User> queryNewUserList(Map<String, Object> map);
+
+    int queryNewUserTotal(Map<String, Object> map);
 }

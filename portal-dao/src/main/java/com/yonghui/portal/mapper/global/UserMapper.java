@@ -28,4 +28,12 @@ public interface UserMapper  extends BaseMapper<User> {
     List<User> queryChangeGrantList(Map<String, Object> map);
 
     int queryChangeGrantTotal(Map<String, Object> map);
+
+    int refuse(@Param(value = "id") String id);
+
+    User queryObjectAll(@Param(value = "id") String id);
+
+    List<User> queryNewUserList(Map<String, Object> map);
+
+    int queryNewUserTotal(Map<String, Object> map);
 }

@@ -3,14 +3,14 @@
 
 <mapper namespace="com.yonghui.portal.mapper.app.KpiBasesMapper">
 
-	<!-- 可根据自己的需求，是否要使用 -->
+    <!-- 可根据自己的需求，是否要使用 -->
     <resultMap id="kpiBasesMap" type="com.yonghui.portal.model.app.AppMenu">
         <result property="id" column="id"/>
         <result property="menuId" column="menuId"/>
         <result property="name" column="name"/>
         <result property="subName" column="subName"/>
-		<result property="url" column="url"/>
-		<result property="ownerDept" column="owner_dept"/>
+        <result property="url" column="url"/>
+        <result property="ownerDept" column="owner_dept"/>
         <result property="computerDept" column="computer_dept"/>
         <result property="link" column="link"/>
         <result property="roleIds" column="role_ids"/>
@@ -23,10 +23,10 @@
         <result property="groupOrder" column="group_order"/>
         <result property="itemOrder" column="item_order"/>
         <result property="audioUpdatedAt" column="audio_updated_at"/>
-		<result property="type" column="type"/>
+        <result property="type" column="type"/>
     </resultMap>
 
-	<select id="queryObject" resultType="com.yonghui.portal.model.app.AppMenu">
+    <select id="queryObject" resultType="com.yonghui.portal.model.app.AppMenu">
 		select
 			`kpi_id` as menuId,
 			`kpi_group` as name,
@@ -47,25 +47,25 @@
 		from appauthority.kpi_bases where kpi_id = #{value}
 	</select>
 
-	<select id="queryList" resultType="com.yonghui.portal.model.app.AppMenu">
-		select
-		`kpi_id` as menuId,
-		`kpi_group` as name,
-		`kpi_name` as subName,
-		'' as url,
-		`owner_dept`,
-		`computer_dept`,
-		`link`,
-		`role_ids`,
-		`create_user`,
-		`memo`,
-		`load_time`,
-		`created_at`,
-		`group_order`,
-		`item_order`,
-		`audio_updated_at`
-		,1 as type
-		from appauthority.kpi_bases
+    <select id="queryList" resultType="com.yonghui.portal.model.app.AppMenu">
+        select
+        `kpi_id` as menuId,
+        `kpi_group` as name,
+        `kpi_name` as subName,
+        '' as url,
+        `owner_dept`,
+        `computer_dept`,
+        `link`,
+        `role_ids`,
+        `create_user`,
+        `memo`,
+        `load_time`,
+        `created_at`,
+        `group_order`,
+        `item_order`,
+        `audio_updated_at`
+        ,1 as type
+        from appauthority.kpi_bases
         <where>
             <if test="menuId != null and menuId !=''">
                 and kpi_id = #{menuId}
@@ -73,37 +73,37 @@
             <if test="subName != null and subName !=''">
                 and kpi_name like concat('%',#{subName},'%')
             </if>
-			<if test="name != null and name !=''">
-				and kpi_group like concat('%',#{name},'%')
-			</if>
+            <if test="name != null and name !=''">
+                and kpi_group like concat('%',#{name},'%')
+            </if>
         </where>
         <choose>
             <when test="sidx != null and sidx.trim() != ''">
                 order by ${sidx} ${order}
             </when>
-			<otherwise>
+            <otherwise>
                 order by id desc
-			</otherwise>
+            </otherwise>
         </choose>
-		<if test="offset != null and limit != null">
-			limit #{offset}, #{limit}
-		</if>
-	</select>
-	
- 	<select id="queryTotal" resultType="int">
-		select count(*) from appauthority.kpi_bases
-		<where>
-			<if test="menuId != null and menuId !=''">
-				and kpi_id = #{menuId}
-			</if>
-			<if test="subName != null and subName !=''">
-				and kpi_name like concat('%',#{subName},'%')
-			</if>
-			<if test="name != null and name !=''">
-				and kpi_group like concat('%',#{name},'%')
-			</if>
-		</where>
-	</select>
+        <if test="offset != null and limit != null">
+            limit #{offset}, #{limit}
+        </if>
+    </select>
+
+    <select id="queryTotal" resultType="int">
+        select count(*) from appauthority.kpi_bases
+        <where>
+            <if test="menuId != null and menuId !=''">
+                and kpi_id = #{menuId}
+            </if>
+            <if test="subName != null and subName !=''">
+                and kpi_name like concat('%',#{subName},'%')
+            </if>
+            <if test="name != null and name !=''">
+                and kpi_group like concat('%',#{name},'%')
+            </if>
+        </where>
+    </select>
 
     <insert id="save" parameterType="com.yonghui.portal.model.app.AppMenu" useGeneratedKeys="true" keyProperty="kpi_id">
 		insert into appauthority.kpi_bases
@@ -147,32 +147,85 @@
     <update id="update" parameterType="com.yonghui.portal.model.app.AppMenu">
         update appauthority.kpi_bases
         <set>
-			<if test="name != null">`kpi_group` = #{name}, </if>
-			<if test="subName != null">`kpi_name` = #{subName}, </if>
-			<if test="ownerDept != null">`owner_dept` = #{ownerDept}, </if>
-			<if test="computerDept != null">`computer_dept` = #{computerDept}, </if>
-			<if test="link != null">`link` = #{link}, </if>
-			<if test="unit != null">`unit` = #{unit}, </if>
-			<if test="roleIds != null">`role_ids` = #{roleIds}, </if>
-			<if test="memo != null">`memo` = #{memo}, </if>
-			<if test="loadTime != null">`load_time` = #{loadTime}, </if>
-			<if test="groupOrder != null">`group_order` = #{groupOrder}, </if>
-			<if test="itemOrder != null">`item_order` = #{itemOrder}, </if>
-			<if test="audioUpdatedAt != null">`audio_updated_at` = #{audioUpdatedAt},</if>
-			`update_at` = now();
+            <if test="name != null">`kpi_group` = #{name},</if>
+            <if test="subName != null">`kpi_name` = #{subName},</if>
+            <if test="ownerDept != null">`owner_dept` = #{ownerDept},</if>
+            <if test="computerDept != null">`computer_dept` = #{computerDept},</if>
+            <if test="link != null">`link` = #{link},</if>
+            <if test="unit != null">`unit` = #{unit},</if>
+            <if test="roleIds != null">`role_ids` = #{roleIds},</if>
+            <if test="memo != null">`memo` = #{memo},</if>
+            <if test="loadTime != null">`load_time` = #{loadTime},</if>
+            <if test="groupOrder != null">`group_order` = #{groupOrder},</if>
+            <if test="itemOrder != null">`item_order` = #{itemOrder},</if>
+            <if test="audioUpdatedAt != null">`audio_updated_at` = #{audioUpdatedAt},</if>
+            `update_at` = now();
         </set>
         where kpi_id = #{menuId}
     </update>
-	
-	<delete id="delete">
+
+    <delete id="delete">
 		delete from appauthority.kpi_bases where kpi_id = #{value}
 	</delete>
-	
-	<delete id="deleteBatch">
-		delete from appauthority.kpi_bases where kpi_id in
-		<foreach item="id" collection="array" open="(" separator="," close=")">
-			#{id}
-		</foreach>
-	</delete>
 
+    <delete id="deleteBatch">
+        delete from appauthority.kpi_bases where kpi_id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="queryAllMenuList" resultType="com.yonghui.portal.model.app.AppMenu">
+        select
+        `kpi_id` as menuId,
+        `kpi_group` as name,
+        `kpi_name` as subName,
+        1 as `type`
+        from appauthority.kpi_bases
+
+        UNION  ALL
+
+         select
+        `group_id` as menuId,
+        `group_name` as `name`,
+        `name` as subName,
+        2 as `type`
+        from appauthority.analysis_bases
+
+        UNION  ALL
+
+        select
+		`group_id` as menuId,
+		`group_name` as `name`,
+		`name` as subName,
+		3 as `type`
+		from appauthority.app_bases
+
+    </select>
+
+
+    <insert id="saveMenu" parameterType="Map">
+        insert into appauthority.sys_role_resources
+        (
+        `role_id`,
+        `obj_id`,
+        `obj_type`
+        )
+        values
+        <foreach collection="menuList" item="item" index="index" separator="," >
+            (
+            #{roleId},
+            #{item.menuId},
+            #{item.type}
+            )
+        </foreach>
+    </insert>
+
+    <delete id="deleteMenu">
+        delete from appauthority.sys_role_resources where role_id = #{value}
+    </delete>
+
+    <select id="queryMenuList" resultType="Map">
+        select `obj_id` as menu_id,`obj_type` from appauthority.sys_role_resources where role_id = #{value}
+    </select>
 </mapper>

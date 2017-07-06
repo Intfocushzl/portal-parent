@@ -3,6 +3,34 @@
 <head>
 <title></title>
     #parse("sys/header.html")
+    <style type="text/css">
+        /* 标签样式 */
+
+        .tags span {
+            font: 12px/22px 'Microsoft Yahei', Arial, Lucida Grande, Tahoma;
+            border: 1px #E3E0D9 solid;
+            display: inline-block;
+            background: #FFF;
+            text-align: center;
+            padding: 2px 7px;
+            margin: 1px 4px;
+            cursor: pointer;
+            -webkit-transition: all .3s ease-in-out;
+            -moz-transition: all .3s ease-in-out;
+            overflow: hidden;
+            color: #989898;
+        }
+
+        .tags span:hover {
+            border-color: #00956d;
+        }
+
+        .tags span.active {
+            color: #FFF;
+            border-color: #00956d;
+            background-color: #00956d;
+        }
+    </style>
 </head>
 <body>
 <div id="rrapp" v-cloak>
@@ -50,6 +78,12 @@
 			        <input type="text" class="form-control" v-model="appUsers.userNum" placeholder=""/>
 			    </div>
 			</div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">角色</div>
+                <div class="col-sm-10">
+                    <div id="tagsdlg"></div>
+                </div>
+            </div>
 			<div class="form-group">
 			   	<div class="col-sm-2 control-label">邮箱</div>
 			   	<div class="col-sm-10">
@@ -98,7 +132,6 @@
 			        <input type="text" class="form-control" v-model="appUsers.memo" placeholder=""/>
 			    </div>
 			</div>
-
 			<div class="form-group">
 				<div class="col-sm-2 control-label"></div> 
 				<input type="button" class="btn btn-primary" @click="saveOrUpdate" value="确定"/>

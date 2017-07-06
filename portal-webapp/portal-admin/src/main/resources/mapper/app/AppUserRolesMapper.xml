@@ -50,27 +50,28 @@
 	</select>
 	<select id="queryRoleIdList" resultType="int">
 		select role_id from appauthority.sys_user_roles
-		where user_id = #{userId}
+        <where>
+            <if test="value != null and value !=''">
+                and user_id = #{value}
+            </if>
+        </where>
 	</select>
-    <insert id="save" parameterType="com.yonghui.portal.model.app.AppUserRoles" useGeneratedKeys="true" keyProperty="id">
-		insert into appauthority.sys_user_roles
-		(
-			`user_id`, 
-			`role_id`, 
-			`create_user`, 
-			`memo`,
-			`load_time`, 
-			`created_at`, 
-		)
-		values
-		(
-			#{userId}, 
-			#{roleId}, 
-			#{createUser}, 
-			#{memo},
-			#{loadTime}, 
-			now()
-		)
+    <insert id="save">
+        insert into appauthority.sys_user_roles
+        (
+        `user_id`,
+        `role_id`,
+        `created_at`
+        )
+        values
+        <foreach collection="roleList" item="item" index="index" separator="," >
+            (
+            #{userId},
+            #{item},
+            now()
+            )
+        </foreach>
+
 	</insert>
 
     <update id="update" parameterType="com.yonghui.portal.model.app.AppUserRoles">
@@ -88,7 +89,7 @@
     </update>
 	
 	<delete id="delete">
-		delete from appauthority.sys_user_roles where where user_id =  #{value}
+		delete from appauthority.sys_user_roles  where user_id =  #{value}
 	</delete>
 
 	<delete id="deleteBatch">

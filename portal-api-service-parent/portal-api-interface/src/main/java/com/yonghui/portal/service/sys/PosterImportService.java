@@ -40,10 +40,10 @@ public interface PosterImportService {
     List<Map<String, Object>> goodsTmpJoinList(String jobNumber);
 
     //将商品海报保存到临时表
-    int insertPosterImportGoodsTmp(List<PosterImportGoods> list);
+    int insertPosterImportGoodsTmp(List<PosterImportGoods> list , String jobNumber);
 
     //根据id删除正式表已存在的海报商品信息
-    void deleteGoods(List<Integer> list , String jobNumber);
+    List<Map<String, Object>> deleteGoods(List<Integer> list , String jobNumber);
 
     //将数据从临时表导入正式表
     int insertGoods();

@@ -103,5 +103,10 @@ public class AppMenusServiceImpl implements AppMenusService {
 		}
 		appBasesMapper.deleteBatch(menuIds);
 	}
-	
+
+    @Override
+    public List<AppMenu> queryAllMenuList(){
+        return kpiBasesMapper.queryAllMenuList();
+    }
+
 }

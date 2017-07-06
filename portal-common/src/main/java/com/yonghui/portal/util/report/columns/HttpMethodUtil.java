@@ -6,6 +6,7 @@ import org.apache.http.NameValuePair;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
@@ -165,6 +166,7 @@ public class HttpMethodUtil {
         CloseableHttpClient httpclient = HttpClients.createDefault();
         // 创建httpget
         HttpGet httpget = new HttpGet(sbUrl.toString());
+
         // 4.3版本不设置超时的话，一旦服务器没有响应，等待时间N久(>24小时)。容易出现504错误（gateway timeout）
         RequestConfig requestConfig = RequestConfig.custom().setConnectTimeout(5000) // 设置请求和传输超时时间
                 .setConnectTimeout(5000).build();
@@ -180,6 +182,61 @@ public class HttpMethodUtil {
                     return result;
                 }
                 System.out.println("GET请求接口信息出错！"+ "请求URL:"+url +"==状态码：=="+status + "==返回结果：=="+result);
+            } finally {
+                response.close();
+            }
+        } catch (IOException e) {
+            System.out.println("获取httpclient错误！"+ e);
+        } finally {
+            // 关闭连接,释放资源
+            try {
+                httpclient.close();
+            } catch (IOException e) {
+                System.out.println("关闭httpclient失败！"+e);
+            }
+        }
+        return null;
+    }
+
+    /**
+     * 使用httpclient进行调用
+     *
+     * 发送 GET请求访问本地应用并根据传递参数不同返回不同结果
+     *
+     * @param url
+     * @param paramMap
+     * @return
+     */
+    public  String getDeleteResult(String url, Map<String, Object> paramMap) {
+        // 创建参数队列
+        StringBuilder sbUrl = new StringBuilder(url).append("?");
+        if (paramMap != null && !paramMap.isEmpty()) {
+            for (String key : paramMap.keySet()) {
+                sbUrl.append(key).append("=").append(paramMap.get(key)).append("&");
+            }
+        }
+        sbUrl.deleteCharAt(sbUrl.length() - 1);
+
+        // 创建默认的httpClient实例.
+        CloseableHttpClient httpclient = HttpClients.createDefault();
+        // 创建httpget
+        HttpDelete httpget = new HttpDelete(sbUrl.toString());
+
+        // 4.3版本不设置超时的话，一旦服务器没有响应，等待时间N久(>24小时)。容易出现504错误（gateway timeout）
+        RequestConfig requestConfig = RequestConfig.custom().setConnectTimeout(5000) // 设置请求和传输超时时间
+                .setConnectTimeout(5000).build();
+        httpget.setConfig(requestConfig);
+        try {
+            CloseableHttpResponse response = httpclient.execute(httpget);
+            try {
+                int status = response.getStatusLine().getStatusCode();
+                HttpEntity entity = response.getEntity();
+                String result = EntityUtils.toString(entity, "UTF-8");
+                // 状态码为200时，才返回正常内容
+                if (status == HttpStatus.SC_OK && entity != null) {
+                    return result;
+                }
+                System.out.println("Delete请求接口信息出错！"+ "请求URL:"+url +"==状态码：=="+status + "==返回结果：=="+result);
             } finally {
                 response.close();
             }

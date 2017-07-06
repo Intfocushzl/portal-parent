@@ -45,8 +45,8 @@ public class PosterImportServiceImpl implements PosterImportService {
         return posterImportMapper.tmpGoodsList(jobNumber);
     }
 
-    public List<Map<String, Object>> goodsList(String posterId , String area){
-        return posterImportMapper.goodsList(posterId , area);
+    public List<Map<String, Object>> goodsList(String posterId, String area) {
+        return posterImportMapper.goodsList(posterId, area);
     }
 
     public int queryCountry(String country) {
@@ -68,21 +68,16 @@ public class PosterImportServiceImpl implements PosterImportService {
 
     public int insertPosterImportAreaTmp(List<PosterImportArea> excellist, String jobNumber, List<Map<String, Object>> list) throws Exception {
         Map<String, Object> map = new HashMap<String, Object>();
+        //请空该用户之前导入临时表的数据
+        posterImportMapper.deleteAreaTmp(jobNumber);
         //查询区域和城市对应关系
         for (Map<String, Object> item : list) {
             map.put(item.get("areamans") + "-" + item.get("city"), item);
         }
         List<Map<String, Object>> tmpList = posterImportMapper.tmpAreaList(jobNumber);
-        Map<String, Object> tmpMap = new HashMap<String, Object>();
-        for (Map<String, Object> item : tmpList) {
-            tmpMap.put(item.get("posterId") + "-" + item.get("area") + "-" + item.get("city"), item);
-        }
         //校验表格数据
         Integer posterId = excellist.get(0).getPosterId();
         for (PosterImportArea item : excellist) {
-            if (tmpMap.get(item.getPosterId() + "-" + item.getArea() + "-" + item.getCity()) != null) {
-                throw new Exception("临时表里已存在相同数据，请核对后再试");
-            }
             if (!item.getPosterId().equals(posterId)) {
                 throw new Exception("海报档期ID不唯一");
             }
@@ -122,21 +117,27 @@ public class PosterImportServiceImpl implements PosterImportService {
     }
 
     //将商品海报保存到临时表
-    public int insertPosterImportGoodsTmp(List<PosterImportGoods> list) {
+    public int insertPosterImportGoodsTmp(List<PosterImportGoods> list , String jobNumber) {
+        //先删除临时表之前的数据
+        posterImportMapper.deleteGoodsTmp(jobNumber);
         return posterImportMapper.insertPosterImportGoodsTmp(list);
     }
 
     //根据id删除正式表已存在的海报信息
     @Transactional
-    public void deleteGoods(List<Integer> list, String jobNumber) {
+    public List<Map<String, Object>> deleteGoods(List<Integer> list, String jobNumber) {
         //删除正式匹配上的数据
         if (list.size() > 0 && list != null) {
             posterImportMapper.deleteGoods(list);
         }
         //将临时表的数据导入到正式
         posterImportMapper.insertGoods();
+
+        List<Map<String, Object>> goodsList = posterImportMapper.tmpGoodsList(jobNumber);
         //清空临时表
         posterImportMapper.deleteGoodsTmp(jobNumber);
+
+        return goodsList;
     }
 
     //将数据从临时表导入正式表

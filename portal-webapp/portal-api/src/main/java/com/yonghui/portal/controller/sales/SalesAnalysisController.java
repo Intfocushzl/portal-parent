@@ -42,14 +42,14 @@ public class SalesAnalysisController {
     @ResponseBody
     @RequestMapping(value = "salesDailyData")
     @IgnoreAuth
-    public R salesDailyData(HttpServletResponse response, String reportLabel, String sDate, String areamans, String shopId
+    public R salesDailyData(HttpServletResponse response, String reportLabel, String sDate, String areaMans, String shopId
             , String groupName, String className, String sDate1, String eDate1) {
         response.setHeader("Access-Control-Allow-Origin", "*");
         if (reportLabel == null || reportLabel.equals("") || reportLabel.equals("null")) {
             reportLabel = "1";
         }
-        if (areamans == null || areamans.equals("") || areamans.equals("null")) {
-            areamans = "上海区";
+        if (areaMans == null || areaMans.equals("") || areaMans.equals("null")) {
+            areaMans = "上海区";
         }
         if (shopId == null || shopId.equals("") || shopId.equals("null")) {
             shopId = "9342";
@@ -63,7 +63,7 @@ public class SalesAnalysisController {
         Map<String, Object> map = new HashMap<>();
         map.put("reportLabel", reportLabel);
         map.put("sDate", sDate);
-        map.put("areaMans", areamans);
+        map.put("areaMans", areaMans);
         map.put("shopId", shopId);
         map.put("groupName", groupName);
         map.put("className", className);

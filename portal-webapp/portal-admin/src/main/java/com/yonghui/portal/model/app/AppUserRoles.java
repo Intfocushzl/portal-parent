@@ -1,6 +1,5 @@
 package com.yonghui.portal.model.app;
 
-import com.yonghui.portal.model.base.AuditAuto;
 
 import java.io.Serializable;
 import java.util.Date;

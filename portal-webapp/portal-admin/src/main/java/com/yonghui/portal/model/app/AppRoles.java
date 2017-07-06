@@ -3,6 +3,8 @@ package com.yonghui.portal.model.app;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 
@@ -31,6 +33,9 @@ public class AppRoles implements Serializable {
     private Date updatedAt;
      
     private Integer active;
+
+    private List<Map<String,Object>> menuList;
+
 
     public Integer getId() {
         return id;
@@ -132,5 +137,12 @@ public class AppRoles implements Serializable {
     public Date getUpdatedAt() {
             return updatedAt;
             }
-   
+
+    public List<Map<String,Object>> getMenuList() {
+        return menuList;
+    }
+
+    public void setMenuList(List<Map<String,Object>> menuList) {
+        this.menuList = menuList;
+    }
 }

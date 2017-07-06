@@ -1,10 +1,10 @@
 package com.yonghui.portal.service.impl.global;
 
+import com.alibaba.dubbo.common.json.JSON;
 import com.yonghui.portal.mapper.global.UserMapper;
 import com.yonghui.portal.model.global.User;
 import com.yonghui.portal.service.global.UserAdminService;
 import com.yonghui.portal.util.Md5Util;
-import com.yonghui.portal.util.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,6 +23,11 @@ public class UserAdminServiceImpl implements UserAdminService {
     @Override
     public User queryObject(Integer id) {
         return userMapper.queryObject(id);
+    }
+
+    @Override
+    public User queryObjectAll(Long id) {
+        return userMapper.queryObjectAll(id+"");
     }
 
     @Override
@@ -61,7 +66,6 @@ public class UserAdminServiceImpl implements UserAdminService {
     public void update(User user) {
         String account = user.getJobNumber().trim();
         user.setAccount(account);
-        user.setAccount(user.getJobNumber().trim());
 
         if (user.getLargeArea() != null && user.getLargeArea().equals("全部")) {
             user.setLargeArea("ALL");
@@ -76,7 +80,6 @@ public class UserAdminServiceImpl implements UserAdminService {
         if (user.getStoreNumber() == null || user.getStoreNumber().equals("")) {
             user.setStoreNumber("ALL");
         }
-//        user.setPass(Md5Util.getMd5("MD5", 0, null, user.getPass()));
         userMapper.update(user);
     }
 
@@ -91,14 +94,9 @@ public class UserAdminServiceImpl implements UserAdminService {
     }
 
     @Override
-    public void updateStatus(User user) {
+    public int updateStatus(User user) {
 //        user.setPass(Md5Util.getMd5("MD5", 0, null, user.getPass()));
-        int res = userMapper.update(user);
-        if (res == 1) {
-            // TODO: 2017/6/9 0009   调用APP注册接口
-        } else {
-
-        }
+        return userMapper.update(user);
     }
 
     @Override
@@ -109,5 +107,46 @@ public class UserAdminServiceImpl implements UserAdminService {
     @Override
     public int queryChangeGrantTotal(Map<String, Object> map) {
         return userMapper.queryChangeGrantTotal(map);
+    }
+
+    @Override
+    public int pass(User user) {
+        if (user.getChangeRoleId() != null && user.getChangeRoleId() != "") {
+            user.setRoleId(user.getChangeRoleId());
+            user.setChangeRoleId("");
+        }
+        if (user.getChangeLargeArea() != null && user.getChangeLargeArea() != "") {
+            user.setLargeArea(user.getChangeLargeArea());
+            user.setChangeLargeArea("");
+        }
+        if (user.getChangeAreaMans() != null && user.getChangeAreaMans() != "") {
+            user.setAreaMans(user.getChangeAreaMans());
+            user.setChangeAreaMans("");
+        }
+        if (user.getChangeStoreNumber() != null && user.getChangeStoreNumber() != "") {
+            user.setStoreNumber(user.getChangeStoreNumber());
+            user.setChangeStoreNumber("");
+        }
+        if (user.getChangeFirm() != null && user.getChangeFirm() != "") {
+            user.setFirm(user.getChangeFirm());
+            user.setChangeFirm("");
+        }
+        user.setChangeStatus(0);
+        return userMapper.update(user);
+    }
+
+    @Override
+    public int refuse(String userId) {
+        return userMapper.refuse(userId);
+    }
+
+    @Override
+    public List<User> queryNewUserList(Map<String, Object> map) {
+        return userMapper.queryNewUserList(map);
+    }
+
+    @Override
+    public int queryNewUserTotal(Map<String, Object> map) {
+        return userMapper.queryNewUserTotal(map);
     }
 }

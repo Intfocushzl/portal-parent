@@ -120,6 +120,7 @@ var vm = new Vue({
                 vm.showList = false;
                 vm.title = "修改";
                 vm.menu = r.menu;
+                vm.parentName = r.menu.pName;
 
                 vm.getMenu();
                 vm.bindIcon(vm.menu.icon);
