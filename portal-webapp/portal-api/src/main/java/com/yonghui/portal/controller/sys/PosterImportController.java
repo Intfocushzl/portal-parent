@@ -61,11 +61,11 @@ public class PosterImportController {
      * @param token
      * @return
      */
-    @RequestMapping(value = "areaImport", method = RequestMethod.GET)
+    @RequestMapping(value = "areaImport", method = RequestMethod.POST)
     public R areaImport(MultipartHttpServletRequest multipartRequest, HttpServletResponse response,
                         String token) {
         TokenApi tokenApi = null;
-        String jobNumber = "admin";
+        String jobNumber = null;
         List<Map<String, Object>> areaList = null;
         List<PosterImportArea> excellist = new ArrayList<PosterImportArea>();
         try {
@@ -106,7 +106,7 @@ public class PosterImportController {
             }
         } catch (Exception e) {
             log.error(e.getMessage());
-            return R.error("程序出现异常");
+            return R.error(e.getMessage());
         }
         return R.success(areaList);
     }
@@ -123,7 +123,7 @@ public class PosterImportController {
     public R areaImport(HttpServletRequest request, HttpServletResponse response,
                         String token) {
         TokenApi tokenApi = null;
-        String jobNumber = "admin";
+        String jobNumber = null;
         try {
             if (token == null) {
                 throw new Exception("token不存在");
@@ -148,11 +148,11 @@ public class PosterImportController {
     }
 
 
-    @RequestMapping(value = "goodsImport", method = RequestMethod.GET)
+    @RequestMapping(value = "goodsImport", method = RequestMethod.POST)
     public R goodsImport(MultipartHttpServletRequest multipartRequest, HttpServletResponse response,
                          String token) {
         TokenApi tokenApi = null;
-        String jobNumber = "admin";
+        String jobNumber = null;
         List<Map<String, Object>> areaList = null;
         List<PosterImportGoods> excellist = new ArrayList<PosterImportGoods>();
         try {
@@ -184,20 +184,11 @@ public class PosterImportController {
                     }
                     // 读取excel里面的数据
                     excellist = getExcelInfo1(imgFile.getInputStream(), isExcel2003);
-                    //判断临时表是否已存在相同数据
-                    List<Map<String, Object>> list = posterImportService.tmpGoodsList(jobNumber);
-                    Map<String, Object> tmpMap = new HashMap<String, Object>();
-                    for (Map<String, Object> item : list) {
-                        tmpMap.put(item.get("posterId") + "-" + item.get("area") + "-" + item.get("goodsId"), item);
-                    }
+                    //保存到临时表
                     for (PosterImportGoods item : excellist) {
-                        if (tmpMap.get(item.getPosterId() + "-" + item.getArea() + "-" + item.getGoodsId()) != null) {
-                            throw new Exception("临时表里已存在相同数据，请核对后再试");
-                        }
                         item.setJobNumber(jobNumber);
                     }
-                    //保存到临时表
-                    posterImportService.insertPosterImportGoodsTmp(excellist);
+                    posterImportService.insertPosterImportGoodsTmp(excellist, jobNumber);
                     //将临时表数据和正式数据进行比对，如有匹配上的需要返回
                     areaList = posterImportService.goodsTmpJoinList(jobNumber);
                 }
@@ -213,7 +204,8 @@ public class PosterImportController {
     public R confirmGoods(HttpServletRequest request, HttpServletResponse response,
                           String token) {
         TokenApi tokenApi = null;
-        String jobNumber = "admin";
+        String jobNumber = null;
+        List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
         try {
             if (token == null) {
                 throw new Exception("token不存在");
@@ -229,12 +221,12 @@ public class PosterImportController {
                 goodsIdList.add((Integer) item.get("id"));
             }
             //删除之前导入的，将临时表的数据导入到正式，清空临时表
-            posterImportService.deleteGoods(goodsIdList, jobNumber);
+            list = posterImportService.deleteGoods(goodsIdList, jobNumber);
         } catch (Exception e) {
             log.error(e.getMessage());
             return R.error("程序出现异常");
         }
-        return R.success();
+        return R.success(list);
     }
 
     /**
@@ -269,10 +261,10 @@ public class PosterImportController {
     }
 
     @RequestMapping(value = "goodsList", method = RequestMethod.GET)
-    public R goodsList(HttpServletRequest request, HttpServletResponse response,String posterId ,  String area) {
+    public R goodsList(HttpServletRequest request, HttpServletResponse response, String posterId, String area) {
         List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
         try {
-            list = posterImportService.goodsList(posterId , area);
+            list = posterImportService.goodsList(posterId, area);
         } catch (Exception e) {
             log.error(e.getMessage());
             return R.error("查询区域列表异常");
