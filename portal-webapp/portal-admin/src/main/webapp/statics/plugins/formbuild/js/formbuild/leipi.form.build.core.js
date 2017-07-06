@@ -43,7 +43,7 @@
                 var attr_name = $(e).attr("id");//属性名称
                 var attr_val = $("#" + attr_name).val();
                 if (attr_name == 'orgvalue') {
-                    if (getStringValue(attr_val) == ""){
+                    if (getStringValue(attr_val) == "") {
                         attr_val = "请输入报表标题";
                     }
                     $(leipiplugins).attr("value", attr_val);
@@ -148,7 +148,7 @@ $(document).ready(function () {
             });
 
             /**
-             * 当松开鼠标按钮时 添加移除
+             * 当松开鼠标按钮时
              */
             $("body").delegate("#temp", "mouseup", function (mu) {
                 mu.preventDefault();
@@ -214,6 +214,7 @@ $(document).ready(function () {
             try {
                 LPB.plugins[plugins](active_component, leipiplugins);
             } catch (e) {
+                console.error(e.message);
                 alert('控件异常，请反馈给开发工程师！');
             }
         } else {

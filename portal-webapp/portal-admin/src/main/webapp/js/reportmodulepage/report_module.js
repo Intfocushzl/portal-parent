@@ -2,18 +2,63 @@ var reportModulePage = {};
 var contentJsonObj = [];
 var module_id;
 var returnJsonObj;
+var selectOptionJsonObjSql;
+var selectOptionJsonObjPro;
 
 // 初始化
 $(function () {
     module_id = getQueryString("id");
     if (getStringValue(module_id) != "") {
         $.get("../reportmodulepage/info/" + module_id, function (r) {
-            var r_obj = JSON.parse(r);
+            var r_obj = getJsonObj(r);
             reportModulePage = r_obj.reportModulePage;
             rendererModule(reportModulePage);
+            $("#aaaaaaa").selectpicker('refresh');
         });
     }
+
+    // sql
+    $.get("../portalexecutesql/sqlList/", function (r) {
+        selectOptionJsonObjSql = getJsonObj(r);
+    });
+
+    // 存储
+    $.get("../portalprocedure/proList/", function (r) {
+        selectOptionJsonObjPro = getJsonObj(r);
+    });
+
 });
+
+/**
+ * 数据源选择
+ * @param data_url_id
+ * @param executeCode
+ */
+function forSelectOption(data_url_id, executeCode) {
+    $(data_url_id).empty();
+    var selectOption;
+    // sql
+    for (var i = 0; i < selectOptionJsonObjSql.sqlList.length; i++) {
+        selectOption = "<option value='" + selectOptionJsonObjSql.sqlList[i].sqlcode + "'";
+        if (executeCode == selectOptionJsonObjSql.sqlList[i].sqlcode) {
+            selectOption = selectOption + " selected = 'selected'";
+        }
+        selectOption = selectOption + " >" + selectOptionJsonObjSql.sqlList[i].sqlcode + "<==>" + selectOptionJsonObjSql.sqlList[i].title + "</option>";
+        $(data_url_id).append(selectOption);
+    }
+    // pro
+    for (var i = 0; i < selectOptionJsonObjPro.proList.length; i++) {
+        selectOption = "<option value='" + selectOptionJsonObjPro.proList[i].procode + "'";
+        if (executeCode == selectOptionJsonObjPro.proList[i].procode) {
+            selectOption = selectOption + " selected = 'selected'";
+        }
+        selectOption = selectOption + " >" + selectOptionJsonObjPro.proList[i].procode + "<==>" + selectOptionJsonObjPro.proList[i].title + "</option>";
+        $(data_url_id).append(selectOption);
+    }
+    // refresh刷新和render渲染操作，必不可少
+    $(data_url_id).selectpicker('refresh');
+    $(data_url_id).selectpicker('render');
+}
 
 // 获取 window.location.href参数
 function getQueryString(name) {
@@ -44,7 +89,7 @@ $(".saveOrUpdate").click(function () {
         url: url,
         data: JSON.stringify(reportModulePage),
         success: function (r) {
-            returnJsonObj = JSON.parse(r);
+            returnJsonObj = getJsonObj(r);
             if (returnJsonObj === 0) {
                 alert('操作成功', function (index) {
                     vm.reload();

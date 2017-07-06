@@ -1,9 +1,11 @@
-/*e.preventDefault();//阻止元素发生默认的行为(例如,当点击提交按钮时阻止对表单的提交*/
+/*
+ * e.preventDefault();//阻止元素发生默认的行为(例如,当点击提交按钮时阻止对表单的提交
+ */
 
 /*
- 横幅框控件 banner
- acc  是 class="component" 的DIV
- e 是 class="leipiplugins" 的控件
+ * 横幅框控件 banner
+ * acc  是 class="component" 的DIV
+ * e 是 class="leipiplugins" 的控件
  */
 LPB.plugins['banner'] = function (active_component, leipiplugins) {
     var popover = $(".popover");
@@ -35,11 +37,11 @@ LPB.plugins['banner'] = function (active_component, leipiplugins) {
             $(popover).find("#banner_config_info").val(jsonObj.config.info);
         }
     }
-    //右弹form  取消控件
+    // 右弹form  取消控件
     $(popover).delegate(".btn-danger", "click", function (e) {
         active_component.popover("hide");
     });
-    //右弹form  确定控件
+    // 右弹form  确定控件
     $(popover).delegate(".btn-info", "click", function (e) {
         var inputs = $(popover).find("input");
         $.each(inputs, function (i, e) {
@@ -65,7 +67,7 @@ LPB.plugins['banner'] = function (active_component, leipiplugins) {
                     break;
             }
             active_component.popover("hide");
-            LPB.genSource();//重置源代码
+            LPB.genSource();// 重置源代码
         });
         setLeipipluginsVal(leipiplugins, jsonObj);
     });
@@ -73,9 +75,9 @@ LPB.plugins['banner'] = function (active_component, leipiplugins) {
 
 
 /*
- 折线图控件 chart_line
- acc  是 class="component" 的DIV
- e 是 class="leipiplugins" 的控件
+ * 折线图控件 chart_line
+ * acc  是 class="component" 的DIV
+ * e 是 class="leipiplugins" 的控件
  */
 LPB.plugins['chart_line'] = function (active_component, leipiplugins) {
     var popover = $(".popover");
@@ -104,33 +106,31 @@ LPB.plugins['chart_line'] = function (active_component, leipiplugins) {
             ]
         }
     };
+
     if (getStringValue(jsonStr) != "") {
         jsonObj = JSON.parse($(leipiplugins).val());
-        //右弹form  初始化值
+        // 右弹form  初始化值
         $(popover).find("#orgname").val(jsonObj.name);
         if (jsonObj.config.title !== undefined) {
             $(popover).find("#chart_line_config_title").val(jsonObj.config.title);
         }
-        if (jsonObj.config.dataUrl !== undefined) {
-            $(popover).find("#chart_line_config_data_url").val(jsonObj.config.dataUrl);
-        }
     }
-    //右弹form  取消控件
+    // 加载数据源
+    forSelectOption("#chart_line_config_data_url", jsonObj.config.dataUrl);
+    // 右弹form  取消控件
     $(popover).delegate(".btn-danger", "click", function (e) {
         active_component.popover("hide");
     });
-    //右弹form  确定控件
+    // 右弹form  确定控件
     $(popover).delegate(".btn-info", "click", function (e) {
+        jsonObj.config.dataUrl = $("#chart_line_config_data_url").val();
         var inputs = $(popover).find("input");
         $.each(inputs, function (i, e) {
-            var attr_name = $(e).attr("id");//属性名称
+            var attr_name = $(e).attr("id");// 属性名称
             var attr_val = $(e).val();
             switch (attr_name) {
                 case 'chart_line_config_title':
                     jsonObj.config.title = attr_val;
-                    break;
-                case 'chart_line_config_data_url':
-                    jsonObj.config.dataUrl = attr_val;
                     break;
                 case 'orgname':
                     attr_val = getAttrVal(attr_val, "chart_line");
@@ -147,9 +147,9 @@ LPB.plugins['chart_line'] = function (active_component, leipiplugins) {
 
 
 /*
- 表格tab切换 tables_v3
- acc  是 class="component" 的DIV
- e 是 class="leipiplugins" 的控件
+ * 表格tab切换 tables_v3
+ * acc  是 class="component" 的DIV
+ * e 是 class="leipiplugins" 的控件
  */
 LPB.plugins['tables_v3'] = function (active_component, leipiplugins) {
     var popover = $(".popover");
@@ -161,7 +161,7 @@ LPB.plugins['tables_v3'] = function (active_component, leipiplugins) {
     };
     var jsonConfigObj;
     var document;
-    //右弹form  初始化值
+    // 右弹form  初始化值
     if (getStringValue(jsonStr) != "") {
         jsonObj = JSON.parse($(leipiplugins).val());
         $(popover).find("#orgname").val(jsonObj.name);
@@ -173,9 +173,8 @@ LPB.plugins['tables_v3'] = function (active_component, leipiplugins) {
                     $("#a_" + document).html(value.title);
                     $(popover).find("#tables_v3_config_title_" + document).val(value.title);
                 }
-                if (value.dataUrl !== undefined) {
-                    $(popover).find("#tables_v3_config_data_url_" + document).val(value.dataUrl);
-                }
+                // 加载数据源
+                forSelectOption("#tables_v3_config_data_url_" + document, value.dataUrl);
             });
         } else {
             // 创建tab
@@ -185,17 +184,19 @@ LPB.plugins['tables_v3'] = function (active_component, leipiplugins) {
         // 创建tab
         addTab();
     }
+    // 初始化tab绑定事件
+    tabsEvent();
 
-    //右弹form  取消控件
+    // 右弹form  取消控件
     $(popover).delegate(".btn-danger", "click", function (e) {
         active_component.popover("hide");
     });
-    //右弹form  确定控件
+    // 右弹form  确定控件
     $(popover).delegate(".btn-info", "click", function (e) {
         // 获取控件名称
         var inputs = $(popover).find("input");
         $.each(inputs, function (i, e) {
-            var attr_name = $(e).attr("id");//属性名称
+            var attr_name = $(e).attr("id");// 属性名称
             var attr_val = $(e).val();
             switch (attr_name) {
                 case 'orgname':
@@ -206,10 +207,10 @@ LPB.plugins['tables_v3'] = function (active_component, leipiplugins) {
             }
         });
 
-        //清空config数组
+        // 清空config数组
         jsonObj.config = [];
         var tabDocuments = $(".tab_document");
-        //遍历所有tab div
+        // 遍历所有tab div
         $.each(tabDocuments, function (j, tabDoc) {
             document = $(tabDoc).attr("document");//tab_div 随机码
             jsonConfigObj = {
@@ -223,20 +224,18 @@ LPB.plugins['tables_v3'] = function (active_component, leipiplugins) {
             // 遍历 所有input内容
             var inputs = $(tabDoc).find("input");
             var nameString = "";
+            jsonConfigObj.dataUrl = $('#tables_v3_config_data_url_' + document).val();
             $.each(inputs, function (i, e) {
-                var attr_name = $(e).attr("id");//属性名称
+                var attr_name = $(e).attr("id");// 属性名称
                 var attr_val = $(e).val();
                 switch (attr_name) {
                     case 'tables_v3_config_title_' + document:
                         nameString = nameString + "_" + attr_val;
                         jsonConfigObj.title = attr_val;
                         break;
-                    case 'tables_v3_config_data_url_' + document:
-                        jsonConfigObj.dataUrl = attr_val;
-                        break;
                 }
                 active_component.popover("hide");
-                LPB.genSource();    //重置源代码
+                LPB.genSource();    // 重置源代码
             });
             jsonObj.config[j] = jsonConfigObj;
         });
@@ -246,15 +245,18 @@ LPB.plugins['tables_v3'] = function (active_component, leipiplugins) {
     });
 }
 
-$(document).ready(function () {
-    $('#tabs a.tab').live('click', function () {
+/**
+ * 初始化tabs绑定事件
+ */
+function tabsEvent() {
+    $('#tabs').on('click', '.tab', function () {
         var contentname = $(this).attr("document") + "_content";
-        $("#content div").hide();
+        $(".tab_document").hide();
         $("#tabs li").removeClass("current");
         $("#" + contentname).show();
         $(this).parent().addClass("current");
     });
-    $('#tabs a.remove').live('click', function () {
+    $('#tabs').on('click', '.remove', function () {
         var document = $(this).parent().find(".tab").attr("document");
         var contentname = document + "_content";
         $("#" + contentname).remove();
@@ -266,26 +268,29 @@ $(document).ready(function () {
             $("#" + firsttabid + "_content").show();
         }
     });
-});
+};
 
-// 添加标签
+// tab控件添加标签
 function addTab() {
     var document = "document_" + RndNum(10);
 
     $("#tabs li").removeClass("current");
     // 隐藏所有tab div
-    $("#content div").hide();
+    $(".tab_document").hide();
 
     $("#tabs").append("<li class='current' id='li_" + document + "'><a class='tab' document='" + document + "' id='a_" + document + "' href='#'>"
         + "标题"
         + "</a><a href='#' class='remove'>x</a></li>");
 
-    $("#content").append("<div class='tab_document' document='" + document + "' id='" + document + "_content'>"
-        + "<label class='control-label'>标题</label>"
-        + "<input type='text'class='tables_v3_config_title' document='" + document + "' id='tables_v3_config_title_" + document + "' placeholder='标题' onchange='onchangeTabTitle(this)'>"
-        + "<label class='control-label'>数据源</label>"
-        + "<input type='text'class='tables_v3_config_data_url' id='tables_v3_config_data_url_" + document + "' placeholder='数据源'>"
+    $("#content").append("<div class='tab_document content-label-input' document='" + document + "' id='" + document + "_content'>"
+        + "<label class='control-label content-left'>标题</label>"
+        + "<input type='text'class='tables_v3_config_title content-left' document='" + document + "' id='tables_v3_config_title_" + document + "' placeholder='标题' onchange='onchangeTabTitle(this)'>"
+        + "<label class='control-label content-left'>数据源</label>"
+        + "<select id='tables_v3_config_data_url_" + document + "' class='selectpicker form-control content-left' data-live-search='true' title='数据源'></select>"
         + "</div>");
+
+    // 加载数据源
+    forSelectOption("#tables_v3_config_data_url_" + document, "");
 
     // 显示新增tab div
     $("#" + document + "_content").show();

@@ -5,11 +5,26 @@
      data-content="
   <form class='form'>
     <div class='controls'>
-      <label class='control-label'>控件名称</label> <input type='text' id='orgname' placeholder='必填项'>
-      <label class='control-label'>标题</label> <input type='text' id='banner_config_title' placeholder='标题'>
-      <label class='control-label'>副标题</label> <input type='text' id='banner_config_subtitle' placeholder='副标题'>
-      <label class='control-label'>日期/周期</label> <input type='text' id='banner_config_date' placeholder='日期/周期'>
-      <label class='control-label'>描述</label> <input type='text' id='banner_config_info' placeholder='描述'>
+      <div class='content-label-input'>
+          <label class='control-label content-left'>控件名称</label>
+          <input type='text' id='orgname' placeholder='必填项' class='content-left'>
+      </div>
+      <div class='content-label-input'>
+          <label class='control-label content-left'>标题</label>
+          <input type='text' id='banner_config_title' placeholder='标题' class='content-left'>
+      </div>
+      <div class='content-label-input'>
+          <label class='control-label content-left'>副标题</label>
+          <input type='text' id='banner_config_subtitle' placeholder='副标题' class='content-left'>
+      </div>
+      <div class='content-label-input'>
+          <label class='control-label content-left'>日期/周期</label>
+          <input type='text' id='banner_config_date' placeholder='日期/周期' class='content-left'>
+      </div>
+      <div class='content-label-input'>
+          <label class='control-label content-left'>描述</label>
+          <input type='text' id='banner_config_info' placeholder='描述' class='content-left'>
+      </div>
      <hr/>
       <button class='btn btn-info' type='button'>确定</button><button class='btn btn-danger' type='button'>取消</button>
     </div>
@@ -31,9 +46,18 @@
      data-content="
   <form class='form'>
     <div class='controls'>
-      <label class='control-label'>控件名称</label> <input type='text' id='orgname' placeholder='必填项'>
-      <label class='control-label'>标题</label> <input type='text' id='chart_line_config_title' placeholder='标题'>
-      <label class='control-label'>数据源</label> <input type='text' id='chart_line_config_data_url' placeholder='数据源'>
+      <div class='content-label-input'>
+          <label class='control-label content-left'>控件名称</label>
+          <input type='text' id='orgname' placeholder='必填项' class='content-left'>
+      </div>
+      <div class='content-label-input'>
+          <label class='control-label content-left'>标题</label>
+          <input type='text' id='chart_line_config_title' placeholder='标题' class='content-left'>
+      </div>
+      <div class='content-label-input'>
+          <label class='control-label content-left'>数据源</label>
+          <select id='chart_line_config_data_url' class='selectpicker form-control content-left' data-live-search='true' title='数据源'></select>
+      </div>
      <hr/>
       <button class='btn btn-info' type='button'>确定</button><button class='btn btn-danger' type='button'>取消</button>
     </div>
@@ -56,7 +80,10 @@
      data-content="
   <form class='form'>
     <div class='controls'>
-      <label class='control-label'>控件名称</label> <input type='text' id='orgname' placeholder='必填项'>
+      <div class='content-label-input'>
+          <label class='control-label content-left'>控件名称</label>
+          <input type='text' id='orgname' placeholder='必填项' class='content-left'>
+      </div>
       <div id='wrapper'>
         <ul id='tabs'>
         </ul>
