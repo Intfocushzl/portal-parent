@@ -249,8 +249,9 @@ LPB.plugins['tables_v3'] = function (active_component, leipiplugins) {
  * 初始化tabs绑定事件
  */
 function tabsEvent() {
+    var contentname;
     $('#tabs').on('click', '.tab', function () {
-        var contentname = $(this).attr("document") + "_content";
+        contentname = $(this).attr("document") + "_content";
         $(".tab_document").hide();
         $("#tabs li").removeClass("current");
         $("#" + contentname).show();
@@ -258,13 +259,13 @@ function tabsEvent() {
     });
     $('#tabs').on('click', '.remove', function () {
         var document = $(this).parent().find(".tab").attr("document");
-        var contentname = document + "_content";
+        contentname = document + "_content";
         $("#" + contentname).remove();
         $(this).parent().remove();
         if ($("#tabs li.current").length == 0 && $("#tabs li").length > 0) {
             var firsttab = $("#tabs li:first-child");
             firsttab.addClass("current");
-            var firsttabid = $(firsttab).find("a.tab").attr("id");
+            var firsttabid = $(firsttab).find("a.tab").attr("document");
             $("#" + firsttabid + "_content").show();
         }
     });
