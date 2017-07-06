@@ -5,7 +5,9 @@ var returnJsonObj;
 var selectOptionJsonObjSql;
 var selectOptionJsonObjPro;
 
-// 初始化
+/**
+ * 初始化数据
+ */
 $(function () {
     module_id = getQueryString("id");
     if (getStringValue(module_id) != "") {
@@ -60,7 +62,11 @@ function forSelectOption(data_url_id, executeCode) {
     $(data_url_id).selectpicker('render');
 }
 
-// 获取 window.location.href参数
+/**
+ * 获取 window.location.href参数
+ * @param name
+ * @returns {null}
+ */
 function getQueryString(name) {
     var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
     var r = window.location.search.substr(1).match(reg);
@@ -68,12 +74,16 @@ function getQueryString(name) {
     return null;
 }
 
-// 返回
+/**
+ * 返回
+ */
 $("#btnBack").click(function () {
     history.go(-1);
 });
 
-// 保存
+/**
+ * 保存
+ */
 $(".saveOrUpdate").click(function () {
     reportModulePage.status = $(this).attr("status");
     // 标题
@@ -101,12 +111,17 @@ $(".saveOrUpdate").click(function () {
     });
 });
 
-// 显示json字符串
+/**
+ * 显示json字符串
+ */
 $("#jsonstrtab").click(function () {
     $("#jsonstr").val(JSON.stringify(selfModuleJson()));
 });
 
-// 封装控件为json
+/**
+ * 封装控件为json
+ * @returns {*[]}
+ */
 function selfModuleJson() {
     var fromName = $("#form_name").val();
     var jsonObj = [
@@ -125,7 +140,10 @@ function selfModuleJson() {
     return jsonObj;
 }
 
-// 初始化渲染模板
+/**
+ * 初始化渲染模板
+ * @param reportModulePage
+ */
 function rendererModule(reportModulePage) {
     contentJsonObj = JSON.parse(reportModulePage.content)[0];
 
@@ -165,7 +183,9 @@ function rendererModule(reportModulePage) {
     }
 }
 
-//打开json view
+/**
+ * 打开json view
+ */
 function open_jsonview() {
     window.open("http://" + window.location.host + "/statics/plugins/jquery-jsonview/json-view.html?jsonstr=" + escape($("#jsonstr").val()));
 };

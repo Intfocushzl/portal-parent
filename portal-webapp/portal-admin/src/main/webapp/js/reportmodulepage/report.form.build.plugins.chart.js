@@ -270,7 +270,10 @@ function tabsEvent() {
     });
 };
 
-// tab控件添加标签
+/**
+ * tab控件添加标签
+ * @returns {string}
+ */
 function addTab() {
     var document = "document_" + RndNum(10);
 
@@ -296,7 +299,11 @@ function addTab() {
     $("#" + document + "_content").show();
     return document;
 }
-// 修改tab标题
+
+/**
+ * 修改tab标题
+ * @param obj
+ */
 function onchangeTabTitle(obj) {
     $("#a_" + $(obj).attr("document")).html($(obj).val());
 }

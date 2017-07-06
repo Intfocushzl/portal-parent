@@ -162,10 +162,6 @@
     min-width: 1000px;
 }
 
-/*.radio input[type="radio"], .checkbox input[type="checkbox"] {
-    margin-left: 20px !important;
-}*/
-
 .bootstrap-select.form-control:not([class*="col-"]) {
     width: 300px;
 }

@@ -222,6 +222,7 @@ $(document).ready(function () {
         }
 
         //console.info("=============e.currentTarget.id:" + e.currentTarget.id);
+
         //移除所有的绑定事件
         $("#" + e.currentTarget.id).unbind();
         //$("#" + e.currentTarget.id).unbind('mouseover');
