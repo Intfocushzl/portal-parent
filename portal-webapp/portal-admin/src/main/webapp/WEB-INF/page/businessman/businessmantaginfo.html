@@ -1,77 +1,86 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>标签信息表</title>
+    <title>标签信息表</title>
     #parse("sys/header.html")
 </head>
 <body>
 <div id="rrapp" v-cloak>
-	<div v-show="showList">
+    <div v-show="showList">
         <div id="queryDiv" class="queryDiv">
             <div class="grid-btn">
                 <div class="form-group col-sm-2">
-                    <input type="text" class="form-control" v-model="businessmanTagInfo.id" @keyup.enter="query" placeholder="主键ID">
+                    <input type="text" class="form-control" v-model="businessmanTagInfo.id" @keyup.enter="query"
+                           placeholder="主键ID">
                 </div>
                 <div class="form-group col-sm-2">
-                	<input type="text" class="form-control" v-model="businessmanTagInfo.remark" @keyup.enter="query" placeholder="备注说明">
+                    <input type="text" class="form-control" v-model="businessmanTagInfo.remark" @keyup.enter="query"
+                           placeholder="备注说明">
                 </div>
                 <a class="btn btn-primary" @click="query">查询</a>
 
-				#if($shiro.hasPermission("businessmantaginfo:save"))
-				<a class="btn btn-primary" @click="add"><i class="fa fa-plus"></i>&nbsp;新增</a>
-				#end
-				#if($shiro.hasPermission("businessmantaginfo:update"))
-				<a class="btn btn-primary" @click="update"><i class="fa fa-pencil-square-o"></i>&nbsp;修改</a>
-				#end
-				#if($shiro.hasPermission("businessmantaginfo:delete"))
-				<a class="btn btn-primary" @click="del"><i class="fa fa-trash-o"></i>&nbsp;删除</a>
-				#end
-			</div>
-		</div>
-	    <table id="jqGrid"></table>
-	    <div id="jqGridPager"></div>
+                #if($shiro.hasPermission("businessmantaginfo:save"))
+                <a class="btn btn-primary" @click="add"><i class="fa fa-plus"></i>&nbsp;新增</a>
+                #end
+                #if($shiro.hasPermission("businessmantaginfo:update"))
+                <a class="btn btn-primary" @click="update"><i class="fa fa-pencil-square-o"></i>&nbsp;修改</a>
+                #end
+                #if($shiro.hasPermission("businessmantaginfo:delete"))
+                <a class="btn btn-primary" @click="del"><i class="fa fa-trash-o"></i>&nbsp;删除</a>
+                #end
+            </div>
+        </div>
+        <table id="jqGrid"></table>
+        <div id="jqGridPager"></div>
     </div>
-    
+
     <div v-show="!showList" class="panel panel-default">
-		<div class="panel-heading">{{title}}</div>
-		<form class="form-horizontal">
-			<div class="form-group">
-			   	<div class="col-sm-2 control-label">标签名</div>
-			   	<div class="col-sm-10">
-			        <input type="text" class="form-control" v-model="businessmanTagInfo.tagName" placeholder="标签名"/>
-			    </div>
-			</div>
-			<div class="form-group">
-			   	<div class="col-sm-2 control-label">标签类型</div>
-			   	<div class="col-sm-10">
-			        <input type="text" class="form-control" v-model="businessmanTagInfo.tagType" placeholder="标签类型 1：文章，2：视频"/>
-			    </div>
-			</div>
-			<div class="form-group">
-			   	<div class="col-sm-2 control-label">说明</div>
-			   	<div class="col-sm-10">
-			        <textarea type="text" class="form-control" v-model="businessmanTagInfo.remark" placeholder="说明"></textarea>
-			    </div>
-			</div>
-			<div class="form-group">
-			   	<div class="col-sm-2 control-label">启用,禁用</div>
-			   	<div class="col-sm-10">
-			        <input type="text" class="form-control" v-model="businessmanTagInfo.disabled" placeholder="启用,禁用(0启用，1禁用)"/>
-			    </div>
-			</div>
-			<!--<div class="form-group">
-			   	<div class="col-sm-2 control-label">版本号</div>
-			   	<div class="col-sm-10">
-			        <input type="text" class="form-control" v-model="businessmanTagInfo.version" placeholder="版本号"/>
-			    </div>
-			</div>-->
-			<div class="form-group">
-				<div class="col-sm-2 control-label"></div> 
-				<input type="button" class="btn btn-primary" @click="saveOrUpdate" value="确定"/>
-				&nbsp;&nbsp;<input type="button" class="btn btn-warning" @click="reload" value="返回"/>
-			</div>
-		</form>
-	</div>
+        <div class="panel-heading">{{title}}</div>
+        <form class="form-horizontal">
+            <div class="form-group">
+                <div class="col-sm-2 control-label">标签名</div>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" v-model="businessmanTagInfo.tagName" placeholder="标签名"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">标签类型</div>
+                <label class="radio-inline">
+                    <input type="radio" name="tagType" value="1" v-model="businessmanTagInfo.tagType"/>
+                    文章
+                </label>
+                <label class="radio-inline">
+                    <input type="radio" name="tagType" value="2" v-model="businessmanTagInfo.tagType"/>
+                    视频
+                </label>
+            </div>
+
+            <div class="form-group">
+                <div class="col-sm-2 control-label">说明</div>
+                <div class="col-sm-10">
+                    <textarea type="text" class="form-control" v-model="businessmanTagInfo.remark"
+                              placeholder="说明"></textarea>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">状态</div>
+                <label class="radio-inline">
+                    <input type="radio" name="disabled" value="0" v-model="businessmanTagInfo.disabled"/>
+                    启用
+                </label>
+                <label class="radio-inline">
+                    <input type="radio" name="disabled" value="1" v-model="businessmanTagInfo.disabled"/>
+                    禁用
+                </label>
+            </div>
+
+            <div class="form-group">
+                <div class="col-sm-2 control-label"></div>
+                <input type="button" class="btn btn-primary" @click="saveOrUpdate" value="确定"/>
+                &nbsp;&nbsp;<input type="button" class="btn btn-warning" @click="reload" value="返回"/>
+            </div>
+        </form>
+    </div>
 </div>
 
 <script src="${rc.contextPath}/js/businessman/businessmantaginfo.js?_${date.systemTime}"></script>
