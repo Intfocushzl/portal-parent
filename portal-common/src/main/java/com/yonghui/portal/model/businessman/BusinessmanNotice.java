@@ -12,8 +12,6 @@ import java.util.Date;
  * @date 2017-06-07 16:33:29
  */
 public class BusinessmanNotice extends AuditAuto {
-    //发布后修改：存为草稿时保存之前的内容
-    private String oldContent;
     //公告类型 1：系统公告 2：业务公告 3：预警消息 4：报表评论
     private Long noticeType;
     //发布范围角色编码 如：101,102,103
@@ -180,13 +178,5 @@ public class BusinessmanNotice extends AuditAuto {
     public Date getExpireTime() {
             return expireTime;
             }
-
-    public String getOldContent() {
-        return oldContent;
-    }
-
-    public void setOldContent(String oldContent) {
-        this.oldContent = oldContent;
-    }
 
 }

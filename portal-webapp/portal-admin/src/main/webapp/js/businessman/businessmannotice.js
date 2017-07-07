@@ -13,7 +13,22 @@ $(function () {
             /*{label: '正文', name: 'content', index: 'content', width: 80 },
              {label: '摘要', name: 'abstracts', index: 'abstracts', width: 80 },
              {label: '封面图', name: 'coverImg', index: 'cover_img', width: 80 }, */
-            {label: '文章状态', name: 'status', index: 'status', width: 80},
+            {
+                label: '编辑状态', name: 'status', index: 'status', width: 80,
+                formatter: function (value, options, row) {
+                    return value === 1 ?
+                        '<span class="label label-warning">新草稿</span>' :
+                        '<span class="label label-info">已发布</span>';
+                }
+            },
+            {
+                label: '显示状态', name: 'disabled', index: 'disabled', width: 80,
+                formatter: function (value, options, row) {
+                    return value === 0 ?
+                        '<span class="label label-success">启用</span>' :
+                        '<span class="label label-danger">禁用</span>';
+                }
+            },
             {label: '阅读数', name: 'pageview', index: 'pageview', width: 80},
             {label: '过期时间', name: 'expireTime', index: 'expire_time', width: 80},
             {label: '创建时间', name: 'createTime', index: 'CREATE_TIME', width: 80},
@@ -90,7 +105,7 @@ var vm = new Vue({
             vm.businessmanNotice.noticeType = $("#noticeType").val();
             vm.businessmanNotice.status = status;
             vm.businessmanNotice.abstracts = KindEditor.instances[0].html();
-            vm.businessmanNotice.content = KindEditor.instances[1].html();
+            vm.businessmanNotice.contentManuscript = KindEditor.instances[1].html();
             vm.businessmanNotice.expireTime = $("#expireTime").val();
             console.log(JSON.stringify(vm.businessmanNotice));
             $.ajax({
@@ -136,7 +151,6 @@ var vm = new Vue({
                 vm.businessmanNotice = r.businessmanNotice;
                 KindEditor.instances[0].html(vm.businessmanNotice.abstracts);
                 KindEditor.instances[1].html(vm.businessmanNotice.contentManuscript);
-                vm.businessmanNotice.oldContent = vm.businessmanNotice.content;
                 //  $("#expireTime").val(vm.businessmanNotice.expireTime);
                 // 在 ajax中 初始化 fileinput 配置参数是不起作用的  需要 先销毁，再初始化
                 $("#file-cover").fileinput('destroy');

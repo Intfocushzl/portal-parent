@@ -102,6 +102,19 @@
                     不推送
                 </label>
             </div>
+
+            <div class="form-group">
+                <div class="col-sm-2 control-label">状态</div>
+                <label class="radio-inline">
+                    <input type="radio" name="disabled" value="0" v-model="businessmanNotice.disabled"/>
+                    启用
+                </label>
+                <label class="radio-inline">
+                    <input type="radio" name="disabled" value="1" v-model="businessmanNotice.disabled"/>
+                    禁用
+                </label>
+            </div>
+
             <div class="form-group">
                 <div class="col-sm-2 control-label">标题</div>
                 <div class="col-sm-10">
@@ -132,13 +145,12 @@
                               placeholder="摘要" id="abstracts" name="abstracts"></textarea>
                         </div>
                         <div class="pc-des">
-                    <textarea style="width:100%;height:200px;" kindEditor="true" v-model="businessmanNotice.content"
-                              placeholder="正文" id="content" name="content"></textarea>
+                    <textarea style="width:100%;height:200px;" kindEditor="true" v-model="businessmanNotice.contentManuscript"
+                              placeholder="正文" id="content" name="contentManuscript"></textarea>
                         </div>
                     </div>
                 </div>
             </div>
-            <input type="hidden" v-model="businessmanNotice.oldContent"/>
 
             <div class="form-group">
                 <div class="col-sm-2 control-label">过期时间</div>
