@@ -35,6 +35,9 @@ public class BusinessmanActicleServiceImpl implements BusinessmanActicleService 
         if (businessmanActicle.getStatus() == 2) {   // 发布 2发布操作，1保存新草稿操作
             businessmanActicle.setContent(businessmanActicle.getContentManuscript());
         }
+        if (StringUtils.isEmpty(businessmanActicle.getContent())) {
+            businessmanActicle.setDisabled(1L);     //  当用户点击保存时如果 正文为空则禁用该文章
+        }
         businessmanActicleMapper.save(businessmanActicle);
     }
 
@@ -42,6 +45,9 @@ public class BusinessmanActicleServiceImpl implements BusinessmanActicleService 
     public void update(BusinessmanActicle businessmanActicle) {
         if (businessmanActicle.getStatus() == 2) {   // 发布 2发布操作，1保存新草稿操作
             businessmanActicle.setContent(businessmanActicle.getContentManuscript());
+        }
+        if (StringUtils.isEmpty(businessmanActicle.getContent())) {
+            businessmanActicle.setDisabled(1L);     //  当用户点击保存时如果 正文为空则禁用该文章
         }
         businessmanActicleMapper.update(businessmanActicle);
     }

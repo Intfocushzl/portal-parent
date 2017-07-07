@@ -144,11 +144,18 @@
             min-width: 600px;;
         }
 
+        #btn-info-add {
+            position: absolute;
+            float: left;
+            top: -1px;
+        }
+
         #tabs {
             margin: 0;
             padding: 0;
             list-style: none;
             overflow: hidden;
+            float: left;
         }
 
         #tabs li {
@@ -357,7 +364,7 @@
                     </ul>
                     <!--<input name="count" type="hidden" />
 -->
-                    <input style="position:absolute; right: 300px;top: -1px;" type="button" class="btn btn-info"
+                    <input id="btn-info-add" type="button" class="btn btn-info"
                            @click="showDialog" value="+"/>
                     <!--   multiple data-max-options="3"    v-model="businessmanActicle.tagInfo"-->
                     <!--<select class="selectpicker form-control" data-live-search="true"

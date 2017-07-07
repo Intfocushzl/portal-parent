@@ -3,14 +3,12 @@ package com.yonghui.portal.service.impl.businessman;
 import com.yonghui.portal.mapper.businessman.BusinessmanNoticeMapper;
 import com.yonghui.portal.model.businessman.BusinessmanNotice;
 import com.yonghui.portal.service.businessman.BusinessmanNoticeService;
-import com.yonghui.portal.util.TimeUtil;
+import com.yonghui.portal.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Map;
-
-import static com.sun.tools.doclint.Entity.nu;
 
 
 @Service("businessmanNoticeService")
@@ -38,6 +36,9 @@ public class BusinessmanNoticeServiceImpl implements BusinessmanNoticeService {
         if (businessmanNotice.getStatus() == 2) {   // 发布 2发布操作，1保存新草稿操作
             businessmanNotice.setContent(businessmanNotice.getContentManuscript());
         }
+        if (StringUtils.isEmpty(businessmanNotice.getContent())) {
+            businessmanNotice.setDisabled(1L);     //  当用户点击保存时如果 正文为空则禁用该文章
+        }
         businessmanNoticeMapper.save(businessmanNotice);
     }
 
@@ -45,6 +46,9 @@ public class BusinessmanNoticeServiceImpl implements BusinessmanNoticeService {
     public void update(BusinessmanNotice businessmanNotice) {
         if (businessmanNotice.getStatus() == 2) {   // 发布 2发布操作，1保存新草稿操作
             businessmanNotice.setContent(businessmanNotice.getContentManuscript());
+        }
+        if (StringUtils.isEmpty(businessmanNotice.getContent())) {
+            businessmanNotice.setDisabled(1L);     //  当用户点击保存时如果 正文为空则禁用该文章
         }
         businessmanNoticeMapper.update(businessmanNotice);
     }
