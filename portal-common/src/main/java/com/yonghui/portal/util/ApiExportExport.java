@@ -30,14 +30,24 @@ public class ApiExportExport {
         HSSFSheet sheet = wb.createSheet(titleName);
         // 创建第一行（标题行）
         HSSFRow rowTitle = sheet.createRow(0);
+        //rowTitle.setHeight((short) 100); //  目的是想把行高设置成100px
+
         // 创建标题栏样式
         HSSFCellStyle styleTitle = wb.createCellStyle();
         styleTitle.setAlignment(HSSFCellStyle.ALIGN_CENTER);// 居中
+        styleTitle.setFillForegroundColor((short) 25);      // 设置背景色
+        styleTitle.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
+        styleTitle.setBorderBottom(HSSFCellStyle.BORDER_THIN);  //  下边框
+        styleTitle.setBorderLeft(HSSFCellStyle.BORDER_THIN);    //  左边框
+        styleTitle.setBorderTop(HSSFCellStyle.BORDER_THIN);     //  上边框
+        styleTitle.setBorderRight(HSSFCellStyle.BORDER_THIN);   //  右边框
+        // 设置标题字体
         HSSFFont fontTitle = wb.createFont();
         // 宋体加粗
-        fontTitle.setBoldweight(HSSFFont.BOLDWEIGHT_BOLD);
+        //fontTitle.setBoldweight(HSSFFont.BOLDWEIGHT_BOLD);
         fontTitle.setFontName("宋体");
         fontTitle.setFontHeight((short) 200);
+        //fontTitle.setFontHeightInPoints((short) 14);        //  设置字体大小
         styleTitle.setFont(fontTitle);
 
         // 在第一行上创建标题列
@@ -59,7 +69,8 @@ public class ApiExportExport {
         // 创建内容
         Map<String, Object> map = null;
         HSSFCellStyle styleCenter = wb.createCellStyle();
-        styleCenter.setAlignment(HSSFCellStyle.ALIGN_CENTER);// 居中
+        styleCenter.setAlignment(HSSFCellStyle.ALIGN_RIGHT);    // 右对齐
+        //styleCenter.setWrapText(true);                          //  设置自动换行
         for (int i = 0; i < list.size(); i++) {
             map = list.get(i);
             HSSFRow row = sheet.createRow(i + 1);

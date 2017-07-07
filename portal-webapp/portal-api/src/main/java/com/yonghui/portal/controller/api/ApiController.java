@@ -95,8 +95,12 @@ public class ApiController {
 
             // 根据报表唯一编码查询报表基本信息
             PortalReport report = reportUtil.getPortalReport(yongHuiReportCustomCode);
+            report.setCellTitleName(GzipUtils.ungzip(report.getCellTitleName()));
             //String[] cellTitleName = {"useFlag1=状态", "hrScopename=门店", "empNo=工号", "empName1=姓名", "remark2=备注"};
-            String[] cellTitleName = report.getCellTitleName().split("\\n");
+            String[] cellTitleName = {};
+            if (!StringUtils.isEmpty(report.getCellTitleName())) {
+                cellTitleName = report.getCellTitleName().split("\\n");
+            }
 
             // 数内容
             list = reportUtil.jdbcProListResultListMapByParam(SQLFilter.sqlInject(yongHuiReportCustomCode), SQLFilter.sqlInject(parameter));
