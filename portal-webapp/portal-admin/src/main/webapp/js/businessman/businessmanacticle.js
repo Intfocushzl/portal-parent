@@ -19,31 +19,29 @@ $(function () {
             /*{label: '是否APP推送', name: 'appPush', index: 'app_push', width: 80},*/
             {label: '标题', name: 'title', index: 'title', width: 80},
             {label: '标签', name: 'tagInfo', index: 'tag_info', width: 80},
-            {label: '评分', name: 'score', index: 'score', width: 80, formatter: function (value, options, row){
-                var htmlString ="";
-                if (value==null||value==""){
-                    htmlString+="0";
-                }else {
-                    htmlString+=value;
-                }
-                htmlString+="&nbsp;&nbsp;<span class='label label-success' onclick='vm.grade(" + row.id + ")'>查看详细</span>";
-                return htmlString;
-            }},
             {
-                label: '编辑状态', name: 'status', index: 'status', width: 80,
+                label: '状态', name: 'status', index: 'status', width: 80, align: "left",
                 formatter: function (value, options, row) {
-                    return value === 1 ?
-                        '<span class="label label-warning">新草稿</span>' :
-                        '<span class="label label-info">已发布</span>';
+                    var status = value === 1 ?
+                        '<span class="label label-warning">草稿</span> ' :
+                        ''
+                    var disabled = row.disabled === 0 ?
+                        '<span class="label label-success">启用</span>' :
+                        '<span class="label label-danger">禁用</span>';
+                    return status + disabled;
                 }
             },
             {
-                label: '显示状态', name: 'disabled', index: 'disabled', width: 80,
-                formatter: function (value, options, row) {
-                    return value === 0 ?
-                        '<span class="label label-success">启用</span>' :
-                        '<span class="label label-danger">禁用</span>';
+                label: '评分', name: 'score', index: 'score', width: 80, formatter: function (value, options, row) {
+                var htmlString = "";
+                if (value == null || value == "") {
+                    htmlString += "0";
+                } else {
+                    htmlString += value;
                 }
+                htmlString += "&nbsp;&nbsp;<span class='label label-success' onclick='vm.grade(" + row.id + ")'>查看详细</span>";
+                return htmlString;
+            }
             },
             {
                 label: '操作', name: 'operation', with: 100, formatter: function (value, options, row) {
@@ -62,7 +60,7 @@ $(function () {
                 return htmlString;
             }
             },
-            {label: '创建时间', name: 'createTime', index: 'CREATE_TIME', width: 80}
+            {label: '创建时间', name: 'createTime', index: 'CREATE_TIME', width: 80},
         ],
         viewrecords: true,     // 是否显示行号，默认值是false，不显示
         height: 385,            // 表格高度
@@ -133,7 +131,7 @@ var vm = new Vue({
         editor1: null,
         topList: [],
         sliderList: [],
-        subjectId:null
+        subjectId: null
     },
     methods: {
         query: function () {
@@ -150,7 +148,7 @@ var vm = new Vue({
             vm.showList = 2;
             vm.title = "新增";
             vm.businessmanActicle = {};
-            vm.businessmanActicle.subjectId=vm.subjectId;
+            vm.businessmanActicle.subjectId = vm.subjectId;
             KindEditor.instances[0].html("");
             KindEditor.instances[1].html("");
             $("#cover_pic_show").prop("src", "");
@@ -431,13 +429,13 @@ $("#dialog-div").dialog({
             saveOrder1();
             saveOrder2();
             console.log($("input[name=list1SortOrder]").val());
-            var strs1=$("input[name=list1SortOrder]").val().split("|");
-            if (strs1.length>5){
+            var strs1 = $("input[name=list1SortOrder]").val().split("|");
+            if (strs1.length > 5) {
                 alert("推荐最多5个");
                 return
             }
-            var strs2=$("input[name=list2SortOrder]").val().split("|");
-            if (strs2.length>3){
+            var strs2 = $("input[name=list2SortOrder]").val().split("|");
+            if (strs2.length > 3) {
                 alert("轮播最多3个");
                 return
             }
@@ -445,14 +443,14 @@ $("#dialog-div").dialog({
                 type: "GET",
                 url: "../businessmanacticle/beTopAndSlider",
                 data: {
-                  topStr: $("input[name=list1SortOrder]").val()+"",
-                  sliderStr: $("input[name=list2SortOrder]").val()+""
-                 },
+                    topStr: $("input[name=list1SortOrder]").val() + "",
+                    sliderStr: $("input[name=list2SortOrder]").val() + ""
+                },
                 success: function (r) {
                     // 关闭窗口
                     $("#dialog-div").dialog("close");
                     if (r.code === 0) {
-                        alert('操作成功',function () {
+                        alert('操作成功', function () {
                             vm.reload();
                         });
                     } else {
@@ -595,14 +593,14 @@ function commentGqGrid(id) {
 
 function gradeGqGrid(id) {
     $("#gradeGqGrid").jqGrid({
-        url: '../businessmanacticle/grade/getListByActicleId?id='+id,     // 请求后台json数据的url
+        url: '../businessmanacticle/grade/getListByActicleId?id=' + id,     // 请求后台json数据的url
         datatype: "json",                // 后台返回的数据格式
         // 列表标题及列表模型
         colModel: [
-            {label: 'id', name: 'id', index: 'id',  key: true },
+            {label: 'id', name: 'id', index: 'id', key: true},
             {label: '用户ID', name: 'userId', index: 'user_id'},
-            {label: '用户名', name: 'userName', index: 'user_name' },
-            {label: '文章ID', name: 'acticleId', index: 'acticle_id' },
+            {label: '用户名', name: 'userName', index: 'user_name'},
+            {label: '文章ID', name: 'acticleId', index: 'acticle_id'},
             {label: '文章标题', name: 'acticleTitle', index: 'acticle_title'},
             {label: '分数，1-5分', name: 'grade', index: 'grade'},
             {label: '创建时间', name: 'createTime', index: 'CREATE_TIME'},
@@ -610,36 +608,36 @@ function gradeGqGrid(id) {
         viewrecords: true,     // 是否显示行号，默认值是false，不显示
         height: 385,            // 表格高度
         rowNum: 50,             // 一页显示的行记录数
-        rowList : [50,100],     // 翻页控制条中 每页显示记录数可选集合
+        rowList: [50, 100],     // 翻页控制条中 每页显示记录数可选集合
         rownumbers: true,
-        autowidth:true,
+        autowidth: true,
         multiselect: true,
         pager: "#gradeJqGridPager",          // 翻页DOM
-        jsonReader : {                   // 重写后台返回数据的属性
+        jsonReader: {                   // 重写后台返回数据的属性
             root: "page.list",          // 将rows修改为page.list
             page: "page.currPage",      // 将page修改为page.currPage
             total: "page.totalPage",    // 将total修改为page.totalPage
             records: "page.totalCount"  // 将records修改为page.totalCount
         },
-        prmNames : {              // 改写请求参数属性
-            page:"page",
-            rows:"limit",
+        prmNames: {              // 改写请求参数属性
+            page: "page",
+            rows: "limit",
             order: "order"
         },
-        gridComplete:function(){
+        gridComplete: function () {
             //隐藏grid底部滚动条
-            $("#gradeGqGrid").closest(".ui-jqgrid-bdiv").css({ "overflow-x" : "hidden" });
+            $("#gradeGqGrid").closest(".ui-jqgrid-bdiv").css({"overflow-x": "hidden"});
         }
     });
 }
 
 $.get("../businessmansubjectinfo/getActicleSubjectSelected", function (r) {
-    var subjectList=r.subjectList;
+    var subjectList = r.subjectList;
     for (var i = 0; i < subjectList.length; i++) {
-            $("#subjectList").append("<option value='" + subjectList[i].id + "'>" + subjectList[i].name + "</option>");
+        $("#subjectList").append("<option value='" + subjectList[i].id + "'>" + subjectList[i].name + "</option>");
     }
-    if (subjectList.length>0){
-        vm.subjectId=subjectList[0].id;
+    if (subjectList.length > 0) {
+        vm.subjectId = subjectList[0].id;
     }
 });
 

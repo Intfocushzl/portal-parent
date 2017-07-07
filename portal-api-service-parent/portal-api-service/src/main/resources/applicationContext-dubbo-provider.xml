@@ -163,4 +163,21 @@
     <bean id="PosterImportervice" class="com.yonghui.portal.service.impl.sys.PosterImportServiceImpl"/>
     <dubbo:service interface="com.yonghui.portal.service.sys.PosterImportService" ref="PosterImportervice"
                    timeout="300000"/>
+
+    <!-- 数据学院热门课程查询  -->
+    <bean id="ApiActicleRecommendService"
+          class="com.yonghui.portal.service.impl.business.ApiActicleRecommendServiceImpl"/>
+    <dubbo:service interface="com.yonghui.portal.service.business.ApiActicleRecommendService"
+                   ref="ApiActicleRecommendService"
+                   timeout="300000"/>
+
+    <!-- 数据学院专题查询  -->
+    <bean id="ApiSubjectInfoService" class="com.yonghui.portal.service.impl.business.ApiSubjectInfoServiceImpl"/>
+    <dubbo:service interface="com.yonghui.portal.service.business.ApiSubjectInfoService" ref="ApiSubjectInfoService"
+                   timeout="300000"/>
+
+    <!-- 数据学院轮播查询  -->
+    <bean id="ApiActicleSliderService" class="com.yonghui.portal.service.impl.business.ApiActicleSliderServiceImpl"/>
+    <dubbo:service interface="com.yonghui.portal.service.business.ApiActicleSliderService" ref="ApiActicleSliderService"
+                   timeout="300000"/>
 </beans>

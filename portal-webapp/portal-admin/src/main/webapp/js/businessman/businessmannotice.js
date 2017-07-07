@@ -14,19 +14,15 @@ $(function () {
              {label: '摘要', name: 'abstracts', index: 'abstracts', width: 80 },
              {label: '封面图', name: 'coverImg', index: 'cover_img', width: 80 }, */
             {
-                label: '编辑状态', name: 'status', index: 'status', width: 80,
+                label: '状态', name: 'status', index: 'status', width: 80, align: 'left',
                 formatter: function (value, options, row) {
-                    return value === 1 ?
-                        '<span class="label label-warning">新草稿</span>' :
-                        '<span class="label label-info">已发布</span>';
-                }
-            },
-            {
-                label: '显示状态', name: 'disabled', index: 'disabled', width: 80,
-                formatter: function (value, options, row) {
-                    return value === 0 ?
+                    var status = value === 1 ?
+                        '<span class="label label-warning">草稿</span> ' :
+                        ''
+                    var disabled = row.disabled === 0 ?
                         '<span class="label label-success">启用</span>' :
                         '<span class="label label-danger">禁用</span>';
+                    return status + disabled;
                 }
             },
             {label: '阅读数', name: 'pageview', index: 'pageview', width: 80},

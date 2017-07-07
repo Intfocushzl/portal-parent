@@ -144,4 +144,10 @@
             )
         </foreach>
     </insert>
+
+    <select id="queryRecommend" resultType="Map" parameterType="Map">
+        SELECT a.acticle_id AS acticleId, b.title FROM platform.businessman_acticle_recommend a
+        LEFT JOIN platform.businessman_acticle b ON a.acticle_id = b.id
+        WHERE a.acticle_type = 2 ORDER BY a.order_num LIMIT 0,3;
+    </select>
 </mapper>

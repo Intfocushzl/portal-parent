@@ -14,13 +14,12 @@ $(function () {
                 width: 80
             },
             {
-                label: '执行类型', name: 'execute_type', index: 'execute_type', width: 80, formatter: function (type) {
-                if (type == 1) {
-                    return '<span class="label label-success">存储</span>';
-                } else if (type == 2) {
-                    return '<span class="label label-success">sql</span>';
+                label: '执行类型', name: 'execute_type', index: 'execute_type', width: 80,
+                formatter: function (value, options, row) {
+                    return value === 1 ?
+                        '<span class="label label-warning">SQL</span>' :
+                        '<span class="label label-info">存储</span>';
                 }
-            }
             },
             {label: '创建人', name: 'username', index: 'username', width: 80},
             {label: '创建时间', name: 'create_time', index: 'create_time', width: 80},
@@ -39,12 +38,14 @@ $(function () {
             page: "page.currPage",      // 将page修改为page.currPage
             total: "page.totalPage",    // 将total修改为page.totalPage
             records: "page.totalCount"  // 将records修改为page.totalCount
-        },
+        }
+        ,
         prmNames: {              // 改写请求参数属性
             page: "page",
             rows: "limit",
             order: "order"
-        },
+        }
+        ,
         gridComplete: function () {
             //隐藏grid底部滚动条
             $("#jqGrid").closest(".ui-jqgrid-bdiv").css({"overflow-x": "hidden"});
@@ -52,7 +53,8 @@ $(function () {
             $("#jqGrid").jqGrid('setGridHeight', getWinH());
         }
     });
-});
+})
+;
 
 var vm = new Vue({
         el: '#rrapp',

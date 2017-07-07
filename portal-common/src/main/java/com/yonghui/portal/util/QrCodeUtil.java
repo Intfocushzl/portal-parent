@@ -72,7 +72,7 @@ public class QrCodeUtil {
         String date = format.format(new Date().getTime());
         node2.put("date", date);
         node2.put("info",
-                "（1）趋势图，展示前14天的销售额的趋势\\u003cbr/\\u003e（2）时间点，为了告知实时销售的数据的截止时间\\u003cbr/\\u003e\\u003cbr\\u003e\\u003csmall\\u003e数据更新时间:" + format1.format(new Date().getTime()) + "+0800\u003c/small\u003e");
+                "说明<br>1.趋势图：展示前14天销售额的趋势<br>2.实时数据每5分钟更新一次（左上角的时间为实时数据刷新截止时间点）<br>3.非实时数据每天更新一次<br>" + format1.format(new Date().getTime()));
 
         node1.put("config", node2);
         //=======================================================
@@ -95,7 +95,7 @@ public class QrCodeUtil {
         //================销售额数据
         JSONArray jsonAry12 = new JSONArray();
         JSONObject node12 = new JSONObject();
-        node12.put("name", goodsName + "前14天销售额趋势");
+        node12.put("name", "销售额");
         node12.put("type", "line");
         if (saleAmount1 == null || saleAmount1.equals("") || saleAmount1.length == 0) {
             node12.put("data", "");

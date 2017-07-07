@@ -32,26 +32,22 @@ public class BusinessmanActicleServiceImpl implements BusinessmanActicleService 
 
     @Override
     public void save(BusinessmanActicle businessmanActicle) {
-        if (businessmanActicle.getStatus() == 1) {//保存草稿  状态1 草稿字段不为空  正文为空 禁用
-            if (StringUtils.isEmpty(businessmanActicle.getContent())) {
-                businessmanActicle.setContent(businessmanActicle.getContentManuscript());
-            }
-            businessmanActicle.setDisabled(1L);
-        } else if (businessmanActicle.getStatus() == 2) {//发布  状态2     启用
+        if (businessmanActicle.getStatus() == 2) {   // 发布 2发布操作，1保存新草稿操作
             businessmanActicle.setContent(businessmanActicle.getContentManuscript());
-            businessmanActicle.setDisabled(0L);
+        }
+        if (StringUtils.isEmpty(businessmanActicle.getContent())) {
+            businessmanActicle.setDisabled(1L);     //  当用户点击保存时如果 正文为空则禁用该文章
         }
         businessmanActicleMapper.save(businessmanActicle);
     }
 
     @Override
     public void update(BusinessmanActicle businessmanActicle) {
-        if (businessmanActicle.getStatus() == 1) {//发布完修改存草稿  都不为空 草稿字段新 内容老  状态2   启用
-            businessmanActicle.setStatus(2L);
-            businessmanActicle.setDisabled(1L);
-        } else if (businessmanActicle.getStatus() == 2) {//发不完修改发布			一样最新		2		启用
-            businessmanActicle.setDisabled(0L);
+        if (businessmanActicle.getStatus() == 2) {   // 发布 2发布操作，1保存新草稿操作
             businessmanActicle.setContent(businessmanActicle.getContentManuscript());
+        }
+        if (StringUtils.isEmpty(businessmanActicle.getContent())) {
+            businessmanActicle.setDisabled(1L);     //  当用户点击保存时如果 正文为空则禁用该文章
         }
         businessmanActicleMapper.update(businessmanActicle);
     }
