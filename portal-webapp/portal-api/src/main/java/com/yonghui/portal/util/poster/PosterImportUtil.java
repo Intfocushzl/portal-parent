@@ -137,7 +137,7 @@ public class PosterImportUtil {
                         }
                         //判断posterId是否在区域维表中存在
                         if (map.get(cell.getStringCellValue().trim()) == null) {
-                            throw new Exception("表格中有非数字的数据！！" + "第" + r + "行" + (c + 1) + "海报档期id在区域表中不存在");
+                            throw new Exception("表格中有非数字的数据！！" + "第" + r + "行" + (c + 1) + "本档期id在区域维表不存在");
                         }
                         try {
                             util.isNumber(cell.getStringCellValue().trim());
@@ -202,7 +202,7 @@ public class PosterImportUtil {
                             }
                         }
                         if (map.get(posterId + "-" + cell.getStringCellValue().trim()) == null) {
-                            throw new Exception("表格中有非数字的数据！！" + "第" + r + "行" + (c + 1) + "海报档期id+区域的关系数据在区域表不存在");
+                            throw new Exception("表格中有非数字的数据！！" + "第" + r + "行" + (c + 1) + "本档期该区域不存在");
                         }
                         goods.setArea(cell.getStringCellValue().trim());
                     } else if (c == 11) {

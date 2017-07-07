@@ -20,4 +20,6 @@ public interface BusinessmanActicleSliderMapper extends BaseMapper<BusinessmanAc
     int deleteAll();
 
     void saveSlider(Map<String, Object> map);
+
+    List<Map<String, Object>> querySlider();
 }

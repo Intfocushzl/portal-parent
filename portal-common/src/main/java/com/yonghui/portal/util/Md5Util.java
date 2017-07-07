@@ -176,7 +176,7 @@ public class Md5Util {
 
 
 		System.out.println("====================生成sign===========================");
-		String parameter = "openApiCode=OPENAPI_000001&shopID=9318&barcode=304348000004";
+		String parameter = "openApiCode=OPENAPI_000001&page=1&limit=10&userId=123456";
 		String key = "yhappQKXYfkjqn8Yq6ojACkwXRnt35322896dfd9419f9d2c4080b064d89a";
 		System.out.println("MD5后的sign值为:" + Md5Util.getMd5("MD5", 0, null, key + parameter + key));
 

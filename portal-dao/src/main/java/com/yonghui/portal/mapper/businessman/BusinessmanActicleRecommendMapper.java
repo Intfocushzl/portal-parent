@@ -20,4 +20,7 @@ public interface BusinessmanActicleRecommendMapper extends BaseMapper<Businessma
     int deleteAll();
 
     void saveRecommend(Map<String, Object> map);
+
+    List<Map<String, Object>> queryRecommend();
+
 }
