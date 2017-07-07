@@ -119,17 +119,67 @@ public class AppMenusController extends AbstractController {
 
         for (AppMenu appMenu:appMenusList) {
             Map<String,Object> node=new HashedMap();
-            node.put("id",appMenu.getMenuId());
-            node.put("name",appMenu.getSubName());
+            node.put("id",(-1)*appMenu.getMenuId());
+            node.put("name",appMenu.getName());
             node.put("type",appMenu.getType());
+            node.put("second",appMenu.getMenuId());
+
+            List<Map<String,Object>> children=new  ArrayList<Map<String,Object>>();
+            Map<String,Object> childrenNode=new HashedMap();
+            childrenNode.put("id",appMenu.getMenuId());
+            childrenNode.put("name",appMenu.getSubName());
+            childrenNode.put("type",appMenu.getType());
+
             if (appMenu.getType()==1){
-                list1.add(node);
+                boolean isExist =false;
+                for (int i=0;i<list1.size();i++){
+                    String name=list1.get(i).get("name")+"";
+                    if (name.equals(appMenu.getName())){
+                        isExist = true;
+                        children= (List<Map<String, Object>>) list1.get(i).get("children");
+                        children.add(childrenNode);
+                        break ;
+                    }
+                }
+                if (!isExist){
+                    children.add(childrenNode);
+                    node.put("children",children);
+                    list1.add(node);
+                }
             }
             if (appMenu.getType()==2){
-                list2.add(node);
+                boolean isExist =false;
+                for (int i=0;i<list2.size();i++){
+                    String name=list2.get(i).get("name")+"";
+                    if (name.equals(appMenu.getName())){
+                        isExist = true;
+                        children= (List<Map<String, Object>>) list2.get(i).get("children");
+                        children.add(childrenNode);
+                        break ;
+                    }
+                }
+                if (!isExist){
+                    children.add(childrenNode);
+                    node.put("children",children);
+                    list2.add(node);
+                }
             }
             if (appMenu.getType()==3){
-                list3.add(node);
+                boolean isExist =false;
+                for (int i=0;i<list3.size();i++){
+                    String name=list3.get(i).get("name")+"";
+                    if (name.equals(appMenu.getName())){
+                        isExist = true;
+                        children= (List<Map<String, Object>>) list3.get(i).get("children");
+                        children.add(childrenNode);
+                        break ;
+                    }
+                }
+                if (!isExist){
+                    children.add(childrenNode);
+                    node.put("children",children);
+                    list3.add(node);
+                }
             }
         }
 

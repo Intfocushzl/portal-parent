@@ -1,6 +1,6 @@
 package com.yonghui.portal.service.impl.app;
 
-import com.alibaba.dubbo.common.json.JSONArray;
+import com.alibaba.fastjson.JSONArray;
 import com.yonghui.portal.mapper.app.AnalysisBasesMapper;
 import com.yonghui.portal.mapper.app.AppBasesMapper;
 import com.yonghui.portal.mapper.app.KpiBasesMapper;
@@ -94,10 +94,10 @@ public class AppMenusServiceImpl implements AppMenusService {
     @Override
     public void deleteBatch(Map<String, Object> map) {
         JSONArray array = ((JSONArray) map.get("menuIds"));
-        Integer[] menuIds = new Integer[array.length()];
+        Integer[] menuIds = new Integer[array.size()];
         if (array != null) {
-            for (int i = 0; i < array.length(); i++) {
-                Integer menuId = (Integer) array.get(i);
+            for (int i = 0; i < array.size(); i++) {
+                Integer menuId = Integer.parseInt(array.get(i).toString());
                 menuIds[i]=menuId;
             }
         } else {
