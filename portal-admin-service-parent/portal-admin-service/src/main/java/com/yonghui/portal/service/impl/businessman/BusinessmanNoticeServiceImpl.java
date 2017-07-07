@@ -35,9 +35,6 @@ public class BusinessmanNoticeServiceImpl implements BusinessmanNoticeService {
 
     @Override
     public void save(BusinessmanNotice businessmanNotice) {
-        if (businessmanNotice.getDisabled() == 1) {  // 1 禁用
-            businessmanNotice.setStatus(1L);
-        }
         if (businessmanNotice.getStatus() == 2) {   // 发布 2发布操作，1保存新草稿操作
             businessmanNotice.setContent(businessmanNotice.getContentManuscript());
         }
@@ -46,9 +43,6 @@ public class BusinessmanNoticeServiceImpl implements BusinessmanNoticeService {
 
     @Override
     public void update(BusinessmanNotice businessmanNotice) {
-        if (businessmanNotice.getDisabled() == 1) {  // 1 禁用
-            businessmanNotice.setStatus(1L);
-        }
         if (businessmanNotice.getStatus() == 2) {   // 发布 2发布操作，1保存新草稿操作
             businessmanNotice.setContent(businessmanNotice.getContentManuscript());
         }
