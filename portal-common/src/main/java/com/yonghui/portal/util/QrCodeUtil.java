@@ -72,7 +72,7 @@ public class QrCodeUtil {
         String date = format.format(new Date().getTime());
         node2.put("date", date);
         node2.put("info",
-                "说明<br>1.趋势图：展示前14天销售额的趋势<br>2.实时数据每5分钟更新一次（左上角的时间为实时数据刷新截止时间点）<br>3.非实时数据每天更新一次<br>" + format1.format(new Date().getTime()));
+                "1.趋势图：展示前14天销售额的趋势<br>2.实时数据每5分钟更新一次（左上角的时间为实时数据刷新截止时间点）<br>3.非实时数据每天更新一次<br>" + format1.format(new Date().getTime()));
 
         node1.put("config", node2);
         //=======================================================
