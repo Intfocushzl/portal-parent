@@ -15,7 +15,13 @@ $(function () {
                 }
             }
             },
-            {label: '创建时间', name: 'createTime', index: 'CREATE_TIME', width: 80},
+            {
+                label: '状态', name: 'disabled', index: 'disabled', width: 80, formatter: function (type) {
+                return type === 0 ?
+                    '<span class="label label-success">启用</span>' :
+                    '<span class="label label-danger">禁用</span>';
+            }
+            },
         ],
         viewrecords: true,     // 是否显示行号，默认值是false，不显示
         height: 385,            // 表格高度
