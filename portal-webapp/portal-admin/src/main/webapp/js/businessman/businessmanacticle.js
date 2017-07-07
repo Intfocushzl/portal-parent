@@ -219,6 +219,7 @@ var vm = new Vue({
                 vm.getTagList(vm.businessmanActicle.acticleType);
                 if (vm.businessmanActicle.tagInfo) {
                     var tags = vm.businessmanActicle.tagInfo.split(",");
+                    $("#tabs").empty();
                     for (var i = 0; i < tags.length; i++) {
                         $("#tabs").append('<li><span class="tab">' + tags[i] + '</span>&nbsp;<span onclick="removeTag(this)" class="remove">x</span>' +
                             '</li>');
