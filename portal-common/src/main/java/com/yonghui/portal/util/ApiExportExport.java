@@ -35,7 +35,7 @@ public class ApiExportExport {
         // 创建标题栏样式
         HSSFCellStyle styleTitle = wb.createCellStyle();
         styleTitle.setAlignment(HSSFCellStyle.ALIGN_CENTER);// 居中
-        styleTitle.setFillForegroundColor((short) 25);      // 设置背景色
+        styleTitle.setFillForegroundColor((short) 13);      // 设置背景色
         styleTitle.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
         styleTitle.setBorderBottom(HSSFCellStyle.BORDER_THIN);  //  下边框
         styleTitle.setBorderLeft(HSSFCellStyle.BORDER_THIN);    //  左边框
