@@ -29,7 +29,22 @@ $(function () {
                 htmlString+="&nbsp;&nbsp;<span class='label label-success' onclick='vm.grade(" + row.id + ")'>查看详细</span>";
                 return htmlString;
             }},
-            {label: '创建时间', name: 'createTime', index: 'CREATE_TIME', width: 80},
+            {
+                label: '编辑状态', name: 'status', index: 'status', width: 80,
+                formatter: function (value, options, row) {
+                    return value === 1 ?
+                        '<span class="label label-warning">新草稿</span>' :
+                        '<span class="label label-info">已发布</span>';
+                }
+            },
+            {
+                label: '显示状态', name: 'disabled', index: 'disabled', width: 80,
+                formatter: function (value, options, row) {
+                    return value === 0 ?
+                        '<span class="label label-success">启用</span>' :
+                        '<span class="label label-danger">禁用</span>';
+                }
+            },
             {
                 label: '操作', name: 'operation', with: 100, formatter: function (value, options, row) {
                 var htmlString = "<span class='label label-success' onclick='vm.logInfo(" + row.id + ")'>阅读日志</span>" +
@@ -46,7 +61,8 @@ $(function () {
                 }
                 return htmlString;
             }
-            }
+            },
+            {label: '创建时间', name: 'createTime', index: 'CREATE_TIME', width: 80}
         ],
         viewrecords: true,     // 是否显示行号，默认值是false，不显示
         height: 385,            // 表格高度

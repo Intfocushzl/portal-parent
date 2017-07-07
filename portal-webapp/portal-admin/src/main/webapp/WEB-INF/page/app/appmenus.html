@@ -23,13 +23,13 @@
                 </div>
                 <div class="form-group col-sm-2">
                     <label class="radio-inline">
-                        <input type="radio" name="t" value="1" v-model="appMenu.type" checked="true"/> 仪表盘
+                        <input type="radio" name="t" value="1" v-model="appMenu.type" checked="true"/> 生意概况
                     </label>
                     <label class="radio-inline">
-                        <input type="radio" name="t" value="2" v-model="appMenu.type"/> 分析
+                        <input type="radio" name="t" value="2" v-model="appMenu.type"/> 报表
                     </label>
                     <label class="radio-inline">
-                        <input type="radio" name="t" value="3" v-model="appMenu.type"/> 应用
+                        <input type="radio" name="t" value="3" v-model="appMenu.type"/> 专题
                     </label>
                 </div>
                 <a class="btn btn-primary" @click="query">查询</a>
@@ -56,20 +56,20 @@
                 <div class="col-sm-2 control-label">类型</div>
                 <div class="col-sm-10">
                     <label class="radio-inline">
-                        <input type="radio" name="type" value="1" v-model="appMenu.type"/> 仪表盘
+                        <input type="radio" name="type" value="1" v-model="appMenu.type"/> 生意概况
                     </label>
                     <label class="radio-inline">
-                        <input type="radio" name="type" value="2" v-model="appMenu.type"/> 分析
+                        <input type="radio" name="type" value="2" v-model="appMenu.type"/> 报表
                     </label>
                     <label class="radio-inline">
-                        <input type="radio" name="type" value="3" v-model="appMenu.type"/> 应用
+                        <input type="radio" name="type" value="3" v-model="appMenu.type"/> 专题
                     </label>
                 </div>
             </div>
             <div class="form-group">
                 <div class="col-sm-2 control-label">菜单ID</div>
                 <div class="col-sm-10">
-                    <input type="text" class="form-control" v-model="appMenu.menuId" placeholder=""/>
+                    <input type="text" class="form-control" v-model="appMenu.menuId" readonly placeholder=""/>
                 </div>
             </div>
             <div class="form-group">
@@ -102,14 +102,14 @@
                     <!--<input type="text" class="form-control" v-model="appMenu.computerDept" placeholder=""/>-->
                 <!--</div>-->
             <!--</div>-->
-            <div v-if="appMenu.type == 1" class="form-group">
-                <div class="col-sm-2 control-label">盘面数据ID</div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">数据ID</div>
                 <div class="col-sm-10">
-                    <input type="text" class="form-control" v-model="appMenu.link" placeholder=""/>
+                    <input type="text" class="form-control" v-model="appMenu.reportId" placeholder=""/>
                 </div>
             </div>
             <div v-if="appMenu.type == 1" class="form-group">
-                <div class="col-sm-2 control-label">盘面数据单位</div>
+                <div class="col-sm-2 control-label">数据单位</div>
                 <div class="col-sm-10">
                     <input type="text" class="form-control" v-model="appMenu.unit" placeholder=""/>
                 </div>

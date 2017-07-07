@@ -172,7 +172,8 @@ var vm = new Vue({
                 var menuIds = vm.appRoles.menuList;
                 for (var i = 0; i < menuIds.length; i++) {
                     var parentNode = ztree.getNodeByParam("id", (-1) *(menuIds[i].obj_type));
-                    var node = ztree.getNodeByParam("id", menuIds[i].menu_id,parentNode);
+                    var scendNode = ztree.getNodeByParam("second", menuIds[i].menu_id,parentNode);
+                    var node = ztree.getNodeByParam("id", menuIds[i].menu_id,scendNode);
                     ztree.checkNode(node, true, false);
                 }
             });

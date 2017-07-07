@@ -6,25 +6,22 @@ $(function () {
         colModel: [
             {label: '类型', name: 'type', index: 'type', width: 80,formatter:function(value){
                 if (value==1){
-                    return "仪表盘";
+                    return "生意概况";
                 }
                 if (value==2){
-                    return "分析";
+                    return "报表";
                 }
                 if (value==3){
-                    return "应用";
+                    return "专题";
                 }
             } },
             {label: '菜单ID', name: 'menuId', index: 'menuId', width: 80 ,key: true },
             {label: '父菜单', name: 'name', index: 'name', width: 80 },
             {label: '子菜单', name: 'subName', index: 'subName', width: 80 },
-            {label: 'URL', name: 'url', index: 'url', width: 80 },
-            {label: '创建人', name: 'createUser', index: 'create_user', width: 80 },
-            {label: '创建时间', name: 'createdAt', index: 'created_at', width: 80 },
-            {label: '修改人', name: 'updateUser', index: 'update_user', width: 80 },
-            {label: '修改时间', name: 'updatedAt', index: 'updated_at', width: 80 },
-            {label: '分组排序', name: 'groupOrder', index: 'group_order', width: 80 },
-            {label: '组内排序', name: 'itemOrder', index: 'item_order', width: 80 },
+            {label: '数据ID', name: 'link', index: 'link', width: 80 },
+            {label: '数据单位', name: 'unit', index: 'unit', width: 80 },
+            {label: '父菜单排序', name: 'groupOrder', index: 'group_order', width: 80 },
+            {label: '子菜单排序', name: 'itemOrder', index: 'item_order', width: 80 },
             {label: '语音更新时间', name: 'audioUpdatedAt', index: 'audio_updated_at', width: 80 }
         ],
         viewrecords: true,
@@ -68,6 +65,7 @@ var vm = new Vue({
         appMenu: {
             type:$("input:radio[name=t]:checked").val()==null?1:$("input:radio[name=t]:checked").val()
         },
+       // nextMenuId:-1,
         kpiList:[],
         analysisList:[],
         appList:[],
@@ -89,7 +87,9 @@ var vm = new Vue({
         add: function(){
             vm.showList = false;
             vm.title = "新增";
-            vm.appMenu = {type:$("input:radio[name=t]:checked").val()==null?1:$("input:radio[name=t]:checked").val()};
+            vm.appMenu = {type:$("input:radio[name=t]:checked").val()==null?1:$("input:radio[name=t]:checked").val(),
+             //menuId:vm.nextMenuId
+            };
         },
         update: function (event) {
             var id = getSelectedRow();
@@ -102,10 +102,19 @@ var vm = new Vue({
             if(rowData == null){
                 return ;
             }
+            if (rowData.type=="生意概况"){
+                rowData.type=1;
+            }
+            if (rowData.type=="报表"){
+                rowData.type=2;
+            }
+            if (rowData.type=="专题"){
+                rowData.type=3;
+            }
             vm.getInfo(rowData)
         },
         saveOrUpdate: function (event) {
-            var url = vm.appMenu.menuId == null ? "../app/menus/save" : "../app/menus/update";
+            var url = vm.appMenu.id == null ? "../app/menus/save" : "../app/menus/update";
             $.ajax({
                 type: "POST",
                 url: url,
@@ -129,6 +138,15 @@ var vm = new Vue({
             var rowData = $("#jqGrid").jqGrid("getRowData",menuIds[0]);
             if(rowData == null){
                 return ;
+            }
+            if (rowData.type=="生意概况"){
+                rowData.type=1;
+            }
+            if (rowData.type=="报表"){
+                rowData.type=2;
+            }
+            if (rowData.type=="专题"){
+                rowData.type=3;
             }
             var  type=rowData.type;
             confirm('确定要删除选中的记录？', function(){
@@ -165,7 +183,9 @@ var vm = new Vue({
         }
     }
 });
-
+// $.get("../app/menus/getNextMenuId", function(r){
+//     vm.nextMenuId = r.nextMenuId;
+// });
 $("input:radio[name=t]").change(function () {
     vm.appMenu={type:$("input:radio[name=t]:checked").val()};
 });
