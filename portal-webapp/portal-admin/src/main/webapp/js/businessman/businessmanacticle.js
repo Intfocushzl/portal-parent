@@ -20,15 +20,15 @@ $(function () {
             {label: '标题', name: 'title', index: 'title', width: 80},
             {label: '标签', name: 'tagInfo', index: 'tag_info', width: 80},
             {
-                label: '状态', name: 'status', index: 'status', width: 80,
+                label: '状态', name: 'status', index: 'status', width: 80, align: "left",
                 formatter: function (value, options, row) {
                     var status = value === 1 ?
-                        '<span class="label label-warning">草稿</span>' :
+                        '<span class="label label-warning">草稿</span> ' :
                         ''
                     var disabled = row.disabled === 0 ?
                         '<span class="label label-success">启用</span>' :
                         '<span class="label label-danger">禁用</span>';
-                    return status + " " + disabled;
+                    return status + disabled;
                 }
             },
             {
