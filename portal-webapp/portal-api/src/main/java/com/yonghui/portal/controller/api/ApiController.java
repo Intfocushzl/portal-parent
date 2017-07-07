@@ -2,7 +2,6 @@ package com.yonghui.portal.controller.api;
 
 import com.alibaba.dubbo.config.annotation.Reference;
 import com.alibaba.fastjson.JSONObject;
-import com.yonghui.portal.annotation.IgnoreAuth;
 import com.yonghui.portal.model.report.PortalReport;
 import com.yonghui.portal.model.sys.SysOperationLog;
 import com.yonghui.portal.service.sys.SysoperationLogService;
@@ -79,24 +78,43 @@ public class ApiController {
      * @param response
      * @param yongHuiReportCustomCode
      */
-    @IgnoreAuth
     @RequestMapping(value = "exportExcel")
-    public void exportExcel(HttpServletRequest req, HttpServletResponse response, String yongHuiReportCustomCode) {
+    public void exportExcel(HttpServletRequest req, HttpServletResponse response, String yongHuiReportCustomCode, String name) {
+        name = StringUtils.isEmpty(name) ? "数据化运营平台" : name;
+        String parameter = null;
+        List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
+        SysOperationLog log = (SysOperationLog) req.getAttribute(LOGIN_USER_OPERATION_LOG);
+
         try {
-            String parameter = HttpContextUtils.getRequestParameter(req);
-            if (!StringUtils.isEmpty(yongHuiReportCustomCode)) {
-                List<Map<String, Object>> dataList = reportUtil.jdbcProListResultListMapByParam(SQLFilter.sqlInject(yongHuiReportCustomCode), SQLFilter.sqlInject(parameter));
-                ApiExportExport export = new ApiExportExport();
-                JSONObject jsonObject = reportUtil.getReportColumns(yongHuiReportCustomCode);
-                HSSFWorkbook workbook = export.export(dataList, jsonObject);
-                String filename = "YH-DATA.xls";
-                response.setContentType("application/x-msdownload");
-                response.setHeader("Content-disposition", "attachment;filename=" + filename);
-                OutputStream ouputStream = response.getOutputStream();
-                workbook.write(ouputStream);
-                ouputStream.flush();
-                ouputStream.close();
-            }
+            parameter = HttpContextUtils.getRequestParameter(req);
+            //获取用户ip,url.参数
+            IPUtils iputil = new IPUtils();
+            log.setIp(iputil.getIpAddr(req));
+            log.setUrl(req.getRequestURL().toString());
+            log.setParameter(HttpContextUtils.getParameterForLog(req));
+
+            // 根据报表唯一编码查询报表基本信息
+            PortalReport report = reportUtil.getPortalReport(yongHuiReportCustomCode);
+            //String[] cellTitleName = {"useFlag1=状态", "hrScopename=门店", "empNo=工号", "empName1=姓名", "remark2=备注"};
+            String[] cellTitleName = report.getCellTitleName().split("\\n");
+
+            // 数内容
+            list = reportUtil.jdbcProListResultListMapByParam(SQLFilter.sqlInject(yongHuiReportCustomCode), SQLFilter.sqlInject(parameter));
+
+            ApiExportExport export = new ApiExportExport();
+            HSSFWorkbook workbook = export.export(list, cellTitleName, name);
+
+            String filename = java.net.URLEncoder.encode(name + ".xls", "UTF-8");
+            response.setContentType("application/x-msdownload");
+            response.setHeader("Content-disposition", "attachment;filename=" + filename);
+
+            OutputStream ouputStream = response.getOutputStream();
+            workbook.write(ouputStream);
+            ouputStream.flush();
+            ouputStream.close();
+
+            log.setEndTime(new Date());
+            sysoperationLogService.SaveLog(log);
         } catch (Exception e) {
             R.error("导出excel异常");
         }
