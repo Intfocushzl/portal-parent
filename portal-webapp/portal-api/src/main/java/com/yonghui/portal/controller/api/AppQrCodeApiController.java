@@ -122,6 +122,7 @@ public class AppQrCodeApiController {
             sysoperationLogService.SaveLog(log);
         } catch (Exception e) {
             log.error("执行APP报表存储过程报表异常", e);
+            e.printStackTrace();
             return R.error("执行APP报表存储过程报表异常");
         }
         return R.success(jsonArrayResult);
