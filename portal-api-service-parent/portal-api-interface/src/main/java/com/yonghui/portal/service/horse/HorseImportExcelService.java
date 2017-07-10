@@ -23,10 +23,10 @@ public interface HorseImportExcelService {
     public List<HorseOperateScore> getlatelyscoreListState(String user, String areamans, String time);
 
     // 查询全部收银数据
-    public List<HorseImportCash> getchashlist(String user, String areamans);
+    public List<HorseImportCash> getchashlist(String user, String areamans , String time);
 
     // 查询所有运营得分数据
-    public List<HorseOperateScore> getscorelist(String user, String areamans);
+    public List<HorseOperateScore> getscorelist(String user, String areamans , String time);
 
     // 批量导入收银数据
     public int insertcashlist(List<HorseImportCash> list);
@@ -61,7 +61,7 @@ public interface HorseImportExcelService {
     public List<HorseOperateScore> getlatelyscoreListStatehuman(String user, String areamans, String time);
 
     // 查询所有人才梯队得分数据
-    public List<HorseOperateScore> getscorelisthuman(String user, String areamans);
+    public List<HorseOperateScore> getscorelisthuman(String user, String areamans, String time);
 
     // 批量导入人才梯队得分数据
     public int insertscorelisthuman(List<HorseOperateScore> list);

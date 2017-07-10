@@ -35,12 +35,12 @@ public class HorseImportExcelServiceImpl implements HorseImportExcelService {
         return horseImportExcelMapper.getlatelyscoreListState(user, areamans, time);
     }
 
-    public List<HorseImportCash> getchashlist(String user, String areamans) {
-        return horseImportExcelMapper.getchashlist(user, areamans);
+    public List<HorseImportCash> getchashlist(String user, String areamans ,String time) {
+        return horseImportExcelMapper.getchashlist(user, areamans , time);
     }
 
-    public List<HorseOperateScore> getscorelist(String user, String areamans) {
-        return horseImportExcelMapper.getscorelist(user, areamans);
+    public List<HorseOperateScore> getscorelist(String user, String areamans ,String time) {
+        return horseImportExcelMapper.getscorelist(user, areamans ,time);
     }
 
     public int insertcashlist(List<HorseImportCash> list) {
@@ -87,8 +87,8 @@ public class HorseImportExcelServiceImpl implements HorseImportExcelService {
         return horseImportExcelMapper.getlatelyscoreListStatehuman(user, areamans, time);
     }
 
-    public List<HorseOperateScore> getscorelisthuman(String user, String areamans) {
-        return horseImportExcelMapper.getscorelisthuman(user, areamans);
+    public List<HorseOperateScore> getscorelisthuman(String user, String areamans ,String time) {
+        return horseImportExcelMapper.getscorelisthuman(user, areamans , time);
     }
 
     public int insertscorelisthuman(List<HorseOperateScore> list) {

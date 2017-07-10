@@ -70,7 +70,8 @@
         b.acticle_id and b.user_id = #{userId} and b.`status`=1
         ) c on a.id = c.id WHERE
         <if test="keyWord != null and keyWord !=''">
-            (a.tag_info LIKE concat('%',#{keyWord},'%') OR a.title LIKE concat('%',#{keyWord},'%') OR a.content LIKE concat('%',#{keyWord},'%'))  AND
+            (a.tag_info LIKE concat('%',#{keyWord},'%') OR a.title LIKE concat('%',#{keyWord},'%') OR a.content LIKE
+            concat('%',#{keyWord},'%')) AND
         </if>
         a.status = 2 AND a.DISABLED = 0 ORDER BY a.CREATE_TIME DESC limit #{offset}, #{limit}
     </select>
@@ -188,4 +189,21 @@
         </foreach>
     </delete>
 
+
+    <select id="acticleListForPc" resultType="Map" parameterType="Map">
+        SELECT a.id , a.author , a.cover_img AS coverImg, a.score, a.title
+        from platform.businessman_acticle a WHERE
+        <if test="keyWord != null and keyWord !=''">
+            (a.tag_info LIKE concat('%',#{keyWord},'%') OR a.title LIKE concat('%',#{keyWord},'%') OR a.content LIKE
+            concat('%',#{keyWord},'%')) AND
+        </if>
+        <if test="subjectId != null and subjectId !=''">
+            a.subject_id = #{subjectId}
+        </if>
+        a.acticle_type= 2 AND a.status = 2 AND a.DISABLED = 0 ORDER BY a.CREATE_TIME DESC limit #{offset}, #{limit}
+    </select>
+
+    <select id="acticleDetailForPc" resultType="Map" parameterType="Map">
+        select a.title , a.tag_info as tagInfo , a.content , a.CREATE_TIME as createTime from platform.businessman_acticle a WHERE a.id = #{id}
+    </select>
 </mapper>
