@@ -1,6 +1,10 @@
 package com.yonghui.portal.model.channelTransparency;
 
-public class Firm {
+import java.io.Serializable;
+
+public class Firm implements Serializable {
+
+	private static final long serialVersionUID = -4348575981742078466L;
 	private int groupid;
 	private String groupname;
 	private String gname;

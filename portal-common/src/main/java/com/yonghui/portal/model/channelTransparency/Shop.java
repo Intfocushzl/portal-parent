@@ -1,6 +1,10 @@
 package com.yonghui.portal.model.channelTransparency;
 
-public class Shop {
+import java.io.Serializable;
+
+public class Shop implements Serializable{
+
+	private static final long serialVersionUID = 18009587126981594L;
 	private String shopId;
 	private String shopName;
 	

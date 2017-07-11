@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yonghui.portal.mapper.channelTransparency.OdsHanaHtsrMapper" >
+
+  <resultMap id="BaseResultMap" type="com.yonghui.portal.model.channelTransparency.OdsHanaHtsr" >
+    <result column="TLX" property="tlx" jdbcType="VARCHAR" />
+    <result column="CPR_CREATE" property="cprCreate" jdbcType="DATE" />
+    <result column="PURCH_ORG" property="purchOrg" jdbcType="VARCHAR" />
+    <result column="TPURCH_ORG" property="tpurchOrg" jdbcType="VARCHAR" />
+    <result column="PUR_GROUP" property="purGroup" jdbcType="VARCHAR" />
+    <result column="TPUR_GROUP" property="tpurGroup" jdbcType="VARCHAR" />
+    <result column="PLANT" property="plant" jdbcType="VARCHAR" />
+    <result column="TPLANT" property="tplant" jdbcType="VARCHAR" />
+    <result column="KNART" property="knart" jdbcType="VARCHAR" />
+    <result column="TKNART" property="tknart" jdbcType="VARCHAR" />
+    <result column="VENDOR" property="vendor" jdbcType="VARCHAR" />
+    <result column="TVENDOR" property="tvendor" jdbcType="VARCHAR" />
+    <result column="TZOPC0009" property="tzopc0009" jdbcType="VARCHAR" />
+    <result column="ZOPC2000" property="zopc2000" jdbcType="VARCHAR" />
+    <result column="ZPURC025" property="zpurc025" jdbcType="VARCHAR" />
+    <result column="GM_VLD_FR" property="gmVldFr" jdbcType="DATE" />
+    <result column="TMC_ENDDA" property="tmcEndda" jdbcType="DATE" />
+    <result column="AMOUNT" property="amount" jdbcType="DOUBLE" />
+    <result column="updateTime" property="updatetime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  
+  <select id="tlxList" resultType="Map">
+  		SELECT h.TLX,h.TLX from ods.ods_hana_htsr h GROUP BY h.TLX;
+  </select>
+  
+  <select id="purchOrgList" resultType="Map">
+  		SELECT h.PURCH_ORG,h.TPURCH_ORG from ods.ods_hana_htsr h GROUP BY h.PURCH_ORG;
+  </select>
+  
+  <select id="purGourpList" resultType="Map">
+		SELECT h.PUR_GROUP,h.TPUR_GROUP from ods.ods_hana_htsr h GROUP BY h.PUR_GROUP;
+  </select>
+  
+  <select id="getAllGalleryCost" parameterType="Map" resultMap="BaseResultMap">
+  		SELECT * from ods.ods_hana_htsr h WHERE 1=1 
+  		<if test="tlx !='all'">
+  		 and h.TLX = #{tlx} 
+  		</if>
+  		<if test="purchOrg !='all'">
+			AND h.PURCH_ORG in
+			<foreach collection="purchOrg" item="item" open="(" separator=","
+				close=")">
+				'${item}'
+			</foreach>
+		</if>
+  		<if test="purGroup != 'all'">
+  			AND h.PUR_GROUP = #{purGroup} 
+  		</if>
+  		<if test="plant != 'all'">
+  			and h.PLANT = #{plant} 
+  		</if>
+  		<if test="sDate != 'all' and eDate != 'all' ">
+  			and h.CPR_CREATE between DATE_FORMAT(#{sDate},"%Y%m%d") and DATE_FORMAT(#{eDate},"%Y%m%d")
+  		</if>	
+  		<!-- GROUP BY h.ZOPC2000; -->
+  </select>
+  
+  <select id="getAllZopc" resultMap="BaseResultMap" parameterType="java.lang.String">
+  		select * from ods.ods_hana_htsr h WHERE h.ZOPC2000 = #{zopc};
+  </select>
+  
+  
+  <insert id="insert" parameterType="com.yonghui.portal.model.channelTransparency.OdsHanaHtsr" >
+    insert into ods_hana_htsr (TLX, CPR_CREATE, PURCH_ORG, 
+      TPURCH_ORG, PUR_GROUP, TPUR_GROUP, 
+      PLANT, TPLANT, KNART, 
+      TKNART, VENDOR, TVENDOR, 
+      TZOPC0009, ZOPC2000, ZPURC025, 
+      GM_VLD_FR, TMC_ENDDA, AMOUNT, 
+      updateTime)
+    values (#{tlx,jdbcType=VARCHAR}, #{cprCreate,jdbcType=DATE}, #{purchOrg,jdbcType=VARCHAR}, 
+      #{tpurchOrg,jdbcType=VARCHAR}, #{purGroup,jdbcType=VARCHAR}, #{tpurGroup,jdbcType=VARCHAR}, 
+      #{plant,jdbcType=VARCHAR}, #{tplant,jdbcType=VARCHAR}, #{knart,jdbcType=VARCHAR}, 
+      #{tknart,jdbcType=VARCHAR}, #{vendor,jdbcType=VARCHAR}, #{tvendor,jdbcType=VARCHAR}, 
+      #{tzopc0009,jdbcType=VARCHAR}, #{zopc2000,jdbcType=VARCHAR}, #{zpurc025,jdbcType=VARCHAR}, 
+      #{gmVldFr,jdbcType=DATE}, #{tmcEndda,jdbcType=DATE}, #{amount,jdbcType=DOUBLE}, 
+      #{updatetime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.yonghui.portal.model.channelTransparency.OdsHanaHtsr" >
+    insert into ods_hana_htsr
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="tlx != null" >
+        TLX,
+      </if>
+      <if test="cprCreate != null" >
+        CPR_CREATE,
+      </if>
+      <if test="purchOrg != null" >
+        PURCH_ORG,
+      </if>
+      <if test="tpurchOrg != null" >
+        TPURCH_ORG,
+      </if>
+      <if test="purGroup != null" >
+        PUR_GROUP,
+      </if>
+      <if test="tpurGroup != null" >
+        TPUR_GROUP,
+      </if>
+      <if test="plant != null" >
+        PLANT,
+      </if>
+      <if test="tplant != null" >
+        TPLANT,
+      </if>
+      <if test="knart != null" >
+        KNART,
+      </if>
+      <if test="tknart != null" >
+        TKNART,
+      </if>
+      <if test="vendor != null" >
+        VENDOR,
+      </if>
+      <if test="tvendor != null" >
+        TVENDOR,
+      </if>
+      <if test="tzopc0009 != null" >
+        TZOPC0009,
+      </if>
+      <if test="zopc2000 != null" >
+        ZOPC2000,
+      </if>
+      <if test="zpurc025 != null" >
+        ZPURC025,
+      </if>
+      <if test="gmVldFr != null" >
+        GM_VLD_FR,
+      </if>
+      <if test="tmcEndda != null" >
+        TMC_ENDDA,
+      </if>
+      <if test="amount != null" >
+        AMOUNT,
+      </if>
+      <if test="updatetime != null" >
+        updateTime,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="tlx != null" >
+        #{tlx,jdbcType=VARCHAR},
+      </if>
+      <if test="cprCreate != null" >
+        #{cprCreate,jdbcType=DATE},
+      </if>
+      <if test="purchOrg != null" >
+        #{purchOrg,jdbcType=VARCHAR},
+      </if>
+      <if test="tpurchOrg != null" >
+        #{tpurchOrg,jdbcType=VARCHAR},
+      </if>
+      <if test="purGroup != null" >
+        #{purGroup,jdbcType=VARCHAR},
+      </if>
+      <if test="tpurGroup != null" >
+        #{tpurGroup,jdbcType=VARCHAR},
+      </if>
+      <if test="plant != null" >
+        #{plant,jdbcType=VARCHAR},
+      </if>
+      <if test="tplant != null" >
+        #{tplant,jdbcType=VARCHAR},
+      </if>
+      <if test="knart != null" >
+        #{knart,jdbcType=VARCHAR},
+      </if>
+      <if test="tknart != null" >
+        #{tknart,jdbcType=VARCHAR},
+      </if>
+      <if test="vendor != null" >
+        #{vendor,jdbcType=VARCHAR},
+      </if>
+      <if test="tvendor != null" >
+        #{tvendor,jdbcType=VARCHAR},
+      </if>
+      <if test="tzopc0009 != null" >
+        #{tzopc0009,jdbcType=VARCHAR},
+      </if>
+      <if test="zopc2000 != null" >
+        #{zopc2000,jdbcType=VARCHAR},
+      </if>
+      <if test="zpurc025 != null" >
+        #{zpurc025,jdbcType=VARCHAR},
+      </if>
+      <if test="gmVldFr != null" >
+        #{gmVldFr,jdbcType=DATE},
+      </if>
+      <if test="tmcEndda != null" >
+        #{tmcEndda,jdbcType=DATE},
+      </if>
+      <if test="amount != null" >
+        #{amount,jdbcType=DOUBLE},
+      </if>
+      <if test="updatetime != null" >
+        #{updatetime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+</mapper>

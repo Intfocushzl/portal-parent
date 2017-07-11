@@ -1,9 +1,12 @@
 package com.yonghui.portal.model.channelTransparency;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class ShopImgVO {
-	
+public class ShopImgVO implements Serializable {
+
+
+	private static final long serialVersionUID = -3054937546024831815L;
 	private Integer id;
 	private String shopid;
 	private String imgurl;
