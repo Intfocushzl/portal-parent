@@ -646,10 +646,4 @@ public class AppMenusController extends AbstractController {
         }
     }
 
-    @RequestMapping("/getNextMenuId")
-    public R getNextMenuId() {
-        //查询菜单的下一个菜单ID
-        Long nextMenuId = appMenusService.getNextMenuId();
-        return R.success().put("nextMenuId", nextMenuId);
-    }
 }
