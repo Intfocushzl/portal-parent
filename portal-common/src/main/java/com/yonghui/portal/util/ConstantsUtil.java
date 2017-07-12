@@ -1,6 +1,5 @@
 package com.yonghui.portal.util;
 
-
 /**
  * 常量定义
  * <p>
@@ -41,6 +40,33 @@ public class ConstantsUtil {
     public abstract class ExecuteType {
         public static final int PROCEDURE = 1;     //存储过程
         public static final int EXECUTESQL = 2;     //自定义sql
+    }
+
+    public static final String APP_BASE_URL = "http://yonghui-test.idata.mobi/api/v2";
+
+    //APP的常量接口
+    public abstract class AppBaseUrl {
+        //菜单
+//        public static final String APP_BASE_GET_REPORT_URL = APP_BASE_URL + "/reports";      //获取生意概况菜单列表
+        public static final String APP_BASE_GET_KPI_URL = APP_BASE_URL + "/kpis";      //仪表盘列表
+        public static final String APP_BASE_GET_ANALYSE_URL = APP_BASE_URL + "/analyses";      //获取报表菜单列表
+        public static final String APP_BASE_GET_APP_URL = APP_BASE_URL + "/apps";      //获取专题菜单列表
+//        public static final String APP_BASE_POST_REPORT_URL = APP_BASE_URL + "/report";      //创建生意概况菜单
+        public static final String APP_BASE_POST_KPI_URL = APP_BASE_URL + "/kpi";      //仪表盘
+        public static final String APP_BASE_POST_ANALYSE_URL = APP_BASE_URL + "/analyse";      //创建报表菜单
+        public static final String APP_BASE_POST_APP_URL = APP_BASE_URL + "/app";      //创建专题菜单
+        //角色
+        public static final String APP_BASE_GET_ROLE_URL = APP_BASE_URL + "/roles";      //获取角色列表
+        public static final String APP_BASE_POST_ROLE_URL = APP_BASE_URL + "/role";      //创建角色
+        //菜单与角色
+        //角色与菜单
+        //群组
+        public static final String APP_BASE_GET_GROUP_URL = APP_BASE_URL + "/groups";      //获取群组列表
+        public static final String APP_BASE_POST_GROUP_URL = APP_BASE_URL + "/group";      //创建群组
+        //用户
+        public static final String APP_BASE_GET_USER_URL = APP_BASE_URL + "/users";      //获取用户列表
+        public static final String APP_BASE_POST_USER_URL = APP_BASE_URL + "/user";      //创建用户
+        //用户与角色
     }
 
 }
