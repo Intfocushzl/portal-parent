@@ -27,4 +27,8 @@ public interface ApiActicleService {
 	List<Map<String, Object>> acticleDetail(Map<String, Object> map);
 
     List<BusinessmanSubjectInfo> acticleSubjectSelected();
+
+	List<Map<String, Object>> acticleListForPc(Map<String, Object> map);
+
+	List<Map<String, Object>> acticleDetailForPc(Map<String, Object> map);
 }

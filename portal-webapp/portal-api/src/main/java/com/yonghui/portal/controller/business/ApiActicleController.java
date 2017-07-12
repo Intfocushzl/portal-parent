@@ -114,4 +114,43 @@ public class ApiActicleController {
         }
         return nodeList;
     }
+
+    /**
+     * pc数据学院列表
+     * @param req
+     * @param response
+     * @param params
+     * @return
+     */
+    @RequestMapping(value = "acticleListForPc", method = RequestMethod.GET)
+    public R acticleListForPc(HttpServletRequest req, HttpServletResponse response, @RequestParam Map<String, Object> params) {
+        PageUtils pageUtil = null;
+        try {
+            ApiQuery query = new ApiQuery(params);
+            List<Map<String, Object>> acticleList = apiActicleService.acticleListForPc(query);
+            int total = apiActicleService.queryTotal(query);
+            pageUtil = new PageUtils(acticleList, total, query.getLimit(), query.getPage());
+        } catch (Exception e) {
+            return R.error("获取文章信息失败");
+        }
+        return R.success().put("page", pageUtil);
+    }
+
+    /**
+     * pc数据学院详情
+     * @param req
+     * @param response
+     * @param params
+     * @return
+     */
+    @RequestMapping(value = "acticleDetailForPc", method = RequestMethod.GET)
+    public R acticleDetailForPc(HttpServletRequest req, HttpServletResponse response, @RequestParam Map<String, Object> params) {
+        List<Map<String, Object>> acticleDetail = null;
+        try {
+            acticleDetail = apiActicleService.acticleDetailForPc(params);
+        } catch (Exception e) {
+            return R.error("获取文章信息失败");
+        }
+        return R.success(acticleDetail);
+    }
 }

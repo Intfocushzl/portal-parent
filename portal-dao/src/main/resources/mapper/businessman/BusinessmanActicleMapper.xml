@@ -189,21 +189,28 @@
         </foreach>
     </delete>
 
-
     <select id="acticleListForPc" resultType="Map" parameterType="Map">
-        SELECT a.id , a.author , a.cover_img AS coverImg, a.score, a.title
+        SELECT a.id , a.author , a.cover_img AS image, a.score, a.title
         from platform.businessman_acticle a WHERE
         <if test="keyWord != null and keyWord !=''">
             (a.tag_info LIKE concat('%',#{keyWord},'%') OR a.title LIKE concat('%',#{keyWord},'%') OR a.content LIKE
             concat('%',#{keyWord},'%')) AND
         </if>
         <if test="subjectId != null and subjectId !=''">
-            a.subject_id = #{subjectId}
+            a.subject_id = #{subjectId} AND
         </if>
         a.acticle_type= 2 AND a.status = 2 AND a.DISABLED = 0 ORDER BY a.CREATE_TIME DESC limit #{offset}, #{limit}
     </select>
 
     <select id="acticleDetailForPc" resultType="Map" parameterType="Map">
-        select a.title , a.tag_info as tagInfo , a.content , a.CREATE_TIME as createTime from platform.businessman_acticle a WHERE a.id = #{id}
+       SELECT a.title,a.cover_img AS image,a.author,a.score,a.abstracts,a.content,a.attach_video AS video, b.full_path ,
+         case c.fav WHEN '0' then '1' else '0' end as favorite
+         FROM platform.businessman_acticle a
+         LEFT JOIN platform.businessman_subject_info b
+         ON a.subject_id = b.id
+         LEFT JOIN ( SELECT a.id, 0 as fav from platform.businessman_acticle a,platform.businessman_favorites b where a.id =
+        b.acticle_id and b.user_id = #{jobNumber} and b.`status`=1 ) c
+      ON a.id = c.id
+     WHERE a.id = #{acticleId};
     </select>
 </mapper>
