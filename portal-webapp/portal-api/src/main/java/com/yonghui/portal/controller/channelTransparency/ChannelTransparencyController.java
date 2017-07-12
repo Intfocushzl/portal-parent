@@ -729,7 +729,7 @@ public class ChannelTransparencyController {
      * @return
      * @throws IOException
      */
-    @RequestMapping(value = "/edit.do", produces = "application/String; charset=utf-8")
+    @RequestMapping(value = "/edit.do")
     public R edit(HttpServletRequest req, String id, Map<String, Object> model) throws IOException {
         ShopDisVO shopDisVO = new ShopDisVO();
         Map<String, Object> map = new HashMap<>();
@@ -746,9 +746,9 @@ public class ChannelTransparencyController {
      * @param id
      * @param model
      * @return
-     * @throws IOException
+     * @throeditShopRack.dows IOException
      */
-    @RequestMapping(value = "/editShopRack.do", produces = "application/String; charset=utf-8")
+    @RequestMapping(value = "/editShopRack.do")
     public R editShopRack(HttpServletRequest req, String id, Map<String, Object> model) throws IOException {
         ShopRackVO shopRackVO = new ShopRackVO();
         Map<String, Object> map = new HashMap<>();

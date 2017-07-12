@@ -9,6 +9,7 @@ import com.yonghui.portal.util.R;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
@@ -17,7 +18,7 @@ import java.util.List;
 import java.util.Map;
 
 
-@Controller
+@RestController
 @RequestMapping(value="/bravo/odsHanaHtsr")
 public class OdsHanaHtsrController {
 
