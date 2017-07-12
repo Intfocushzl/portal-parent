@@ -163,9 +163,9 @@
   </update>
   
   
-<!--   <select id="listGroup" resultType="Map">
+   <select id="listGroup" resultType="Map">
 		select id as id ,name as text  from platform.dateno_group where type = 'group'
-  </select> -->
+  </select>
 	
 	
  <select id="listDateNo" resultType="Map">

@@ -35,6 +35,12 @@
     <div v-show="!showList" class="panel panel-default">
 		<div class="panel-heading">{{title}}</div>
 		<form class="form-horizontal">
+            <div class="form-group">
+                <div class="col-sm-2 control-label">群组ID</div>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" v-model="appGroups.groupId" placeholder="群组ID"/>
+                </div>
+            </div>
 			<div class="form-group">
 			   	<div class="col-sm-2 control-label">群组名</div>
 			   	<div class="col-sm-10">

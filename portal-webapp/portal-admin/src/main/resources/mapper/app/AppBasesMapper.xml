@@ -11,7 +11,7 @@
 		<result property="url" column="url"/>
 		<result property="createUser" column="create_user"/>
 		<result property="updateUser" column="update_user"/>
-		<result property="updateAt" column="update_at"/>
+		<result property="updatedAt" column="updated_at"/>
 		<result property="memo" column="memo"/>
 		<result property="loadTime" column="load_time"/>
 		<result property="createdAt" column="created_at"/>
@@ -56,7 +56,7 @@
 		`group_order`,
 		`item_order`,
 		3 as type
-		from appauthority.app_bases
+        from appauthority.app_bases
 		<where>
 			<if test="menuId != null and menuId !=''">
 				and group_id = #{menuId}
@@ -136,7 +136,7 @@
 			<if test="loadTime != null">`load_time` = #{loadTime},</if>
 			<if test="groupOrder != null">`group_order` = #{groupOrder},</if>
 			<if test="itemOrder != null">`item_order` = #{itemOrder}</if>
-			`update_at` = #{updateAt}
+			`updated_at` = NOW()
 		</set>
 		where group_id = #{menuId}
 	</update>

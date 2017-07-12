@@ -4,28 +4,60 @@ $(function () {
         datatype: "json",                // 后台返回的数据格式
         // 列表标题及列表模型
         colModel: [
-            {label: '类型', name: 'type', index: 'type', width: 80,formatter:function(value){
+            {label: 'ID', name: 'id', index: 'id', width: 80 ,hidden:true },
+            {label: '菜单ID', name: 'menuId', index: 'menuId', width: 80 ,key: true },
+            {label: '一级标题', name: 'type', index: 'type', width: 80,formatter:function(value){
                 if (value==1){
-                    return "仪表盘";
+                    return "生意概况";
                 }
                 if (value==2){
-                    return "分析";
+                    return "报表";
                 }
                 if (value==3){
-                    return "应用";
+                    return "专题";
                 }
             } },
-            {label: '菜单ID', name: 'menuId', index: 'menuId', width: 80 ,key: true },
-            {label: '父菜单', name: 'name', index: 'name', width: 80 },
-            {label: '子菜单', name: 'subName', index: 'subName', width: 80 },
-            {label: 'URL', name: 'url', index: 'url', width: 80 },
-            {label: '创建人', name: 'createUser', index: 'create_user', width: 80 },
-            {label: '创建时间', name: 'createdAt', index: 'created_at', width: 80 },
-            {label: '修改人', name: 'updateUser', index: 'update_user', width: 80 },
-            {label: '修改时间', name: 'updatedAt', index: 'updated_at', width: 80 },
-            {label: '分组排序', name: 'groupOrder', index: 'group_order', width: 80 },
-            {label: '组内排序', name: 'itemOrder', index: 'item_order', width: 80 },
-            {label: '语音更新时间', name: 'audioUpdatedAt', index: 'audio_updated_at', width: 80 }
+            {label: '二级标题', name: 'subName1', index: 'subName1', width: 80 },
+            {label: '三级标题', name: 'subName2', index: 'subName2', width: 80 },
+            {label: '标题', name: 'title', index: 'title', width: 80 },
+            {label: '报表ID', name: 'reportId', index: 'reportId', width: 80 },
+            {label: '模板ID', name: 'templateId', index: 'templateId', width: 80 },
+            {label: '链接地址', name: 'url', index: 'url', width: 80 },
+            {label: '图标', name: 'icon', index: 'icon', width: 80 },
+            {label: '图标地址', name: 'iconUrl', index: 'iconUrl', width: 80 },
+            {label: '是否公开', name: 'publicly', index: 'publicly', width: 80, formatter:function(value){
+                if (value==null){
+                    return "";
+                }
+                return  value?
+                    '<span class="label label-success">是</span> ' :
+                    '<span class="label label-danger">否</span>';
+            }},
+            {label: '语音播报', name: 'hasAudio', index: 'hasAudio', width: 80, formatter:function(value){
+                if (value==null){
+                    return "";
+                }
+                return  value?
+                    '<span class="label label-success">有</span> ' :
+                    '<span class="label label-danger">无</span>';
+            }},
+            {label: '报表健康值', name: 'healthValue', index: 'healthValue', width: 80, formatter:function(value){
+                if (value==null){
+                    return "";
+                }
+                if (value<60){
+                    return  '<span class="label label-danger">'+value+'</span>';
+                }
+                if (value>=90){
+                    return '<span class="label label-success">'+value+'</span>';
+                }
+                return '<span class="label label-info">'+value+'</span>';
+            } },
+            {label: '备注', name: 'remark', index: 'remark', width: 80 },
+            {label: '父菜单排序', name: 'groupOrder', index: 'groupOrder', width: 80 },
+            {label: '子菜单排序', name: 'itemOrder', index: 'itemOrder', width: 80 },
+            {label: '创建时间', name: 'createdAt', index: 'createdAt', width: 80 },
+            {label: '更新时间', name: 'updatedAt', index: 'updatedAt', width: 80 },
         ],
         viewrecords: true,
         height: 385,            // 表格高度
@@ -68,6 +100,7 @@ var vm = new Vue({
         appMenu: {
             type:$("input:radio[name=t]:checked").val()==null?1:$("input:radio[name=t]:checked").val()
         },
+       // nextMenuId:-1,
         kpiList:[],
         analysisList:[],
         appList:[],
@@ -89,23 +122,64 @@ var vm = new Vue({
         add: function(){
             vm.showList = false;
             vm.title = "新增";
-            vm.appMenu = {type:$("input:radio[name=t]:checked").val()==null?1:$("input:radio[name=t]:checked").val()};
+            vm.appMenu = {type:$("input:radio[name=t]:checked").val()==null?1:$("input:radio[name=t]:checked").val(),
+                    id:null
+            };
+            vm.getRoleList(null);
         },
         update: function (event) {
             var id = getSelectedRow();
             if(id == null){
                 return ;
             }
+            // var rowData = $("#jqGrid").jqGrid("getRowData",id);
+            // if(rowData == null){
+            //     return ;
+            // }
+            // if (rowData.publicly.indexOf("是")){
+            //     rowData.publicly=true;
+            // }else if (rowData.publicly.indexOf("否")){
+            //     rowData.publicly=false;
+            // }else {
+            //     rowData.publicly=null;
+            // }
+            // if (rowData.type=="生意概况"){
+            //     rowData.type=1;
+            // }
+            // if (rowData.type=="报表"){
+            //     rowData.type=2;
+            // }
+            // if (rowData.type=="专题"){
+            //     rowData.type=3;
+            // }
+            // rowData.healthValue=0;
+            // vm.appMenu = rowData;
+            var o=new Object();
+            o.type=$("input:radio[name=t]:checked").val();
+            o.menuId=id;
             vm.showList = false;
             vm.title = "修改";
-            var rowData = $("#jqGrid").jqGrid("getRowData",id);
-            if(rowData == null){
-                return ;
-            }
-            vm.getInfo(rowData)
+            vm.getInfo(o);
         },
         saveOrUpdate: function (event) {
-            var url = vm.appMenu.menuId == null ? "../app/menus/save" : "../app/menus/update";
+            var aSpan = $("span.active");
+            var arr = new Array;
+            for(var i = 0; i < aSpan.length; i++) {
+                if(aSpan[i].className == 'active') {
+                    arr.push(aSpan[i].id.substring(4));
+                    if (aSpan[i].id == "undefined") {
+                        alert(aSpan[i].id+"-->PC端无此角色");
+                        return;
+                    }
+                }
+            }
+            console.log(arr);
+            if (arr == "undefined") {
+                alert("请选择角色");
+                return;
+            }
+            vm.appMenu.roleIdList = arr;
+            var url = vm.appMenu.id == null ? "../app/menus/save" : "../app/menus/update";
             $.ajax({
                 type: "POST",
                 url: url,
@@ -130,6 +204,15 @@ var vm = new Vue({
             if(rowData == null){
                 return ;
             }
+            if (rowData.type=="生意概况"){
+                rowData.type=1;
+            }
+            if (rowData.type=="报表"){
+                rowData.type=2;
+            }
+            if (rowData.type=="专题"){
+                rowData.type=3;
+            }
             var  type=rowData.type;
             confirm('确定要删除选中的记录？', function(){
                 var o = new Object();
@@ -152,20 +235,62 @@ var vm = new Vue({
             });
         },
         getInfo: function(params){
+            console.log(params);
             $.get("../app/menus/info",params, function(r){
+                console.log(r.appMenu);
                 vm.appMenu = r.appMenu;
+                vm.getRoleList(params);
             });
         },
         reload: function (event) {
             vm.showList = true;
             var page = $("#jqGrid").jqGrid('getGridParam','page');
             $("#jqGrid").jqGrid('setGridParam',{
-                page:page
+                page:page,
+                type:vm.appMenu.type
             }).trigger("reloadGrid");
+        },
+        getRoleList: function (rowData) {
+            var url="";
+            $.get("../app/menus/selectRole?menuId=" + rowData.menuId, rowData ,function (result) {
+                // var objs = jQuery.parseJSON(); //由JSON字符串转换为JSON对象
+                var objs = result.list;
+                console.log(objs);
+
+                var htmlString = "<p><span class='tags'>";
+                for (var i = 0; i < objs.length; i++) {
+                    if (objs[i].active == 1) {
+                        htmlString += "<span id='span" + objs[i].roleId + "' class='active'  onClick='spanClick(" + objs[i].roleId + ")'>" + objs[i].roleName + "</span>";
+                    } else {
+                        htmlString += "<span id='span" + objs[i].roleId + "'  onClick='spanClick(" + objs[i].roleId + ")'>" + objs[i].roleName + "</span>";
+                    }
+                }
+                htmlString += "</span> </p>";
+                document.getElementById("tagsdlg").innerHTML = htmlString;
+            });
+
         }
     }
 });
 
+
+function spanClick(spanid) {
+
+    if ($("#span" + spanid).hasClass('active')) {
+        $("#span" + spanid).removeClass("active");
+    } else {
+        $("#span" + spanid).addClass("active");
+    }
+    // $("span").each(function () {
+    //     $(this).removeClass("active");
+    // });
+    // $("#span" + spanid).addClass("active");
+}
+
+// $.get("../app/menus/getNextMenuId", function(r){
+//     vm.nextMenuId = r.nextMenuId;
+// });
 $("input:radio[name=t]").change(function () {
     vm.appMenu={type:$("input:radio[name=t]:checked").val()};
+    vm.query();
 });

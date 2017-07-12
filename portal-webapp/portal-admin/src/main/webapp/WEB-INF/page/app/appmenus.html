@@ -3,6 +3,34 @@
 <head>
     <title></title>
     #parse("sys/header.html")
+    <style type="text/css">
+        /* 标签样式 */
+
+        .tags span {
+            font: 12px/22px 'Microsoft Yahei', Arial, Lucida Grande, Tahoma;
+            border: 1px #E3E0D9 solid;
+            display: inline-block;
+            background: #FFF;
+            text-align: center;
+            padding: 2px 7px;
+            margin: 1px 4px;
+            cursor: pointer;
+            -webkit-transition: all .3s ease-in-out;
+            -moz-transition: all .3s ease-in-out;
+            overflow: hidden;
+            color: #989898;
+        }
+
+        .tags span:hover {
+            border-color: #00956d;
+        }
+
+        .tags span.active {
+            color: #FFF;
+            border-color: #00956d;
+            background-color: #00956d;
+        }
+    </style>
 </head>
 <body>
 <div id="rrapp" v-cloak>
@@ -23,13 +51,13 @@
                 </div>
                 <div class="form-group col-sm-2">
                     <label class="radio-inline">
-                        <input type="radio" name="t" value="1" v-model="appMenu.type" checked="true"/> 仪表盘
+                        <input type="radio" name="t" value="1" v-model="appMenu.type" checked="true"/> 生意概况
                     </label>
                     <label class="radio-inline">
-                        <input type="radio" name="t" value="2" v-model="appMenu.type"/> 分析
+                        <input type="radio" name="t" value="2" v-model="appMenu.type"/> 报表
                     </label>
                     <label class="radio-inline">
-                        <input type="radio" name="t" value="3" v-model="appMenu.type"/> 应用
+                        <input type="radio" name="t" value="3" v-model="appMenu.type"/> 专题
                     </label>
                 </div>
                 <a class="btn btn-primary" @click="query">查询</a>
@@ -53,89 +81,92 @@
         <div class="panel-heading">{{title}}</div>
         <form class="form-horizontal">
             <div class="form-group">
-                <div class="col-sm-2 control-label">类型</div>
+                <div class="col-sm-2 control-label"></div>
                 <div class="col-sm-10">
-                    <label class="radio-inline">
-                        <input type="radio" name="type" value="1" v-model="appMenu.type"/> 仪表盘
-                    </label>
-                    <label class="radio-inline">
-                        <input type="radio" name="type" value="2" v-model="appMenu.type"/> 分析
-                    </label>
-                    <label class="radio-inline">
-                        <input type="radio" name="type" value="3" v-model="appMenu.type"/> 应用
-                    </label>
+                    <div type="text" class="form-control">目前只能配置PDF和外部web页面</div>
                 </div>
             </div>
-            <div class="form-group">
+
+            <div v-if="appMenu.id != null" class="form-group">
                 <div class="col-sm-2 control-label">菜单ID</div>
-                <div class="col-sm-10">
-                    <input type="text" class="form-control" v-model="appMenu.menuId" placeholder=""/>
+                <div  class="col-sm-10">
+                    <input type="text" class="form-control" v-model="appMenu.menuId" readonly placeholder=""/>
                 </div>
             </div>
             <div class="form-group">
-                <div class="col-sm-2 control-label">父菜单</div>
+                <div class="col-sm-2 control-label">一级标题</div>
+                <div class="col-sm-10" v-if="appMenu.id != null" >
+                    <label class="radio-inline">
+                        <input type="radio" name="type" value="1" disabled v-model="appMenu.type"/> 生意概况
+                    </label>
+                    <label class="radio-inline">
+                        <input type="radio" name="type" value="2" disabled v-model="appMenu.type"/> 报表
+                    </label>
+                    <label class="radio-inline">
+                        <input type="radio" name="type" value="3" disabled v-model="appMenu.type"/> 专题
+                    </label>
+                </div>
+                <div class="col-sm-10" v-if="appMenu.id == null">
+                    <label class="radio-inline">
+                        <input type="radio" name="type" value="1" v-model="appMenu.type"/> 生意概况
+                    </label>
+                    <label class="radio-inline">
+                        <input type="radio" name="type" value="2" v-model="appMenu.type"/> 报表
+                    </label>
+                    <label class="radio-inline">
+                        <input type="radio" name="type" value="3" v-model="appMenu.type"/> 专题
+                    </label>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-sm-2 control-label">二级标题</div>
                 <div class="col-sm-10">
-                    <input type="text" class="form-control" v-model="appMenu.name" placeholder=""/>
+                    <input type="text" class="form-control" v-model="appMenu.subName1" placeholder=""/>
                 </div>
             </div>
             <div class="form-group">
-                <div class="col-sm-2 control-label">子菜单</div>
+                <div class="col-sm-2 control-label">三级标题</div>
                 <div class="col-sm-10">
-                    <input type="text" class="form-control" v-model="appMenu.subName" placeholder=""/>
+                    <input type="text" class="form-control" v-model="appMenu.subName2" placeholder=""/>
+                </div>
+            </div>
+            <div  class="form-group">
+                <div class="col-sm-2 control-label">标题</div>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" v-model="appMenu.title" placeholder=""/>
                 </div>
             </div>
             <div class="form-group">
-                <div class="col-sm-2 control-label">URL</div>
+                <div class="col-sm-2 control-label">链接地址</div>
                 <div class="col-sm-10">
                     <input type="text" class="form-control" v-model="appMenu.url" placeholder=""/>
                 </div>
             </div>
-            <!--<div class="form-group">-->
-                <!--<div class="col-sm-2 control-label"></div>-->
-                <!--<div class="col-sm-10">-->
-                    <!--<input type="text" class="form-control" v-model="appMenu.ownerDept" placeholder=""/>-->
-                <!--</div>-->
-            <!--</div>-->
-            <!--<div class="form-group">-->
-                <!--<div class="col-sm-2 control-label"></div>-->
-                <!--<div class="col-sm-10">-->
-                    <!--<input type="text" class="form-control" v-model="appMenu.computerDept" placeholder=""/>-->
-                <!--</div>-->
-            <!--</div>-->
-            <div v-if="appMenu.type == 1" class="form-group">
-                <div class="col-sm-2 control-label">盘面数据ID</div>
-                <div class="col-sm-10">
-                    <input type="text" class="form-control" v-model="appMenu.link" placeholder=""/>
-                </div>
-            </div>
-            <div v-if="appMenu.type == 1" class="form-group">
-                <div class="col-sm-2 control-label">盘面数据单位</div>
-                <div class="col-sm-10">
-                    <input type="text" class="form-control" v-model="appMenu.unit" placeholder=""/>
-                </div>
-            </div>
-            <!--<div v-if="appMenu.type == 1" class="form-group">-->
-                <!--<div class="col-sm-2 control-label"></div>-->
-                <!--<div class="col-sm-10">-->
-                    <!--<input type="text" class="form-control" v-model="appMenu.roleIds" placeholder=""/>-->
-                <!--</div>-->
-            <!--</div>-->
             <div class="form-group">
-                <div class="col-sm-2 control-label">父菜单排序</div>
-                <div class="col-sm-10">
-                    <input type="text" class="form-control" v-model="appMenu.groupOrder" placeholder=""/>
+                <div class="col-sm-2 control-label">是否公开</div>
+                <div class="col-sm-10" v-if="appMenu.id != null" >
+                    <label class="radio-inline">
+                        <input type="radio" name="publicly" value="true"  v-model="appMenu.publicly"/> 是
+                    </label>
+                    <label class="radio-inline">
+                        <input type="radio" name="publicly" value="false"  v-model="appMenu.publicly"/> 否
+                    </label>
+                    </label>
+                </div>
+                <div class="col-sm-10" v-if="appMenu.id == null">
+                    <label class="radio-inline">
+                        <input type="radio" name="publicly" value="true" v-model="appMenu.publicly"/> 是
+                    </label>
+                    <label class="radio-inline">
+                        <input type="radio" name="publicly" value="false" v-model="appMenu.publicly"/> 否
+                    </label>
                 </div>
             </div>
             <div class="form-group">
-                <div class="col-sm-2 control-label">子菜单排序</div>
+                <div class="col-sm-2 control-label">所属角色</div>
                 <div class="col-sm-10">
-                    <input type="text" class="form-control" v-model="appMenu.itemOrder" placeholder=""/>
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="col-sm-2 control-label">备注</div>
-                <div class="col-sm-10">
-                    <input type="text" class="form-control" v-model="appMenu.memo" placeholder=""/>
+                    <div id="tagsdlg"></div>
                 </div>
             </div>
             <div class="form-group">

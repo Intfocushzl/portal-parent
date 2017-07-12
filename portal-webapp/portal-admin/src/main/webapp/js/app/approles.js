@@ -4,14 +4,10 @@ $(function () {
         datatype: "json",                // 后台返回的数据格式
         // 列表标题及列表模型
         colModel: [
-            {label: '角色id', name: 'id', index: 'id', width: 50, key: true},
+            {label: '角色id', name: 'id', index: 'id', width: 50},
+            {label: 'PC角色id', name: 'roleId', index: 'roleId', width: 50, key: true},
             {label: '角色名', name: 'roleName', index: 'role_name', width: 80},
-            {label: '备注', name: 'memo', index: 'memo', width: 80},
-            {label: '加载时间', name: 'loadTime', index: 'load_time', width: 80},
-            {label: '创建人', name: 'createUser', index: 'create_user', width: 80},
-            {label: '创建时间', name: 'createdAt', index: 'created_at', width: 80},
-            {label: '更新人', name: 'updateUser', index: 'update_user', width: 80},
-            {label: '更新时间', name: 'updatedAt', index: 'updated_at', width: 80},
+            {label: '备注说明', name: 'memo', index: 'memo', width: 80}
         ],
         viewrecords: true,
         height: 385,            // 表格高度
@@ -100,7 +96,8 @@ var vm = new Vue({
             vm.showList = false;
             vm.title = "新增";
             vm.appRoles = {};
-            vm.getMenuTree(null);
+            // vm.getMenuTree(null);
+
         },
         update: function (event) {
             var id = getSelectedRow();
@@ -110,7 +107,8 @@ var vm = new Vue({
             vm.showList = false;
             vm.title = "修改";
 
-            vm.getMenuTree(id);
+            // vm.getMenuTree(id);
+            vm.getInfo(id);
         },
         saveOrUpdate: function (event) {
             //获取选择的菜单
@@ -166,15 +164,17 @@ var vm = new Vue({
             });
         },
         getInfo: function (id) {
-            $.get("../app/roles/info/" + id, function (r) {
+            $.get("../app/roles/info/"+id, function (r) {
+                console.log(r);
                 vm.appRoles = r.appRoles;
-                //勾选角色所拥有的菜单
-                var menuIds = vm.appRoles.menuList;
-                for (var i = 0; i < menuIds.length; i++) {
-                    var parentNode = ztree.getNodeByParam("id", (-1) *(menuIds[i].obj_type));
-                    var node = ztree.getNodeByParam("id", menuIds[i].menu_id,parentNode);
-                    ztree.checkNode(node, true, false);
-                }
+                // //勾选角色所拥有的菜单
+                // var menuIds = vm.appRoles.menuList;
+                // for (var i = 0; i < menuIds.length; i++) {
+                //     var parentNode = ztree.getNodeByParam("id", (-1) *(menuIds[i].obj_type));
+                //     var scendNode = ztree.getNodeByParam("second", menuIds[i].menu_id,parentNode);
+                //     var node = ztree.getNodeByParam("id", menuIds[i].menu_id,scendNode);
+                //     ztree.checkNode(node, true, false);
+                // }
             });
         },
         reload: function (event) {
@@ -185,16 +185,16 @@ var vm = new Vue({
             }).trigger("reloadGrid");
         },
         getMenuTree: function (roleId) {
-            //加载菜单树
-            $.get("../app/menus/select", function (r) {
-                ztree = $.fn.zTree.init($("#menuTree"), setting, r.appMenuList);
-                //展开所有节点
-                ztree.expandAll(false);
-
-                    if (roleId != null) {
-                        vm.getInfo(roleId);
-                    }
-            });
+            // //加载菜单树
+            // $.get("../app/menus/select", function (r) {
+            //     ztree = $.fn.zTree.init($("#menuTree"), setting, r.appMenuList);
+            //     //展开所有节点
+            //     ztree.expandAll(false);
+            //
+            //         if (roleId != null) {
+            //             vm.getInfo(roleId);
+            //         }
+            // });
         },
     }
 });

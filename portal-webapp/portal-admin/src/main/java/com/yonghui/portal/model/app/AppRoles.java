@@ -19,6 +19,8 @@ public class AppRoles implements Serializable {
     private Integer id;
     //角色名称
     private String roleName;
+    //对应的PC端的角色ID
+    private Integer roleId;
     //创建人
     private Integer createUser;
     //修改人
@@ -28,7 +30,7 @@ public class AppRoles implements Serializable {
     //
     private Date loadTime;
     //创建时间
-    private Date createdAt;
+    private String createdAt;
     //更新时间
     private Date updatedAt;
      
@@ -65,6 +67,15 @@ public class AppRoles implements Serializable {
     public String getRoleName() {
             return roleName;
             }
+
+    public Integer getRoleId() {
+        return roleId;
+    }
+
+    public void setRoleId(Integer roleId) {
+        this.roleId = roleId;
+    }
+
     /**
      * 设置：
      */
@@ -116,13 +127,13 @@ public class AppRoles implements Serializable {
     /**
      * 设置：
      */
-    public void setCreatedAt(Date createdAt) {
+    public void setCreatedAt(String createdAt) {
             this.createdAt = createdAt;
             }
     /**
      * 获取：
      */
-    public Date getCreatedAt() {
+    public String getCreatedAt() {
             return createdAt;
             }
     /**

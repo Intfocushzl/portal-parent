@@ -1,8 +1,12 @@
 package com.yonghui.portal.model.channelTransparency;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class OdsHanaHtsr {
+public class OdsHanaHtsr implements Serializable {
+
+
+	private static final long serialVersionUID = -2555798664139943425L;
 	private String tlx;
 
 	private String cprCreate;

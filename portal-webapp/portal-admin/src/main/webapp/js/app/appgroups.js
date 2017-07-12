@@ -4,14 +4,12 @@ $(function () {
         datatype: "json",                // 后台返回的数据格式
         // 列表标题及列表模型
         colModel: [
-            {label: '群组ID', name: 'id', index: 'id', width: 50, key: true },
-            {label: '群组名', name: 'groupName', index: 'group_name', width: 80 },
+            {label: 'ID', name: 'id', index: 'id', width: 50, key: true },
+            {label: '群组ID', name: 'groupId', index: 'groupId', width: 50 },
+            {label: '群组名', name: 'groupName', index: 'groupName', width: 80 },
             {label: '备注', name: 'memo', index: 'memo', width: 80 },
-            {label: '加载时间', name: 'loadTime', index: 'load_time', width: 80 },
-            {label: '创建人', name: 'createUser', index: 'create_user', width: 80 },
-            {label: '创建时间', name: 'createdAt', index: 'created_at', width: 80 },
-            {label: '更新人', name: 'updateUser', index: 'update_user', width: 80 },
-            {label: '更新时间', name: 'updatedAt', index: 'updated_at', width: 80 }
+            {label: '创建时间', name: 'createdAt', index: 'createdAt', width: 80 },
+            {label: '更新时间', name: 'updatedAt', index: 'updatedAt', width: 80 }
         ],
         viewrecords: true,
         height: 385,            // 表格高度

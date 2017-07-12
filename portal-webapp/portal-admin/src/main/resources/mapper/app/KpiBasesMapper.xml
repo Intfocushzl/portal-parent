@@ -3,34 +3,13 @@
 
 <mapper namespace="com.yonghui.portal.mapper.app.KpiBasesMapper">
 
-    <!-- 可根据自己的需求，是否要使用 -->
-    <resultMap id="kpiBasesMap" type="com.yonghui.portal.model.app.AppMenu">
-        <result property="id" column="id"/>
-        <result property="menuId" column="menuId"/>
-        <result property="name" column="name"/>
-        <result property="subName" column="subName"/>
-        <result property="url" column="url"/>
-        <result property="ownerDept" column="owner_dept"/>
-        <result property="computerDept" column="computer_dept"/>
-        <result property="link" column="link"/>
-        <result property="roleIds" column="role_ids"/>
-        <result property="createUser" column="create_user"/>
-        <result property="updateUser" column="update_user"/>
-        <result property="memo" column="memo"/>
-        <result property="loadTime" column="load_time"/>
-        <result property="createdAt" column="created_at"/>
-        <result property="updatedAt" column="updated_at"/>
-        <result property="groupOrder" column="group_order"/>
-        <result property="itemOrder" column="item_order"/>
-        <result property="audioUpdatedAt" column="audio_updated_at"/>
-        <result property="type" column="type"/>
-    </resultMap>
 
     <select id="queryObject" resultType="com.yonghui.portal.model.app.AppMenu">
 		select
 			`kpi_id` as menuId,
-			`kpi_group` as name,
+			`kpi_group` as `name`,
 			`kpi_name` as subName,
+			`kpi_name` as sonName,
 			'' as url,
 			`owner_dept`,
 			`computer_dept`,
@@ -44,7 +23,7 @@
 			`item_order`,
 			`audio_updated_at`
 			,1 as type
-		from appauthority.kpi_bases where kpi_id = #{value}
+		    from appauthority.kpi_bases  where kpi_id = #{value}
 	</select>
 
     <select id="queryList" resultType="com.yonghui.portal.model.app.AppMenu">
@@ -105,41 +84,43 @@
         </where>
     </select>
 
-    <insert id="save" parameterType="com.yonghui.portal.model.app.AppMenu" useGeneratedKeys="true" keyProperty="kpi_id">
+    <insert id="save" parameterType="com.yonghui.portal.model.app.AppMenu">
 		insert into appauthority.kpi_bases
 		(
+		    `id`,
 			`kpi_id`,
 			`kpi_group`,
-			`kpi_name`, 
+			`kpi_name`,
 			`owner_dept`,
-			`computer_dept`, 
+			`computer_dept`,
 			`link`,
 			`unit`,
 			`role_ids`,
-			`create_user`, 
+			`create_user`,
 			`memo`,
-			`load_time`, 
-			`created_at`, 
+			`load_time`,
+			`created_at`,
 			`group_order`,
-			`item_order`, 
+			`item_order`,
 			`audio_updated_at`
 		)
 		values
 		(
+		    #{id},
 			#{menuId},
 			#{name},
 			#{subName},
 			#{ownerDept},
-			#{computerDept}, 
+			#{computerDept},
 			#{link},
 			#{unit},
 			#{roleIds},
-			#{createUser}, 
+			#{createUser},
 			#{memo},
-			#{loadTime}, 
+			#{loadTime},
 			now(),
 			#{groupOrder},
-			#{itemOrder}, 
+			#{itemOrder},
 			#{audioUpdatedAt}
 		)
 	</insert>
@@ -159,7 +140,7 @@
             <if test="groupOrder != null">`group_order` = #{groupOrder},</if>
             <if test="itemOrder != null">`item_order` = #{itemOrder},</if>
             <if test="audioUpdatedAt != null">`audio_updated_at` = #{audioUpdatedAt},</if>
-            `update_at` = now();
+            `updated_at` = now()
         </set>
         where kpi_id = #{menuId}
     </update>
