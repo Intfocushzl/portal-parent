@@ -47,10 +47,12 @@ public class ConstantsUtil {
     //APP的常量接口
     public abstract class AppBaseUrl {
         //菜单
-        public static final String APP_BASE_GET_REPORT_URL = APP_BASE_URL + "/reports";      //获取生意概况菜单列表
+//        public static final String APP_BASE_GET_REPORT_URL = APP_BASE_URL + "/reports";      //获取生意概况菜单列表
+        public static final String APP_BASE_GET_KPI_URL = APP_BASE_URL + "/kpis";      //仪表盘列表
         public static final String APP_BASE_GET_ANALYSE_URL = APP_BASE_URL + "/analyses";      //获取报表菜单列表
         public static final String APP_BASE_GET_APP_URL = APP_BASE_URL + "/apps";      //获取专题菜单列表
-        public static final String APP_BASE_POST_REPORT_URL = APP_BASE_URL + "/report";      //创建生意概况菜单
+//        public static final String APP_BASE_POST_REPORT_URL = APP_BASE_URL + "/report";      //创建生意概况菜单
+        public static final String APP_BASE_POST_KPI_URL = APP_BASE_URL + "/kpi";      //仪表盘
         public static final String APP_BASE_POST_ANALYSE_URL = APP_BASE_URL + "/analyse";      //创建报表菜单
         public static final String APP_BASE_POST_APP_URL = APP_BASE_URL + "/app";      //创建专题菜单
         //角色

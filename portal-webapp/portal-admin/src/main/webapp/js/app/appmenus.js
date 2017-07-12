@@ -6,7 +6,7 @@ $(function () {
         colModel: [
             {label: 'ID', name: 'id', index: 'id', width: 80 ,hidden:true },
             {label: '菜单ID', name: 'menuId', index: 'menuId', width: 80 ,key: true },
-            {label: '一级菜单', name: 'type', index: 'type', width: 80,formatter:function(value){
+            {label: '一级标题', name: 'type', index: 'type', width: 80,formatter:function(value){
                 if (value==1){
                     return "生意概况";
                 }
@@ -17,9 +17,9 @@ $(function () {
                     return "专题";
                 }
             } },
-            {label: '二级菜单', name: 'subName1', index: 'subName1', width: 80 },
-            {label: '三级菜单', name: 'subName2', index: 'subName2', width: 80 },
-            {label: '四级菜单', name: 'title', index: 'title', width: 80 },
+            {label: '二级标题', name: 'subName1', index: 'subName1', width: 80 },
+            {label: '三级标题', name: 'subName2', index: 'subName2', width: 80 },
+            {label: '标题', name: 'title', index: 'title', width: 80 },
             {label: '报表ID', name: 'reportId', index: 'reportId', width: 80 },
             {label: '模板ID', name: 'templateId', index: 'templateId', width: 80 },
             {label: '链接地址', name: 'url', index: 'url', width: 80 },
@@ -251,9 +251,6 @@ var vm = new Vue({
             }).trigger("reloadGrid");
         },
         getRoleList: function (rowData) {
-            if(rowData==null||rowData.type==1){
-                return;
-            }
             var url="";
             $.get("../app/menus/selectRole?menuId=" + rowData.menuId, rowData ,function (result) {
                 // var objs = jQuery.parseJSON(); //由JSON字符串转换为JSON对象

@@ -59,7 +59,7 @@ public class AppMenusController extends AbstractController {
             String result = "";
             switch (type) {
                 case 1:
-                    result = httpUtil.getGetResult(ConstantsUtil.AppBaseUrl.APP_BASE_GET_REPORT_URL, map);
+                    result = httpUtil.getGetResult(ConstantsUtil.AppBaseUrl.APP_BASE_GET_KPI_URL, map);
                     break;
                 case 2:
                     result = httpUtil.getGetResult(ConstantsUtil.AppBaseUrl.APP_BASE_GET_ANALYSE_URL, map);
@@ -84,32 +84,31 @@ public class AppMenusController extends AbstractController {
                         appMenu.setMenuId(id);
                         switch (type) {
                             case 1:
-                                String title = array.getJSONObject(i).getString("title");
-                                appMenu.setSubName1(StringUtils.isEmpty(title) ? "" : title);
+                                String subName2=array.getJSONObject(i).getString("kpi_group");
+                                appMenu.setSubName2(subName2);
+                                String title = array.getJSONObject(i).getString("kpi_name");
+                                appMenu.setTitle(StringUtils.isEmpty(title) ? "" : title);
                                 Integer reportId = array.getJSONObject(i).getInteger("report_id");
                                 appMenu.setReportId(reportId);
                                 Integer templateId = array.getJSONObject(i).getInteger("template_id");
                                 appMenu.setTemplateId(templateId);
                                 Boolean hasAudio = array.getJSONObject(i).getBoolean("has_audio");
                                 appMenu.setHasAudio(hasAudio);
+                                String url = array.getJSONObject(i).getString("url");
+                                appMenu.setUrl(StringUtils.isEmpty(url) ? "" : url);
                                 break;
                             case 2:
                                 String category = array.getJSONObject(i).getString("category");
                                 appMenu.setSubName1(StringUtils.isEmpty(category) ? "" : category);
+                            case 3:
                                 String group_name = array.getJSONObject(i).getString("group_name");
                                 appMenu.setSubName2(StringUtils.isEmpty(group_name) ? "" : group_name);
                                 String name = array.getJSONObject(i).getString("name");
                                 appMenu.setTitle(StringUtils.isEmpty(name) ? "" : name);
-                                break;
-                            case 3:
-                                String group_name3 = array.getJSONObject(i).getString("group_name");
-                                appMenu.setSubName1(StringUtils.isEmpty(group_name3) ? "" : group_name3);
-                                String name3 = array.getJSONObject(i).getString("name");
-                                appMenu.setSubName2(StringUtils.isEmpty(name3) ? "" : name3);
+                                String link_path = array.getJSONObject(i).getString("link_path");
+                                appMenu.setUrl(StringUtils.isEmpty(link_path) ? "" : link_path);
                                 break;
                         }
-                        String link_path = array.getJSONObject(i).getString("link_path");
-                        appMenu.setUrl(StringUtils.isEmpty(link_path) ? "" : link_path);
                         String icon = array.getJSONObject(i).getString("icon");
                         appMenu.setIcon(StringUtils.isEmpty(icon) ? "" : icon);
                         String icon_link = array.getJSONObject(i).getString("icon_link");
@@ -187,7 +186,7 @@ public class AppMenusController extends AbstractController {
             String result = "";
             switch (type) {
                 case 1:
-                    result = httpUtil.getGetResult(ConstantsUtil.AppBaseUrl.APP_BASE_POST_REPORT_URL+"/"+menuId, map);
+                    result = httpUtil.getGetResult(ConstantsUtil.AppBaseUrl.APP_BASE_POST_KPI_URL+"/"+menuId, map);
                     break;
                 case 2:
                     result = httpUtil.getGetResult(ConstantsUtil.AppBaseUrl.APP_BASE_POST_ANALYSE_URL+"/"+menuId, map);
@@ -207,7 +206,9 @@ public class AppMenusController extends AbstractController {
                     appMenu.setMenuId(id);
                     switch (type) {
                         case 1:
-                            String title = object.getString("title");
+                            String subName2=object.getString("kpi_group");
+                            appMenu.setSubName2(subName2);
+                            String title = object.getString("kpi_name");
                             appMenu.setTitle(StringUtils.isEmpty(title) ? "" : title);
                             Integer reportId = object.getInteger("report_id");
                             appMenu.setReportId(reportId);
@@ -215,24 +216,21 @@ public class AppMenusController extends AbstractController {
                             appMenu.setTemplateId(templateId);
                             Boolean hasAudio = object.getBoolean("has_audio");
                             appMenu.setHasAudio(hasAudio);
+                            String url = object.getString("url");
+                            appMenu.setUrl(StringUtils.isEmpty(url) ? "" : url);
                             break;
                         case 2:
                             String category = object.getString("category");
                             appMenu.setSubName1(StringUtils.isEmpty(category) ? "" : category);
+                        case 3:
                             String group_name = object.getString("group_name");
                             appMenu.setSubName2(StringUtils.isEmpty(group_name) ? "" : group_name);
                             String name = object.getString("name");
                             appMenu.setTitle(StringUtils.isEmpty(name) ? "" : name);
-                            break;
-                        case 3:
-                            String group_name3 = object.getString("group_name");
-                            appMenu.setSubName1(StringUtils.isEmpty(group_name3) ? "" : group_name3);
-                            String name3 = object.getString("name");
-                            appMenu.setSubName2(StringUtils.isEmpty(name3) ? "" : name3);
+                            String link_path = object.getString("link_path");
+                            appMenu.setUrl(StringUtils.isEmpty(link_path) ? "" : link_path);
                             break;
                     }
-                    String link_path = object.getString("link_path");
-                    appMenu.setUrl(StringUtils.isEmpty(link_path) ? "" : link_path);
                     String icon = object.getString("icon");
                     appMenu.setIcon(StringUtils.isEmpty(icon) ? "" : icon);
                     String icon_link = object.getString("icon_link");
@@ -311,7 +309,7 @@ public class AppMenusController extends AbstractController {
             String result = "";
             switch (type) {
                 case 1:
-                    result = httpUtil.getPostJsonResult(ConstantsUtil.AppBaseUrl.APP_BASE_POST_REPORT_URL , JSON.toJSONString(map));
+                    result = httpUtil.getPostJsonResult(ConstantsUtil.AppBaseUrl.APP_BASE_POST_KPI_URL , JSON.toJSONString(map));
                     break;
                 case 2:
                     result = httpUtil.getPostJsonResult(ConstantsUtil.AppBaseUrl.APP_BASE_POST_ANALYSE_URL, JSON.toJSONString(map));
@@ -370,21 +368,18 @@ public class AppMenusController extends AbstractController {
         Map<String, Object> child = new HashedMap();
         child.put("url_path",appMenu.getUrl());
         child.put("publicly",appMenu.getPublicly());
+        child.put("group_name",appMenu.getSubName2());
+        child.put("name",appMenu.getTitle());
         if (type==1){
-            child.put("name",appMenu.getSubName2());
             child.put("category",1);
-            child.put("group_name",appMenu.getSubName1());
             map.put("kpi", child);
             return null;
         }else if(type==2){
-            child.put("name",appMenu.getTitle());
             child.put("category",appMenu.getSubName1());
-            child.put("group_name",appMenu.getSubName2());
             map.put("analyse", child);
         }else{
-            child.put("name",appMenu.getSubName2());
+
             child.put("category",1);
-            child.put("group_name",appMenu.getSubName1());
             map.put("app", child);
         }
         map.put("role_ids", appMenu.getRoleIdList());
@@ -393,7 +388,7 @@ public class AppMenusController extends AbstractController {
             String result = "";
             switch (type) {
                 case 1:
-                    result = httpUtil.getPostJsonResult(ConstantsUtil.AppBaseUrl.APP_BASE_POST_REPORT_URL +"/"+appMenu.getMenuId(), JSON.toJSONString(map));
+                    result = httpUtil.getPostJsonResult(ConstantsUtil.AppBaseUrl.APP_BASE_POST_KPI_URL +"/"+appMenu.getMenuId(), JSON.toJSONString(map));
                     break;
                 case 2:
                     result = httpUtil.getPostJsonResult(ConstantsUtil.AppBaseUrl.APP_BASE_POST_ANALYSE_URL+"/"+appMenu.getMenuId(), JSON.toJSONString(map));
@@ -432,7 +427,7 @@ public class AppMenusController extends AbstractController {
             String result = "";
             switch (type) {
                 case 1:
-                    result = httpUtil.getPostJsonResult(ConstantsUtil.AppBaseUrl.APP_BASE_POST_REPORT_URL +"/"+menuId+"/roles", JSON.toJSONString(map));
+                    result = httpUtil.getPostJsonResult(ConstantsUtil.AppBaseUrl.APP_BASE_POST_KPI_URL +"/"+menuId+"/roles", JSON.toJSONString(map));
                     break;
                 case 2:
                     result = httpUtil.getPostJsonResult(ConstantsUtil.AppBaseUrl.APP_BASE_POST_ANALYSE_URL+"/"+menuId+"/roles", JSON.toJSONString(map));
@@ -590,7 +585,7 @@ public class AppMenusController extends AbstractController {
             String result = "";
             switch (type) {
                 case 1:
-                    result = httpUtil.getGetResult(ConstantsUtil.AppBaseUrl.APP_BASE_POST_REPORT_URL + "/" + menuId + "/roles", map);
+                    result = httpUtil.getGetResult(ConstantsUtil.AppBaseUrl.APP_BASE_POST_KPI_URL + "/" + menuId + "/roles", map);
                     break;
                 case 2:
                     result = httpUtil.getGetResult(ConstantsUtil.AppBaseUrl.APP_BASE_POST_ANALYSE_URL + "/" + menuId + "/roles", map);
