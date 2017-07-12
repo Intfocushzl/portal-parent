@@ -36,13 +36,13 @@ public interface HorseImportExcelMapper {
                                                                 @Param("areamans") String areamans, @Param("time") String time);
 
     // 查询全部收银数据
-    public List<HorseImportCash> getchashlist(@Param("user") String user, @Param("areamans") String areamans);
+    public List<HorseImportCash> getchashlist(@Param("user") String user, @Param("areamans") String areamans ,@Param("time") String time);
 
     // 查询所有运营得分数据
-    public List<HorseOperateScore> getscorelist(@Param("user") String user, @Param("areamans") String areamans);
+    public List<HorseOperateScore> getscorelist(@Param("user") String user, @Param("areamans") String areamans , @Param("time") String time);
 
     // 查询所有人才梯队得分数据
-    public List<HorseOperateScore> getscorelisthuman(@Param("user") String user, @Param("areamans") String areamans);
+    public List<HorseOperateScore> getscorelisthuman(@Param("user") String user, @Param("areamans") String areamans , @Param("time") String time);
 
     // 批量导入收银数据
     public int insertcashlist(List<HorseImportCash> list);

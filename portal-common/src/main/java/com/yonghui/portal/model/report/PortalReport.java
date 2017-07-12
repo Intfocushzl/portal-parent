@@ -34,6 +34,9 @@ public class PortalReport extends AuditAuto {
 
     private int reportHeadersCountCols;
 
+    // 返回结果中英文关系
+    private String cellTitleName;
+
     @Override
     public Long getId() {
         return id;
@@ -168,5 +171,13 @@ public class PortalReport extends AuditAuto {
 
     public void setReportHeadersCountCols(int reportHeadersCountCols) {
         this.reportHeadersCountCols = reportHeadersCountCols;
+    }
+
+    public String getCellTitleName() {
+        return cellTitleName;
+    }
+
+    public void setCellTitleName(String cellTitleName) {
+        this.cellTitleName = cellTitleName;
     }
 }

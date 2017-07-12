@@ -1,9 +1,12 @@
 package com.yonghui.portal.model.channelTransparency;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
-public class Menu {
+public class Menu implements Serializable{
+
+    private static final long serialVersionUID = -5549821535879922855L;
     private Integer id;
 
     private String name;

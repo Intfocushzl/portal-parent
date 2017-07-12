@@ -121,7 +121,7 @@ public class HorseImportExcelController {
                         return R.success(resMap);
                     }
                     // 查询该区域全部数据，转成map，用于判断倒入数据是否重复
-                    List<HorseOperateScore> totelList = horseImportExcelService.getscorelist(user, areamans);
+                    List<HorseOperateScore> totelList = horseImportExcelService.getscorelist(user, areamans , time);
                     Map<String, Object> totelMap = new HashMap<String, Object>();
                     for (HorseOperateScore item : totelList) {
                         totelMap.put(item.getSdate() + "-" + item.getSapshopid() + "-" + item.getGroupid(), item);
@@ -269,7 +269,7 @@ public class HorseImportExcelController {
                         return R.success(resMap);
                     }
                     // 查询该区域全部数据，转成map，用于判断倒入数据是否重复
-                    List<HorseOperateScore> totelList = horseImportExcelService.getscorelisthuman(user, areamans);
+                    List<HorseOperateScore> totelList = horseImportExcelService.getscorelisthuman(user, areamans ,time);
                     Map<String, Object> totelMap = new HashMap<String, Object>();
                     for (HorseOperateScore item : totelList) {
                         totelMap.put(item.getSdate() + "-" + item.getSapshopid() + "-" + item.getGroupid(), item);
@@ -413,7 +413,7 @@ public class HorseImportExcelController {
                     }
 
                     // 查询该区域全部数据，转成map，用于判断倒入数据是否重复
-                    List<HorseImportCash> totelList = horseImportExcelService.getchashlist(user, areamans);
+                    List<HorseImportCash> totelList = horseImportExcelService.getchashlist(user, areamans , time);
                     Map<String, Object> totelMap = new HashMap<String, Object>();
                     for (HorseImportCash item : totelList) {
                         totelMap.put(item.getSdate() + "-" + item.getSapshopid() + "-" + item.getGroupid(), item);
@@ -642,7 +642,8 @@ public class HorseImportExcelController {
         response.setContentType("text/html;charset=UTF-8");
         List<HorseImportCash> list = new ArrayList<HorseImportCash>();
         try {
-            list = horseImportExcelService.getchashlist(user, areamans);
+            String time = getDate();
+            list = horseImportExcelService.getchashlist(user, areamans ,time);
             for (HorseImportCash item : list) {
                 if (item.getSapshopid() != null) {
                     item.setShopname(horseImportExcelService.getshopname(item.getSapshopid()).get("shopname"));
@@ -671,7 +672,8 @@ public class HorseImportExcelController {
         response.setContentType("text/html;charset=UTF-8");
         List<HorseOperateScore> list = new ArrayList<HorseOperateScore>();
         try {
-            list = horseImportExcelService.getscorelist(user, areamans);
+            String time = getDate();
+            list = horseImportExcelService.getscorelist(user, areamans,time);
             for (HorseOperateScore item : list) {
                 if (item.getSapshopid() != null) {
                     item.setShopname(horseImportExcelService.getshopname(item.getSapshopid()).get("shopname"));
@@ -700,7 +702,8 @@ public class HorseImportExcelController {
         response.setContentType("text/html;charset=UTF-8");
         List<HorseOperateScore> list = new ArrayList<HorseOperateScore>();
         try {
-            list = horseImportExcelService.getscorelisthuman(user, areamans);
+            String time = getDate();
+            list = horseImportExcelService.getscorelisthuman(user, areamans ,time);
             for (HorseOperateScore item : list) {
                 if (item.getSapshopid() != null) {
                     item.setShopname(horseImportExcelService.getshopname(item.getSapshopid()).get("shopname"));

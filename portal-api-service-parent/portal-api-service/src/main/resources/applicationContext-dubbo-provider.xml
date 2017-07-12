@@ -159,6 +159,36 @@
     <dubbo:service interface="com.yonghui.portal.service.channelTransparency.ShopRackService" ref="shopRackService"
                    timeout="300000"/>
 
+    <!-- 门店陈列快照服务类  -->
+    <bean id="shopDisService" class="com.yonghui.portal.service.impl.channelTransparency.ShopDisServiceImpl"/>
+    <dubbo:service interface="com.yonghui.portal.service.channelTransparency.ShopDisService" ref="shopDisService"
+                   timeout="300000"/>
+
+    <!-- 门店陈列平面图服务类  -->
+    <bean id="shopPlanService" class="com.yonghui.portal.service.impl.channelTransparency.ShopPlanServiceImpl"/>
+    <dubbo:service interface="com.yonghui.portal.service.channelTransparency.ShopPlanService" ref="shopPlanService"
+                   timeout="300000"/>
+
+    <!-- 门店图片服务类  -->
+    <bean id="shopImgService" class="com.yonghui.portal.service.impl.channelTransparency.ShopImgServiceImpl"/>
+    <dubbo:service interface="com.yonghui.portal.service.channelTransparency.ShopImgService" ref="shopImgService"
+                   timeout="300000"/>
+
+    <!-- 区域门店服务类  -->
+    <bean id="menuService" class="com.yonghui.portal.service.impl.channelTransparency.MenuServiceImpl"/>
+    <dubbo:service interface="com.yonghui.portal.service.channelTransparency.MenuService" ref="menuService"
+                   timeout="300000"/>
+
+    <!-- 商行档期服务类  -->
+    <bean id="firmService" class="com.yonghui.portal.service.impl.channelTransparency.FirmServiceImpl"/>
+    <dubbo:service interface="com.yonghui.portal.service.channelTransparency.FirmService" ref="firmService"
+                   timeout="300000"/>
+
+    <!-- 通道费用分析服务类  -->
+    <bean id="odsHanaHtsrService" class="com.yonghui.portal.service.impl.channelTransparency.OdsHanaHtsrServiceImpl"/>
+    <dubbo:service interface="com.yonghui.portal.service.channelTransparency.OdsHanaHtsrService" ref="odsHanaHtsrService"
+                   timeout="300000"/>
+
     <!-- 海报上传  -->
     <bean id="PosterImportervice" class="com.yonghui.portal.service.impl.sys.PosterImportServiceImpl"/>
     <dubbo:service interface="com.yonghui.portal.service.sys.PosterImportService" ref="PosterImportervice"

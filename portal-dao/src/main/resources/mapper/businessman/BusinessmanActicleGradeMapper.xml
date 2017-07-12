@@ -129,4 +129,9 @@
         left join platform.businessman_acticle a on a.id = g.acticle_id
         left join platform.user_forfront u on u.id = g.user_id WHERE g.acticle_id = #{id}
     </select>
+
+    <select id="grade" resultType="Map" parameterType="Map">
+        SELECT b.grade FROM platform.businessman_acticle_grade b WHERE b.user_id = #{userId} AND b.acticle_id = #{acticleId}
+    </select>
+
 </mapper>

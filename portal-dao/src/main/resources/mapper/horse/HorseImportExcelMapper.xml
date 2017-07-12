@@ -45,21 +45,21 @@
     	<select id="getchashlist" resultType="com.yonghui.portal.model.horse.HorseImportCash">
     		SELECT a.* FROM
     		saima.data_import_cash a where a.account = #{user} and a.areamans =
-    		#{areamans}
+    		#{areamans} AND a.sdate = #{time}
     	</select>
 
     	<select id="getscorelist" resultType="com.yonghui.portal.model.horse.HorseOperateScore">
     		SELECT a.* FROM
     		saima.data_import_checkscore a where a.account = #{user} and
     		a.areamans
-    		= #{areamans}
+    		= #{areamans} AND a.sdate = #{time}
     	</select>
 
     	<select id="getscorelisthuman" resultType="com.yonghui.portal.model.horse.HorseOperateScore">
     		SELECT a.* FROM
     		saima.data_import_humanscore a where a.account = #{user} and
     		a.areamans
-    		= #{areamans}
+    		= #{areamans} AND a.sdate = #{time}
     	</select>
 
     	<update id="updatecashstate" parameterType="java.lang.String">

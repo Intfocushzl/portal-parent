@@ -4,6 +4,7 @@ import com.yonghui.portal.mapper.base.BaseMapper;
 import com.yonghui.portal.model.businessman.BusinessmanActicleGrade;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 文章评分
@@ -15,4 +16,6 @@ import java.util.List;
 public interface BusinessmanActicleGradeMapper extends BaseMapper<BusinessmanActicleGrade> {
 
     List<BusinessmanActicleGrade> getListByActicleId(Integer id);
+
+    List<Map<String, Object>> grade(Map<String, Object> map);
 }

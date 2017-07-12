@@ -45,7 +45,7 @@ import java.util.*;
  */
 @RestController
 @RequestMapping("/bravo/channelTransparencyController")
-@Api(value = "/bravo/channelTransparencyController", description = "通道透明化")
+/*@Api(value = "/bravo/channelTransparencyController", description = "通道透明化")*/
 public class ChannelTransparencyController {
 
     Logger log = Logger.getLogger(this.getClass());
@@ -69,6 +69,11 @@ public class ChannelTransparencyController {
     private String templatePath;
 
     /**
+     * 允许上传的扩展名
+     */
+    private static final String[] extensionPermit = {"jpg", "JPG", "png", "PNG", "gif", "GIF"};
+
+    /**
      * 根据门店ID取出陈列位信息
      *
      * @param req
@@ -76,9 +81,10 @@ public class ChannelTransparencyController {
      * @param shopid
      * @return
      */
-    @ApiOperation(value = "根据门店ID取出陈列位信息", produces = MediaType.APPLICATION_JSON_VALUE, notes = "根据门店ID取出陈列位信息",response = R.class)
-    @GetMapping(value = "/getShopRackVOSByshopId", produces = MediaType.APPLICATION_JSON_VALUE)
-    public R groupHorseTotal(HttpServletRequest req, HttpServletResponse response, @PathVariable String shopid, @PathVariable String area, @PathVariable  String groupid) {
+/*    @ApiOperation(value = "根据门店ID取出陈列位信息", produces = MediaType.APPLICATION_JSON_VALUE, notes = "根据门店ID取出陈列位信息",response = R.class)
+    @GetMapping(value = "/getShopRackVOSByshopId", produces = MediaType.APPLICATION_JSON_VALUE)*/
+    @RequestMapping(value="getShopRackVOSByshopId",method = RequestMethod.GET)
+    public R groupHorseTotal(HttpServletRequest req, HttpServletResponse response, String shopid,  String area,   String groupid) {
         response.setHeader("Access-Control-Allow-Origin", "*");
         Map<String, Object> map = new HashMap<>();
         map.put("shopid", shopid);
@@ -99,11 +105,10 @@ public class ChannelTransparencyController {
      * @return
      */
     @RequestMapping(value = "selectShopRack", produces = "application/json; charset=utf-8")
-    @ResponseBody
-    public String selectShopRack(HttpServletRequest req, HttpServletResponse response, String shopid) {
+    public R selectShopRack(HttpServletRequest req, HttpServletResponse response, String shopid) {
         response.setHeader("Access-Control-Allow-Origin", "*");
         ShopRackVO shopRackVO = shopRackService.selectByPrimaryKey(Long.valueOf(shopid));
-        return JSON.toJSONString(shopRackVO);
+        return R.success(shopRackVO);
     }
 
     /**
@@ -114,13 +119,12 @@ public class ChannelTransparencyController {
      * @return
      */
     @RequestMapping("listGroup")
-    @ResponseBody
-    public List<Map<String, Object>> listGroup(HttpSession session, HttpServletResponse response) {
+    public R listGroup(HttpSession session, HttpServletResponse response) {
         try {
-            return shopDisService.listGroup();
+            return R.success(shopDisService.listGroup());
         } catch (Exception e) {
             log.error("获取商行列表出错", e);
-            return new ArrayList<>();
+            return R.error("获取商行列表出错");
         }
     }
 
@@ -132,13 +136,12 @@ public class ChannelTransparencyController {
      * @return
      */
     @RequestMapping("listDateNo")
-    @ResponseBody
-    public List<Map<String, Object>> listDateNo(HttpSession session, HttpServletResponse response) {
+    public R listDateNo(HttpSession session, HttpServletResponse response) {
         try {
-            return shopDisService.listDateNo();
+            return R.success(shopDisService.listDateNo());
         } catch (Exception e) {
             log.error("获取档期列表出错", e);
-            return new ArrayList<>();
+            return R.error("获取档期列表出错");
         }
     }
 
@@ -151,13 +154,12 @@ public class ChannelTransparencyController {
      * @return
      */
     @RequestMapping(value = "getShopImgsByshopId", produces = "application/json; charset=utf-8")
-    @ResponseBody
-    public String getShopImgsByshopId(HttpServletRequest req, HttpServletResponse response, String shopid) {
+    public R getShopImgsByshopId(HttpServletRequest req, HttpServletResponse response, String shopid) {
         response.setHeader("Access-Control-Allow-Origin", "*");
         List<ShopImgVO> list = shopImgService.selectByShopid(shopid);
         JSONObject jo = new JSONObject();
         jo.put("rows", list);
-        return JSON.toJSONString(jo);
+        return R.success(list);
     }
 
     /**
@@ -212,8 +214,7 @@ public class ChannelTransparencyController {
      */
     @SuppressWarnings("rawtypes")
     @RequestMapping(value = "/upload", produces = "application/json; charset=utf-8")
-    @ResponseBody
-    public String imgUpload(String shopid, MultipartHttpServletRequest multipartRequest, HttpServletResponse response) {
+    public R imgUpload(String shopid, MultipartHttpServletRequest multipartRequest, HttpServletResponse response) {
         User user = (User) multipartRequest.getSession().getAttribute("user");
         String json = "{\"result\":1}";
         if (user != null && user.getStoreNumber() != null && !user.getStoreNumber().equals("ALL")) {
@@ -293,9 +294,9 @@ public class ChannelTransparencyController {
             }
         } else {
             json = "{\"result\":\"对不起，没有门店权限！\"}";//
-            return json;
+            return R.error("对不起，没有门店权限！");
         }
-        return json;
+        return R.success("上传成功");
     }
 
     /**
@@ -307,8 +308,7 @@ public class ChannelTransparencyController {
      */
     @SuppressWarnings("rawtypes")
     @RequestMapping(value = "/uploadShop", produces = "application/json; charset=utf-8")
-    @ResponseBody
-    public String imgUploadShop(String shopid, MultipartHttpServletRequest multipartRequest,
+    public R imgUploadShop(String shopid, MultipartHttpServletRequest multipartRequest,
                                 HttpServletResponse response) {
         User user = (User) multipartRequest.getSession().getAttribute("user");
         String json = "{\"result\":1}";
@@ -397,9 +397,9 @@ public class ChannelTransparencyController {
             }
         } else {
             json = "{\"result\":\"对不起，没有门店权限！\"}";//
-            return json;
+            return R.error("对不起，没有门店权限！");
         }
-        return json;
+        return R.success("上传成功");
     }
 
     /**
@@ -411,8 +411,7 @@ public class ChannelTransparencyController {
      */
     @SuppressWarnings("rawtypes")
     @RequestMapping(value = "/uploadShopPlan", produces = "application/json; charset=utf-8")
-    @ResponseBody
-    public String uploadShopPlan(String shopid, MultipartHttpServletRequest multipartRequest,
+    public R uploadShopPlan(String shopid, MultipartHttpServletRequest multipartRequest,
                                  HttpServletResponse response) {
         User user = (User) multipartRequest.getSession().getAttribute("user");
         String json = "{\"result\":1}";
@@ -464,9 +463,9 @@ public class ChannelTransparencyController {
             }
         } else {
             json = "{\"result\":\"对不起，没有门店权限！\"}";//
-            return json;
+            return R.error("对不起，没有门店权限！");
         }
-        return json;
+        return R.success("上传成功");
     }
 
     /**
@@ -480,9 +479,8 @@ public class ChannelTransparencyController {
      * @return
      * @throws Exception
      */
-    @ResponseBody
     @RequestMapping(value = "/uploadShopRack.do", method = RequestMethod.POST, produces = "application/json; charset=utf-8")
-    public String uploadData(Exception ex, HttpServletRequest req, HttpServletResponse response,
+    public R uploadData(Exception ex, HttpServletRequest req, HttpServletResponse response,
                              Map<String, Object> model,
                              @org.springframework.web.bind.annotation.RequestParam("file") CommonsMultipartFile file) throws Exception {
         User user = (User) req.getSession().getAttribute("user");
@@ -506,7 +504,7 @@ public class ChannelTransparencyController {
                     Map<String, List<String[]>> map = ep.getMap();
                     if (map.size() == 0) {
                         json = "{\"result\":\"请填写上传内容！\"}";//
-                        return json;
+                        return R.error("请填写上传内容！");
                     }
 
                     String[] headerTemplate = {"门店名称", "商行ID", "商行名称", "陈列位编码", "陈列类型"};
@@ -584,17 +582,17 @@ public class ChannelTransparencyController {
                     }
                     if (err.size() > 0) {
                         json = "{\"result\":" + JSON.toJSONString(err) + "}";
-                        return json;
+                        return R.error(json);
                     }
                     shopRackService.insertlist(data);
-                    return json;
+                    return R.success("上传成功");
                 }
             }
         } else {
             json = "{\"result\":\"您尚无门店权限！\"}";
-            return json;
+            return R.error("您尚无门店权限！");
         }
-        return json;
+        return R.success("成功");
     }
 
     /**
@@ -609,7 +607,7 @@ public class ChannelTransparencyController {
      */
 
     @RequestMapping("/listTable.do")
-    public String listTable(HttpServletRequest req, HttpServletResponse response, String shopid, String area, String groupid, String rackNo, Map<String, Object> model)
+    public R listTable(HttpServletRequest req, HttpServletResponse response, String shopid, String area, String groupid, String rackNo, Map<String, Object> model)
             throws IOException {
         Map<String, Object> map = new HashMap<>();
         map.put("shopid", shopid);
@@ -618,9 +616,8 @@ public class ChannelTransparencyController {
         map.put("rackNo", rackNo);
         List<ShopRackVO> list = shopRackService.queryRacks(map);
         model.put("data", list);
-        return "backstage/bravo/channelTransparency/shopRackListTable";
+        return R.success(list);
     }
-
 
     /**
      * 门店陈列快照信息
@@ -633,11 +630,10 @@ public class ChannelTransparencyController {
      * @throws IOException
      */
     @RequestMapping("/listShopDisTable.do")
-    public String listShopDisTable(HttpServletRequest req, String dateno, String groupid, String shopid,
-                                   Map<String, Object> model) throws IOException {
+    public R listShopDisTable (HttpServletRequest req, String dateno, String groupid, String shopid,Map<String, Object> model) {
         List<ShopDisVO> list = shopDisService.selectByShopidAndGroupidAndShopid(dateno, groupid, shopid);
         model.put("data", list);
-        return "backstage/bravo/channelTransparency/shopRackDisplayListTable";
+        return R.success(list);
     }
 
     /**
@@ -650,15 +646,14 @@ public class ChannelTransparencyController {
      * @return
      * @throws IOException
      */
-    @ResponseBody
     @RequestMapping("/shopplan.do")
-    public String shopplan(HttpServletRequest req, String shopid, Map<String, Object> model) throws IOException {
+    public R shopplan(HttpServletRequest req, String shopid, Map<String, Object> model) throws IOException {
         // String shopid = req.getParameter("shopid");
         ShopPlanVO shopPlanVO = shopPlanService.selectByShopid(shopid);
         if (shopPlanVO != null && shopPlanVO.getUrl() != null) {
-            return shopPlanVO.getUrl();
+            return R.success(shopPlanVO.getUrl());
         }
-        return "";
+        return R.error("暂无图片");
     }
 
     /**
@@ -672,8 +667,7 @@ public class ChannelTransparencyController {
      */
 
     @RequestMapping(value = "/add.do", produces = "application/json; charset=utf-8")
-    @ResponseBody
-    public String add(MultipartHttpServletRequest multipartRequest, ShopDisVO shopDisVO, HttpServletResponse res,
+    public R add(MultipartHttpServletRequest multipartRequest, ShopDisVO shopDisVO, HttpServletResponse res,
                       Map<String, Object> model) {
         Map<String, Object> map = new HashMap<>();
         String msg = "ok";
@@ -720,10 +714,10 @@ public class ChannelTransparencyController {
             }
         } else {
             json = "{\"result\":\"您尚无门店权限！\"}";
-            return json;
+            return R.error("您尚无门店权限！");
         }
 
-        return json;
+        return R.success("成功！");
     }
 
     /**
@@ -736,13 +730,13 @@ public class ChannelTransparencyController {
      * @throws IOException
      */
     @RequestMapping(value = "/edit.do", produces = "application/String; charset=utf-8")
-    @ResponseBody
-    public String edit(HttpServletRequest req, String id, Map<String, Object> model) throws IOException {
+    public R edit(HttpServletRequest req, String id, Map<String, Object> model) throws IOException {
         ShopDisVO shopDisVO = new ShopDisVO();
         Map<String, Object> map = new HashMap<>();
         shopDisVO = shopDisService.selectByPrimaryKey(Long.valueOf(id));
         model.put("data", shopDisVO);
-        return JSONObject.toJSONString(shopDisVO);
+        return R.success(shopDisVO);
+
     }
 
     /**
@@ -755,13 +749,12 @@ public class ChannelTransparencyController {
      * @throws IOException
      */
     @RequestMapping(value = "/editShopRack.do", produces = "application/String; charset=utf-8")
-    @ResponseBody
-    public String editShopRack(HttpServletRequest req, String id, Map<String, Object> model) throws IOException {
+    public R editShopRack(HttpServletRequest req, String id, Map<String, Object> model) throws IOException {
         ShopRackVO shopRackVO = new ShopRackVO();
         Map<String, Object> map = new HashMap<>();
         shopRackVO = shopRackService.selectByPrimaryKey(Long.valueOf(id));
         model.put("data", shopRackVO);
-        return JSONObject.toJSONString(shopRackVO);
+        return R.success(shopRackVO);
     }
 
     /**
@@ -775,8 +768,7 @@ public class ChannelTransparencyController {
      * @throws Exception
      */
     @RequestMapping("/updateShopRack.do")
-    @ResponseBody
-    public String updateShopRack(HttpServletRequest req, ShopRackVO shopRackVO, String id, Map<String, Object> model)
+    public R updateShopRack(HttpServletRequest req, ShopRackVO shopRackVO, String id, Map<String, Object> model)
             throws Exception {
         String msg = "ok";
         shopRackVO.setUpdateDate(new Date());
@@ -793,7 +785,7 @@ public class ChannelTransparencyController {
             }
         }
         shopRackService.updateByPrimaryKeySelective(shopRackVO);
-        return msg;
+        return R.success("修改成功");
     }
 
     /**
@@ -808,8 +800,7 @@ public class ChannelTransparencyController {
      */
 
     @RequestMapping(value = "/addRack.do", produces = "application/json; charset=utf-8")
-    @ResponseBody
-    public String addRack(HttpServletRequest multipartRequest, ShopRackVO shopRackVO, HttpServletResponse res,
+    public R addRack(HttpServletRequest multipartRequest, ShopRackVO shopRackVO, HttpServletResponse res,
                           Map<String, Object> model) throws Exception {
         Map<String, Object> map = new HashMap<>();
         String msg = "ok";
@@ -834,10 +825,10 @@ public class ChannelTransparencyController {
 
         } else {
             json = "{\"result\":\"您尚无门店权限！\"}";
-            return json;
+            return R.error("您尚无门店权限！");
         }
 
-        return json;
+        return R.success();
     }
 
     /**
@@ -851,12 +842,11 @@ public class ChannelTransparencyController {
      * @throws IOException
      */
     @RequestMapping("/deleteShopRack.do")
-    @ResponseBody
-    public String deleteShopRack(HttpServletRequest req, String id, Map<String, Object> model) throws IOException {
+    public R deleteShopRack(HttpServletRequest req, String id, Map<String, Object> model) throws IOException {
         String msg = "ok";
         shopRackService.deleteByPrimaryKey(Long.valueOf(id));
         //	shopRackVOMapper.deleteByPrimaryKey(Long.valueOf(id));
-        return msg;
+        return R.success("删除成功");
     }
 
     /**
@@ -870,8 +860,7 @@ public class ChannelTransparencyController {
      * @throws IOException
      */
     @RequestMapping("/update.do")
-    @ResponseBody
-    public String update(MultipartHttpServletRequest req, ShopDisVO shopDisVO, String id, Map<String, Object> model)
+    public R update(MultipartHttpServletRequest req, ShopDisVO shopDisVO, String id, Map<String, Object> model)
             throws IOException {
         String msg = "ok";
         if (req.getParameter("file") != null) {
@@ -879,13 +868,10 @@ public class ChannelTransparencyController {
         }
         shopDisVO.setUpdatedate(new Date());
         shopDisService.updateByPrimaryKeySelective(shopDisVO);
-        return msg;
+        return R.success("更新成功");
     }
 
-    /**
-     * 允许上传的扩展名
-     */
-    private static final String[] extensionPermit = {"jpg", "JPG", "png", "PNG", "gif", "GIF"};
+
 
     /**
      * 上传图片方法
@@ -948,7 +934,6 @@ public class ChannelTransparencyController {
      * @return
      */
     @RequestMapping(value = "downloadfile")
-    @ResponseBody
     public void downloadfile(HttpServletRequest req, HttpServletResponse response, String shopid) {
         response.setHeader("Access-Control-Allow-Origin", "*");
 		/*
