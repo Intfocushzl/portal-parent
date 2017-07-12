@@ -17,8 +17,8 @@ $(function () {
                 label: '执行类型', name: 'execute_type', index: 'execute_type', width: 80,
                 formatter: function (value, options, row) {
                     return value === 1 ?
-                        '<span class="label label-warning">SQL</span>' :
-                        '<span class="label label-info">存储</span>';
+                        '<span class="label label-info">存储</span>' :
+                        '<span class="label label-warning">SQL</span>';
                 }
             },
             {label: '创建人', name: 'username', index: 'username', width: 80},

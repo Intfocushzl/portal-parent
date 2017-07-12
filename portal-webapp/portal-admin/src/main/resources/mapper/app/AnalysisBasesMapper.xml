@@ -36,7 +36,7 @@
         `group_order`,
         `item_order`,
         2 as type
-        from appauthority.analysis_bases where group_id = #{value}
+		 from appauthority.analysis_bases where group_id = #{value}
     </select>
 
     <select id="queryList" resultType="com.yonghui.portal.model.app.AppMenu">
@@ -135,7 +135,7 @@
             <if test="loadTime != null">`load_time` = #{loadTime},</if>
             <if test="groupOrder != null">`group_order` = #{groupOrder},</if>
             <if test="itemOrder != null">`item_order` = #{itemOrder}</if>
-            `update_at` = #{updateAt}
+            `updated_at` = now()
         </set>
         where group_id = #{menuId}
     </update>

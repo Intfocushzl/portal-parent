@@ -122,13 +122,16 @@
             </div>
             <div class="form-group">
                 <div class="col-sm-2 control-label">状态</div>
-                <label class="radio-inline" v-if="user.status==-5||user.status==null">
+                <label class="radio-inline">
                     <input type="radio" name="status" value="-5" v-model="user.status"/> 待处理
                 </label>
-                <label class="radio-inline" v-if="user.status==-1||user.status==null">
+                <label class="radio-inline">
                     <input type="radio" name="status" value="-1" v-model="user.status"/> 禁用
                 </label>
-                <label class="radio-inline" v-if="user.status==1||user.status==null">
+                <label class="radio-inline">
+                    <input type="radio" name="status" value="0" v-model="user.status"/> 新注册
+                </label>
+                <label class="radio-inline">
                     <input type="radio" name="status" value="1" v-model="user.status"/> 正常
                 </label>
             </div>

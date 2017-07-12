@@ -1,7 +1,6 @@
 package com.yonghui.portal.model.app;
 
 import java.io.Serializable;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -13,56 +12,53 @@ public class AppMenu implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private Integer id;
-
     //
-    private Long menuId;
-    //
+    private Integer menuId;
+    //大分类  1生意概况 2 报表 3专题
     private String name;
-    //
-    private String subName;
-
+    //一级分类
+    private String subName1;
+    //二级分类
+    private String subName2;
+    //标题
+    private  String title;
+    //报表ID
+    private Integer reportId;
+    //模板ID
+    private Integer templateId;
+    //访问链接
     private String url;
-    //
-    private String ownerDept;
-    //
-    private String computerDept;
-    //
-    private String link;
-
-
-    private String unit;
-    //
-    private String roleIds;
-    //
-    private Integer createUser;
-    //
-    private Integer updateUser;
-    //
-    private String memo;
-    //
-    private Date loadTime;
-    //
-    private Date createdAt;
-    //
-    private Date updatedAt;
+    //图标名
+    private String  icon;
+    //图标地址
+    private String iconUrl;
+    //是否公开通用（无权限设置，所有角色可看）
+    private Boolean publicly;
+    //是否有语音
+    private Boolean   hasAudio;
+    //健康值
+    private Integer    healthValue;
+    //创建时间
+    private String createdAt;
+    //更新时间
+    private String updatedAt;
     //
     private Integer groupOrder;
     //
     private Integer itemOrder;
-    //
-    private Date audioUpdatedAt;
-
+    //类型
     private Integer type;
+    //备注
+    private String remark;
 
+    private Integer active;
+
+    //子菜单列表
     private List<AppMenu> menuList;
+    //拥有该菜单权限的角色列表
+    private String roleIds;
 
-    public String getUrl() {
-        return url;
-    }
-
-    public void setUrl(String url) {
-        this.url = url;
-    }
+    private List<Integer> roleIdList;
 
     public Integer getId() {
         return id;
@@ -72,11 +68,11 @@ public class AppMenu implements Serializable {
         this.id = id;
     }
 
-    public Long getMenuId() {
+    public Integer getMenuId() {
         return menuId;
     }
 
-    public void setMenuId(Long menuId) {
+    public void setMenuId(Integer menuId) {
         this.menuId = menuId;
     }
 
@@ -88,97 +84,107 @@ public class AppMenu implements Serializable {
         this.name = name;
     }
 
-    public String getSubName() {
-        return subName;
+    public String getSubName1() {
+        return subName1;
     }
 
-    public void setSubName(String subName) {
-        this.subName = subName;
+    public void setSubName1(String subName1) {
+        this.subName1 = subName1;
     }
 
-    public String getOwnerDept() {
-        return ownerDept;
+    public String getSubName2() {
+        return subName2;
     }
 
-    public void setOwnerDept(String ownerDept) {
-        this.ownerDept = ownerDept;
+    public void setSubName2(String subName2) {
+        this.subName2 = subName2;
     }
 
-    public String getComputerDept() {
-        return computerDept;
+    public String getTitle() {
+        return title;
     }
 
-    public void setComputerDept(String computerDept) {
-        this.computerDept = computerDept;
+    public void setTitle(String title) {
+        this.title = title;
     }
 
-    public String getLink() {
-        return link;
+    public Integer getReportId() {
+        return reportId;
     }
 
-    public void setLink(String link) {
-        this.link = link;
-    }
-    public String getUnit() {
-        return unit;
+    public void setReportId(Integer reportId) {
+        this.reportId = reportId;
     }
 
-    public void setUnit(String unit) {
-        this.unit = unit;
-    }
-    public String getRoleIds() {
-        return roleIds;
+    public Integer getTemplateId() {
+        return templateId;
     }
 
-    public void setRoleIds(String roleIds) {
-        this.roleIds = roleIds;
+    public void setTemplateId(Integer templateId) {
+        this.templateId = templateId;
     }
 
-    public Integer getCreateUser() {
-        return createUser;
+    public String getUrl() {
+        return url;
     }
 
-    public void setCreateUser(Integer createUser) {
-        this.createUser = createUser;
+    public void setUrl(String url) {
+        this.url = url;
     }
 
-    public Integer getUpdateUser() {
-        return updateUser;
+    public String getIcon() {
+        return icon;
     }
 
-    public void setUpdateUser(Integer updateUser) {
-        this.updateUser = updateUser;
+    public void setIcon(String icon) {
+        this.icon = icon;
     }
 
-    public String getMemo() {
-        return memo;
+    public String getIconUrl() {
+        return iconUrl;
     }
 
-    public void setMemo(String memo) {
-        this.memo = memo;
+    public void setIconUrl(String iconUrl) {
+        this.iconUrl = iconUrl;
     }
 
-    public Date getLoadTime() {
-        return loadTime;
+    public Boolean getPublicly() {
+        return publicly;
     }
 
-    public void setLoadTime(Date loadTime) {
-        this.loadTime = loadTime;
+    public void setPublicly(Boolean publicly) {
+        this.publicly = publicly;
     }
 
-    public Date getCreatedAt() {
+    public Boolean getHasAudio() {
+        return hasAudio;
+    }
+
+    public void setHasAudio(Boolean hasAudio) {
+        this.hasAudio = hasAudio;
+    }
+
+    public Integer getHealthValue() {
+        return healthValue;
+    }
+
+    public void setHealthValue(Integer healthValue) {
+        this.healthValue = healthValue;
+    }
+
+    public String getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(Date createdAt) {
+    public void setCreatedAt(String createdAt) {
         this.createdAt = createdAt;
     }
 
-    public Date getUpdatedAt() {
+    public String getUpdatedAt() {
         return updatedAt;
     }
 
-    public void setUpdatedAt(Date updatedAt) {
+    public void setUpdatedAt(String updatedAt) {
         this.updatedAt = updatedAt;
     }
 
@@ -198,14 +204,6 @@ public class AppMenu implements Serializable {
         this.itemOrder = itemOrder;
     }
 
-    public Date getAudioUpdatedAt() {
-        return audioUpdatedAt;
-    }
-
-    public void setAudioUpdatedAt(Date audioUpdatedAt) {
-        this.audioUpdatedAt = audioUpdatedAt;
-    }
-
     public Integer getType() {
         return type;
     }
@@ -214,11 +212,43 @@ public class AppMenu implements Serializable {
         this.type = type;
     }
 
+    public String getRemark() {
+        return remark;
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark;
+    }
+
     public List<AppMenu> getMenuList() {
         return menuList;
     }
 
     public void setMenuList(List<AppMenu> menuList) {
         this.menuList = menuList;
+    }
+
+    public String getRoleIds() {
+        return roleIds;
+    }
+
+    public void setRoleIds(String roleIds) {
+        this.roleIds = roleIds;
+    }
+
+    public Integer getActive() {
+        return active;
+    }
+
+    public void setActive(Integer active) {
+        this.active = active;
+    }
+
+    public List<Integer> getRoleIdList() {
+        return roleIdList;
+    }
+
+    public void setRoleIdList(List<Integer> roleIdList) {
+        this.roleIdList = roleIdList;
     }
 }

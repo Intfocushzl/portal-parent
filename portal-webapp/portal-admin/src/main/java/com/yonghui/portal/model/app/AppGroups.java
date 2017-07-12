@@ -29,7 +29,7 @@ public class AppGroups implements Serializable {
 
     private String shopid;
 
-    private String groupid;
+    private Integer groupid;
 
     /**
      * 设置：
@@ -146,7 +146,7 @@ public class AppGroups implements Serializable {
     /**
      * 设置：
      */
-    public void setGroupid(String groupid) {
+    public void setGroupid(Integer groupid) {
         this.groupid = groupid;
     }
 
@@ -161,8 +161,7 @@ public class AppGroups implements Serializable {
     /**
      * 获取：
      */
-
-    public String getGroupid() {
+    public Integer getGroupid() {
         return groupid;
     }
 }

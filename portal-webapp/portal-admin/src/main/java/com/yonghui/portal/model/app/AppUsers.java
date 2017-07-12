@@ -63,6 +63,7 @@ public class AppUsers implements Serializable {
     private String storeIds;
 
     private List<Integer> roleIdList;
+    private List<AppRoles> roleList;
 
     public Integer getId() {
         return id;
@@ -416,4 +417,11 @@ public class AppUsers implements Serializable {
         this.roleIdList = roleIdList;
     }
 
+    public List<AppRoles> getRoleList() {
+        return roleList;
+    }
+
+    public void setRoleList(List<AppRoles> roleList) {
+        this.roleList = roleList;
+    }
 }

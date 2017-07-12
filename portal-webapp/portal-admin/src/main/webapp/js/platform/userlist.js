@@ -275,6 +275,13 @@ var vm = new Vue({
                 page: page
             }).trigger("reloadGrid");
         },
+        newReload: function (event) {
+            vm.showList = 1;
+            var page = $("#jqNewGrid").jqGrid('getGridParam', 'page');
+            $("#jqNewGrid").jqGrid('setGridParam', {
+                page: page
+            }).trigger("reloadGrid");
+        },
         onTypeChange: function () {
             var o = new Object();
             o.type = $("select[name='type']").val();
@@ -315,7 +322,7 @@ var vm = new Vue({
                     success: function (r) {
                         if (r.code === 0) {
                             alert('操作成功', function (index) {
-                                vm.reload();
+                                vm.newReload();
                             });
                         } else {
                             alert(r.msg);
@@ -336,7 +343,7 @@ var vm = new Vue({
                 success: function (r) {
                     if (r.code === 0) {
                         alert('操作成功', function (index) {
-                            vm.reload();
+                            vm.newReload();
                         });
                     } else {
                         alert(r.msg);

@@ -4,9 +4,9 @@ $(function () {
         datatype: "json",                // 后台返回的数据格式
         // 列表标题及列表模型
         colModel: [
-            {label: '用户ID', name: 'id', index: 'id', width: 80, key: true},
-            {label: '用户名', name: 'userName', index: 'user_name', width: 80},
-            {label: '工号', name: 'userNum', index: 'user_num', width: 80},
+            {label: '用户ID', name: 'id', index: 'id', width: 80},
+            {label: '用户名', name: 'userName', index: 'userName', width: 80},
+            {label: '工号', name: 'userNum', index: 'userNum', width: 80,key: true},
             {label: '邮箱', name: 'email', index: 'email', width: 80},
             {label: '手机', name: 'mobile', index: 'mobile', width: 80},
             {label: '电话', name: 'tel', index: 'tel', width: 80},
@@ -68,17 +68,17 @@ var vm = new Vue({
             vm.showList = false;
             vm.title = "新增";
             vm.appUsers = {};
-            vm.getRoleList(-1);
+            vm.getRoleList();
         },
         update: function (event) {
-            var id = getSelectedRow();
-            if (id == null) {
+            var userNum = getSelectedRow();
+            if (userNum == null) {
                 return;
             }
             vm.showList = false;
             vm.title = "修改";
 
-            vm.getInfo(id)
+            vm.getInfo(userNum)
         },
         saveOrUpdate: function (event) {
             var ids = $("span.active").attr("id") + "";
@@ -128,10 +128,22 @@ var vm = new Vue({
                 });
             });
         },
-        getInfo: function (id) {
-            $.get("../app/users/info/" + id, function (r) {
+        getInfo: function (userNum) {
+            $.get("../app/users/info/" + userNum, function (r) {
                 vm.appUsers = r.appUsers;
-                vm.getRoleList(id);
+                console.log(vm.appUsers);
+                var objs =  r.appUsers.roleList;
+
+                var htmlString = "<p><span class='tags'>";
+                for (var i = 0; i < objs.length; i++) {
+                    if (objs[i].active == 1) {
+                        htmlString += "<span id='span" + objs[i].roleId + "' class='active'  onClick='spanClick(" + objs[i].roleId + ")'>" + objs[i].roleName + "</span>";
+                    } else {
+                        htmlString += "<span id='span" + objs[i].roleId + "'  onClick='spanClick(" + objs[i].roleId + ")'>" + objs[i].roleName + "</span>";
+                    }
+                }
+                htmlString += "</span> </p>";
+                document.getElementById("tagsdlg").innerHTML = htmlString;
             });
         },
         reload: function (event) {
@@ -141,17 +153,17 @@ var vm = new Vue({
                 page: page
             }).trigger("reloadGrid");
         },
-        getRoleList: function (id) {
-            $.get("../app/users/roleSelect/" + id, function (result) {
+        getRoleList: function () {
+            $.get("../app/roles/select", function (result) {
                 // var objs = jQuery.parseJSON(); //由JSON字符串转换为JSON对象
                 var objs = result.list;
 
                 var htmlString = "<p><span class='tags'>";
                 for (var i = 0; i < objs.length; i++) {
                     if (objs[i].active == 1) {
-                        htmlString += "<span id='span" + objs[i].id + "' class='active'  onClick='spanClick(" + objs[i].id + ")'>" + objs[i].roleName + "</span>";
+                        htmlString += "<span id='span" + objs[i].roleId + "' class='active'  onClick='spanClick(" + objs[i].roleId + ")'>" + objs[i].roleName + "</span>";
                     } else {
-                        htmlString += "<span id='span" + objs[i].id + "'  onClick='spanClick(" + objs[i].id + ")'>" + objs[i].roleName + "</span>";
+                        htmlString += "<span id='span" + objs[i].roleId + "'  onClick='spanClick(" + objs[i].roleId + ")'>" + objs[i].roleName + "</span>";
                     }
                 }
                 htmlString += "</span> </p>";
