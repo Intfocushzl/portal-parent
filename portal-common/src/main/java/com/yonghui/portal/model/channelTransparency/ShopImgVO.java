@@ -8,10 +8,10 @@ public class ShopImgVO implements Serializable {
 
 	private static final long serialVersionUID = -3054937546024831815L;
 	private Integer id;
-	private String shopid;
-	private String imgurl;
-	private String title;
-	private Date updatedate;
+	private String shopid;//门店ID
+	private String imgurl;//图片链接
+	private String title;//标题
+	private Date updatedate;//更新时间
 	
 	
 	public String getTitle() {

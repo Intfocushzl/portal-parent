@@ -7,15 +7,15 @@ public class ShopDisVO implements Serializable {
 
 	private static final long serialVersionUID = -7393474936118727085L;
 	private Integer id;
-	private String shopid;
-	private String shopname;
-	private String dateno;
-	private String groupid;
-	private String groupname;
-	private String rackno;
-	private String remark;
-	private Date updatedate;
-	private String imgurl;
+	private String shopid;//店铺ID
+	private String shopname;//店铺名称
+	private String dateno;//档期
+	private String groupid;//商行ID
+	private String groupname;//商行名称
+	private String rackno;//陈列位
+	private String remark;// 备注
+	private Date updatedate;//更新时间
+	private String imgurl;//图片链接
 
 	
 	

@@ -5,6 +5,7 @@ import com.yonghui.portal.service.channelTransparency.MenuService;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -19,5 +20,10 @@ public class MenuServiceImpl implements MenuService {
     @Override
     public Map<String, Object> getShopByShopId(String shopId) throws Exception {
         return chanelMenuMapper.getShopByShopId(shopId);
+    }
+
+    @Override
+    public List<Map<String, Object>> getAllBroveStoreList() throws Exception {
+        return chanelMenuMapper.getAllBroveStoreList();
     }
 }

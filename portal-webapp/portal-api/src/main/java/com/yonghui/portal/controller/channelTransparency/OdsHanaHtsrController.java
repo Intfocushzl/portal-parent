@@ -4,6 +4,7 @@ import com.alibaba.dubbo.config.annotation.Reference;
 import com.alibaba.fastjson.JSONObject;
 import com.yonghui.portal.mapper.channelTransparency.OdsHanaHtsrMapper;
 import com.yonghui.portal.model.channelTransparency.OdsHanaHtsr;
+import com.yonghui.portal.service.channelTransparency.MenuService;
 import com.yonghui.portal.service.channelTransparency.OdsHanaHtsrService;
 import com.yonghui.portal.util.R;
 import org.springframework.stereotype.Controller;
@@ -24,12 +25,25 @@ public class OdsHanaHtsrController {
 
 	@Reference
 	private OdsHanaHtsrService odsHanaHtsrService;
-	
+	@Reference
+	private MenuService menuService;
 	//费用类型
 	@RequestMapping(value="/tlxList")
 	public R tlxList(HttpServletResponse reseponse){
 		reseponse.setHeader("Access-Control-Allow-Origin", "*");
 		return R.success(odsHanaHtsrService.tlxList());
+	}
+
+	//店铺列表
+	@RequestMapping(value="/listShop")
+	public R listShop(HttpServletResponse reseponse){
+		reseponse.setHeader("Access-Control-Allow-Origin", "*");
+		try {
+			return R.success(menuService.getAllBroveStoreList());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return R.error("程序错误！");
 	}
 
 	
@@ -53,9 +67,12 @@ public class OdsHanaHtsrController {
 		Map<String,Object> map = new HashMap<>();
 		purchOrg = purchOrg.substring(1);
 		String[] array = purchOrg.split(",");
+
+		String[] arraygroup = purGroup.split(",");
+
 		map.put("tlx", tlx);	
-		map.put("purchOrg", array.length==1?"all":array);
-		map.put("purGroup", purGroup);
+		map.put("purchOrg", array.length==0?"all":array);
+		map.put("purGroup", arraygroup.length==0?"all":arraygroup);
 		map.put("plant", ("").equals(plant)?"all":plant);
 		map.put("sDate", sDate.equals("")?"all":sDate);
 		map.put("eDate", eDate.equals("")?"all":eDate);

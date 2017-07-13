@@ -49,7 +49,12 @@
 			</foreach>
 		</if>
   		<if test="purGroup != 'all'">
-  			AND h.PUR_GROUP = #{purGroup} 
+
+          AND h.PUR_GROUP in
+          <foreach collection="purGroup" item="item" open="(" separator=","
+                   close=")">
+            '${item}'
+          </foreach>
   		</if>
   		<if test="plant != 'all'">
   			and h.PLANT = #{plant} 
