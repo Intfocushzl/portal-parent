@@ -368,7 +368,7 @@
 
 
 	<select id="getAllBroveStoreList" resultType="Map"> 
-		select'all' as id,'全部' as text union 
+
 			select DISTINCT sap_shopId as id ,SName as text 
 			from dw.d_bravo_shop
 	</select>

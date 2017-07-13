@@ -6,11 +6,11 @@ import java.util.Date;
 public class ShopPlanVO implements Serializable{
 
     private static final long serialVersionUID = -1161395681992776283L;
-    private String shopid;
+    private String shopid;//门店ID
 
-    private String url;
+    private String url;//链接地址
 
-    private Date updatedate;
+    private Date updatedate;//更新时间
 
     public String getShopid() {
         return shopid;
