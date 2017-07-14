@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -66,23 +65,15 @@ public class PosterImportServiceImpl implements PosterImportService {
         return posterImportMapper.insertPosterImportArea(list);
     }
 
-    public int insertPosterImportAreaTmp(List<PosterImportArea> excellist, String jobNumber, List<Map<String, Object>> list) throws Exception {
-        Map<String, Object> map = new HashMap<String, Object>();
+    public int insertPosterImportAreaTmp(List<PosterImportArea> excellist, String jobNumber) throws Exception {
         //请空该用户之前导入临时表的数据
         posterImportMapper.deleteAreaTmp(jobNumber);
-        //查询区域和城市对应关系
-        for (Map<String, Object> item : list) {
-            map.put(item.get("areamans") + "-" + item.get("city"), item);
-        }
         List<Map<String, Object>> tmpList = posterImportMapper.tmpAreaList(jobNumber);
         //校验表格数据
         Integer posterId = excellist.get(0).getPosterId();
         for (PosterImportArea item : excellist) {
             if (!item.getPosterId().equals(posterId)) {
                 throw new Exception("海报档期ID不唯一");
-            }
-            if (map.get(item.getArea() + "-" + item.getCity()) == null) {
-                throw new Exception("填写的区域和城市不对应");
             }
             item.setJobNumber(jobNumber);
         }
@@ -117,7 +108,7 @@ public class PosterImportServiceImpl implements PosterImportService {
     }
 
     //将商品海报保存到临时表
-    public int insertPosterImportGoodsTmp(List<PosterImportGoods> list , String jobNumber) {
+    public int insertPosterImportGoodsTmp(List<PosterImportGoods> list, String jobNumber) {
         //先删除临时表之前的数据
         posterImportMapper.deleteGoodsTmp(jobNumber);
         return posterImportMapper.insertPosterImportGoodsTmp(list);

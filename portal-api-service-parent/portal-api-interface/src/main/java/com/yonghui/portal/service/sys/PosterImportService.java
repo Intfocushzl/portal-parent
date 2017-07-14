@@ -31,7 +31,7 @@ public interface PosterImportService {
     //区域和城市对应关系
     List<Map<String, Object>> areamansList();
 
-    int insertPosterImportAreaTmp(List<PosterImportArea> excellist , String jobNmuber , List<Map<String, Object>> list) throws Exception;
+    int insertPosterImportAreaTmp(List<PosterImportArea> excellist , String jobNmuber) throws Exception;
 
     void deleteArea(List<Integer> list , String jobNumber);
 

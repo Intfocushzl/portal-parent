@@ -57,6 +57,13 @@ public class PosterImportUtil {
             }
             area = new PosterImportArea();
             // 循环Excel的列
+            List<Map<String, Object>> list = posterImportService.areamansList();
+            Map<String, Object> map = new HashMap<String, Object>();
+            for (Map<String, Object> item : list) {
+                if(map.get(item.get("City")) == null){
+                    map.put(item.get("City").toString(), item);
+                }
+            }
             for (int c = 0; c < this.totalCells; c++) {
                 Cell cell = row.getCell(c);
                 // 格式化，每个单元个都为字符串
@@ -78,7 +85,12 @@ public class PosterImportUtil {
                     } else if (c == 1) {
                         area.setArea(cell.getStringCellValue().trim());
                     } else if (c == 2) {
-                        area.setCity(cell.getStringCellValue().trim());
+                        if(map.get(cell.getStringCellValue().trim()) != null){
+                            area.setCity(cell.getStringCellValue().trim());
+                        }else{
+                            throw new Exception("填写的数据有误！！" + "第" + r + "行" + (c + 1) + "城市不正确");
+                        }
+
                     }
                 } else {
                     throw new Exception("填写的数据含有空值！！" + "第" + r + "行" + (c + 1) + "列有空值");
