@@ -83,12 +83,18 @@ var vm = new Vue({
         saveOrUpdate: function (event) {
             var ids = $("span.active").attr("id") + "";
             if (ids == "undefined") {
-                alert("请选择角色");
+                alert("菜单选择异常");
                 return;
             }
             var arr = new Array;
             arr.push(ids.substring(4));
             vm.appUsers.roleIdList = arr;
+
+            if (vm.appRoles.roleName==null||vm.appRoles.roleName==""){
+                alert("角色名不能为空");
+                return;
+            }
+
             var url = vm.appUsers.id == null ? "../app/users/save" : "../app/users/update";
             $.ajax({
                 type: "POST",

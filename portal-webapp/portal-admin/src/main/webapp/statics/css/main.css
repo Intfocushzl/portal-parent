@@ -58,6 +58,14 @@ html {
         width: 20%;
         max-width: 200px;
     }
+    .col-sm-3 {
+        width: 30%;
+        max-width: 300px;
+    }
+    .col-sm-5 {
+        width: 50%;
+        max-width: 500px;
+    }
 }
 
 tbody > tr > th {

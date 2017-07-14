@@ -121,7 +121,10 @@
 
             <div class="form-group">
                 <div class="col-sm-2 control-label">二级标题</div>
-                <div class="col-sm-10">
+                <div class="col-sm-10" v-if="appMenu.type !=2">
+                    <input type="text" class="form-control" v-model="appMenu.subName1" readonly placeholder=""/>
+                </div>
+                <div class="col-sm-10" v-else>
                     <input type="text" class="form-control" v-model="appMenu.subName1" placeholder=""/>
                 </div>
             </div>

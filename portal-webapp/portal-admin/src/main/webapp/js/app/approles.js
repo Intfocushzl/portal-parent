@@ -41,7 +41,9 @@ $(function () {
     });
 });
 
-var ztree;
+var ztree1;
+var ztree2;
+var ztree3;
 
 var setting = {
     view: {
@@ -67,9 +69,9 @@ function onCheck(e, treeId, treeNode) {
     }
 }
 function clearCheckedOldNodes() {
-     zTree = $.fn.zTree.getZTreeObj("menuTree"),
-         nodes = zTree.getChangeCheckedNodes();
-    for (var i=0, l=nodes.length; i<l; i++) {
+    zTree1 = $.fn.zTree.getZTreeObj("menuTree"),
+        nodes = zTree.getChangeCheckedNodes();
+    for (var i = 0, l = nodes.length; i < l; i++) {
         nodes[i].checkedOld = nodes[i].checked;
     }
 }
@@ -96,8 +98,7 @@ var vm = new Vue({
             vm.showList = false;
             vm.title = "新增";
             vm.appRoles = {};
-            // vm.getMenuTree(null);
-
+            vm.getMenuTree(-1);
         },
         update: function (event) {
             var id = getSelectedRow();
@@ -112,29 +113,45 @@ var vm = new Vue({
         },
         saveOrUpdate: function (event) {
             //获取选择的菜单
-            var nodes = ztree.getCheckedNodes(true);
+            var nodes1 = ztree1.getCheckedNodes(true);
             var menuList = new Array();
-            for (var i = 0; i < nodes.length; i++) {
-                var o=new Object();
-                o.menuId=nodes[i].id;
-                o.subName=nodes[i].name;
-                o.type=nodes[i].type;
+            for (var i = 0; i < nodes1.length; i++) {
+                var o = new Object();
+                o.menuId = nodes1[i].id;
+                o.title = nodes1[i].name;
+                o.type = 1;
+                menuList.push(o);
+            }
+            var nodes2 = ztree2.getCheckedNodes(true);
+            for (var i = 0; i < nodes2.length; i++) {
+                var o = new Object();
+                o.menuId = nodes2[i].id;
+                o.title = nodes2[i].name;
+                o.type = 2;
+                menuList.push(o);
+            }
+            var nodes3 = ztree3.getCheckedNodes(true);
+            for (var i = 0; i < nodes3.length; i++) {
+                var o = new Object();
+                o.menuId = nodes3[i].id;
+                o.title = nodes3[i].name;
+                o.type = 3;
                 menuList.push(o);
             }
             console.log(menuList);
-            vm.appRoles.menuList=menuList;
+            vm.appRoles.menuList = menuList;
             console.log(JSON.stringify(vm.appRoles));
             var url = vm.appRoles.id == null ? "../app/roles/save" : "../app/roles/update";
             $.ajax({
                 type: "POST",
                 url: url,
                 data: JSON.stringify(vm.appRoles),
-                success: function(r){
-                    if(r.code === 0){
-                        alert('操作成功', function(index){
+                success: function (r) {
+                    if (r.code === 0) {
+                        alert('操作成功', function (index) {
                             vm.reload();
-                     });
-                    }else{
+                        });
+                    } else {
                         alert(r.msg);
                     }
                 }
@@ -163,18 +180,16 @@ var vm = new Vue({
                 });
             });
         },
-        getInfo: function (id) {
-            $.get("../app/roles/info/"+id, function (r) {
+        getInfo: function (roleId) {
+            var rowData = $("#jqGrid").jqGrid("getRowData", roleId);
+            if (rowData == null) {
+                return;
+            }
+            var id = rowData.id;
+            $.get("../app/roles/info/" + roleId, function (r) {
                 console.log(r);
                 vm.appRoles = r.appRoles;
-                // //勾选角色所拥有的菜单
-                // var menuIds = vm.appRoles.menuList;
-                // for (var i = 0; i < menuIds.length; i++) {
-                //     var parentNode = ztree.getNodeByParam("id", (-1) *(menuIds[i].obj_type));
-                //     var scendNode = ztree.getNodeByParam("second", menuIds[i].menu_id,parentNode);
-                //     var node = ztree.getNodeByParam("id", menuIds[i].menu_id,scendNode);
-                //     ztree.checkNode(node, true, false);
-                // }
+                vm.getMenuTree(id);
             });
         },
         reload: function (event) {
@@ -185,16 +200,45 @@ var vm = new Vue({
             }).trigger("reloadGrid");
         },
         getMenuTree: function (roleId) {
-            // //加载菜单树
-            // $.get("../app/menus/select", function (r) {
-            //     ztree = $.fn.zTree.init($("#menuTree"), setting, r.appMenuList);
-            //     //展开所有节点
-            //     ztree.expandAll(false);
-            //
-            //         if (roleId != null) {
-            //             vm.getInfo(roleId);
-            //         }
-            // });
+            //加载菜单树
+            $.get("../app/roles/selectKpisMenu?roleId=" + roleId, function (r) {
+                ztree1 = $.fn.zTree.init($("#menuTree1"), setting, r.list);
+                //展开所有节点
+                ztree1.expandAll(false);
+
+                //勾选角色所拥有的菜单
+                var menuIds = r.menuKpiList;
+                for (var i = 0; i < menuIds.length; i++) {
+                    var node = ztree1.getNodeByParam("id", menuIds[i].menuId);
+                    ztree1.checkNode(node, true, false);
+                }
+            });
+            //加载菜单树
+            $.get("../app/roles/selectAnalysesMenu?roleId=" + roleId, function (r) {
+                ztree2 = $.fn.zTree.init($("#menuTree2"), setting, r.list);
+                //展开所有节点
+                ztree2.expandAll(false);
+
+                //勾选角色所拥有的菜单
+                var menuIds = r.menuAnalysesList;
+                for (var i = 0; i < menuIds.length; i++) {
+                    var node = ztree2.getNodeByParam("id", menuIds[i].menuId);
+                    ztree2.checkNode(node, true, false);
+                }
+            });
+            //加载菜单树
+            $.get("../app/roles/selectAppsMenu?roleId=" + roleId, function (r) {
+                ztree3 = $.fn.zTree.init($("#menuTree3"), setting, r.list);
+                //展开所有节点
+                ztree3.expandAll(false);
+
+                //勾选角色所拥有的菜单
+                var menuIds = r.menuAppList;
+                for (var i = 0; i < menuIds.length; i++) {
+                    var node = ztree3.getNodeByParam("id", menuIds[i].menuId);
+                    ztree3.checkNode(node, true, false);
+                }
+            });
         },
     }
 });

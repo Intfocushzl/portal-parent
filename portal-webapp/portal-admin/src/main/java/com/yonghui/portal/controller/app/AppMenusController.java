@@ -206,6 +206,7 @@ public class AppMenusController extends AbstractController {
                     appMenu.setMenuId(id);
                     switch (type) {
                         case 1:
+                            appMenu.setName("生意概况");
                             String subName2=object.getString("kpi_group");
                             appMenu.setSubName2(subName2);
                             String title = object.getString("kpi_name");
@@ -220,15 +221,24 @@ public class AppMenusController extends AbstractController {
                             appMenu.setUrl(StringUtils.isEmpty(url) ? "" : url);
                             break;
                         case 2:
+                            appMenu.setName("报表");
                             String category = object.getString("category");
                             appMenu.setSubName1(StringUtils.isEmpty(category) ? "" : category);
-                        case 3:
                             String group_name = object.getString("group_name");
                             appMenu.setSubName2(StringUtils.isEmpty(group_name) ? "" : group_name);
                             String name = object.getString("name");
                             appMenu.setTitle(StringUtils.isEmpty(name) ? "" : name);
                             String link_path = object.getString("link_path");
                             appMenu.setUrl(StringUtils.isEmpty(link_path) ? "" : link_path);
+                            break;
+                        case 3:
+                            appMenu.setName("专题");
+                            String a_group_name = object.getString("group_name");
+                            appMenu.setSubName2(StringUtils.isEmpty(a_group_name) ? "" : a_group_name);
+                            String a_name = object.getString("name");
+                            appMenu.setTitle(StringUtils.isEmpty(a_name) ? "" : a_name);
+                            String a_link_path = object.getString("link_path");
+                            appMenu.setUrl(StringUtils.isEmpty(a_link_path) ? "" : a_link_path);
                             break;
                     }
                     String icon = object.getString("icon");
@@ -422,7 +432,7 @@ public class AppMenusController extends AbstractController {
      * 报表报表菜单权限配置
      * */
     public R updateRole(HttpMethodUtil httpUtil, Integer menuId,int type,Map<String,Object> map) {
-        log.info("============>更新角色开始");
+        log.info("============>更新菜单-角色开始");
         try {
             String result = "";
             switch (type) {
@@ -440,7 +450,7 @@ public class AppMenusController extends AbstractController {
                 JSONObject jsonObject = JSONObject.parseObject(result);
                 if (jsonObject.getInteger("code") == 201) {
                     String info = jsonObject.getString("message");
-                    log.info("============>更新角色结束");
+                    log.info("============>更新菜单-角色结束");
                     return R.success().setMsg(info);
                 } else {
                     String info = jsonObject.getString("message");
@@ -464,108 +474,6 @@ public class AppMenusController extends AbstractController {
     public R delete(@RequestBody Map<String, Object> params) {
 //        appMenusService.deleteBatch(params);
         return R.success();
-    }
-
-    @RequestMapping("/select")
-    //@RequiresPermissions("app:menu:select")
-    public R select() {
-        //查询列表数据
-        List<AppMenu> appMenusList = appMenusService.queryAllMenuList();
-
-        List<Map<String, Object>> list = new ArrayList<>();
-
-        Map<String, Object> map1 = new HashedMap();
-        map1.put("id", -1);
-        map1.put("name", "生意概况");
-        map1.put("type", 1);
-        Map<String, Object> map2 = new HashedMap();
-        map2.put("id", -2);
-        map2.put("name", "报表");
-        map2.put("type", 2);
-        Map<String, Object> map3 = new HashedMap();
-        map3.put("id", -3);
-        map3.put("name", "专题");
-        map3.put("type", 3);
-
-        List<Map<String, Object>> list1 = new ArrayList<>();
-        List<Map<String, Object>> list2 = new ArrayList<>();
-        List<Map<String, Object>> list3 = new ArrayList<>();
-
-        for (AppMenu appMenu : appMenusList) {
-            Map<String, Object> node = new HashedMap();
-            node.put("id", (-1) * appMenu.getMenuId());
-            node.put("name", appMenu.getName());
-            node.put("type", appMenu.getType());
-            node.put("second", appMenu.getMenuId());
-
-            List<Map<String, Object>> children = new ArrayList<Map<String, Object>>();
-            Map<String, Object> childrenNode = new HashedMap();
-            childrenNode.put("id", appMenu.getMenuId());
-            childrenNode.put("name", appMenu.getSubName1());
-            childrenNode.put("type", appMenu.getType());
-
-            if (appMenu.getType() == 1) {
-                boolean isExist = false;
-                for (int i = 0; i < list1.size(); i++) {
-                    String name = list1.get(i).get("name") + "";
-                    if (name.equals(appMenu.getName())) {
-                        isExist = true;
-                        children = (List<Map<String, Object>>) list1.get(i).get("children");
-                        children.add(childrenNode);
-                        break;
-                    }
-                }
-                if (!isExist) {
-                    children.add(childrenNode);
-                    node.put("children", children);
-                    list1.add(node);
-                }
-            }
-            if (appMenu.getType() == 2) {
-                boolean isExist = false;
-                for (int i = 0; i < list2.size(); i++) {
-                    String name = list2.get(i).get("name") + "";
-                    if (name.equals(appMenu.getName())) {
-                        isExist = true;
-                        children = (List<Map<String, Object>>) list2.get(i).get("children");
-                        children.add(childrenNode);
-                        break;
-                    }
-                }
-                if (!isExist) {
-                    children.add(childrenNode);
-                    node.put("children", children);
-                    list2.add(node);
-                }
-            }
-            if (appMenu.getType() == 3) {
-                boolean isExist = false;
-                for (int i = 0; i < list3.size(); i++) {
-                    String name = list3.get(i).get("name") + "";
-                    if (name.equals(appMenu.getName())) {
-                        isExist = true;
-                        children = (List<Map<String, Object>>) list3.get(i).get("children");
-                        children.add(childrenNode);
-                        break;
-                    }
-                }
-                if (!isExist) {
-                    children.add(childrenNode);
-                    node.put("children", children);
-                    list3.add(node);
-                }
-            }
-        }
-
-        map1.put("children", list1);
-        map2.put("children", list2);
-        map3.put("children", list3);
-
-        list.add(map1);
-        list.add(map2);
-        list.add(map3);
-
-        return R.success().put("appMenuList", list);
     }
 
     //获取某分析的菜单权限列表
