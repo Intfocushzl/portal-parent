@@ -84,6 +84,13 @@
                     <div id="tagsdlg"></div>
                 </div>
             </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">群组</div>
+                <div class="col-sm-10">
+                    <select id="groupList" class="selectpicker form-control" data-live-search="true" v-model="appUsers.groupId">
+                    </select>
+                </div>
+            </div>
 			<div class="form-group">
 			   	<div class="col-sm-2 control-label">邮箱</div>
 			   	<div class="col-sm-10">
@@ -102,30 +109,30 @@
 			        <input type="text" class="form-control" v-model="appUsers.tel" placeholder=""/>
 			    </div>
 			</div>
-			<div class="form-group">
-			   	<div class="col-sm-2 control-label">职位</div>
-			   	<div class="col-sm-10">
-			        <input type="text" class="form-control" v-model="appUsers.position" placeholder=""/>
-			    </div>
-			</div>
-			<div class="form-group">
-			   	<div class="col-sm-2 control-label">部门ID</div>
-			   	<div class="col-sm-10">
-			        <input type="text" class="form-control" v-model="appUsers.deptId" placeholder=""/>
-			    </div>
-			</div>
-			<div class="form-group">
-			   	<div class="col-sm-2 control-label">部门</div>
-			   	<div class="col-sm-10">
-			        <input type="text" class="form-control" v-model="appUsers.deptName" placeholder=""/>
-			    </div>
-			</div>
-			<div class="form-group">
-				<div class="col-sm-2 control-label">门店ID</div>
-				<div class="col-sm-10">
-					<input type="text" class="form-control" v-model="appUsers.storeIds" placeholder=""/>
-				</div>
-			</div>
+			<!--<div class="form-group">-->
+			   	<!--<div class="col-sm-2 control-label">职位</div>-->
+			   	<!--<div class="col-sm-10">-->
+			        <!--<input type="text" class="form-control" v-model="appUsers.position" placeholder=""/>-->
+			    <!--</div>-->
+			<!--</div>-->
+			<!--<div class="form-group">-->
+			   	<!--<div class="col-sm-2 control-label">部门ID</div>-->
+			   	<!--<div class="col-sm-10">-->
+			        <!--<input type="text" class="form-control" v-model="appUsers.deptId" placeholder=""/>-->
+			    <!--</div>-->
+			<!--</div>-->
+			<!--<div class="form-group">-->
+			   	<!--<div class="col-sm-2 control-label">部门</div>-->
+			   	<!--<div class="col-sm-10">-->
+			        <!--<input type="text" class="form-control" v-model="appUsers.deptName" placeholder=""/>-->
+			    <!--</div>-->
+			<!--</div>-->
+			<!--<div class="form-group">-->
+				<!--<div class="col-sm-2 control-label">门店ID</div>-->
+				<!--<div class="col-sm-10">-->
+					<!--<input type="text" class="form-control" v-model="appUsers.storeIds" placeholder=""/>-->
+				<!--</div>-->
+			<!--</div>-->
 			<div class="form-group">
 			   	<div class="col-sm-2 control-label">备注</div>
 			   	<div class="col-sm-10">

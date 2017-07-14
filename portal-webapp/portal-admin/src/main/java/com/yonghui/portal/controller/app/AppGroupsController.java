@@ -170,7 +170,7 @@ public class AppGroupsController extends AbstractController {
         appMap.put("group_id", appGroups.getGroupid());
         appMap.put("group_name", appGroups.getGroupName());
         appMap.put("memo", appGroups.getMemo());
-        map.put("role", appMap);
+        map.put("group", appMap);
         try {
             String result = httpUtil.getPostJsonResult(ConstantsUtil.AppBaseUrl.APP_BASE_POST_GROUP_URL, JSON.toJSONString(map));
 
@@ -210,7 +210,7 @@ public class AppGroupsController extends AbstractController {
         appMap.put("group_id", appGroups.getGroupid());
         appMap.put("group_name", appGroups.getGroupName());
         appMap.put("memo", appGroups.getMemo());
-        map.put("role", appMap);
+        map.put("group", appMap);
         try {
             String result = httpUtil.getPostJsonResult(ConstantsUtil.AppBaseUrl.APP_BASE_POST_GROUP_URL+ "/" + appGroups.getId(), JSON.toJSONString(map));
 
@@ -240,7 +240,7 @@ public class AppGroupsController extends AbstractController {
     @RequestMapping("/delete")
     @RequiresPermissions("appgroups:delete")
     public R delete(@RequestBody Integer[] ids) {
-        appGroupsService.deleteBatch(ids);
+//        appGroupsService.deleteBatch(ids);
         return R.success();
     }
 

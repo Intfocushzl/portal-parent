@@ -112,6 +112,11 @@ var vm = new Vue({
             vm.getInfo(id);
         },
         saveOrUpdate: function (event) {
+            if (vm.appRoles.roleName==null||vm.appRoles.roleName==""){
+                alert("角色名不能为空");
+                return;
+            }
+
             //获取选择的菜单
             var nodes1 = ztree1.getCheckedNodes(true);
             var menuList = new Array();
@@ -185,11 +190,10 @@ var vm = new Vue({
             if (rowData == null) {
                 return;
             }
-            var id = rowData.id;
             $.get("../app/roles/info/" + roleId, function (r) {
                 console.log(r);
                 vm.appRoles = r.appRoles;
-                vm.getMenuTree(id);
+                vm.getMenuTree(roleId);
             });
         },
         reload: function (event) {

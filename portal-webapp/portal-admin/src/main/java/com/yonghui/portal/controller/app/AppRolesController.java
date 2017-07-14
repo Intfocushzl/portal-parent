@@ -319,6 +319,9 @@ public class AppRolesController extends AbstractController {
                 app_ids.add(Integer.parseInt(menuId));
             }
         }
+        System.err.println("1-->menuId====>"+JSON.toJSONString(kpi_ids));
+        System.err.println("2-->menuId====>"+JSON.toJSONString(analyse_ids));
+        System.err.println("3-->menuId====>"+JSON.toJSONString(app_ids));
         Map<String, Object> map = new HashedMap();
         map.put("api_token", "api_token");
         map.put("kpi_ids", kpi_ids);

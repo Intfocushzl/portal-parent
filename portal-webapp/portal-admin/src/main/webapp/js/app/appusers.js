@@ -6,7 +6,7 @@ $(function () {
         colModel: [
             {label: '用户ID', name: 'id', index: 'id', width: 80},
             {label: '用户名', name: 'userName', index: 'userName', width: 80},
-            {label: '工号', name: 'userNum', index: 'userNum', width: 80,key: true},
+            {label: '工号', name: 'userNum', index: 'userNum', width: 80, key: true},
             {label: '邮箱', name: 'email', index: 'email', width: 80},
             {label: '手机', name: 'mobile', index: 'mobile', width: 80},
             {label: '电话', name: 'tel', index: 'tel', width: 80},
@@ -67,7 +67,9 @@ var vm = new Vue({
         add: function () {
             vm.showList = false;
             vm.title = "新增";
-            vm.appUsers = {};
+            vm.appUsers = {
+                groupId: vm.groupId,
+            };
             vm.getRoleList();
         },
         update: function (event) {
@@ -83,18 +85,18 @@ var vm = new Vue({
         saveOrUpdate: function (event) {
             var ids = $("span.active").attr("id") + "";
             if (ids == "undefined") {
-                alert("菜单选择异常");
+                alert("角色选择异常");
                 return;
             }
             var arr = new Array;
             arr.push(ids.substring(4));
             vm.appUsers.roleIdList = arr;
 
-            if (vm.appRoles.roleName==null||vm.appRoles.roleName==""){
-                alert("角色名不能为空");
+            vm.appUsers.groupId = $("#groupList").val();
+            if (vm.appUsers.groupId == null) {
+                alert("群组未选择");
                 return;
             }
-
             var url = vm.appUsers.id == null ? "../app/users/save" : "../app/users/update";
             $.ajax({
                 type: "POST",
@@ -138,7 +140,7 @@ var vm = new Vue({
             $.get("../app/users/info/" + userNum, function (r) {
                 vm.appUsers = r.appUsers;
                 console.log(vm.appUsers);
-                var objs =  r.appUsers.roleList;
+                var objs = r.appUsers.roleList;
 
                 var htmlString = "<p><span class='tags'>";
                 for (var i = 0; i < objs.length; i++) {
@@ -198,3 +200,16 @@ function selectRoleIds() {
     var role_id = $("span.active").attr("id").substring(4);
     console.log(role_id);
 }
+
+$.get("../app/groups/select", function (r) {
+    var groupList = r.groupList;
+    for (var i = 0; i < groupList.length; i++) {
+        $("#groupList").append("<option value='" + groupList[i].id + "'>" + groupList[i].groupName + "</option>");
+    }
+    // refresh刷新和render渲染操作，必不可少  +r.data[i].id+"<===>"
+    $('#groupList').selectpicker('refresh');
+    $('#groupList').selectpicker('render');
+    if (groupList.length > 0) {
+        vm.groupId = groupList[0].id;
+    }
+});

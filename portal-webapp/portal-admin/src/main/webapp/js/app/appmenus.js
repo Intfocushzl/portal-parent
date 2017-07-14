@@ -251,8 +251,8 @@ var vm = new Vue({
             }).trigger("reloadGrid");
         },
         getRoleList: function (rowData) {
-            var url="";
-            $.get("../app/menus/selectRole?menuId=" + rowData.menuId, rowData ,function (result) {
+            var menuId=rowData==null?-1:rowData.menuId;
+            $.get("../app/menus/selectRole?menuId=" + menuId, rowData ,function (result) {
                 // var objs = jQuery.parseJSON(); //由JSON字符串转换为JSON对象
                 var objs = result.list;
                 console.log(objs);

@@ -65,6 +65,9 @@ public class AppUsers implements Serializable {
     private List<Integer> roleIdList;
     private List<AppRoles> roleList;
 
+    private Integer groupId;
+
+
     public Integer getId() {
         return id;
     }
@@ -423,5 +426,13 @@ public class AppUsers implements Serializable {
 
     public void setRoleList(List<AppRoles> roleList) {
         this.roleList = roleList;
+    }
+
+    public Integer getGroupId() {
+        return groupId;
+    }
+
+    public void setGroupId(Integer groupId) {
+        this.groupId = groupId;
     }
 }
