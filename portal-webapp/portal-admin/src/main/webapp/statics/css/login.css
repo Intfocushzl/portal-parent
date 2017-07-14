@@ -1,0 +1,11 @@
+.login-box-wrap, .register-box-wrap {
+    background: transparent;
+    /*padding: 20px;*/
+    padding: 30px 20px 30px 20px;
+    border-top: 0;
+    color: #666
+}
+
+.white{
+   background-color: transparent
+}

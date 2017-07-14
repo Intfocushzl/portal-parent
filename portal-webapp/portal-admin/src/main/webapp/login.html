@@ -29,37 +29,46 @@
         <b>数据化运营平台</b>
     </div>
     <!-- /.login-logo -->
-    <div class="login-box-body">
-        <p class="login-box-msg">管理员登录</p>
-
-        <div v-if="error" class="alert alert-danger alert-dismissible">
+    <div class="login-box-wrap">
+        <!--<p class="login-box-msg"></p>-->
+        <div v-if="error" class="alert alert-danger alert-dismissible " style="margin-top: -20px">
             <h4 style="margin-bottom: 0px;"><i class="fa fa-exclamation-triangle"></i> {{errorMsg}}</h4>
         </div>
-        <div class="form-group has-feedback">
-            <input type="text" class="form-control" v-model="username" placeholder="账号">
+
+        <div class="form-group has-feedback" >
+            <input type="text" class="form-control white"   v-model="username" placeholder="账号">
             <span class="glyphicon glyphicon-user form-control-feedback"></span>
         </div>
         <div class="form-group has-feedback">
-            <input type="password" class="form-control" v-model="password" placeholder="密码">
+            <input type="password" class="form-control white"  v-model="password" placeholder="密码">
             <span class="glyphicon glyphicon-lock form-control-feedback"></span>
         </div>
-        <div class="form-group has-feedback">
+        <div class="form-group has-feedback" hidden>
             <input type="text" class="form-control" v-model="captcha" @keyup.enter="login" placeholder="验证码">
             <span class="glyphicon glyphicon-warning-sign form-control-feedback"></span>
         </div>
-        <div class="form-group has-feedback">
+        <div class="form-group has-feedback" hidden>
             <img alt="如果看不清楚，请单击图片刷新！" class="pointer" :src="src" @click="refreshCode">
             &nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:;" @click="refreshCode">点击刷新</a>
         </div>
 
-        <div class="row">
-            <div class="col-xs-8">
-                <div class="checkbox icheck">
-                </div>
-            </div>
+        <!--<div class="row">-->
+            <!--<div class="col-xs-8">-->
+                <!--<div class="checkbox icheck">-->
+                <!--</div>-->
+            <!--</div>-->
+            <!--&lt;!&ndash; /.col &ndash;&gt;-->
+            <!--<div class="col-xs-4">-->
+                <!--<button type="button" class="btn btn-primary btn-block btn-flat" @click="login">登录</button>-->
+            <!--</div>-->
+            <!--&lt;!&ndash; /.col &ndash;&gt;-->
+        <!--</div>-->
+
+
+        <div>
             <!-- /.col -->
-            <div class="col-xs-4">
-                <button type="button" class="btn btn-primary btn-block btn-flat" @click="login">登录</button>
+            <div class="form-group has-feedback">
+                <button type="button" class="btn btn-primary btn-block btn-flat" style="margin-top: 20px"  @click="login">登录</button>
             </div>
             <!-- /.col -->
         </div>
@@ -79,7 +88,7 @@
 <!--登录背景样式-->
 <canvas id="login.canvas"></canvas>
 <script src="statics/canvas/login.canvas5.js"></script>
-
+<link rel="stylesheet" href="statics/css/login.css">
 <!--登录-->
 <script type="text/javascript">
     var vm = new Vue({
