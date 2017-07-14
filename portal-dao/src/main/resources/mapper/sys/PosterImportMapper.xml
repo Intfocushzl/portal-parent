@@ -30,7 +30,7 @@
     </select>
 
     <select id="areamansList" resultType="Map" parameterType="Map">
-        SELECT a.AreaMans AS areamans , a.City AS city FROM platform.d_bravo_shop a
+        SELECT DISTINCT a.City FROM platform.d_bravo_shop a
     </select>
 
     <insert id="insertPosterImportAreaTmp" parameterType="java.util.List">

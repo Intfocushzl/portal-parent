@@ -99,13 +99,13 @@ public class PosterImportController {
                     excellist = getExcelInfo(imgFile.getInputStream(), isExcel2003);
                     //保存到临时表
                     List<Map<String, Object>> list = posterImportService.areamansList();
-                    posterImportService.insertPosterImportAreaTmp(excellist, jobNumber, list);
+                    posterImportService.insertPosterImportAreaTmp(excellist, jobNumber);
                     //将临时表数据和正式数据进行比对，如有匹配上的需要返回
                     areaList = posterImportService.areaTmpJoinList(jobNumber);
                 }
             }
         } catch (Exception e) {
-            log.error(e.getMessage());
+            e.printStackTrace();
             return R.error(e.getMessage());
         }
         return R.success(areaList);
