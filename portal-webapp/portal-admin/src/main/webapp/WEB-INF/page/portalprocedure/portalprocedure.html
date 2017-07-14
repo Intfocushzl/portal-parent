@@ -28,7 +28,9 @@
                 #if($shiro.hasPermission("portalprocedure:delete"))
                 <a class="btn btn-primary" @click="del"><i class="fa fa-trash-o"></i>&nbsp;删除</a>
                 #end
+                #if($shiro.hasPermission("portalprocedure:save"))
                 <a class="btn btn-danger" @click="addRedis">一键缓存</a>
+                #end
             </div>
         </div>
         <table id="jqGrid"></table>
