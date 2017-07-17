@@ -214,10 +214,9 @@ public class ChannelTransparencyController {
      */
     @SuppressWarnings("rawtypes")
     @RequestMapping(value = "/upload", produces = "application/json; charset=utf-8")
-    public R imgUpload(String shopid, MultipartHttpServletRequest multipartRequest, HttpServletResponse response) {
-        User user = (User) multipartRequest.getSession().getAttribute("user");
+    public R imgUpload(String shopid,String storeNumber, MultipartHttpServletRequest multipartRequest, HttpServletResponse response) {
         String json = "{\"result\":1}";
-        if (user != null && user.getStoreNumber() != null && !user.getStoreNumber().equals("ALL")) {
+        if (storeNumber != null && !storeNumber.equals("ALL")) {
             response.setContentType("image/jpeg");
 
             ShopImgVO pimg = null;
@@ -273,9 +272,7 @@ public class ChannelTransparencyController {
                             out.close();
 
                             pimg = new ShopImgVO();
-                            if (user != null) {
-                                pimg.setShopid(user.getStoreNumber());
-                            }
+                                pimg.setShopid(storeNumber);
                             String pname = "/" + uuid + ".jpg";
                             pimg.setImgurl(s + "/upload/image/" + TimeUtil.getTimeYMD() + pname);
                             // pimg.setTitle(key);
@@ -308,11 +305,10 @@ public class ChannelTransparencyController {
      */
     @SuppressWarnings("rawtypes")
     @RequestMapping(value = "/uploadShop", produces = "application/json; charset=utf-8")
-    public R imgUploadShop(String shopid, MultipartHttpServletRequest multipartRequest,
+    public R imgUploadShop(String shopid,String storeNumber, MultipartHttpServletRequest multipartRequest,
                                 HttpServletResponse response) {
-        User user = (User) multipartRequest.getSession().getAttribute("user");
         String json = "{\"result\":1}";
-        if (user != null && user.getStoreNumber() != null && !user.getStoreNumber().equals("ALL")) {
+        if (storeNumber != null && !storeNumber.equals("ALL")) {
             response.setContentType("image/jpeg");
 
             ShopImgVO pimg = null;
@@ -377,9 +373,7 @@ public class ChannelTransparencyController {
                             // "shcg/", "shop_rack_tpl.xlsx", "D:/")
 
                             pimg = new ShopImgVO();
-                            if (user != null) {
-                                pimg.setShopid(user.getStoreNumber());
-                            }
+                                pimg.setShopid(storeNumber);
                             String pname = "/" + uuid + ".jpg";
                             pimg.setImgurl(SFTPConstants.SHOP_IMAGE + TimeUtil.getTimeYMD() + pname);
                             // pimg.setTitle(key);
@@ -411,11 +405,11 @@ public class ChannelTransparencyController {
      */
     @SuppressWarnings("rawtypes")
     @RequestMapping(value = "/uploadShopPlan", produces = "application/json; charset=utf-8")
-    public R uploadShopPlan(String shopid, MultipartHttpServletRequest multipartRequest,
+    public R uploadShopPlan(String shopid, String storeNumber,MultipartHttpServletRequest multipartRequest,
                                  HttpServletResponse response) {
         User user = (User) multipartRequest.getSession().getAttribute("user");
         String json = "{\"result\":1}";
-        if (user != null && user.getStoreNumber() != null && !user.getStoreNumber().equals("ALL")) {
+        if (storeNumber != null && !storeNumber.equals("ALL")) {
             ShopPlanVO shopPlanVO = new ShopPlanVO();
             shopPlanVO.setShopid(user.getStoreNumber());
             ShopImgVO pimg = null;
@@ -480,12 +474,11 @@ public class ChannelTransparencyController {
      * @throws Exception
      */
     @RequestMapping(value = "/uploadShopRack.do", method = RequestMethod.POST, produces = "application/json; charset=utf-8")
-    public R uploadData(Exception ex, HttpServletRequest req, HttpServletResponse response,
+    public R uploadData(Exception ex,String storeNumber, HttpServletRequest req, HttpServletResponse response,
                              Map<String, Object> model,
                              @org.springframework.web.bind.annotation.RequestParam("file") CommonsMultipartFile file) throws Exception {
-        User user = (User) req.getSession().getAttribute("user");
         String json = "{\"result\":1}";
-        if (user != null && user.getStoreNumber() != null && !user.getStoreNumber().equals("ALL")) {
+        if (storeNumber != null && !storeNumber.equals("ALL")) {
             if (file.getSize() > 0) {
 
                 String AllExt = ".xls|.xlsx|";
@@ -573,7 +566,7 @@ public class ChannelTransparencyController {
                                     if (StringUtils.isNotBlank(arrstr[4])) {
                                         shopRackVO.setDistype(arrstr[4]);
                                     }
-                                    shopRackVO.setShopid(user.getStoreNumber());
+                                    shopRackVO.setShopid(storeNumber);
                                     shopRackVO.setUpdateDate(new Date());
                                     data.add(shopRackVO);
                                 }
@@ -667,13 +660,12 @@ public class ChannelTransparencyController {
      */
 
     @RequestMapping(value = "/add.do", produces = "application/json; charset=utf-8")
-    public R add(MultipartHttpServletRequest multipartRequest, ShopDisVO shopDisVO, HttpServletResponse res,
+    public R add(MultipartHttpServletRequest multipartRequest, String storeNumber, ShopDisVO shopDisVO, HttpServletResponse res,
                       Map<String, Object> model) {
         Map<String, Object> map = new HashMap<>();
         String msg = "ok";
-        User user = (User) multipartRequest.getSession().getAttribute("user");
         String json = "{\"result\":1}";
-        if (user != null && user.getStoreNumber() != null && !user.getStoreNumber().equals("ALL")) {
+        if (storeNumber != null && !storeNumber.equals("ALL")) {
             if (multipartRequest.getParameter("id").equals("")) {
                 // ShopDisVO shopDisVO = new ShopDisVO();
                 if (multipartRequest.getParameter("dateno") != null) {
@@ -695,7 +687,7 @@ public class ChannelTransparencyController {
                 if (multipartRequest.getParameter("shopname") != null) {
                     shopDisVO.setShopname(multipartRequest.getParameter("shopname").trim());
                 }
-                shopDisVO.setShopid(user.getStoreNumber());
+                shopDisVO.setShopid(storeNumber);
                 shopDisVO.setImgurl(uploadFile("/upload/image/", "/upload/image/", multipartRequest));
                 shopDisVO.setUpdatedate(new Date());
                 shopDisService.insertSelective(shopDisVO);
@@ -708,7 +700,7 @@ public class ChannelTransparencyController {
                     }
 
                 }
-                shopDisVO.setShopid(user.getStoreNumber());
+                shopDisVO.setShopid(storeNumber);
                 shopDisVO.setUpdatedate(new Date());
                 shopDisService.updateByPrimaryKeySelective(shopDisVO);
             }
@@ -800,13 +792,12 @@ public class ChannelTransparencyController {
      */
 
     @RequestMapping(value = "/addRack.do", produces = "application/json; charset=utf-8")
-    public R addRack(HttpServletRequest multipartRequest, ShopRackVO shopRackVO, HttpServletResponse res,
+    public R addRack(HttpServletRequest multipartRequest, String storeNumber,ShopRackVO shopRackVO, HttpServletResponse res,
                           Map<String, Object> model) throws Exception {
         Map<String, Object> map = new HashMap<>();
         String msg = "ok";
-        User user = (User) multipartRequest.getSession().getAttribute("user");
         String json = "{\"result\":1}";
-        if (user != null && user.getStoreNumber() != null && !user.getStoreNumber().equals("ALL")) {
+        if (storeNumber != null && !storeNumber.equals("ALL")) {
             if (shopRackVO.getShopid() != null) {
                 Map<String, Object> mapshop = menuService.getShopByShopId(shopRackVO.getShopid());
                 if (mapshop != null && mapshop.get("text") != null) {
@@ -883,7 +874,6 @@ public class ChannelTransparencyController {
      */
     public String uploadFile(String savepath, String urlpath, MultipartHttpServletRequest multipartRequest) {
         String url = "";
-        User user = (User) multipartRequest.getSession().getAttribute("user");
 
         for (Iterator it = multipartRequest.getFileNames(); it.hasNext(); ) {
             String key = (String) it.next();
