@@ -26,11 +26,11 @@
     <select id="queryList" resultType="com.yonghui.portal.model.common.DBravoShopAddress">
         select * from d_bravo_shop_address
         <where>
-            <if test="id != null and id !=''">
-                and id like concat('%',#{id},'%')
+            <if test="shopid != null and shopid !=''">
+                and shopid like concat('%',#{shopid},'%')
             </if>
-            <if test="remark != null and remark !=''">
-                and remark like concat('%',#{remark},'%')
+            <if test="address != null and address !=''">
+                and address like concat('%',#{address},'%')
             </if>
         </where>
         <choose>

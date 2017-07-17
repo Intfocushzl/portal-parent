@@ -51,8 +51,8 @@ var vm = new Vue({
             //vm.reload();
             $("#jqGrid").jqGrid('setGridParam', {
                 postData: {
-                    id: vm.dBravoShopAddress.id,
-                    remark: vm.dBravoShopAddress.remark
+                    shopid: vm.dBravoShopAddress.shopid,
+                    address: vm.dBravoShopAddress.address
                 },
                 page: 1
             }).trigger("reloadGrid");
