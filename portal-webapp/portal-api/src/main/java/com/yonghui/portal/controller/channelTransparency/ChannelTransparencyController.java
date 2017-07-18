@@ -407,6 +407,7 @@ public class ChannelTransparencyController {
     @RequestMapping(value = "/uploadShopPlan", produces = "application/json; charset=utf-8")
     public R uploadShopPlan(String shopid, String storeNumber,MultipartHttpServletRequest multipartRequest,
                                  HttpServletResponse response) {
+        storeNumber = multipartRequest.getParameter("storeNumber");
         User user = (User) multipartRequest.getSession().getAttribute("user");
         String json = "{\"result\":1}";
         if (storeNumber != null && !storeNumber.equals("ALL")) {
