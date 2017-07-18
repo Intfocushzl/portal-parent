@@ -1,5 +1,6 @@
 package com.yonghui.portal.service.global;
 
+import com.yonghui.portal.model.global.Menu;
 import com.yonghui.portal.model.global.Role;
 
 import java.util.List;
@@ -25,5 +26,7 @@ public interface RoleService {
 
     void deleteBatch(Integer[] ids);
 
-    List<Integer>  queryMenuIdList(Integer id);
+    List<Integer> queryMenuIdList(Integer id);
+
+    List<Menu> queryMenuList(Integer roleId);
 }

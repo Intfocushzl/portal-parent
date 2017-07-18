@@ -19,6 +19,10 @@ public class Menu implements Serializable{
 
     private Date createTime;
 
+    private String createdAt;
+
+    private String updatedAt;
+
     private Integer status;
 
     private Integer sort;
@@ -124,7 +128,8 @@ public class Menu implements Serializable{
 //	}
 //
 //	
-//	
+//
+
 	public String getChecked() {
 		return checked;
 //		return checked="true";

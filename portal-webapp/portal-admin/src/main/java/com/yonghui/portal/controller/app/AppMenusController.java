@@ -84,7 +84,7 @@ public class AppMenusController extends AbstractController {
                         appMenu.setMenuId(id);
                         switch (type) {
                             case 1:
-                                String subName2=array.getJSONObject(i).getString("kpi_group");
+                                String subName2 = array.getJSONObject(i).getString("kpi_group");
                                 appMenu.setSubName2(subName2);
                                 String title = array.getJSONObject(i).getString("kpi_name");
                                 appMenu.setTitle(StringUtils.isEmpty(title) ? "" : title);
@@ -186,16 +186,16 @@ public class AppMenusController extends AbstractController {
             String result = "";
             switch (type) {
                 case 1:
-                    result = httpUtil.getGetResult(ConstantsUtil.AppBaseUrl.APP_BASE_POST_KPI_URL+"/"+menuId, map);
+                    result = httpUtil.getGetResult(ConstantsUtil.AppBaseUrl.APP_BASE_POST_KPI_URL + "/" + menuId, map);
                     break;
                 case 2:
-                    result = httpUtil.getGetResult(ConstantsUtil.AppBaseUrl.APP_BASE_POST_ANALYSE_URL+"/"+menuId, map);
+                    result = httpUtil.getGetResult(ConstantsUtil.AppBaseUrl.APP_BASE_POST_ANALYSE_URL + "/" + menuId, map);
                     break;
                 case 3:
-                    result = httpUtil.getGetResult(ConstantsUtil.AppBaseUrl.APP_BASE_POST_APP_URL+"/"+menuId, map);
+                    result = httpUtil.getGetResult(ConstantsUtil.AppBaseUrl.APP_BASE_POST_APP_URL + "/" + menuId, map);
                     break;
             }
-            System.out.println(result);
+            log.info(result);
             if (!StringUtils.isEmpty(result)) {
                 JSONObject jsonObject = JSONObject.parseObject(result);
                 if (jsonObject.getInteger("code") == 200) {
@@ -207,7 +207,7 @@ public class AppMenusController extends AbstractController {
                     switch (type) {
                         case 1:
                             appMenu.setName("生意概况");
-                            String subName2=object.getString("kpi_group");
+                            String subName2 = object.getString("kpi_group");
                             appMenu.setSubName2(subName2);
                             String title = object.getString("kpi_name");
                             appMenu.setTitle(StringUtils.isEmpty(title) ? "" : title);
@@ -296,21 +296,31 @@ public class AppMenusController extends AbstractController {
     public R save(@RequestBody AppMenu appMenu) {
 //        appMenusService.save(appMenu);
 //        return R.success();
-        int type  =appMenu.getType();
+        int type = appMenu.getType();
         HttpMethodUtil httpUtil = new HttpMethodUtil();
         Map<String, Object> map = new HashedMap();
         map.put("api_token", "api_token");
         Map<String, Object> child = new HashedMap();
-        child.put("url_path",appMenu.getUrl());
-        child.put("publicly",appMenu.getPublicly());
-        child.put("name",appMenu.getTitle());
-        child.put("category",appMenu.getSubName1());
-        child.put("group_name",appMenu.getSubName2());
-        if (type==1){
-            map.put("report", child);
-        }else if(type==2){
+        if (type == 1) {
+            child.put("publicly", appMenu.getPublicly());
+            child.put("kpi_name", appMenu.getTitle());
+            child.put("kpi_group", appMenu.getSubName2());
+            child.put("kpi_id", 0);
+            child.put("link", 0);
+            map.put("kpi", child);
+        } else if (type == 2) {
+            child.put("publicly", appMenu.getPublicly());
+            child.put("name", appMenu.getTitle());
+            child.put("group_name", appMenu.getSubName2());
+            child.put("category", appMenu.getSubName1());
+            child.put("url_path", appMenu.getUrl());
             map.put("analyse", child);
-        }else{
+        } else {
+            child.put("publicly", appMenu.getPublicly());
+            child.put("name", appMenu.getTitle());
+            child.put("group_name", appMenu.getSubName2());
+            child.put("category", 1);
+            child.put("url_path", appMenu.getUrl());
             map.put("app", child);
         }
         map.put("role_ids", appMenu.getRoleIds());
@@ -319,7 +329,7 @@ public class AppMenusController extends AbstractController {
             String result = "";
             switch (type) {
                 case 1:
-                    result = httpUtil.getPostJsonResult(ConstantsUtil.AppBaseUrl.APP_BASE_POST_KPI_URL , JSON.toJSONString(map));
+                    result = httpUtil.getPostJsonResult(ConstantsUtil.AppBaseUrl.APP_BASE_POST_KPI_URL, JSON.toJSONString(map));
                     break;
                 case 2:
                     result = httpUtil.getPostJsonResult(ConstantsUtil.AppBaseUrl.APP_BASE_POST_ANALYSE_URL, JSON.toJSONString(map));
@@ -371,25 +381,31 @@ public class AppMenusController extends AbstractController {
 //        appMenusService.update(appMenu);
 //        return R.success();
 
-        int type  =appMenu.getType();
+        int type = appMenu.getType();
         HttpMethodUtil httpUtil = new HttpMethodUtil();
         Map<String, Object> map = new HashedMap();
         map.put("api_token", "api_token");
         Map<String, Object> child = new HashedMap();
-        child.put("url_path",appMenu.getUrl());
-        child.put("publicly",appMenu.getPublicly());
-        child.put("group_name",appMenu.getSubName2());
-        child.put("name",appMenu.getTitle());
-        if (type==1){
-            child.put("category",1);
+        if (type == 1) {
+            child.put("publicly", appMenu.getPublicly());
+            child.put("kpi_name", appMenu.getTitle());
+            child.put("kpi_group", appMenu.getSubName2());
+            child.put("kpi_id", 0);
+            child.put("link", 0);
             map.put("kpi", child);
-            return null;
-        }else if(type==2){
-            child.put("category",appMenu.getSubName1());
+        } else if (type == 2) {
+            child.put("publicly", appMenu.getPublicly());
+            child.put("name", appMenu.getTitle());
+            child.put("group_name", appMenu.getSubName2());
+            child.put("category", appMenu.getSubName1());
+            child.put("url_path", appMenu.getUrl());
             map.put("analyse", child);
-        }else{
-
-            child.put("category",1);
+        } else {
+            child.put("publicly", appMenu.getPublicly());
+            child.put("name", appMenu.getTitle());
+            child.put("group_name", appMenu.getSubName2());
+            child.put("category", 1);
+            child.put("url_path", appMenu.getUrl());
             map.put("app", child);
         }
         map.put("role_ids", appMenu.getRoleIdList());
@@ -398,20 +414,20 @@ public class AppMenusController extends AbstractController {
             String result = "";
             switch (type) {
                 case 1:
-                    result = httpUtil.getPostJsonResult(ConstantsUtil.AppBaseUrl.APP_BASE_POST_KPI_URL +"/"+appMenu.getMenuId(), JSON.toJSONString(map));
+                    result = httpUtil.getPostJsonResult(ConstantsUtil.AppBaseUrl.APP_BASE_POST_KPI_URL + "/" + appMenu.getMenuId(), JSON.toJSONString(map));
                     break;
                 case 2:
-                    result = httpUtil.getPostJsonResult(ConstantsUtil.AppBaseUrl.APP_BASE_POST_ANALYSE_URL+"/"+appMenu.getMenuId(), JSON.toJSONString(map));
+                    result = httpUtil.getPostJsonResult(ConstantsUtil.AppBaseUrl.APP_BASE_POST_ANALYSE_URL + "/" + appMenu.getMenuId(), JSON.toJSONString(map));
                     break;
                 case 3:
-                    result = httpUtil.getPostJsonResult(ConstantsUtil.AppBaseUrl.APP_BASE_POST_APP_URL+"/"+appMenu.getMenuId(), JSON.toJSONString(map));
+                    result = httpUtil.getPostJsonResult(ConstantsUtil.AppBaseUrl.APP_BASE_POST_APP_URL + "/" + appMenu.getMenuId(), JSON.toJSONString(map));
                     break;
             }
             if (!StringUtils.isEmpty(result)) {
                 JSONObject jsonObject = JSONObject.parseObject(result);
                 if (jsonObject.getInteger("code") == 201) {
                     String info = jsonObject.getString("message");
-                    updateRole(httpUtil,appMenu.getMenuId(),type,map);
+                    updateRole(httpUtil, appMenu.getMenuId(), type, map);
                     log.info("============>更新结束");
                     return R.success().setMsg(info);
                 } else {
@@ -430,20 +446,20 @@ public class AppMenusController extends AbstractController {
 
     /**
      * 报表报表菜单权限配置
-     * */
-    public R updateRole(HttpMethodUtil httpUtil, Integer menuId,int type,Map<String,Object> map) {
+     */
+    public R updateRole(HttpMethodUtil httpUtil, Integer menuId, int type, Map<String, Object> map) {
         log.info("============>更新菜单-角色开始");
         try {
             String result = "";
             switch (type) {
                 case 1:
-                    result = httpUtil.getPostJsonResult(ConstantsUtil.AppBaseUrl.APP_BASE_POST_KPI_URL +"/"+menuId+"/roles", JSON.toJSONString(map));
+                    result = httpUtil.getPostJsonResult(ConstantsUtil.AppBaseUrl.APP_BASE_POST_KPI_URL + "/" + menuId + "/roles", JSON.toJSONString(map));
                     break;
                 case 2:
-                    result = httpUtil.getPostJsonResult(ConstantsUtil.AppBaseUrl.APP_BASE_POST_ANALYSE_URL+"/"+menuId+"/roles", JSON.toJSONString(map));
+                    result = httpUtil.getPostJsonResult(ConstantsUtil.AppBaseUrl.APP_BASE_POST_ANALYSE_URL + "/" + menuId + "/roles", JSON.toJSONString(map));
                     break;
                 case 3:
-                    result = httpUtil.getPostJsonResult(ConstantsUtil.AppBaseUrl.APP_BASE_POST_APP_URL+"/"+menuId+"/roles", JSON.toJSONString(map));
+                    result = httpUtil.getPostJsonResult(ConstantsUtil.AppBaseUrl.APP_BASE_POST_APP_URL + "/" + menuId + "/roles", JSON.toJSONString(map));
                     break;
             }
             if (!StringUtils.isEmpty(result)) {
@@ -488,7 +504,7 @@ public class AppMenusController extends AbstractController {
         HttpMethodUtil httpUtil = new HttpMethodUtil();
         Map<String, Object> map = new HashedMap();
         map.put("api_token", "api_token");
-        map.put("lazy_load",true);
+        map.put("lazy_load", true);
         try {
             String result = "";
             switch (type) {
@@ -526,7 +542,7 @@ public class AppMenusController extends AbstractController {
                         String created_at = array.getJSONObject(i).getString("created_at");
                         appRoles.setCreatedAt(StringUtils.isEmpty(created_at) ? "" : created_at);
                         Boolean active = array.getJSONObject(i).getBoolean("active");
-                        appRoles.setActive((active!=null&&active)?1:0);
+                        appRoles.setActive((active != null && active) ? 1 : 0);
                         list.add(appRoles);
 
                     }

@@ -1,4 +1,5 @@
 $(function () {
+
     $("#jqGrid").jqGrid({
         url: '../app/users/list',     // 请求后台json数据的url
         datatype: "json",                // 后台返回的数据格式
@@ -139,7 +140,6 @@ var vm = new Vue({
         getInfo: function (userNum) {
             $.get("../app/users/info/" + userNum, function (r) {
                 vm.appUsers = r.appUsers;
-                console.log(vm.appUsers);
                 var objs = r.appUsers.roleList;
 
                 var htmlString = "<p><span class='tags'>";
@@ -151,7 +151,7 @@ var vm = new Vue({
                     }
                 }
                 htmlString += "</span> </p>";
-                document.getElementById("tagsdlg").innerHTML = htmlString;
+                $("#tagsdlg").html(htmlString);
             });
         },
         reload: function (event) {
@@ -175,7 +175,7 @@ var vm = new Vue({
                     }
                 }
                 htmlString += "</span> </p>";
-                document.getElementById("tagsdlg").innerHTML = htmlString;
+                $("#tagsdlg").html(htmlString);
             });
 
         }

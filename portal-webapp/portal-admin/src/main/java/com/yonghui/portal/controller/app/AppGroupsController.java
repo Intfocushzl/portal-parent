@@ -5,11 +5,11 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.yonghui.portal.controller.AbstractController;
 import com.yonghui.portal.model.app.AppGroups;
-import com.yonghui.portal.model.app.AppRoles;
 import com.yonghui.portal.service.app.AppGroupsService;
 import com.yonghui.portal.util.*;
 import com.yonghui.portal.util.report.columns.HttpMethodUtil;
 import org.apache.commons.collections.map.HashedMap;
+import org.apache.log4j.Logger;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -27,7 +27,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/app/groups")
 public class AppGroupsController extends AbstractController {
-
+    Logger log = Logger.getLogger(this.getClass());
 
     @Autowired
     private AppGroupsService appGroupsService;
@@ -50,7 +50,7 @@ public class AppGroupsController extends AbstractController {
         try {
             String result = httpUtil.getGetResult(ConstantsUtil.AppBaseUrl.APP_BASE_GET_GROUP_URL, map);
 
-            System.out.println(result);
+            log.info(result);
             if (!StringUtils.isEmpty(result)) {
                 JSONObject jsonObject = JSONObject.parseObject(result);
                 if (jsonObject.getInteger("code") == 200) {
@@ -64,12 +64,12 @@ public class AppGroupsController extends AbstractController {
                         Integer id = array.getJSONObject(i).getInteger("id");
                         appGroups.setId(id);
                         Integer group_id = array.getJSONObject(i).getInteger("group_id");
-                        appGroups.setGroupid(group_id);
+                        appGroups.setGroupId(group_id);
                         String group_name = array.getJSONObject(i).getString("group_name");
                         appGroups.setGroupName(group_name);
                         String memo = array.getJSONObject(i).getString("memo");
                         appGroups.setMemo(memo);
-                        Date created_at = array.getJSONObject(i).getDate("created_at");
+                        String created_at = array.getJSONObject(i).getString("created_at");
                         appGroups.setCreatedAt(created_at);
 
                         appGroupsList.add(appGroups);
@@ -122,7 +122,7 @@ public class AppGroupsController extends AbstractController {
         try {
             String result = httpUtil.getGetResult(ConstantsUtil.AppBaseUrl.APP_BASE_POST_GROUP_URL + "/" + id, map);
 
-            System.out.println(result);
+            log.info(result);
             if (!StringUtils.isEmpty(result)) {
                 JSONObject jsonObject = JSONObject.parseObject(result);
                 if (jsonObject.getInteger("code") == 200) {
@@ -132,7 +132,7 @@ public class AppGroupsController extends AbstractController {
                     Integer xid = obj.getInteger("id");
                     appGroups.setId(xid);
                     Integer group_id = obj.getInteger("group_id");
-                    appGroups.setGroupid(group_id);
+                    appGroups.setGroupId(group_id);
                     String group_name = obj.getString("group_name");
                     appGroups.setGroupName(group_name);
                     String memo = obj.getString("memo");
@@ -167,14 +167,13 @@ public class AppGroupsController extends AbstractController {
         Map<String, Object> map = new HashedMap();
         map.put("api_token", "api_token");
         Map<String, Object> appMap = new HashedMap();
-        appMap.put("group_id", appGroups.getGroupid());
+        appMap.put("group_id", appGroups.getGroupId());
         appMap.put("group_name", appGroups.getGroupName());
         appMap.put("memo", appGroups.getMemo());
         map.put("group", appMap);
         try {
             String result = httpUtil.getPostJsonResult(ConstantsUtil.AppBaseUrl.APP_BASE_POST_GROUP_URL, JSON.toJSONString(map));
-
-            System.out.println(result);
+            log.info(result);
             if (!StringUtils.isEmpty(result)) {
                 JSONObject jsonObject = JSONObject.parseObject(result);
                 if (jsonObject.getInteger("code") == 201) {
@@ -207,14 +206,14 @@ public class AppGroupsController extends AbstractController {
         Map<String, Object> map = new HashedMap();
         map.put("api_token", "api_token");
         Map<String, Object> appMap = new HashedMap();
-        appMap.put("group_id", appGroups.getGroupid());
+        appMap.put("group_id", appGroups.getGroupId());
         appMap.put("group_name", appGroups.getGroupName());
         appMap.put("memo", appGroups.getMemo());
         map.put("group", appMap);
         try {
             String result = httpUtil.getPostJsonResult(ConstantsUtil.AppBaseUrl.APP_BASE_POST_GROUP_URL+ "/" + appGroups.getId(), JSON.toJSONString(map));
 
-            System.out.println(result);
+            log.info(result);
             if (!StringUtils.isEmpty(result)) {
                 JSONObject jsonObject = JSONObject.parseObject(result);
                 if (jsonObject.getInteger("code") == 201) {
@@ -260,7 +259,7 @@ public class AppGroupsController extends AbstractController {
         try {
             String result = httpUtil.getGetResult(ConstantsUtil.AppBaseUrl.APP_BASE_GET_GROUP_URL, map);
 
-            System.out.println(result);
+            log.info(result);
             if (!StringUtils.isEmpty(result)) {
                 JSONObject jsonObject = JSONObject.parseObject(result);
                 if (jsonObject.getInteger("code") == 200) {
@@ -274,14 +273,14 @@ public class AppGroupsController extends AbstractController {
                         Integer id = array.getJSONObject(i).getInteger("id");
                         appGroups.setId(id);
                         Integer group_id = array.getJSONObject(i).getInteger("group_id");
-                        appGroups.setGroupid(group_id);
+                        appGroups.setGroupId(group_id);
                         String group_name = array.getJSONObject(i).getString("group_name");
                         appGroups.setGroupName(group_name);
                         String memo = array.getJSONObject(i).getString("memo");
                         appGroups.setMemo(memo);
-                        Date created_at = array.getJSONObject(i).getDate("created_at");
+                        String created_at = array.getJSONObject(i).getString("created_at");
                         appGroups.setCreatedAt(created_at);
-
+                        appGroups.setActive(0);
                         appGroupsList.add(appGroups);
                     }
 
@@ -303,5 +302,60 @@ public class AppGroupsController extends AbstractController {
             return R.success().put("groupList", appGroupsList);
         }
 
+    }
+    /**
+     * 列表
+     */
+    @RequestMapping("/selectGroups")
+    public R selectGroups(@RequestParam String userNum) {
+        List<AppGroups> groupList = new ArrayList<>();
+
+        HttpMethodUtil httpUtil = new HttpMethodUtil();
+        Map<String, Object> map = new HashedMap();
+        map.put("api_token", "api_token");
+        map.put("lazy_load", true);
+        try {
+            String result = httpUtil.getGetResult(ConstantsUtil.AppBaseUrl.APP_BASE_POST_USER_URL + "/" + userNum + "/groups", map);
+            log.info(result);
+            if (!StringUtils.isEmpty(result)) {
+                JSONObject jsonObject = JSONObject.parseObject(result);
+                if (jsonObject.getInteger("code") == 200) {
+
+                    JSONArray array = jsonObject.getJSONArray("data");
+                    if (array == null) {
+                        array = new JSONArray();
+                    }
+                    for (int i = 0; i < array.size(); i++) {
+                        AppGroups appGroups = new AppGroups();
+                        Integer id = array.getJSONObject(i).getInteger("id");
+                        appGroups.setId(id);
+                        Integer group_id = array.getJSONObject(i).getInteger("group_id");
+                        if (group_id != null) {
+                            appGroups.setGroupId(group_id);
+                        }
+                        String group_name = array.getJSONObject(i).getString("group_name");
+                        appGroups.setGroupName(StringUtils.isEmpty(group_name) ? "" : group_name);
+                        String memo = array.getJSONObject(i).getString("memo");
+                        appGroups.setMemo(StringUtils.isEmpty(memo) ? "" : memo);
+                        String created_at = array.getJSONObject(i).getString("created_at");
+                        appGroups.setCreatedAt(StringUtils.isEmpty(created_at) ? "" : created_at);
+                        Boolean active = array.getJSONObject(i).getBoolean("active");
+                        appGroups.setActive((active != null && active) ? 1 : 0);
+                        groupList.add(appGroups);
+                    }
+                    return R.success().put("groupList", groupList);
+                } else {
+                    groupList = new ArrayList<>();
+                    return R.success().put("groupList", groupList);
+                }
+            } else {
+                groupList = new ArrayList<>();
+                return R.success().put("groupList", groupList);
+            }
+        } catch (Exception e) {
+            log.error(e);
+            e.printStackTrace();
+            return R.success().put("groupList", groupList);
+        }
     }
 }

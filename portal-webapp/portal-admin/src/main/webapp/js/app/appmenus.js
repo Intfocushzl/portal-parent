@@ -266,7 +266,7 @@ var vm = new Vue({
                     }
                 }
                 htmlString += "</span> </p>";
-                document.getElementById("tagsdlg").innerHTML = htmlString;
+                $("#tagsdlg").html(htmlString);
             });
 
         }
