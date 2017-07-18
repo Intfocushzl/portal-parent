@@ -222,8 +222,27 @@ tbody > tr > th {
 }
 
 /*菜单缩进*/
-.skin-blue .sidebar-menu > li > .treeview-menu {
-    padding-left: 20px;
+.sidebar-menu .treeview-menu {
+    padding-left: 0px !important;
+}
+
+.skin-blue .sidebar-menu > li > .treeview-menu > li > a {
+    padding-left: 25px;
+}
+
+.sidebar-menu .treeview-menu .treeview-menu > li > a {
+    padding-left: 45px !important;
+}
+
+/*导航背景色*/
+.skin-blue .treeview-menu > li > a:hover {
+    color: #fff !important;
+    background: #333;
+}
+
+.active_a {
+    color: #fff !important;
+    background: #000;
 }
 
 /*修改密码*/

@@ -109,6 +109,9 @@ function routerList(router, menuList){
 			    //导航菜单展开
 			    $(".treeview-menu li").removeClass("active");
 			    $("a[href='"+url+"']").parents("li").addClass("active");
+
+				$(".treeview-menu a").removeClass("active_a");
+				$("a[href='"+url+"']").addClass("active_a");
 			    
 			    vm.navTitle = $("a[href='"+url+"']").text();
 			});
