@@ -411,7 +411,7 @@ public class ChannelTransparencyController {
         String json = "{\"result\":1}";
         if (storeNumber != null && !storeNumber.equals("ALL")) {
             ShopPlanVO shopPlanVO = new ShopPlanVO();
-            shopPlanVO.setShopid(user.getStoreNumber());
+            shopPlanVO.setShopid(storeNumber);
             ShopImgVO pimg = null;
             for (Iterator it = multipartRequest.getFileNames(); it.hasNext(); ) {
                 String key = (String) it.next();
