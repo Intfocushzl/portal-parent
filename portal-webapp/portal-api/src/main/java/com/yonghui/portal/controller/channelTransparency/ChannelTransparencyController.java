@@ -216,6 +216,7 @@ public class ChannelTransparencyController {
     @RequestMapping(value = "/upload", produces = "application/json; charset=utf-8")
     public R imgUpload(String shopid,String storeNumber, MultipartHttpServletRequest multipartRequest, HttpServletResponse response) {
         String json = "{\"result\":1}";
+        storeNumber = multipartRequest.getParameter("storeNumber");
         if (storeNumber != null && !storeNumber.equals("ALL")) {
             response.setContentType("image/jpeg");
 
@@ -308,6 +309,7 @@ public class ChannelTransparencyController {
     public R imgUploadShop(String shopid,String storeNumber, MultipartHttpServletRequest multipartRequest,
                                 HttpServletResponse response) {
         String json = "{\"result\":1}";
+        storeNumber = multipartRequest.getParameter("storeNumber");
         if (storeNumber != null && !storeNumber.equals("ALL")) {
             response.setContentType("image/jpeg");
 
@@ -476,6 +478,7 @@ public class ChannelTransparencyController {
                              Map<String, Object> model,
                              @org.springframework.web.bind.annotation.RequestParam("file") CommonsMultipartFile file) throws Exception {
         String json = "{\"result\":1}";
+        storeNumber = req.getParameter("storeNumber");
         if (storeNumber != null && !storeNumber.equals("ALL")) {
             if (file.getSize() > 0) {
 
@@ -663,6 +666,7 @@ public class ChannelTransparencyController {
         Map<String, Object> map = new HashMap<>();
         String msg = "ok";
         String json = "{\"result\":1}";
+        storeNumber = multipartRequest.getParameter("storeNumber");
         if (storeNumber != null && !storeNumber.equals("ALL")) {
             if (multipartRequest.getParameter("id").equals("")) {
                 // ShopDisVO shopDisVO = new ShopDisVO();
@@ -795,6 +799,7 @@ public class ChannelTransparencyController {
         Map<String, Object> map = new HashMap<>();
         String msg = "ok";
         String json = "{\"result\":1}";
+        storeNumber = multipartRequest.getParameter("storeNumber");
         if (storeNumber != null && !storeNumber.equals("ALL")) {
             if (shopRackVO.getShopid() != null) {
                 Map<String, Object> mapshop = menuService.getShopByShopId(shopRackVO.getShopid());
