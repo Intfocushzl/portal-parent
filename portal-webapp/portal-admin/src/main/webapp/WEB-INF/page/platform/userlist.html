@@ -71,7 +71,7 @@
                 <div class="col-sm-10">
                     <select class="form-control" name="roleId" v-model='user.roleId' >
                         <template v-for="role in roleList">
-                            <option :value="role.id" >
+                            <option :value="role.roleId" >
                                 {{ role.name }}
                             </option>
                         </template>

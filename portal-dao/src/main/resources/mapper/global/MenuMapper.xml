@@ -201,6 +201,16 @@
         order by sort asc
     </select>
 
+    <select id="listRoleMenuByRoleId"  resultMap="BaseResultMap">
+        call platform.query_role_menu(#{value});
+        <!--select *,1 as checked from platform.menu_forfront-->
+        <!--<if test="null != value ">-->
+            <!--where id in-->
+            <!--(select menuId from platform.r_role_menu_forfront where roleId = #{value})-->
+        <!--</if>-->
+        <!--order by sort asc-->
+    </select>
+
     <select id="listMenu" resultMap="BaseResultMap">
         select * from platform.menu_forfront order by sort asc
     </select>

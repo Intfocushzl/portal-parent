@@ -197,7 +197,8 @@ var vm = new Vue({
             vm.title = "新增";
             var o = new Object();
             o.type = (vm.user.type == null ? 1 : vm.user.type);
-            this.getRoleList(o);
+            vm.getRoleList(o);
+            vm.getGroupList(null);
         },
         update: function (event) {
             var id = getSelectedRow();
@@ -261,6 +262,7 @@ var vm = new Vue({
                 var o = new Object();
                 o.type = vm.user.type;
                 vm.getRoleList(o);
+                vm.getGroupList(vm.user.jobNumber);
             });
         },
         getRoleList: function (params) {
@@ -291,6 +293,26 @@ var vm = new Vue({
             // $.get("/yhportal/api/portal/custom?yongHuiReportCustomCode=REP_000030", function (data) {
             //     console.log(data);
             // });
+        },
+        getGroupList: function (userNum){
+            var url=userNum==null?"../app/groups/select":"../app/groups/selectGroups?userNum="+userNum;
+            $.get(url, function (r) {
+                var groupList = r.groupList;
+                var isInited=false;
+                for (var i = 0; i < groupList.length; i++) {
+                    $("#groupList").append("<option value='" + groupList[i].id + "'>" + groupList[i].groupName + "</option>");
+                    if(groupList[i].active>0){
+                        vm.user.groupId=groupList[i].id;
+                        isInited=true;
+                    }
+                }
+                // refresh刷新和render渲染操作，必不可少  +r.data[i].id+"<===>"
+                $('#groupList').selectpicker('refresh');
+                $('#groupList').selectpicker('render');
+                if (!isInited&&groupList.length > 0) {
+                    vm.user.groupId = groupList[0].id;
+                }
+            });
         },
         newUserReload: function (event) {
             vm.showList = 3;
@@ -352,5 +374,11 @@ var vm = new Vue({
             });
         }
     }
+});
+
+$(window).on('load', function () {
+    $('.selectpicker').selectpicker({
+        'selectedText': 'cat'
+    });
 });
 vm.getLargeArea();

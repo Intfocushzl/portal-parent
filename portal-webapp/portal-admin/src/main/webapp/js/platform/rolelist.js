@@ -142,12 +142,14 @@ var vm = new Vue({
         getRole: function (roleId) {
             $.get("/admin/forfront/role/info/" + roleId, function (r) {
                 vm.role = r.role;
-
+                console.log(r.role);
                 //勾选角色所拥有的菜单
                 var menuIds = vm.role.menuIdList;
                 for (var i = 0; i < menuIds.length; i++) {
                     var node = ztree.getNodeByParam("id", menuIds[i]);
-                    ztree.checkNode(node, true, false);
+                    if (node!=null){
+                        ztree.checkNode(node, true, false);
+                    }
                 }
             });
         },
@@ -208,6 +210,28 @@ var vm = new Vue({
                 postData: {'name': vm.q.name},
                 page: page
             }).trigger("reloadGrid");
+        },
+        addRedis: function () {
+            var roleIds = getSelectedRows();
+            if (roleIds == null) {
+                return;
+            }
+            confirm('确定要缓存选中角色的权限菜单？', function () {
+                $.ajax({
+                    type: "POST",
+                    url: "/admin/forfront/role/addRedis",
+                    data: JSON.stringify(roleIds),
+                    success: function (r) {
+                        if (r.code == 0) {
+                            alert('操作成功', function (index) {
+                                vm.reload();
+                            });
+                        } else {
+                            alert(r.msg);
+                        }
+                    }
+                });
+            });
         }
     }
 });

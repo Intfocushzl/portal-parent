@@ -34,7 +34,7 @@
                 order by ${sidx} ${order}
             </when>
 			<otherwise>
-                order by id ASC
+                order by roleId ASC
 			</otherwise>
         </choose>
 		<if test="offset != null and limit != null">
@@ -111,6 +111,10 @@
 		delete from platform.r_role_menu_forfront where roleId = #{value}
 	</delete>
 
+    <delete id="deleteUselessRoleMenu">
+        delete from platform.r_role_menu_forfront where roleId not in (select roleId from platform.role_forfront);
+    </delete>
+
 	<insert id="saveRoleMenu" parameterType="Map" useGeneratedKeys="true" keyProperty="id">
 		insert into platform.r_role_menu_forfront
 		(
@@ -137,4 +141,8 @@
 		where roleId = #{roleId}
 	</update>
 
+
+    <select id="getNextRoleId" resultType="Integer">
+        select (roleId+1) as nextId from platform.role_forfront order by roleId desc limit 1;
+    </select>
 </mapper>

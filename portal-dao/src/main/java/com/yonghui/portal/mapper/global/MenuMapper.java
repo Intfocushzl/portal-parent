@@ -45,6 +45,8 @@ public interface MenuMapper extends BaseMapper<Menu>{
     List<Map<String,Object>> getBravoShopList(Map<String, Object> map);
 
     List<Map<String,Object>> getNewAreaMansListByLargeArea(Map<String, Object> map);
+
+    List<Menu> listRoleMenuByRoleId(Integer roleId);
 }
 
 
