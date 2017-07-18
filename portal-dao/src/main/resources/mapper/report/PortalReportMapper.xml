@@ -71,6 +71,7 @@
 			`report_hot_data`,
 			`report_merged_cell_info_collection`,
 			`report_outer_html`,
+			`report_title_name`,
 			`cell_title_name`,
 			`remark`,
 			`creater`,
@@ -94,6 +95,7 @@
 			#{reportHotData},
 			#{reportMergedCellInfoCollection},
 			#{reportOuterHtml},
+			#{reportTitleName},
 			#{cellTitleName},
 			#{remark},
 			#{creater},
@@ -123,6 +125,7 @@
                 #{reportMergedCellInfoCollection},
             </if>
             <if test="reportOuterHtml != null">`report_outer_html` = #{reportOuterHtml},</if>
+            <if test="reportTitleName != null">`report_title_name` = #{reportTitleName},</if>
             <if test="cellTitleName != null">`cell_title_name` = #{cellTitleName},</if>
             <if test="remark != null">`remark` = #{remark},</if>
             <if test="creater != null">`creater` = #{creater},</if>

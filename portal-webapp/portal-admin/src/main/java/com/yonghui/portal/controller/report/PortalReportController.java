@@ -69,6 +69,7 @@ public class PortalReportController extends AbstractController {
         portalReport.setReportHotData(GzipUtils.gzip(portalReport.getReportHotData()));
         portalReport.setReportHeadersFormatConsole(GzipUtils.gzip(portalReport.getReportHeadersFormatConsole()));
         portalReport.setReportOuterHtml(GzipUtils.gzip(portalReport.getReportOuterHtml()));
+        portalReport.setReportTitleName(GzipUtils.gzip(portalReport.getReportTitleName()));
         portalReport.setCellTitleName(GzipUtils.gzip(portalReport.getCellTitleName()));
         redisBizUtilAdmin.setPortalReport(portalReport.getCodeOld(), portalReport.getCode(), JSONObject.toJSONString(portalReport));
         return R.success();
@@ -86,6 +87,7 @@ public class PortalReportController extends AbstractController {
         portalReport.setReportHotData(GzipUtils.gzip(portalReport.getReportHotData()));
         portalReport.setReportHeadersFormatConsole(GzipUtils.gzip(portalReport.getReportHeadersFormatConsole()));
         portalReport.setReportOuterHtml(GzipUtils.gzip(portalReport.getReportOuterHtml()));
+        portalReport.setReportTitleName(GzipUtils.gzip(portalReport.getReportTitleName()));
         portalReport.setCellTitleName(GzipUtils.gzip(portalReport.getCellTitleName()));
         redisBizUtilAdmin.setPortalReport(portalReport.getCodeOld(), portalReport.getCode(), JSONObject.toJSONString(portalReport));
         return R.success();

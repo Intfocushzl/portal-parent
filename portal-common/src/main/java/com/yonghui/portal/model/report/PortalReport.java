@@ -34,8 +34,19 @@ public class PortalReport extends AuditAuto {
 
     private int reportHeadersCountCols;
 
-    // 返回结果中英文关系
+    // 导出结果中英文关系
     private String cellTitleName;
+
+    // 导出报表标题中英文关系
+    private String reportTitleName;
+
+    public String getReportTitleName() {
+        return reportTitleName;
+    }
+
+    public void setReportTitleName(String reportTitleName) {
+        this.reportTitleName = reportTitleName;
+    }
 
     @Override
     public Long getId() {
