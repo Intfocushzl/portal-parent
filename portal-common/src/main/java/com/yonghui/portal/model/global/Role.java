@@ -32,6 +32,8 @@ public class Role implements Serializable {
     //1-人事2-财务3-招商4-其他
     private Integer ownerType;
 
+    private Integer active;
+
     /**
      * 创建者ID
      */
@@ -154,5 +156,13 @@ public class Role implements Serializable {
 
     public void setMenuIdList(List<Integer> menuIdList) {
         this.menuIdList = menuIdList;
+    }
+
+    public Integer getActive() {
+        return active;
+    }
+
+    public void setActive(Integer active) {
+        this.active = active;
     }
 }

@@ -23,13 +23,15 @@ public class AppGroups implements Serializable {
 
     private Date loadTime;
 
-    private Date createdAt;
+    private String createdAt;
 
-    private Date updatedAt;
+    private String updatedAt;
 
     private String shopid;
 
-    private Integer groupid;
+    private Integer groupId;
+
+    private Integer active;
 
     /**
      * 设置：
@@ -104,28 +106,28 @@ public class AppGroups implements Serializable {
     /**
      * 设置：
      */
-    public void setCreatedAt(Date createdAt) {
+    public void setCreatedAt(String createdAt) {
         this.createdAt = createdAt;
     }
 
     /**
      * 获取：
      */
-    public Date getCreatedAt() {
+    public String getCreatedAt() {
         return createdAt;
     }
 
     /**
      * 设置：
      */
-    public void setUpdatedAt(Date updatedAt) {
+    public void setUpdatedAt(String updatedAt) {
         this.updatedAt = updatedAt;
     }
 
     /**
      * 获取：
      */
-    public Date getUpdatedAt() {
+    public String getUpdatedAt() {
         return updatedAt;
     }
 
@@ -146,8 +148,15 @@ public class AppGroups implements Serializable {
     /**
      * 设置：
      */
-    public void setGroupid(Integer groupid) {
-        this.groupid = groupid;
+    public void setGroupId(Integer groupid) {
+        this.groupId = groupid;
+    }
+
+    /**
+     * 获取：
+     */
+    public Integer getGroupId() {
+        return groupId;
     }
 
     public Integer getId() {
@@ -158,10 +167,11 @@ public class AppGroups implements Serializable {
         this.id = id;
     }
 
-    /**
-     * 获取：
-     */
-    public Integer getGroupid() {
-        return groupid;
+    public Integer getActive() {
+        return active;
+    }
+
+    public void setActive(Integer active) {
+        this.active = active;
     }
 }

@@ -25,6 +25,9 @@
 				#if($shiro.hasPermission("role:delete"))
 				<a class="btn btn-primary" @click="del"><i class="fa fa-trash-o"></i>&nbsp;删除</a>
 				#end
+                #if($shiro.hasPermission("role:save"))
+                <a class="btn btn-danger" @click="addRedis"><i class="fa fa-download"></i>&nbsp;一键缓存</a>
+                #end
 			</div>
 		</div>
 	    <table id="jqGrid"></table>

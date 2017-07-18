@@ -1,5 +1,6 @@
 package com.yonghui.portal.controller.platform;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.yonghui.portal.controller.AbstractController;
 import com.yonghui.portal.model.global.Menu;
@@ -62,7 +63,7 @@ public class RoleController extends AbstractController {
      */
     @RequestMapping("/select")
     @RequiresPermissions("forfront:role:select")
-    public R select(@RequestParam Map<String, Object> map){
+    public R select(@RequestParam Map<String, Object> map) {
 
 //        //如果不是超级管理员，则只查询自己所拥有的角色列表
 //        if(getUserId() != Constant.SUPER_ADMIN){
@@ -118,7 +119,7 @@ public class RoleController extends AbstractController {
     @RequiresPermissions("role:delete")
     public R delete(@RequestBody Integer[] ids) {
         roleService.deleteBatch(ids);
-        for (Integer id:ids){
+        for (Integer id : ids) {
             redisBizUtilAdmin.removeRoleMenu(id);
         }
         return R.success();
@@ -126,15 +127,31 @@ public class RoleController extends AbstractController {
 
     public void getRoleMenu(Role role) {
         List<Menu> menus = new ArrayList<Menu>();
-        List<Menu> menuList  = userMenuService.listRoleMenu(role.getMenuIdList());
+        List<Menu> menuList = userMenuService.listRoleMenu(role.getMenuIdList());
         menus = new ListToTreeUtils().listTreeMenu(menuList);
         JSONObject json = new JSONObject();
         json.put("data", menus);
-        if (menuList==null){
+        if (menuList == null) {
             menuList = new ArrayList<Menu>();
         }
-        log.info("角色菜单数据:" + menuList);
+        log.info("角色菜单数据-:" + json.toString());
         redisBizUtilAdmin.setRoleMenu(role.getRoleId(), json.toString());
     }
 
+    //一键缓存
+    @RequestMapping("/addRedis")
+    public R addRedis(@RequestBody Integer[] ids) {
+        for (Integer id : ids) {
+            List<Menu> menuList = roleService.queryMenuList(id);
+            List<Menu> menus = new ListToTreeUtils().listTreeMenu(menuList);
+            JSONObject json = new JSONObject();
+            json.put("data", menus);
+            if (menuList == null) {
+                menuList = new ArrayList<Menu>();
+            }
+            log.info("角色菜单数据-:" + json.toString());
+            redisBizUtilAdmin.setRoleMenu(id, json.toString());
+        }
+        return R.success();
+    }
 }

@@ -25,4 +25,8 @@ public interface RoleMapper extends BaseMapper<Role> {
     void saveRoleMenu(Map<String, Object> map);
 
     void updateRoleMenu(Map<String, Object> map);
+
+    Integer getNextRoleId();
+
+    void deleteUselessRoleMenu();
 }
