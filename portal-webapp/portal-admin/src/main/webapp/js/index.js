@@ -20,7 +20,7 @@ var menuItem = Vue.extend({
 //iframe自适应
 $(window).on('resize', function() {
 	var $content = $('.content');
-	$content.height($(this).height() - 154);
+	$content.height($(this).height() - 115);
 	$content.find('iframe').each(function() {
 		$(this).height($content.height());
 	});

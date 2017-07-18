@@ -3,6 +3,7 @@ html {
 }
 
 .content-header {
+    display: none;
     position: relative;
     padding: 0 0 3px 8px
 }
@@ -58,10 +59,12 @@ html {
         width: 20%;
         max-width: 200px;
     }
+
     .col-sm-3 {
         width: 30%;
         max-width: 300px;
     }
+
     .col-sm-5 {
         width: 50%;
         max-width: 500px;
@@ -112,19 +115,208 @@ tbody > tr > th {
 
 /* 滚动槽 */
 ::-webkit-scrollbar-track {
-    -webkit-box-shadow: inset 0 0 6px rgba(246, 116, 2, 0.3);
+    -webkit-box-shadow: inset 0 0 6px rgba(204, 204, 204, 0.9);
     border-radius: 12px;
 }
 
 /* 滚动条滑块 */
 ::-webkit-scrollbar-thumb {
     border-radius: 12px;
-    background: rgba(0, 238, 118, 0.1);
-    -webkit-box-shadow: inset 0 0 6px rgba(97, 255, 3, 0.35);
+    background: rgba(153, 153, 153, 0.58);
+    -webkit-box-shadow: inset 0 0 6px rgba(153, 153, 153, 0.89);
 }
 
 ::-webkit-scrollbar-thumb:window-inactive {
-    background: rgba(0, 255, 60, 0.29);
+    background: rgba(153, 153, 153, 0.89);
 }
 
 /* 设置滚动条的样式 结束 */
+
+/* 自定义开始 */
+.skin-blue .main-header .navbar {
+    background-color: #dddddd;
+}
+
+/*头部导航*/
+.skin-blue .main-header .navbar .nav > li > a {
+    color: #333
+}
+
+.skin-blue .main-header .navbar .nav > li > a:hover, .skin-blue .main-header .navbar .nav > li > a:active, .skin-blue .main-header .navbar .nav > li > a:focus, .skin-blue .main-header .navbar .nav .open > a, .skin-blue .main-header .navbar .nav .open > a:hover, .skin-blue .main-header .navbar .nav .open > a:focus, .skin-blue .main-header .navbar .nav > .active > a {
+    background: rgba(0, 0, 0, 0.1);
+    color: #000000
+}
+
+.skin-blue .main-header .navbar .sidebar-toggle {
+    color: #333;
+}
+
+.skin-blue .main-header .navbar .sidebar-toggle:hover {
+    background-color: #333;
+}
+
+.skin-blue .main-header .logo {
+    background-color: #000000;
+    color: #fff;
+    border-bottom: 0 solid transparent;
+}
+
+.skin-blue .main-header .logo:hover {
+    background-color: #333;
+}
+
+.skin-blue .sidebar-menu > li:hover > a, .skin-blue .sidebar-menu > li.active > a {
+    color: #fff;
+    background: #1e282c;
+    border-left-color: #00a6ee;
+}
+
+/*btn-primary按钮样式*/
+.btn-primary {
+    color: #fff;
+    background-color: #00a6ee;
+    border-color: #6fc8ef;
+}
+
+.btn-primary.focus, .btn-primary:focus {
+    color: #fff;
+    background-color: #099cee;
+    border-color: #6fc8ef;
+}
+
+.btn-primary:hover {
+    color: #fff;
+    background-color: #0b6b95;
+    border-color: #6fc8ef;
+}
+
+.btn-primary.active, .btn-primary:active, .open > .dropdown-toggle.btn-primary {
+    color: #fff;
+    background-color: #00a6ee;
+    border-color: #6fc8ef
+}
+
+.btn-primary.active.focus, .btn-primary.active:focus, .btn-primary.active:hover, .btn-primary:active.focus, .btn-primary:active:focus, .btn-primary:active:hover, .open > .dropdown-toggle.btn-primary.focus, .open > .dropdown-toggle.btn-primary:focus, .open > .dropdown-toggle.btn-primary:hover {
+    color: #fff;
+    background-color: #099cee;
+    border-color: #6fc8ef
+}
+
+.btn-primary.active, .btn-primary:active, .open > .dropdown-toggle.btn-primary {
+    background-image: none
+}
+
+.btn-primary.disabled.focus, .btn-primary.disabled:focus, .btn-primary.disabled:hover, .btn-primary[disabled].focus, .btn-primary[disabled]:focus, .btn-primary[disabled]:hover, fieldset[disabled] .btn-primary.focus, fieldset[disabled] .btn-primary:focus, fieldset[disabled] .btn-primary:hover {
+    background-color: #1a8eee;
+    border-color: #6fc8ef
+}
+
+.btn-primary .badge {
+    color: #1a8eee;
+    background-color: #fff
+}
+
+/*导航菜单字体*/
+.sidebar-menu {
+    font-size: 16px;
+}
+
+/*菜单缩进*/
+.skin-blue .sidebar-menu > li > .treeview-menu {
+    padding-left: 20px;
+}
+
+/*修改密码*/
+.layui-layer-molv .layui-layer-title {
+    background: #00a6ee !important;
+}
+
+/*jqgrid弹出框*/
+.ui-widget-header {
+    border: 1px solid #6fc8ef !important;
+    background: #00a6ee !important;
+}
+
+.ui-state-default, .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default {
+    background: #c9e5fe !important;
+}
+
+/*layui-layer-btn0按钮样式*/
+.layui-layer-btn0 {
+    color: #fff;
+    background-color: #00a6ee !important;
+    border-color: #6fc8ef !important;
+}
+
+.layui-layer-btn0.focus, .layui-layer-btn0:focus {
+    color: #fff !important;
+    background-color: #099cee !important;
+    border-color: #6fc8ef !important;
+}
+
+.layui-layer-btn0:hover {
+    color: #fff !important;
+    background-color: #0b6b95 !important;
+    border-color: #6fc8ef !important;
+}
+
+.layui-layer-btn0 .badge {
+    color: #1a8eee !important;
+    background-color: #fff !important;
+}
+
+/*修改密码取消按钮*/
+.layui-layer-btn1 {
+    color: #fff !important;
+    background-color: #f0ad4e !important;
+    border-color: #eea236 !important;
+}
+
+.layui-layer-btn1.focus, .layui-layer-btn1:focus {
+    color: #fff !important;
+    background-color: #ec971f !important;
+    border-color: #985f0d !important;
+}
+
+.layui-layer-btn1:hover {
+    color: #fff !important;
+    background-color: #ec971f !important;
+    border-color: #d58512 !important;
+}
+
+.layui-layer-btn1 .badge {
+    color: #f0ad4e !important;
+    background-color: #fff !important;
+}
+
+/*ui-button-text按钮样式*/
+.ui-button-text {
+    color: #fff;
+    background-color: #00a6ee !important;
+    border-color: #6fc8ef !important;
+}
+
+.ui-button-text.focus, .ui-button-text:focus {
+    color: #fff !important;
+    background-color: #099cee !important;
+    border-color: #6fc8ef !important;
+}
+
+.ui-button-text:hover {
+    color: #fff !important;
+    background-color: #0b6b95 !important;
+    border-color: #6fc8ef !important;
+}
+
+.ui-button-text .badge {
+    color: #1a8eee !important;
+    background-color: #fff !important;
+}
+
+.ui-button-icon-only .ui-button-text, .ui-button-icons-only .ui-button-text {
+    padding: 0px !important;
+}
+
+.ui-state-default, .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default {
+    border: none !important;
+}
