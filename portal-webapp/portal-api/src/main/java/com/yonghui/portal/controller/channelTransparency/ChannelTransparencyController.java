@@ -408,7 +408,7 @@ public class ChannelTransparencyController {
     public R uploadShopPlan(String shopid, String storeNumber,MultipartHttpServletRequest multipartRequest,
                                  HttpServletResponse response) {
         storeNumber = multipartRequest.getParameter("storeNumber");
-        User user = (User) multipartRequest.getSession().getAttribute("user");
+      //  User user = (User) multipartRequest.getSession().getAttribute("user");
         String json = "{\"result\":1}";
         if (storeNumber != null && !storeNumber.equals("ALL")) {
             ShopPlanVO shopPlanVO = new ShopPlanVO();
@@ -436,9 +436,6 @@ public class ChannelTransparencyController {
                             // "shcg/", "shop_rack_tpl.xlsx", "D:/")
                             SFTPUpload.upload(in, SFTPConstants.LOCATION_SHOPPLAN + filepath + "/" + ftpname, SFTPConstants.LOCATION_SHOPPLAN + "/" + filepath);
                             pimg = new ShopImgVO();
-                            if (user != null) {
-                                pimg.setShopid(user.getStoreNumber());
-                            }
                             String pname = "/" + uuid + ".xlsx";
                             pimg.setImgurl(SFTPConstants.LOCATION_SHOPPLAN + TimeUtil.getTimeYMD() + pname);
                             // pimg.setTitle(key);
