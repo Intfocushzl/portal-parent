@@ -5,7 +5,12 @@ $(function () {
         // 列表标题及列表模型
         colModel: [
             {label: 'id', name: 'id', index: 'id', width: 50, hidden: true},
-            {label: '唯一编码', name: 'code', index: 'code', width: 80, key: true},
+            {
+                label: '唯一编码', name: 'code', index: 'code', width: 80, key: true,
+                formatter: function (value, options, row) {
+                    return '<a class="a_text" onclick="vm.info(\'' + row.code + '\')">' + value + '</a>';
+                }
+            },
             {label: '标题', name: 'title', index: 'title', width: 80},
             {
                 label: '数据脚本',
@@ -85,6 +90,7 @@ var vm = new Vue({
                 vm.getNewMaxCode();
             },
             update: function (event) {
+                $("#saveOrUpdate").css("display", "");
                 var code = getSelectedRow();
                 if (code == null) {
                     return;
@@ -97,6 +103,13 @@ var vm = new Vue({
                 /*vm.bindCindexAperture("Profit");
                  vm.bindReportDimIndex("tm");
                  vm.bindCindexRefer("tb");*/
+            },
+            info: function (code) {
+                $("#saveOrUpdate").css("display", "none");
+                vm.showList = false;
+                vm.title = "详情";
+                vm.getInfo(code);
+                $("input[name='code']").attr("readonly", "readonly");
             },
             saveOrUpdate: function () {
                 var code = vm.portalReport.code;
