@@ -3,7 +3,7 @@ html {
 }
 
 .content-header {
-    display: none;
+/*    display: none;*/
     position: relative;
     padding: 0 0 3px 8px
 }
