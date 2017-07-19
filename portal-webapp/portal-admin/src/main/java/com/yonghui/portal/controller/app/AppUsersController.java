@@ -61,6 +61,9 @@ public class AppUsersController extends AbstractController {
         if (query.get("userName") != null) {
             map.put("user_name", query.get("userName"));
         }
+        if (query.get("userNum") != null) {
+            map.put("user_num", query.get("userNum"));
+        }
         try {
             String result = httpUtil.getGetResult(ConstantsUtil.AppBaseUrl.APP_BASE_GET_USER_URL, map);
 
