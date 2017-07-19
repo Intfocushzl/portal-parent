@@ -124,7 +124,7 @@ public class RoleServiceImpl implements RoleService {
     }
 
     private void saveRoleMenu(Integer id, List<Integer> menuIdList) {
-        if (menuIdList.size() == 0) {
+        if (menuIdList==null) {
             return;
         }
         System.out.println(id);
@@ -144,7 +144,7 @@ public class RoleServiceImpl implements RoleService {
     }
 
     private void updateRoleMenu(Integer id, List<Integer> menuIdList) {
-        if (menuIdList.size() == 0) {
+        if (menuIdList==null) {
             return;
         }
         String menuId = "";

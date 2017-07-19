@@ -85,8 +85,8 @@ var vm = new Vue({
             //vm.reload();
             $("#jqGrid").jqGrid('setGridParam', {
                 postData: {
-                    pid: vm.menu.pid,
-                    name: vm.menu.name
+                    subName2: vm.menu.subName2,
+                    title: vm.menu.title
                 },
                 page: 1
             }).trigger("reloadGrid");
