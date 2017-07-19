@@ -26,6 +26,10 @@
 		select * from portal_route_report where id = #{value}
 	</select>
 
+	<select id="queryObjectByCode" resultType="com.yonghui.portal.model.report.PortalRouteReport">
+		select * from portal_route_report where code = #{code}
+	</select>
+
 	<select id="queryList" resultType="com.yonghui.portal.model.report.PortalRouteReport">
 		select * from portal_route_report
         <where>

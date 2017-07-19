@@ -97,8 +97,10 @@ public class PosterImportController {
                     }
                     // 读取excel里面的数据
                     excellist = getExcelInfo(imgFile.getInputStream(), isExcel2003);
+                    for (PosterImportArea item : excellist) {
+                        item.setJobNumber(jobNumber);
+                    }
                     //保存到临时表
-                    List<Map<String, Object>> list = posterImportService.areamansList();
                     posterImportService.insertPosterImportAreaTmp(excellist, jobNumber);
                     //将临时表数据和正式数据进行比对，如有匹配上的需要返回
                     areaList = posterImportService.areaTmpJoinList(jobNumber);

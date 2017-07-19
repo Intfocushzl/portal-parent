@@ -91,4 +91,15 @@ public class PortalRouteReportController extends AbstractController {
         return R.success();
     }
 
+
+    //一键缓存
+    @RequestMapping("/addRedis")
+    public R addRedis(@RequestBody String[] codes){
+        for (String code:codes) {
+            PortalRouteReport portalRouteReport = portalRouteReportService.queryObjectByCode(code);
+            redisBizUtilAdmin.setRouteReport(code, code, JSONObject.toJSONString(portalRouteReport));
+        }
+        return R.success();
+    }
+
 }

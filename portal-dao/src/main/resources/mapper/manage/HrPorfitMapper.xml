@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.yonghui.portal.mapper.manage.HrProfitMapper">
+
+    <insert id="insertProfitTmp" parameterType="java.util.List">
+        INSERT INTO application.hrbonus_profit_adject_str_tmp
+        (lkpMonth , shopid , rtshopid, shopname , adj_profit , remark , creater) VALUES
+        <foreach collection="list" item="item" index="index"
+                 separator=",">
+            (#{item.lkpMonth,jdbcType=INTEGER},
+            #{item.shopid,jdbcType=VARCHAR},
+            #{item.rtshopid,jdbcType=VARCHAR},
+            #{item.shopname,jdbcType=VARCHAR},
+            #{item.adj_profit,jdbcType=FLOAT},
+            #{item.remark,jdbcType=VARCHAR},
+            #{item.creater,jdbcType=VARCHAR}
+            )
+        </foreach>
+    </insert>
+
+    <select id="tmpProfitList" resultType="Map" parameterType="Map">
+        SELECT a.lkpMonth , a.shopid , a.rtshopid, a.shopname , a.adj_profit , a.remark , a.creater
+        FROM application.hrbonus_profit_adject_str_tmp a WHERE a.creater = #{jobNumber}
+    </select>
+
+    <select id="profitList" resultType="Map">
+        SELECT a.lkpMonth , a.shopid , a.rtshopid, a.shopname , a.adj_profit , a.remark , a.creater
+         FROM application.hrbonus_profit_adject_str a WHERE
+         a.sMonth = #{lkpMonth} AND a.shopid = #{shopid}
+    </select>
+
+    <select id="profitTmpJoinList" resultType="Map" parameterType="Map">
+        SELECT  a.lkpMonth , a.shopid , a.rtshopid, a.shopname , a.adj_profit , a.remark , a.creater  FROM application.hrbonus_profit_adject_str a
+        LEFT JOIN application.hrbonus_profit_adject_str_tmp b ON a.lkpMonth = b.lkpMonth AND a.shopid = b.shopid AND a.rtshopid = b.rtshopid
+        WHERE a.creater = #{jobNumber}
+    </select>
+
+    <delete id="deleteProfit" parameterType="Map">
+        DELETE FROM application.hrbonus_profit_adject_str WHERE lkpMonth = #{lkpMonth} AND shopid = #{shopid}
+    </delete>
+
+    <insert id="insertProfit" parameterType="java.util.List">
+        INSERT INTO application.hrbonus_profit_adject_str SELECT * FROM application.hrbonus_profit_adject_str_tmp;
+    </insert>
+
+    <delete id="deleteProfitTmp" parameterType="Map">
+        DELETE FROM application.hrbonus_profit_adject_str_tmp  WHERE creater = #{jobNumber};
+    </delete>
+
+    <update id="editRule" parameterType="Map">
+        update application.hrbonus_rule_detail_str
+        <set>
+            <if test="empNum != null">`empNum` = #{empNum},</if>
+            <if test="standardRule != null">`standardRule` = #{standardRule},</if>
+            <if test="friRule != null">`friRule` = #{friRule},</if>
+            <if test="secRule != null">`secRule` = #{secRule},</if>
+            <if test="runtype != null">`runtype` = #{runtype},</if>
+            <if test="editRecord != null">`editRecord` = #{editRecord},</if>
+            `updatetime` = NOW()
+        </set>
+        where id = #{id}
+    </update>
+
+    <update id="editEmp" parameterType="Map">
+        update application.hrbonus_emp_detail_str
+        <set>
+            <if test="flagBonus != null">`flagBonus` = #{flagBonus},</if>
+            <if test="guarantees != null">`guarantees` = #{guarantees},</if>
+            <if test="turnshopId != null">`turnshopId` = #{shopId},</if>
+            <if test="turnshopName != null">`turnshopName` = #{shopName},</if>
+            <if test="turngroupId != null">`turngroupId` = #{groupId},</if>
+            <if test="turngroupName != null">`turngroupName` = #{groupName},</if>
+            <if test="turnDate != null">`turnDate` = #{turnDate},</if>
+            <if test="editRecord != null">`editRecord` = #{editRecord},</if>
+            `updatetime` = NOW()
+        </set>
+        where id = #{id}
+    </update>
+
+    <select id="queryShopID" resultType="Map" parameterType="Map">
+        SELECT a.ShopID , a.ShopName FROM dim.dim_bravo_shop a WHERE a.ShopName LIKE concat('%',#{shopName},'%');
+    </select>
+
+    <select id="queryGroupID" resultType="Map" parameterType="Map">
+        SELECT a.groupid , a.groupname FROM platform.d_grouplist_sm a where a.normal = 1 AND a.groupname LIKE concat('%',#{groupName},'%');
+    </select>
+
+    <select id="queryRuleById" resultType="Map" parameterType="String">
+        SELECT a.id , a.editRecord  FROM application.hrbonus_rule_detail_str a WHERE a.id = #{id};
+    </select>
+
+    <select id="queryEmpById" resultType="Map" parameterType="String">
+        SELECT a.id , a.editRecord  FROM application.hrbonus_emp_detail_str a WHERE a.id = #{id};
+    </select>
+
+    <select id="queryRule" resultType="Map" parameterType="Map">
+        SELECT a.id , a.shopId , a.shopName , a.groupName, a.empNum, a.standardRule,
+        a.friRule, a.secRule, a.runtype ,a.editRecord
+        FROM application.hrbonus_rule_detail_str a
+        <where>
+            <if test="shopId != null and shopId !=''">
+                AND shopId = #{shopId}
+            </if>
+            <if test="groupId != null and groupId !=''">
+                AND groupId = #{groupId}
+            </if>
+        </where>
+    </select>
+
+    <select id="queryEmp" resultType="Map" parameterType="Map">
+        SELECT a.id, a.shopId , a.shopName, a.groupname,a.empNo , a.empName, a.job,
+        a.flagBonus ,a.guarantees ,a.turnshopId ,a.turngroupId ,a.turnDate ,a.editRecord
+        FROM application.hrbonus_emp_detail_str a
+        <where>
+            <if test="shopId != null and shopId !=''">
+                AND shopId = #{shopId}
+            </if>
+            <if test="groupId != null and groupId !=''">
+                AND groupId = #{groupId}
+            </if>
+        </where>
+    </select>
+
+    <select id="queryShop" resultType="Map" parameterType="java.util.List">
+        SELECT a.ShopID , a.ShopName FROM dim.dim_bravo_shop a
+        <if test="null != list ">
+            where a.ShopID in
+            <foreach collection="list" item="item" open="(" separator=","
+                     close=")">
+                #{item}
+            </foreach>
+        </if>
+    </select>
+
+    <select id="queryShopAll" resultType="Map" parameterType="Map">
+       SELECT a.ShopID , a.ShopName FROM dim.dim_bravo_shop a
+    </select>
+
+    <select id="queryDimRule" resultType="Map" parameterType="Map">
+      SELECT a.standardRule , a.friRule , a.secRule FROM application.hrbonus_rule_dim_str a where a.groupId = #{groupId} AND a.empNum = #{empNum}
+    </select>
+</mapper>

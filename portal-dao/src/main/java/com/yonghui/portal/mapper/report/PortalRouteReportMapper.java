@@ -2,6 +2,7 @@ package com.yonghui.portal.mapper.report;
 
 import com.yonghui.portal.mapper.base.BaseMapper;
 import com.yonghui.portal.model.report.PortalRouteReport;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * 
@@ -12,4 +13,10 @@ import com.yonghui.portal.model.report.PortalRouteReport;
  */
 public interface PortalRouteReportMapper extends BaseMapper<PortalRouteReport> {
 
+    /**
+     * 根据编码查询
+     * @param code
+     * @return
+     */
+    PortalRouteReport queryObjectByCode(@Param("code") String code);
 }

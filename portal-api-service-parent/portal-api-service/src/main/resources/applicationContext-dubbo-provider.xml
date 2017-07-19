@@ -210,4 +210,9 @@
     <bean id="ApiActicleSliderService" class="com.yonghui.portal.service.impl.business.ApiActicleSliderServiceImpl"/>
     <dubbo:service interface="com.yonghui.portal.service.business.ApiActicleSliderService" ref="ApiActicleSliderService"
                    timeout="300000"/>
+
+    <!-- 人事分红  -->
+    <bean id="HrProfitService" class="com.yonghui.portal.service.impl.manage.HrProfitServiceImpl"/>
+    <dubbo:service interface="com.yonghui.portal.service.manage.HrProfitService" ref="HrProfitService"
+                   timeout="300000"/>
 </beans>

@@ -158,7 +158,7 @@ public class RedisBizUtilAdmin {
 
     public void setRouteReport(String codeOld , String code, String value) {
         if (!StringUtils.isEmpty(codeOld) && !codeOld.equals(code)) {
-            redisUtil.remove(String.format("%s:penapi:route", KEY_PREFIX), codeOld);
+            redisUtil.remove(String.format("%s:openapi:route", KEY_PREFIX), codeOld);
         }
         redisUtil.put(String.format("%s:openapi:route", KEY_PREFIX), code, value);
     }

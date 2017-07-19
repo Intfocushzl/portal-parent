@@ -17,6 +17,8 @@ public interface PortalRouteReportService {
 
 	PortalRouteReport queryObject(Integer id);
 
+	PortalRouteReport queryObjectByCode(String code);
+
 	List<PortalRouteReport> queryList(Map<String, Object> map);
 
 	int queryTotal(Map<String, Object> map);

@@ -1,6 +1,7 @@
 package com.yonghui.portal.service.impl.report;
 
 import com.yonghui.portal.mapper.report.PortalRouteReportMapper;
+import com.yonghui.portal.model.report.PortalReport;
 import com.yonghui.portal.model.report.PortalRouteReport;
 import com.yonghui.portal.service.report.PortalRouteReportService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +12,7 @@ import java.util.Map;
 
 @Service("portalRouteReportService")
 public class PortalRouteReportServiceImpl implements PortalRouteReportService {
+
 	@Autowired
 	private PortalRouteReportMapper portalRouteReportMapper;
 	
@@ -47,6 +49,10 @@ public class PortalRouteReportServiceImpl implements PortalRouteReportService {
 	@Override
 	public void deleteBatch(String[] codes){
 		portalRouteReportMapper.deleteBatch(codes);
+	}
+
+	public PortalRouteReport queryObjectByCode(String code){
+		return portalRouteReportMapper.queryObjectByCode(code);
 	}
 	
 }
