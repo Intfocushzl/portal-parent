@@ -129,6 +129,40 @@ public class ChannelTransparencyController {
     }
 
     /**
+     * 根据商行ID查询商行
+     *
+     * @param session
+     * @param response
+     * @return
+     */
+    @RequestMapping("getGroupById")
+    public R getGroupById(HttpSession session, HttpServletResponse response,String groupid) {
+        try {
+            return R.success(firmService.getGroupByGroupId(groupid));
+        } catch (Exception e) {
+            log.error("获取商行列表出错", e);
+            return R.error("获取商行列表出错");
+        }
+    }
+
+    /**
+     * 门店ID查询门店
+     *
+     * @param session
+     * @param response
+     * @return
+     */
+    @RequestMapping("getShopById")
+    public R getShopById(HttpSession session, HttpServletResponse response,String shopid) {
+        try {
+            return R.success(menuService.getShopByShopId(shopid));
+        } catch (Exception e) {
+            log.error("获取商行列表出错", e);
+            return R.error("获取商行列表出错");
+        }
+    }
+
+    /**
      * 当期列表
      *
      * @param session
