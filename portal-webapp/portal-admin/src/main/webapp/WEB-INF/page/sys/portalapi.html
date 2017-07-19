@@ -16,17 +16,13 @@
             padding: 20px;
         }
 
-        .json_formatter, .json_str {
+        .json_formatter {
             padding: 20px;
             min-height: 500px;;
             height: auto;
             width: 100%;
             float: left;
         }
-
-        /*.json_formatter {
-            border-left: 1px solid #3b5998;
-        }*/
 
         #json {
             border: 1px solid rgba(82, 168, 236, 0.8);
@@ -37,20 +33,6 @@
             margin-bottom: 10px;
         }
 
-        .json_str_text {
-            display: block;
-            width: 100%;
-            min-height: 400px;
-            overflow-x: hidden;
-            overflow-y: hidden;
-            resize: none;
-            overflow: hidden;
-            word-wrap: break-word;
-            outline: 0 none;
-            border-color: rgba(82, 168, 236, 0.8);
-            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1), 0 0 8px rgba(82, 168, 236, 0.6);
-        }
-
         #goTopBtn {
             position: fixed;
             line-height: 46px;
@@ -59,7 +41,7 @@
             height: 46px;
             cursor: pointer;
             display: none;
-            background: url(/statics/css/img/up.png);
+            background: url(/statics/css/img/top-up.png);
         }
 
         .col-sm-2 {
@@ -145,10 +127,6 @@
             $('#json').JSONView('toggle', 5);
         });
     });
-</script>
-
-<script>
-    autosize($('.json_str_text'));
 </script>
 
 <script type="text/javascript">

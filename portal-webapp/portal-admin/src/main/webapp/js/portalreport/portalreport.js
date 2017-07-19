@@ -111,6 +111,9 @@ var vm = new Vue({
                 vm.getInfo(code);
                 $("input[name='code']").attr("readonly", "readonly");
             },
+            toTest: function () {
+                window.open("http://" + window.location.host + "/sys/portalapi.html?code=" + escape(vm.portalReport.code));
+            },
             saveOrUpdate: function () {
                 var code = vm.portalReport.code;
                 var id = vm.portalReport.id;
