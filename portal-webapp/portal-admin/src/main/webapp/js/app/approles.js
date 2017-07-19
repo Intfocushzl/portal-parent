@@ -5,7 +5,7 @@ $(function () {
         // 列表标题及列表模型
         colModel: [
             {label: '角色id', name: 'id', index: 'id', width: 50},
-            {label: 'PC角色id', name: 'roleId', index: 'roleId', width: 50, key: true},
+            {label: 'PC角色id', name: 'roleId', index: 'role_id', width: 50, key: true},
             {label: '角色名', name: 'roleName', index: 'role_name', width: 80},
             {label: '备注说明', name: 'memo', index: 'memo', width: 80}
         ],
@@ -81,7 +81,8 @@ var vm = new Vue({
     data: {
         showList: true,
         title: null,
-        appRoles: {}
+        appRoles: {},
+        nextRoleId:-1
     },
     methods: {
         query: function () {
@@ -98,6 +99,7 @@ var vm = new Vue({
             vm.showList = false;
             vm.title = "新增";
             vm.appRoles = {};
+            vm.appRoles.roleId=vm.nextRoleId;
             vm.getMenuTree(-1);
         },
         update: function (event) {
@@ -204,8 +206,9 @@ var vm = new Vue({
             }).trigger("reloadGrid");
         },
         getMenuTree: function (roleId) {
+            var kpiUrl= roleId==-1?"../app/menus/selectKpisMenu":("../app/roles/selectKpisMenu?roleId=" + roleId);
             //加载菜单树
-            $.get("../app/roles/selectKpisMenu?roleId=" + roleId, function (r) {
+            $.get(kpiUrl, function (r) {
                 ztree1 = $.fn.zTree.init($("#menuTree1"), setting, r.list);
                 //展开所有节点
                 ztree1.expandAll(false);
@@ -217,8 +220,9 @@ var vm = new Vue({
                     ztree1.checkNode(node, true, false);
                 }
             });
+            var analyseUrl= roleId==-1?"../app/menus/selectAnalysesMenu":("../app/roles/selectAnalysesMenu?roleId=" + roleId);
             //加载菜单树
-            $.get("../app/roles/selectAnalysesMenu?roleId=" + roleId, function (r) {
+            $.get(analyseUrl, function (r) {
                 ztree2 = $.fn.zTree.init($("#menuTree2"), setting, r.list);
                 //展开所有节点
                 ztree2.expandAll(false);
@@ -230,8 +234,9 @@ var vm = new Vue({
                     ztree2.checkNode(node, true, false);
                 }
             });
+            var appUrl= roleId==-1?"../app/menus/selectAppsMenu":("../app/roles/selectAppsMenu?roleId=" + roleId);
             //加载菜单树
-            $.get("../app/roles/selectAppsMenu?roleId=" + roleId, function (r) {
+            $.get(appUrl, function (r) {
                 ztree3 = $.fn.zTree.init($("#menuTree3"), setting, r.list);
                 //展开所有节点
                 ztree3.expandAll(false);
@@ -244,5 +249,12 @@ var vm = new Vue({
                 }
             });
         },
+        getNextRoleId: function () {
+            $.get("../forfront/role/getNextRoleId", function (r) {
+                vm.nextRoleId = r.data.nextRoleId;
+            });
+        }
     }
 });
+
+vm.getNextRoleId();

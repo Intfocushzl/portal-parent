@@ -29,4 +29,6 @@ public interface RoleService {
     List<Integer> queryMenuIdList(Integer id);
 
     List<Menu> queryMenuList(Integer roleId);
+
+    int getNextRoleId();
 }

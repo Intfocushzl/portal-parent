@@ -7,12 +7,11 @@ import com.yonghui.portal.model.global.Menu;
 import com.yonghui.portal.model.global.Role;
 import com.yonghui.portal.service.global.RoleService;
 import com.yonghui.portal.service.global.UserMenuService;
-import com.yonghui.portal.util.ListToTreeUtils;
-import com.yonghui.portal.util.PageUtils;
-import com.yonghui.portal.util.Query;
-import com.yonghui.portal.util.R;
+import com.yonghui.portal.util.*;
+import com.yonghui.portal.util.report.columns.HttpMethodUtil;
 import com.yonghui.portal.utils.redis.RedisBizUtilAdmin;
 import com.yonghui.portal.utils.validator.ValidatorUtils;
+import org.apache.commons.collections.map.HashedMap;
 import org.apache.log4j.Logger;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -94,10 +93,40 @@ public class RoleController extends AbstractController {
     @RequestMapping("/save")
     @RequiresPermissions("role:save")
     public R save(@RequestBody Role role) {
+        role.setCreater(getUserId());
         ValidatorUtils.validateEntity(role);
         roleService.save(role);
         getRoleMenu(role);
-        return R.success();
+        HttpMethodUtil httpUtil = new HttpMethodUtil();
+        Map<String, Object> map = new HashedMap();
+        map.put("api_token", "api_token");
+        Map<String, Object> appMap = new HashedMap();
+        appMap.put("role_id", role.getRoleId());
+        appMap.put("role_name", role.getName());
+        appMap.put("memo", role.getRemark());
+        map.put("role", appMap);
+
+        try {
+            String result = httpUtil.getPostJsonResult(ConstantsUtil.AppBaseUrl.APP_BASE_POST_ROLE_URL, JSON.toJSONString(map));
+
+            System.out.println(result);
+            if (!StringUtils.isEmpty(result)) {
+                JSONObject jsonObject = JSONObject.parseObject(result);
+                if (jsonObject.getInteger("code") == 201) {
+                    return R.success();
+                } else if (jsonObject.getInteger("code") == 200) {
+                    String info = jsonObject.getString("message");
+                    return R.error().setMsg(info);
+                } else {
+                    return R.error().setMsg("APP角色添加失败");
+                }
+            } else {
+                return R.error();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return R.error();
+        }
     }
 
     /**
@@ -109,7 +138,36 @@ public class RoleController extends AbstractController {
         ValidatorUtils.validateEntity(role);
         roleService.update(role);
         getRoleMenu(role);
-        return R.success();
+        HttpMethodUtil httpUtil = new HttpMethodUtil();
+        Map<String, Object> map = new HashedMap();
+        map.put("api_token", "api_token");
+        Map<String, Object> appMap = new HashedMap();
+        appMap.put("role_id", role.getRoleId());
+        appMap.put("role_name", role.getName());
+        appMap.put("memo", role.getRemark());
+        map.put("role", appMap);
+
+        try {
+            String result = httpUtil.getPostJsonResult(ConstantsUtil.AppBaseUrl.APP_BASE_POST_ROLE_URL + "/" + role.getRoleId(), JSON.toJSONString(map));
+
+            System.out.println(result);
+            if (!StringUtils.isEmpty(result)) {
+                JSONObject jsonObject = JSONObject.parseObject(result);
+                if (jsonObject.getInteger("code") == 201) {
+                    return R.success();
+                } else if (jsonObject.getInteger("code") == 200) {
+                    String info = jsonObject.getString("message");
+                    return R.error().setMsg(info);
+                } else {
+                    return R.error().setMsg("APP角色更新失败");
+                }
+            } else {
+                return R.error();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return R.error();
+        }
     }
 
     /**
@@ -154,4 +212,13 @@ public class RoleController extends AbstractController {
         }
         return R.success();
     }
+
+    @RequestMapping("/getNextRoleId")
+    public R getNextRoleId() {
+        int roleId = roleService.getNextRoleId();
+        Map<String, Object> result = new HashedMap();
+        result.put("nextRoleId", roleId);
+        return R.success().setData(result);
+    }
+
 }

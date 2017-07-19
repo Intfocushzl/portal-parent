@@ -6,7 +6,8 @@ import com.alibaba.fastjson.JSONObject;
 import com.yonghui.portal.controller.AbstractController;
 import com.yonghui.portal.model.app.AppMenu;
 import com.yonghui.portal.model.app.AppRoles;
-import com.yonghui.portal.service.app.AppRolesService;
+import com.yonghui.portal.model.global.Role;
+import com.yonghui.portal.service.global.RoleService;
 import com.yonghui.portal.util.*;
 import com.yonghui.portal.util.report.columns.HttpMethodUtil;
 import org.apache.commons.collections.map.HashedMap;
@@ -31,7 +32,8 @@ public class AppRolesController extends AbstractController {
     Logger log = Logger.getLogger(this.getClass());
 
     @Autowired
-    private AppRolesService appRolesService;
+    private RoleService roleService;
+
 
     /**
      * 列表
@@ -56,6 +58,9 @@ public class AppRolesController extends AbstractController {
         map.put("api_token", "api_token");
         map.put("page", query.getPage() - 1);
         map.put("page_size", query.getLimit());
+        if (query.get("roleName") != null) {
+            map.put("role_name", query.get("roleName"));
+        }
         try {
             String result = httpUtil.getGetResult(ConstantsUtil.AppBaseUrl.APP_BASE_GET_ROLE_URL, map);
 
@@ -225,11 +230,19 @@ public class AppRolesController extends AbstractController {
         Map<String, Object> map = new HashedMap();
         map.put("api_token", "api_token");
         Map<String, Object> appMap = new HashedMap();
+        appMap.put("role_id", appRoles.getRoleId());
         appMap.put("role_name", appRoles.getRoleName());
         appMap.put("memo", appRoles.getMemo());
         map.put("role", appMap);
         List<Map<String, Object>> menus = appRoles.getMenuList();
-
+        Role role=new Role();
+        role.setRoleId( appRoles.getRoleId());
+        role.setName(appRoles.getRoleName());
+        role.setRemark(appRoles.getMemo());
+        role.setStatus(1);
+        role.setType(1);
+        role.setMenuIdList(new ArrayList<>());
+        roleService.save(role);
         try {
             String result = httpUtil.getPostJsonResult(ConstantsUtil.AppBaseUrl.APP_BASE_POST_ROLE_URL, JSON.toJSONString(map));
 
@@ -265,10 +278,16 @@ public class AppRolesController extends AbstractController {
         Map<String, Object> map = new HashedMap();
         map.put("api_token", "api_token");
         Map<String, Object> appMap = new HashedMap();
+        appMap.put("role_id", appRoles.getRoleId());
         appMap.put("role_name", appRoles.getRoleName());
         appMap.put("memo", appRoles.getMemo());
         map.put("role", appMap);
-
+        Role role=new Role();
+        role.setRoleId( appRoles.getRoleId());
+        role.setName(appRoles.getRoleName());
+        role.setRemark(appRoles.getMemo());
+        role.setType(1);
+        roleService.update(role);
         List<Map<String, Object>> menus = appRoles.getMenuList();
 
         try {

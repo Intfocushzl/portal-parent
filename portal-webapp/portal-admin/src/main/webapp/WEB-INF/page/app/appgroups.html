@@ -9,11 +9,11 @@
 	<div v-show="showList">
         <div id="queryDiv" class="queryDiv">
             <div class="grid-btn">
-                <div class="form-group col-sm-2">
-                    <input type="text" class="form-control" v-model="appGroups.id" @keyup.enter="query" placeholder="主键ID">
+                <div class="form-group col-sm-2" hidden>
+                    <input type="text" class="form-control" v-model="appGroups.id" @keyup.enter="query" placeholder="主键ID" >
                 </div>
                 <div class="form-group col-sm-2">
-                	<input type="text" class="form-control" v-model="appGroups.groupName" @keyup.enter="query" placeholder="备注说明">
+                	<input type="text" class="form-control" v-model="appGroups.groupName" @keyup.enter="query" placeholder="群组名称">
                 </div>
                 <a class="btn btn-primary" @click="query">查询</a>
 

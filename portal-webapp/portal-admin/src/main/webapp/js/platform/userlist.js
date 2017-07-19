@@ -176,9 +176,8 @@ var vm = new Vue({
     data: {
         showList: 1,
         title: null,
-        roleList: {},
         user: {
-            roleIdList: []
+            roleIdList: [],
         }
     },
     methods: {
@@ -211,6 +210,9 @@ var vm = new Vue({
             vm.getInfo(id);
         },
         saveOrUpdate: function (event) {
+            if (vm.user.largeArea=="全部"){
+                vm.user.largeArea="ALL";
+            }
             var url = vm.user.id == null ? baseUrl + "/forfront/user/save" : baseUrl + "/forfront/user/update";
             console.log(vm.user);
             $.ajax({
@@ -259,6 +261,11 @@ var vm = new Vue({
         getInfo: function (id) {
             $.get(baseUrl + "/forfront/user/info/" + id, function (r) {
                 vm.user = r.user;
+                vm.user.roleId=r.user.roleId;
+                if (vm.user.largeArea=="ALL"){
+                    vm.user.areaMans="ALL";
+                    vm.user.largeArea="全部";
+                }
                 var o = new Object();
                 o.type = vm.user.type;
                 vm.getRoleList(o);
@@ -266,8 +273,18 @@ var vm = new Vue({
             });
         },
         getRoleList: function (params) {
+            var roleId=vm.user.roleId;
             $.get("../forfront/role/select", params, function (r) {
-                vm.roleList = r.list;
+                var roleList = r.list;
+                if (roleId=="undefined"&&roleList.length > 0) {
+                    vm.user.roleId = roleList[0].value;
+                }
+                for (var i = 0; i < roleList.length; i++) {
+                    $("#roleList").append("<option value='" + roleList[i].roleId + "'>" + roleList[i].name + "</option>");
+                }
+                // refresh刷新和render渲染操作，必不可少  +r.data[i].id+"<===>"
+                $('#roleList').selectpicker('refresh');
+                $('#roleList').selectpicker('render');
             });
         },
         reload: function (event) {
@@ -289,10 +306,21 @@ var vm = new Vue({
             o.type = $("select[name='type']").val();
             vm.getRoleList(o);
         },
-        getLargeArea: function () {
-            // $.get("/yhportal/api/portal/custom?yongHuiReportCustomCode=REP_000030", function (data) {
-            //     console.log(data);
-            // });
+        getAreaMans: function () {
+            $.get("../common/getDataList?reportLabel=2", function (r) {
+                var areaMansList = r.data.list;
+                if (areaMansList.length > 0) {
+                    vm.user.areaMans = areaMansList[0].value;
+                    vm.user.largeArea =areaMansList[0].pid;
+                }
+                $("#areaMansList").append("<option value='ALL'>全部</option>");
+                for (var i = 0; i < areaMansList.length; i++) {
+                    $("#areaMansList").append("<option value='" + areaMansList[i].value + "'>" + areaMansList[i].label + "</option>");
+                }
+                // refresh刷新和render渲染操作，必不可少  +r.data[i].id+"<===>"
+                $('#areaMansList').selectpicker('refresh');
+                $('#areaMansList').selectpicker('render');
+            });
         },
         getGroupList: function (userNum){
             var url=userNum==null?"../app/groups/select":"../app/groups/selectGroups?userNum="+userNum;
@@ -381,4 +409,14 @@ $(window).on('load', function () {
         'selectedText': 'cat'
     });
 });
-vm.getLargeArea();
+vm.getAreaMans();
+$("select#areaMansList").change(function(){
+    var pid= $("select#areaMansList option:selected").val();
+    $.get("../common/getDataList?reportLabel=5&pid="+pid, function (r) {
+        var largeAreaList = r.data.list;
+        if (largeAreaList.length > 0) {
+            vm.user.largeArea = largeAreaList[0].value;
+            $("#largeArea").val(largeAreaList[0].value);
+        }
+    });
+});

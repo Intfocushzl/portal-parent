@@ -47,6 +47,9 @@ public class AppGroupsController extends AbstractController {
         map.put("api_token", "api_token");
         map.put("page", query.getPage() - 1);
         map.put("page_size", query.getLimit());
+        if (query.get("groupName") != null) {
+            map.put("group_name", query.get("groupName"));
+        }
         try {
             String result = httpUtil.getGetResult(ConstantsUtil.AppBaseUrl.APP_BASE_GET_GROUP_URL, map);
 

@@ -1,6 +1,5 @@
 package com.yonghui.portal.service.impl.global;
 
-import com.alibaba.dubbo.common.json.JSON;
 import com.yonghui.portal.mapper.global.UserMapper;
 import com.yonghui.portal.model.global.User;
 import com.yonghui.portal.service.global.UserAdminService;
@@ -112,8 +111,8 @@ public class UserAdminServiceImpl implements UserAdminService {
     @Override
     public int pass(User user) {
         if (user.getChangeRoleId() != null && user.getChangeRoleId() != "") {
-            user.setRoleId(user.getChangeRoleId());
-            user.setChangeRoleId("");
+            user.setRoleId(Integer.parseInt(user.getChangeRoleId()));
+            user.setChangeRoleId(null);
         }
         if (user.getChangeLargeArea() != null && user.getChangeLargeArea() != "") {
             user.setLargeArea(user.getChangeLargeArea());
