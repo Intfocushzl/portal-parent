@@ -8,7 +8,7 @@ $(function () {
             {
                 label: '唯一编码', name: 'code', index: 'code', width: 80, key: true,
                 formatter: function (value, options, row) {
-                    return '<a class="a_text" onclick="vm.info(\'' + row.code + '\')">' + value + '</a>';
+                    return '<a class="a_text" onclick="vm.toTest(\'' + row.code + '\')">' + value + '</a>';
                 }
             },
             {label: '标题', name: 'title', index: 'title', width: 80},
@@ -111,8 +111,8 @@ var vm = new Vue({
                 vm.getInfo(code);
                 $("input[name='code']").attr("readonly", "readonly");
             },
-            toTest: function () {
-                window.open("http://" + window.location.host + "/sys/portalapi.html?code=" + escape(vm.portalReport.code));
+            toTest: function (code) {
+                window.open("http://" + window.location.host + "/sys/portalapi.html?code=" + escape(code));
             },
             saveOrUpdate: function () {
                 var code = vm.portalReport.code;
