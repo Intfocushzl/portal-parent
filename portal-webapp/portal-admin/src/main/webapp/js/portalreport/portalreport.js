@@ -6,7 +6,7 @@ $(function () {
         colModel: [
             {label: 'id', name: 'id', index: 'id', width: 50, hidden: true},
             {label: '唯一编码', name: 'code', index: 'code', width: 80, key: true},
-            {label: '标题简介', name: 'title', index: 'title', width: 80},
+            {label: '标题', name: 'title', index: 'title', width: 80},
             {
                 label: '数据脚本',
                 name: 'execute_code',
