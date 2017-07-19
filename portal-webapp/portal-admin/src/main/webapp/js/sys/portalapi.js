@@ -8,6 +8,43 @@ function getQueryString(name) {
 
 var code = unescape(getQueryString("code"));
 
+var vm = new Vue({
+    data: {
+        portalReport: {}
+    },
+    methods: {
+        getInfo: function (code) {
+            if (code == 0){
+                code = $("#code").val();
+            }
+            $.get(rcContextPath + "/portalreport/info/" + code, function (r) {
+                vm.portalReport = r.portalReport;
+                init();
+            });
+        },
+        getJsonTest: function () {
+            $.get(test_url, function (r) {
+                $(".json_str_text").val(JSON.stringify(r));
+                $("#json").JSONView(JSON.stringify(r));
+            });
+        },
+        getJsonDev: function () {
+            $.get(dev_url, function (r) {
+                $(".json_str_text").val(JSON.stringify(r));
+                $("#json").JSONView(JSON.stringify(r));
+            });
+        }
+    }
+});
+
+vm.getInfo(code);
+
+// 初始化信息
+function init(){
+    $("#code").val(vm.portalReport.code);
+    $("#title").val(vm.portalReport.title);
+}
+
 // 格式化json
 $(function () {
     $('#toggle-formatter').on('click', function () {
@@ -63,17 +100,3 @@ var dev_url = "http://10.67.241.234/yhportal/api/portal/custom?token=CS123456mXB
 
 $("#test_url").val(test_url);
 $("#dev_url").val(dev_url);
-
-function getJsonTest() {
-    $.get(test_url, function (r) {
-        $(".json_str_text").val(JSON.stringify(r));
-        $("#json").JSONView(JSON.stringify(r));
-    });
-}
-
-function getJsonDev() {
-    $.get(dev_url, function (r) {
-        $(".json_str_text").val(JSON.stringify(r));
-        $("#json").JSONView(JSON.stringify(r));
-    });
-}

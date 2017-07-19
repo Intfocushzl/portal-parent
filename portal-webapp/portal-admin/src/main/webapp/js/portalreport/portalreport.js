@@ -90,7 +90,6 @@ var vm = new Vue({
                 vm.getNewMaxCode();
             },
             update: function (event) {
-                $("#saveOrUpdate").css("display", "");
                 var code = getSelectedRow();
                 if (code == null) {
                     return;
@@ -103,13 +102,6 @@ var vm = new Vue({
                 /*vm.bindCindexAperture("Profit");
                  vm.bindReportDimIndex("tm");
                  vm.bindCindexRefer("tb");*/
-            },
-            info: function (code) {
-                $("#saveOrUpdate").css("display", "none");
-                vm.showList = false;
-                vm.title = "详情";
-                vm.getInfo(code);
-                $("input[name='code']").attr("readonly", "readonly");
             },
             toTest: function (code) {
                 window.open("http://" + window.location.host + "/sys/portalapi.html?code=" + escape(code));
