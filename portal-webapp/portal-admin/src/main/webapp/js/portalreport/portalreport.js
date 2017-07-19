@@ -73,7 +73,7 @@ var vm = new Vue({
         },
         methods: {
             query: function () {
-                //vm.reload();
+                // vm.reload();
                 $("#jqGrid").jqGrid('setGridParam', {
                     postData: {
                         code: vm.portalReport.code,
