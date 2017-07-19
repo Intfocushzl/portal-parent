@@ -108,7 +108,7 @@ public class RegisterController {
             if (StringUtils.isEmpty(roleId)) {
                 return R.error("角色不能为空");
             } else {
-                user.setRoleId(roleId);
+                user.setRoleId(Integer.parseInt(roleId));
             }
             if (StringUtils.isEmpty(firm)) {
                 return R.error("商行不能为空");

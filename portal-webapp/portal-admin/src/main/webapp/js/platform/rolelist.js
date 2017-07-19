@@ -95,6 +95,7 @@ var vm = new Vue({
         title: null,
         roleList: {},
         role: {}
+        , nextRoleId: -1
     },
     methods: {
         query: function () {
@@ -104,6 +105,7 @@ var vm = new Vue({
             vm.showList = false;
             vm.title = "新增";
             vm.role = {};
+            vm.role.roleId=vm.nextRoleId;
             vm.getMenuTree(null);
         },
         update: function () {
@@ -147,7 +149,7 @@ var vm = new Vue({
                 var menuIds = vm.role.menuIdList;
                 for (var i = 0; i < menuIds.length; i++) {
                     var node = ztree.getNodeByParam("id", menuIds[i]);
-                    if (node!=null){
+                    if (node != null) {
                         ztree.checkNode(node, true, false);
                     }
                 }
@@ -159,14 +161,14 @@ var vm = new Vue({
             });
         },
         saveOrUpdate: function (event) {
-            if (vm.role.id == null) {
-                for (var i = 0; i < vm.roleList.length; i++) {
-                    if ($('#roleId').val() == (vm.roleList[i].roleId)) {
-                        alert("角色唯一编码已存在");
-                        return;
-                    }
-                }
-            }
+            // if (vm.role.id == null) {
+            //     for (var i = 0; i < vm.roleList.length; i++) {
+            //         if ($('#roleId').val() == (vm.roleList[i].roleId)) {
+            //             alert("角色唯一编码已存在");
+            //             return;
+            //         }
+            //     }
+            // }
             //获取选择的菜单
             var nodes = ztree.getCheckedNodes(true);
             var menuIdList = new Array();
@@ -232,11 +234,17 @@ var vm = new Vue({
                     }
                 });
             });
+        },
+        getNextRoleId: function () {
+            $.get("../forfront/role/getNextRoleId", function (r) {
+                vm.nextRoleId = r.data.nextRoleId;
+            });
         }
     }
 });
 
 vm.getRoleList();
+vm.getNextRoleId();
 
 $('#roleId').bind('input propertychange', function () {
     for (var i = 0; i < vm.roleList.length; i++) {

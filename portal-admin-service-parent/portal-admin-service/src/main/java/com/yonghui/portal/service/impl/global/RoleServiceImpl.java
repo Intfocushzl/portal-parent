@@ -161,7 +161,12 @@ public class RoleServiceImpl implements RoleService {
         roleMapper.updateRoleMenu(map);
     }
 
-    void deleteUselessRoleMenu() {
+    private void deleteUselessRoleMenu() {
         roleMapper.deleteUselessRoleMenu();
+    }
+
+    @Override
+    public int getNextRoleId() {
+        return roleMapper.getNextRoleId();
     }
 }

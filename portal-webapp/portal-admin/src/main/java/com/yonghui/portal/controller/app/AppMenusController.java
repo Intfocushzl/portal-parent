@@ -59,12 +59,30 @@ public class AppMenusController extends AbstractController {
             String result = "";
             switch (type) {
                 case 1:
+                    if (query.get("subName2") != null) {
+                        map.put("kpi_group", query.get("subName2"));
+                    }
+                    if (query.get("title") != null) {
+                        map.put("kpi_name", query.get("title"));
+                    }
                     result = httpUtil.getGetResult(ConstantsUtil.AppBaseUrl.APP_BASE_GET_KPI_URL, map);
                     break;
                 case 2:
+                    if (query.get("subName2") != null) {
+                        map.put("group_name", query.get("subName2"));
+                    }
+                    if (query.get("title") != null) {
+                        map.put("name", query.get("title"));
+                    }
                     result = httpUtil.getGetResult(ConstantsUtil.AppBaseUrl.APP_BASE_GET_ANALYSE_URL, map);
                     break;
                 case 3:
+                    if (query.get("subName2") != null) {
+                        map.put("group_name", query.get("subName2"));
+                    }
+                    if (query.get("title") != null) {
+                        map.put("name", query.get("title"));
+                    }
                     result = httpUtil.getGetResult(ConstantsUtil.AppBaseUrl.APP_BASE_GET_APP_URL, map);
                     break;
             }
@@ -166,6 +184,434 @@ public class AppMenusController extends AbstractController {
             return R.error().put("page", pageUtil);
         }
     }
+
+    /**
+     * 角色对应菜单
+     */
+    @RequestMapping("/selectKpisMenu")
+    public R selectKpisMenu(@RequestParam Map<String, Object> map) {
+        List<Map<String, Object>> list = new ArrayList<>();
+        HttpMethodUtil httpUtil = new HttpMethodUtil();
+        map.put("api_token", "api_token");
+        map.put("page", 0);
+        map.put("page_size", 10000);
+        try {
+            String result = httpUtil.getGetResult(ConstantsUtil.AppBaseUrl.APP_BASE_GET_KPI_URL , map);
+
+            System.out.println(result);
+            if (!StringUtils.isEmpty(result)) {
+                List<AppMenu> menuList = new ArrayList<>();
+
+                JSONObject jsonObject = JSONObject.parseObject(result);
+                if (jsonObject.getInteger("code") == 200) {
+
+                    JSONArray array = jsonObject.getJSONArray("data");
+                    if (array == null) {
+                        array = new JSONArray();
+                    }
+                    int total = array.size();
+                    for (int i = 0; i < total; i++) {
+                        AppMenu appMenu = new AppMenu();
+                        Integer id = array.getJSONObject(i).getInteger("id");
+                        appMenu.setId(id);
+                        appMenu.setMenuId(id);
+                        String group_name = array.getJSONObject(i).getString("kpi_group");
+                        appMenu.setSubName2(StringUtils.isEmpty(group_name) ? "" : group_name);
+                        String name = array.getJSONObject(i).getString("kpi_name");
+                        appMenu.setTitle(StringUtils.isEmpty(name) ? "" : name);
+
+                        String url = array.getJSONObject(i).getString("url");
+                        appMenu.setUrl(StringUtils.isEmpty(url) ? "" : url);
+                        String icon = array.getJSONObject(i).getString("icon");
+                        appMenu.setIcon(StringUtils.isEmpty(icon) ? "" : icon);
+                        String icon_link = array.getJSONObject(i).getString("icon_link");
+                        appMenu.setIconUrl(StringUtils.isEmpty(icon_link) ? "" : icon_link);
+
+                        String remark = array.getJSONObject(i).getString("remark");
+                        appMenu.setRemark(StringUtils.isEmpty(remark) ? "" : remark);
+
+                        Boolean publicly = array.getJSONObject(i).getBoolean("publicly");
+                        if (publicly != null) {
+                            appMenu.setPublicly(publicly);
+                        }
+
+                        Integer healthValue = array.getJSONObject(i).getInteger("health_value");
+                        if (healthValue != null) {
+                            appMenu.setHealthValue(healthValue);
+                        }
+                        Integer groupOrder = array.getJSONObject(i).getInteger("group_order");
+                        if (groupOrder != null) {
+                            appMenu.setGroupOrder(groupOrder);
+                        }
+                        Integer itemOrder = array.getJSONObject(i).getInteger("item_order");
+                        if (itemOrder != null) {
+                            appMenu.setItemOrder(itemOrder);
+                        }
+
+                        appMenu.setType(1);
+
+                        String createdAt = array.getJSONObject(i).getString("created_at");
+                        appMenu.setCreatedAt(StringUtils.isEmpty(createdAt) ? "" : createdAt);
+                        String updatedAt = array.getJSONObject(i).getString("updated_at");
+                        appMenu.setUpdatedAt(StringUtils.isEmpty(updatedAt) ? "" : updatedAt);
+                        Boolean active = array.getJSONObject(i).getBoolean("active");
+                        appMenu.setActive((active != null && active) ? 1 : 0);
+                        menuList.add(appMenu);
+                    }
+//                    for (AppMenu appMenu : menuList) {
+//                        Map<String, Object> node = new HashedMap();
+//                        node.put("id", appMenu.getMenuId());
+//                        node.put("name", appMenu.getSubName2());
+//
+//                        List<Map<String, Object>> children = new ArrayList<Map<String, Object>>();
+//                        Map<String, Object> childrenNode = new HashedMap();
+//                        childrenNode.put("id", appMenu.getMenuId());
+//                        childrenNode.put("name", appMenu.getTitle());
+//                        childrenNode.put("type", appMenu.getType());
+//
+//                        boolean isExist = false;
+//                        for (int i = 0; i < list.size(); i++) {
+//                            String name = list.get(i).get("name") + "";
+//                            if (name.equals(appMenu.getSubName2())) {
+//                                isExist = true;
+//                                children = (List<Map<String, Object>>) list.get(i).get("children");
+//                                children.add(childrenNode);
+//                                break;
+//                            }
+//                        }
+//                        if (!isExist) {
+//                            children.add(childrenNode);
+//                            node.put("children", children);
+//                            list.add(node);
+//                        }
+//                    }
+                    List<AppMenu> menuKpiList = new ArrayList<>();
+
+                    for (AppMenu appMenu : menuList) {
+                        if (appMenu.getActive() == 1) {
+                            menuKpiList.add(appMenu);
+                        }
+                    }
+                    list = parseListToTree(menuList);
+                    return R.success().put("list", list).put("menuKpiList", menuKpiList);
+                } else {
+                    String info = jsonObject.getString("message");
+                    return R.error().put("list", list).setMsg(info);
+                }
+            } else {
+                return R.error().put("list", list);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return R.error().put("list", list);
+        }
+//        //如果不是超级管理员，则只查询自己所拥有的角色列表
+//        if(getUserId() != Constant.SUPER_ADMIN){
+//            map.put("createUserId", getUserId());
+//        }
+//        List<AppRoles> list = appRolesService.queryList(map);
+//
+//        return R.success().put("list", list);
+    }
+
+    @RequestMapping("/selectAnalysesMenu")
+    public R selectAnalysesMenu(@RequestParam Map<String, Object> map) {
+        List<Map<String, Object>> list = new ArrayList<>();
+
+        HttpMethodUtil httpUtil = new HttpMethodUtil();
+        map.put("api_token", "api_token");
+        map.put("page", 0);
+        map.put("page_size", 10000);
+        try {
+            String result = httpUtil.getGetResult(ConstantsUtil.AppBaseUrl.APP_BASE_GET_ANALYSE_URL , map);
+
+            if (!StringUtils.isEmpty(result)) {
+                List<AppMenu> menuList = new ArrayList<>();
+
+                JSONObject jsonObject = JSONObject.parseObject(result);
+                if (jsonObject.getInteger("code") == 200) {
+
+                    JSONArray array = jsonObject.getJSONArray("data");
+                    if (array == null) {
+                        array = new JSONArray();
+                    }
+                    int total = array.size();
+                    for (int i = 0; i < total; i++) {
+                        AppMenu appMenu = new AppMenu();
+                        Integer id = array.getJSONObject(i).getInteger("id");
+                        appMenu.setId(id);
+                        appMenu.setMenuId(id);
+                        String category = array.getJSONObject(i).getString("category");
+                        appMenu.setSubName1(StringUtils.isEmpty(category) ? "" : category);
+                        String group_name = array.getJSONObject(i).getString("group_name");
+                        appMenu.setSubName2(StringUtils.isEmpty(group_name) ? "" : group_name);
+                        String name = array.getJSONObject(i).getString("name");
+                        appMenu.setTitle(StringUtils.isEmpty(name) ? "" : name);
+
+                        String link_path = array.getJSONObject(i).getString("link_path");
+                        appMenu.setUrl(StringUtils.isEmpty(link_path) ? "" : link_path);
+                        String icon = array.getJSONObject(i).getString("icon");
+                        appMenu.setIcon(StringUtils.isEmpty(icon) ? "" : icon);
+                        String icon_link = array.getJSONObject(i).getString("icon_link");
+                        appMenu.setIconUrl(StringUtils.isEmpty(icon_link) ? "" : icon_link);
+
+                        String remark = array.getJSONObject(i).getString("remark");
+                        appMenu.setRemark(StringUtils.isEmpty(remark) ? "" : remark);
+
+                        Boolean publicly = array.getJSONObject(i).getBoolean("publicly");
+                        if (publicly != null) {
+                            appMenu.setPublicly(publicly);
+                        }
+
+                        Integer healthValue = array.getJSONObject(i).getInteger("health_value");
+                        if (healthValue != null) {
+                            appMenu.setHealthValue(healthValue);
+                        }
+                        Integer groupOrder = array.getJSONObject(i).getInteger("group_order");
+                        if (groupOrder != null) {
+                            appMenu.setGroupOrder(groupOrder);
+                        }
+                        Integer itemOrder = array.getJSONObject(i).getInteger("item_order");
+                        if (itemOrder != null) {
+                            appMenu.setItemOrder(itemOrder);
+                        }
+
+                        appMenu.setType(2);
+
+                        String createdAt = array.getJSONObject(i).getString("created_at");
+                        appMenu.setCreatedAt(StringUtils.isEmpty(createdAt) ? "" : createdAt);
+                        String updatedAt = array.getJSONObject(i).getString("updated_at");
+                        appMenu.setUpdatedAt(StringUtils.isEmpty(updatedAt) ? "" : updatedAt);
+                        Boolean active = array.getJSONObject(i).getBoolean("active");
+                        appMenu.setActive((active != null && active) ? 1 : 0);
+                        menuList.add(appMenu);
+                    }
+                    for (int k = 0; k < menuList.size(); k++) {
+                        AppMenu appMenu = menuList.get(k);
+                        Map<String, Object> aNode = new HashedMap();
+                        aNode.put("id", "a" + appMenu.getId());
+                        aNode.put("name", appMenu.getSubName1());
+                        aNode.put("pname", appMenu.getName() + "报表");
+                        List<AppMenu> aChild = new ArrayList<>();
+
+                        boolean bIsExist = false;
+                        for (int i = 0; i < list.size(); i++) {
+                            String aName = list.get(i).get("name") + "";
+                            String bPName = appMenu.getSubName1();
+                            if (bPName.equals(aName)) {
+                                bIsExist = true;
+                                aChild = (List<AppMenu>) list.get(i).get("children");
+                                aChild.add(appMenu);
+                            }
+                        }
+
+                        if (!bIsExist) {
+                            aChild.add(appMenu);
+                            aNode.put("children", aChild);
+                            list.add(aNode);
+                        }
+                    }
+                    List<Map<String, Object>> newList = new ArrayList<>();
+                    for (int k = 0; k < list.size(); k++) {
+                        Map<String, Object> newMap = new HashedMap();
+                        String id = list.get(k).get("id") + "";
+                        String name = list.get(k).get("name") + "";
+
+                        List<AppMenu> appMenus = (List<AppMenu>) list.get(k).get("children");
+                        List<Map<String, Object>> children = parseListToTree(appMenus);
+
+                        newMap.put("id", id);
+                        newMap.put("name", name);
+                        newMap.put("children", children);
+                        newList.add(newMap);
+                    }
+
+                    List<AppMenu> menuAnalysesList = new ArrayList<>();
+
+                    for (AppMenu appMenu : menuList) {
+                        if (appMenu.getActive() == 1) {
+                            menuAnalysesList.add(appMenu);
+                        }
+                    }
+                    return R.success().put("list", newList).put("menuAnalysesList", menuAnalysesList);
+                } else {
+                    String info = jsonObject.getString("message");
+                    return R.error().put("list", list).setMsg(info);
+                }
+            } else {
+                return R.error().put("list", list);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return R.error().put("list", list);
+        }
+//        //如果不是超级管理员，则只查询自己所拥有的角色列表
+//        if(getUserId() != Constant.SUPER_ADMIN){
+//            map.put("createUserId", getUserId());
+//        }
+//        List<AppRoles> list = appRolesService.queryList(map);
+//
+//        return R.success().put("list", list);
+    }
+
+    public List<Map<String, Object>> parseListToTree(List<AppMenu> menuList) {
+        List<Map<String, Object>> list = new ArrayList<>();
+        for (AppMenu appMenu : menuList) {
+            Map<String, Object> node = new HashedMap();
+            node.put("id", "b" + appMenu.getMenuId());
+            node.put("name", appMenu.getSubName2());
+
+            List<Map<String, Object>> children = new ArrayList<Map<String, Object>>();
+            Map<String, Object> childrenNode = new HashedMap();
+            childrenNode.put("id", appMenu.getMenuId());
+            childrenNode.put("name", appMenu.getTitle());
+            childrenNode.put("type", appMenu.getType());
+
+            boolean isExist = false;
+            for (int i = 0; i < list.size(); i++) {
+                String name = list.get(i).get("name") + "";
+                if (name.equals(appMenu.getSubName2())) {
+                    isExist = true;
+                    children = (List<Map<String, Object>>) list.get(i).get("children");
+                    children.add(childrenNode);
+                    break;
+                }
+            }
+            if (!isExist) {
+                children.add(childrenNode);
+                node.put("children", children);
+                list.add(node);
+            }
+        }
+        return list;
+    }
+
+    @RequestMapping("/selectAppsMenu")
+    public R selectAppsMenu(@RequestParam Map<String, Object> map) {
+        List<Map<String, Object>> list = new ArrayList<>();
+
+        HttpMethodUtil httpUtil = new HttpMethodUtil();
+        map.put("api_token", "api_token");
+        map.put("page", 0);
+        map.put("page_size", 10000);
+        try {
+            String result = httpUtil.getGetResult(ConstantsUtil.AppBaseUrl.APP_BASE_GET_APP_URL , map);
+
+            System.out.println(result);
+            if (!StringUtils.isEmpty(result)) {
+                List<AppMenu> menuList = new ArrayList<>();
+
+                JSONObject jsonObject = JSONObject.parseObject(result);
+                if (jsonObject.getInteger("code") == 200) {
+
+                    JSONArray array = jsonObject.getJSONArray("data");
+                    if (array == null) {
+                        array = new JSONArray();
+                    }
+                    int total = array.size();
+                    for (int i = 0; i < total; i++) {
+                        AppMenu appMenu = new AppMenu();
+                        Integer id = array.getJSONObject(i).getInteger("id");
+                        appMenu.setId(id);
+                        appMenu.setMenuId(id);
+                        String group_name = array.getJSONObject(i).getString("group_name");
+                        appMenu.setSubName2(StringUtils.isEmpty(group_name) ? "" : group_name);
+                        String name = array.getJSONObject(i).getString("name");
+                        appMenu.setTitle(StringUtils.isEmpty(name) ? "" : name);
+                        String link_path = array.getJSONObject(i).getString("link_path");
+                        appMenu.setUrl(StringUtils.isEmpty(link_path) ? "" : link_path);
+                        String icon = array.getJSONObject(i).getString("icon");
+                        appMenu.setIcon(StringUtils.isEmpty(icon) ? "" : icon);
+                        String icon_link = array.getJSONObject(i).getString("icon_link");
+                        appMenu.setIconUrl(StringUtils.isEmpty(icon_link) ? "" : icon_link);
+
+                        String remark = array.getJSONObject(i).getString("remark");
+                        appMenu.setRemark(StringUtils.isEmpty(remark) ? "" : remark);
+
+                        Boolean publicly = array.getJSONObject(i).getBoolean("publicly");
+                        if (publicly != null) {
+                            appMenu.setPublicly(publicly);
+                        }
+
+                        Integer healthValue = array.getJSONObject(i).getInteger("health_value");
+                        if (healthValue != null) {
+                            appMenu.setHealthValue(healthValue);
+                        }
+                        Integer groupOrder = array.getJSONObject(i).getInteger("group_order");
+                        if (groupOrder != null) {
+                            appMenu.setGroupOrder(groupOrder);
+                        }
+                        Integer itemOrder = array.getJSONObject(i).getInteger("item_order");
+                        if (itemOrder != null) {
+                            appMenu.setItemOrder(itemOrder);
+                        }
+
+                        appMenu.setType(3);
+
+                        String createdAt = array.getJSONObject(i).getString("created_at");
+                        appMenu.setCreatedAt(StringUtils.isEmpty(createdAt) ? "" : createdAt);
+                        String updatedAt = array.getJSONObject(i).getString("updated_at");
+                        appMenu.setUpdatedAt(StringUtils.isEmpty(updatedAt) ? "" : updatedAt);
+                        Boolean active = array.getJSONObject(i).getBoolean("active");
+                        appMenu.setActive((active != null && active) ? 1 : 0);
+                        menuList.add(appMenu);
+                    }
+//                    for (AppMenu appMenu : menuList) {
+//                        Map<String, Object> node = new HashedMap();
+//                        node.put("id", appMenu.getMenuId());
+//                        node.put("name", appMenu.getSubName2());
+//
+//                        List<Map<String, Object>> children = new ArrayList<Map<String, Object>>();
+//                        Map<String, Object> childrenNode = new HashedMap();
+//                        childrenNode.put("id", appMenu.getMenuId());
+//                        childrenNode.put("name", appMenu.getTitle());
+//                        childrenNode.put("type", appMenu.getType());
+//
+//                        boolean isExist = false;
+//                        for (int i = 0; i < list.size(); i++) {
+//                            String name = list.get(i).get("name") + "";
+//                            if (name.equals(appMenu.getSubName2())) {
+//                                isExist = true;
+//                                children = (List<Map<String, Object>>) list.get(i).get("children");
+//                                children.add(childrenNode);
+//                                break;
+//                            }
+//                        }
+//                        if (!isExist) {
+//                            children.add(childrenNode);
+//                            node.put("children", children);
+//                            list.add(node);
+//                        }
+//                    }
+                    list = parseListToTree(menuList);
+                    List<AppMenu> menuAppList = new ArrayList<>();
+
+                    for (AppMenu appMenu : menuList) {
+                        if (appMenu.getActive() == 1) {
+                            menuAppList.add(appMenu);
+                        }
+                    }
+                    return R.success().put("list", list).put("menuAppList", menuAppList);
+                } else {
+                    String info = jsonObject.getString("message");
+                    return R.error().put("list", list).setMsg(info);
+                }
+            } else {
+                return R.error().put("list", list);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return R.error().put("list", list);
+        }
+//        //如果不是超级管理员，则只查询自己所拥有的角色列表
+//        if(getUserId() != Constant.SUPER_ADMIN){
+//            map.put("createUserId", getUserId());
+//        }
+//        List<AppRoles> list = appRolesService.queryList(map);
+//
+//        return R.success().put("list", list);
+    }
+
 
     /**
      * 信息

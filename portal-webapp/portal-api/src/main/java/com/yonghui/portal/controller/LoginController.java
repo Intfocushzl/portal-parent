@@ -182,7 +182,7 @@ public R queryFineUserPwd(HttpServletRequest req, HttpServletResponse response){
         User user = new User();
         user.setJobNumber("CS123456");
         user.setName("测试");
-        user.setRoleId("1");
+        user.setRoleId(1);
         TokenApi tokenApiLast = tokenApiService.queryByJobNumber(user.getJobNumber());
         TokenApi tokenApiNew = tokenUtil.createToken(tokenApiLast, user);
 
@@ -201,7 +201,7 @@ public R queryFineUserPwd(HttpServletRequest req, HttpServletResponse response){
         User user = new User();
         user.setJobNumber("CS123456");
         user.setName("测试");
-        user.setRoleId("1");
+        user.setRoleId(1);
         //生成token
         TokenApi tokenApiNew = tokenUtil.createToken(null, user);
         return R.success(tokenApiNew);

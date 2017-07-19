@@ -1,6 +1,8 @@
 package com.yonghui.portal.model.global;
 
 
+import com.yonghui.portal.model.base.AuditAuto;
+
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
@@ -12,17 +14,14 @@ import java.util.List;
  * @email 80715104@yonghui.cn
  * @date 2017-05-15 20:03:17
  */
-public class Role implements Serializable {
+public class Role extends AuditAuto {
 
-    private Integer id;
     //角色唯一编码
     private Integer roleId;
     //角色名称
     private String name;
     //状态 0冻结，1激活
     private Integer status;
-    //创建时间
-    private Date createTime;
     //
     private Date createdAt;
     //
@@ -41,13 +40,6 @@ public class Role implements Serializable {
 
     private List<Integer> menuIdList;
 
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
 
     public Integer getRoleId() {
         return roleId;

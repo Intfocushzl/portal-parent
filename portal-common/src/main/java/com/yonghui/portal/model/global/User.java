@@ -15,7 +15,7 @@ public class User  implements Serializable{
 	//手机号
 	private String mobile;
 	//菜单权限，默认ALL权限拥有全部。 逗号隔开为拥有权限
-	private String  roleId;
+	private Integer  roleId;
 	//密码
 	private String pass;
 	//工号
@@ -133,11 +133,11 @@ public class User  implements Serializable{
 		this.mobile = mobile;
 	}
 
-	public String getRoleId() {
+	public Integer getRoleId() {
 		return roleId;
 	}
 
-	public void setRoleId(String roleId) {
+	public void setRoleId(Integer roleId) {
 		this.roleId = roleId;
 	}
 

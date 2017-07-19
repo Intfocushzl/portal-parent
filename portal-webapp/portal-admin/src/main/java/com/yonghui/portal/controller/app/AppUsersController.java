@@ -58,6 +58,9 @@ public class AppUsersController extends AbstractController {
         map.put("api_token", "api_token");
         map.put("page", query.getPage() - 1);
         map.put("page_size", query.getLimit());
+        if (query.get("userName") != null) {
+            map.put("user_name", query.get("userName"));
+        }
         try {
             String result = httpUtil.getGetResult(ConstantsUtil.AppBaseUrl.APP_BASE_GET_USER_URL, map);
 

@@ -9,9 +9,9 @@
     <div v-show="showList">
         <div id="queryDiv" class="queryDiv">
             <div class="grid-btn">
-                <div class="form-group col-sm-2">
+                <div class="form-group col-sm-2" hidden>
                     <input type="text" class="form-control" v-model="appRoles.id" @keyup.enter="query"
-                           placeholder="主键ID">
+                           placeholder="主键ID" >
                 </div>
                 <div class="form-group col-sm-2">
                     <input type="text" class="form-control" v-model="appRoles.roleName" @keyup.enter="query"
@@ -44,6 +44,12 @@
                 </div>
             </div>
             <div class="form-group">
+                <div class="col-sm-2 control-label">PC角色ID</div>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" v-model="appRoles.roleId" placeholder=""/>
+                </div>
+            </div>
+            <div class="form-group">
                 <div class="col-sm-2 control-label">备注</div>
                 <div class="col-sm-10">
                     <input type="text" class="form-control" v-model="appRoles.memo" placeholder=""/>
@@ -52,13 +58,13 @@
             <div class="form-group">
                 <div class="col-sm-2 control-label">授权</div>
                 <div class="col-sm-10">
-                    <div class="col-sm-3">
+                    <div class="col-sm-2">
                         <ul id="menuTree1" class="ztree"></ul>
                     </div>
-                    <div class="col-sm-3">
+                    <div class="col-sm-2">
                         <ul id="menuTree2" class="ztree"></ul>
                     </div>
-                    <div class="col-sm-3">
+                    <div class="col-sm-2">
                         <ul id="menuTree3" class="ztree"></ul>
                     </div>
                 </div>
