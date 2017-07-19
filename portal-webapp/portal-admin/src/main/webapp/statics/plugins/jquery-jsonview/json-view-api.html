@@ -1,0 +1,176 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>JSONView</title>
+
+    <link rel="shortcut icon" href="/statics/css/img/logo40X40.png"/>
+    <link rel="stylesheet" href="/statics/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/statics/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/statics/plugins/jqgrid/ui.jqgrid-bootstrap.css">
+    <link rel="stylesheet" href="/statics/plugins/ztree/css/metroStyle/metroStyle.css">
+    <link rel="stylesheet" href="/statics/css/main.css">
+    <link rel="stylesheet" href="/statics/css/query.css">
+    <link rel="stylesheet" href="/statics/plugins/jqueryui/jquery-ui.min.css">
+    <link rel="stylesheet" href="/statics/plugins/jquery-jsonview/jquery.jsonview.css"/>
+
+    <style>
+        .form-group {
+            margin-top: 20px;
+            padding: 20px;
+        }
+
+        .json_formatter, .json_str {
+            padding: 20px;
+            min-height: 500px;;
+            height: auto;
+            width: 50%;
+            float: left;
+        }
+
+        /*.json_formatter {
+            border-left: 1px solid #3b5998;
+        }*/
+
+        .json_btn {
+            margin-bottom: 10px;
+        }
+
+        .json_str_text {
+            display: block;
+            width: 100%;
+            min-height: 400px;
+            overflow-x: hidden;
+            overflow-y: hidden;
+            resize: none;
+            overflow: hidden;
+            word-wrap: break-word;
+            outline: 0 none;
+            border-color: rgba(82, 168, 236, 0.8);
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1), 0 0 8px rgba(82, 168, 236, 0.6);
+        }
+
+        #goTopBtn {
+            position: fixed;
+            line-height: 46px;
+            width: 46px;
+            bottom: 30px;
+            height: 46px;
+            cursor: pointer;
+            display: none;
+            background: url(top.png);
+        }
+    </style>
+
+    <script src="/statics/libs/jquery.min.js"></script>
+    <script src="/statics/plugins/layer/layer.js"></script>
+    <script src="/statics/libs/bootstrap.min.js"></script>
+    <script src="/statics/libs/vue.min.js"></script>
+    <script src="/statics/plugins/jqgrid/grid.locale-cn.js"></script>
+    <script src="/statics/plugins/jqgrid/jquery.jqGrid.min.js"></script>
+    <script src="/statics/plugins/ztree/jquery.ztree.all.min.js"></script>
+    <script src="/js/common.js"></script>
+    <script src="/js/commonUtils.js"></script>
+    <script src="/statics/plugins/jqueryui/jquery-ui.min.js"></script>
+    <link rel="stylesheet" href="/statics/plugins/bootstrap-select/dist/css/bootstrap-select.css">
+    <script src="/statics/plugins/bootstrap-select/dist/js/bootstrap-select.js"></script>
+
+    <script src="/statics/plugins/jquery-jsonview/jquery.jsonview.js"></script>
+    <script src="/statics/plugins/jquery-jsonview/autosize.js"></script>
+
+    <script type="text/javascript">
+        // 获取 window.location.href参数
+        function getQueryString(name) {
+            var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
+            var r = window.location.search.substr(1).match(reg);
+            if (r != null) return unescape(r[2]);
+            return null;
+        }
+
+        var code = JSON.parse(unescape(getQueryString("code")));
+
+        $(function () {
+            $('#toggle-formatter').on('click', function () {
+                $("#json").JSONView($("#json_str_text").val());
+            });
+
+            $('#toggle-btn').on('click', function () {
+                $('#json').JSONView('toggle');
+            });
+
+            $('#toggle-level1-btn').on('click', function () {
+                $('#json').JSONView('toggle', 1);
+            });
+
+            $('#toggle-level2-btn').on('click', function () {
+                $('#json').JSONView('toggle', 2);
+            });
+
+            $('#toggle-level3-btn').on('click', function () {
+                $('#json').JSONView('toggle', 3);
+            });
+
+            $('#toggle-level4-btn').on('click', function () {
+                $('#json').JSONView('toggle', 4);
+            });
+
+            $('#toggle-level5-btn').on('click', function () {
+                $('#json').JSONView('toggle', 5);
+            });
+        });
+    </script>
+</head>
+<body>
+<div id="rrapp">
+    <div class="form-group">
+        少时诵诗书所所所所所所所
+    </div>
+
+    <div class="form-group form-group-json">
+        <div class="json_str">
+            <div class="json_btn">
+                <button id="toggle-formatter" class="btn btn-primary">　格式化　</button>
+            </div>
+            <div id="json_str">
+                <textarea id="json_str_text" class="json_str_text" textarea-auto="true"></textarea>
+            </div>
+        </div>
+        <div class="json_formatter">
+            <div class="json_btn json_formatter_btn">
+                <button id="toggle-btn" class="btn btn-primary">　展　开　</button>
+                <button id="toggle-level1-btn" class="btn btn-danger">　一　级　</button>
+                <button id="toggle-level2-btn" class="btn btn-danger">　二　级　</button>
+                <button id="toggle-level3-btn" class="btn btn-danger">　三　级　</button>
+                <button id="toggle-level4-btn" class="btn btn-danger">　四　级　</button>
+                <button id="toggle-level5-btn" class="btn btn-danger">　五　级　</button>
+            </div>
+            <div id="json"></div>
+        </div>
+    </div>
+</div>
+
+<div id="goTopBtn"></div>
+
+<script>
+    autosize($('.json_str_text'));
+</script>
+
+<script type="text/javascript">
+    $(window).scroll(function () {
+        var sc = $(window).scrollTop();
+        var rwidth = $(window).width()
+        if (sc > 0) {
+            $("#goTopBtn").css("display", "block");
+            $("#goTopBtn").css("left", (rwidth - 48) + "px")
+        } else {
+            $("#goTopBtn").css("display", "none");
+        }
+    })
+    $("#goTopBtn").click(function () {
+        var sc = $(window).scrollTop();
+        $('body,html').animate({scrollTop: 0}, 500);
+    })
+</script>
+
+</body>
+</html>
