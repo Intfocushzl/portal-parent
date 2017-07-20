@@ -131,3 +131,12 @@ var vm = new Vue({
         }
     }
 });
+
+// 图片自适应
+$(function () {
+    $("img").autoIMG();
+});
+
+
+// textarea 高度自动扩展
+autosize($('textarea'));
