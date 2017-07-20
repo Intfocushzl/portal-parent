@@ -19,7 +19,6 @@ function init() {
 }
 
 // 测试请求
-//var test_url = "http://10.67.241.218/yhportal/userAuthMenu/listRoleMenu?roleId=1&token=adminMGdp1nT0Q3qxBqDvFNKW0QM9354d8db013b4bb08d4e116e6fd1893e";
 //var test_url = "http://10.67.241.218/yhportal/api/portal/custom?yongHuiReportCustomCode=REP_000003&reportLabel=2&sDate=2017/6/19&eDate=2017/7/19&holdName=%E7%AC%AC%E4%BA%8C%E9%9B%86%E7%BE%A4&classId=&areaId=&areaMans=&shopId=&token=adminMGdp1nT0Q3qxBqDvFNKW0QM9354d8db013b4bb08d4e116e6fd1893e";
 var test_url = "http://10.67.241.218/yhportal/api/portal/custom";
 var dev_url = "http://10.67.241.234/yhportal/api/portal/custom";
@@ -88,13 +87,13 @@ var vm = new Vue({
             });
         },
         getJsonTest: function () {
-            $.get(test_url + "?" + parameters, function (r) {
+            $.get(test_url + "?" + vm.parameters, function (r) {
                 $(".json_str_text").val(JSON.stringify(r));
                 $("#json").JSONView(JSON.stringify(r));
             });
         },
         getJsonDev: function () {
-            $.get(dev_url + "?" + parameters, function (r) {
+            $.get(dev_url + "?" + vm.parameters, function (r) {
                 $(".json_str_text").val(JSON.stringify(r));
                 $("#json").JSONView(JSON.stringify(r));
             });
@@ -126,7 +125,7 @@ var vm = new Vue({
 function getParametersStr(parameters) {
     var pmt = "yongHuiReportCustomCode=" + vm.portalReport.code + "&token=" + token;
     if (getStringValue(parameters) != "") {
-        pmt = pmt + "&" + parameters.replace(/@@/g, "=&");
+        pmt = pmt + "&" + parameters.replace(/@@/g, "=&") + "=";
     }
     return pmt;
 }
