@@ -689,3 +689,6 @@ function saveOrder2() {
     }).get();
     $("input[name=list2SortOrder]").val(data.join("|"));
 }
+
+// textarea 高度自动扩展
+autosize($('textarea'));

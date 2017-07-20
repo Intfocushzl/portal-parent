@@ -336,3 +336,7 @@ var vm = new Vue({
         }
     })
     ;
+
+
+// textarea 高度自动扩展
+autosize($('textarea'));

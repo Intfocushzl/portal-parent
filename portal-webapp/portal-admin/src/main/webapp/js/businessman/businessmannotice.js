@@ -192,3 +192,7 @@ $fdate.datetimepicker({
 $(function () {
     $("img").autoIMG();
 });
+
+
+// textarea 高度自动扩展
+autosize($('textarea'));
