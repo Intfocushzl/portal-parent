@@ -14,7 +14,7 @@ var executeCode = unescape(getQueryString("executeCode"));
 function init() {
     /*$("#code").val(vm.portalReport.code);*/
     vm.getRepCode();
-    $("#title").val(vm.portalReport.title);
+    /*$("#title").val(vm.portalReport.title);*/
     $("#reportTitleName").val(vm.portalReport.reportTitleName);
     $("#remark").val(vm.portalReport.remark);
 }
