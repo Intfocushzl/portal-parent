@@ -1,6 +1,6 @@
 $(function () {
     $("#jqGrid").jqGrid({
-        url: '/admin/forfront/role/list',     // 请求后台json数据的url
+        url: '${rc.contextPath}/forfront/role/list',     // 请求后台json数据的url
         datatype: "json",                // 后台返回的数据格式
         // 列表标题及列表模型
         colModel: [
@@ -127,7 +127,7 @@ var vm = new Vue({
             confirm('确定要删除选中的记录？', function () {
                 $.ajax({
                     type: "POST",
-                    url: "/admin/forfront/role/delete",
+                    url: rcContextPath+"/forfront/role/delete",
                     data: JSON.stringify(roleIds),
                     success: function (r) {
                         if (r.code == 0) {
@@ -142,7 +142,7 @@ var vm = new Vue({
             });
         },
         getRole: function (roleId) {
-            $.get("/admin/forfront/role/info/" + roleId, function (r) {
+            $.get(rcContextPath+"/forfront/role/info/" + roleId, function (r) {
                 vm.role = r.role;
                 console.log(r.role);
                 //勾选角色所拥有的菜单
@@ -156,7 +156,7 @@ var vm = new Vue({
             });
         },
         getRoleList: function () {
-            $.get("/admin/forfront/role/select", function (r) {
+            $.get(rcContextPath+"/forfront/role/select", function (r) {
                 vm.roleList = r.list;
             });
         },
@@ -177,10 +177,10 @@ var vm = new Vue({
             }
             vm.role.menuIdList = menuIdList;
 
-            var url = vm.role.id == null ? "/admin/forfront/role/save" : "/admin/forfront/role/update";
+            var url = vm.role.id == null ? "/forfront/role/save" : "/forfront/role/update";
             $.ajax({
                 type: "POST",
-                url: url,
+                url: rcContextPath+url,
                 data: JSON.stringify(vm.role),
                 success: function (r) {
                     if (r.code === 0) {
@@ -195,7 +195,7 @@ var vm = new Vue({
         },
         getMenuTree: function (roleId) {
             //加载菜单树
-            $.get("/admin/forfront/menu/perms", function (r) {
+            $.get(rcContextPath+"/forfront/menu/perms", function (r) {
                 ztree = $.fn.zTree.init($("#menuTree"), setting, r.menuList);
                 //展开所有节点
                 ztree.expandAll(false);
@@ -221,7 +221,7 @@ var vm = new Vue({
             confirm('确定要缓存选中角色的权限菜单？', function () {
                 $.ajax({
                     type: "POST",
-                    url: "/admin/forfront/role/addRedis",
+                    url: rcContextPath+"/forfront/role/addRedis",
                     data: JSON.stringify(roleIds),
                     success: function (r) {
                         if (r.code == 0) {
@@ -236,7 +236,7 @@ var vm = new Vue({
             });
         },
         getNextRoleId: function () {
-            $.get("../forfront/role/getNextRoleId", function (r) {
+            $.get(rcContextPath+"/forfront/role/getNextRoleId", function (r) {
                 vm.nextRoleId = r.data.nextRoleId;
             });
         }
