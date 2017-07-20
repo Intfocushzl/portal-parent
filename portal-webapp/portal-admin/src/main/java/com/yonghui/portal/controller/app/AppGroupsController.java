@@ -6,16 +6,20 @@ import com.alibaba.fastjson.JSONObject;
 import com.yonghui.portal.controller.AbstractController;
 import com.yonghui.portal.model.app.AppGroups;
 import com.yonghui.portal.service.app.AppGroupsService;
-import com.yonghui.portal.util.*;
+import com.yonghui.portal.service.global.UserAdminService;
+import com.yonghui.portal.util.ConstantsUtil;
+import com.yonghui.portal.util.PageUtils;
+import com.yonghui.portal.util.Query;
+import com.yonghui.portal.util.R;
 import com.yonghui.portal.util.report.columns.HttpMethodUtil;
 import org.apache.commons.collections.map.HashedMap;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -30,7 +34,7 @@ public class AppGroupsController extends AbstractController {
     Logger log = Logger.getLogger(this.getClass());
 
     @Autowired
-    private AppGroupsService appGroupsService;
+    private UserAdminService userAdminService;
 
     /**
      * 列表
@@ -252,13 +256,22 @@ public class AppGroupsController extends AbstractController {
      */
     @RequestMapping("/select")
     public R select(@RequestParam Map<String, Object> params) {
+        String areaMans=params.get("areaMans")+"";
         //查询列表数据
         List<AppGroups> appGroupsList = new ArrayList<>();
         HttpMethodUtil httpUtil = new HttpMethodUtil();
         Map<String, Object> map = new HashedMap();
         map.put("api_token", "api_token");
         map.put("page", 0);
-        map.put("page_size", 10000);
+        if (!StringUtils.isEmpty(areaMans)){
+            if (areaMans.equals("ALL")){
+                areaMans="全部";
+            }
+            map.put("group_name", areaMans);
+            map.put("page_size", 1000);
+        }else {
+            map.put("page_size", 10000);
+        }
         try {
             String result = httpUtil.getGetResult(ConstantsUtil.AppBaseUrl.APP_BASE_GET_GROUP_URL, map);
 
@@ -316,7 +329,7 @@ public class AppGroupsController extends AbstractController {
         HttpMethodUtil httpUtil = new HttpMethodUtil();
         Map<String, Object> map = new HashedMap();
         map.put("api_token", "api_token");
-        map.put("lazy_load", true);
+       // map.put("lazy_load", true);
         try {
             String result = httpUtil.getGetResult(ConstantsUtil.AppBaseUrl.APP_BASE_POST_USER_URL + "/" + userNum + "/groups", map);
             log.info(result);

@@ -112,8 +112,8 @@ var vm = new Vue({
             $("#jqGrid").jqGrid('setGridParam', {
                 postData: {
                     menuId: vm.appMenu.menuId,
-                    name: vm.appMenu.name,
-                    subName: vm.appMenu.subName,
+                    subName2: vm.menu.subName2,
+                    title: vm.menu.title,
                     type: vm.appMenu.type
                 },
                 page: 1
@@ -123,7 +123,8 @@ var vm = new Vue({
             vm.showList = false;
             vm.title = "新增";
             vm.appMenu = {type:$("input:radio[name=t]:checked").val()==null?1:$("input:radio[name=t]:checked").val(),
-                    id:null
+                    id:null,
+                publicly:false
             };
             vm.getRoleList(null);
         },
@@ -159,6 +160,9 @@ var vm = new Vue({
             o.menuId=id;
             vm.showList = false;
             vm.title = "修改";
+            if (vm.appMenu.publicly==null){
+                vm.appMenu.publicly=false;
+            }
             vm.getInfo(o);
         },
         saveOrUpdate: function (event) {

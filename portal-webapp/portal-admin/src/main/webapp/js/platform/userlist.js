@@ -126,10 +126,14 @@ $(function () {
                 }
             },
             {
-                label: '操作', name: 'operation', index: 'operation', with: 100, formatter: function (value, options, row) {
-                    return "<span class='label label-success' onclick='vm.userInfo(" + row.id + ")'>查看</span>&nbsp;&nbsp;<span class='label label-success'onclick='vm.pass(" + row.id+ ")'>同意</span>" +
+                label: '操作',
+                name: 'operation',
+                index: 'operation',
+                with: 100,
+                formatter: function (value, options, row) {
+                    return "<span class='label label-success' onclick='vm.userInfo(" + row.id + ")'>查看</span>&nbsp;&nbsp;<span class='label label-success'onclick='vm.pass(" + row.id + ")'>同意</span>" +
                         "&nbsp;&nbsp;<span class='label label-success' onclick='vm.refuse(" + row.id + ")'>拒绝</span>";
-            }
+                }
             },
             {label: '大区', name: 'largeArea', index: 'largeArea', width: 100},
             {label: '新大区', name: 'areaMans', index: 'areaMans', width: 100},
@@ -143,7 +147,7 @@ $(function () {
         viewrecords: true,
         height: 400,            // 表格高度
         rowNum: 10,             // 一页显示的行记录数
-        rowList: [10,20,50,100],     // 翻页控制条中 每页显示记录数可选集合
+        rowList: [10, 20, 50, 100],     // 翻页控制条中 每页显示记录数可选集合
         rownumbers: true,       // 是否显示行号，默认值是false，不显示
         autowidth: true,
         // autoScroll: true,
@@ -196,6 +200,7 @@ var vm = new Vue({
             vm.title = "新增";
             var o = new Object();
             o.type = (vm.user.type == null ? 1 : vm.user.type);
+            $("#type").selectpicker("val",o.type);
             vm.getRoleList(o);
             vm.getGroupList(null);
         },
@@ -210,8 +215,11 @@ var vm = new Vue({
             vm.getInfo(id);
         },
         saveOrUpdate: function (event) {
-            if (vm.user.largeArea=="全部"){
-                vm.user.largeArea="ALL";
+            vm.user.roleId = $("select#roleList option:selected").val();
+            vm.user.areaMans = $("select#areaMansList option:selected").val();
+
+            if (vm.user.largeArea == "全部") {
+                vm.user.largeArea = "ALL";
             }
             var url = vm.user.id == null ? baseUrl + "/forfront/user/save" : baseUrl + "/forfront/user/update";
             console.log(vm.user);
@@ -253,7 +261,7 @@ var vm = new Vue({
                 });
             });
         },
-        audit:function () {
+        audit: function () {
             vm.showList = 3;
             vm.title = "审核";
         }
@@ -261,22 +269,24 @@ var vm = new Vue({
         getInfo: function (id) {
             $.get(baseUrl + "/forfront/user/info/" + id, function (r) {
                 vm.user = r.user;
-                vm.user.roleId=r.user.roleId;
-                if (vm.user.largeArea=="ALL"){
-                    vm.user.areaMans="ALL";
-                    vm.user.largeArea="全部";
+                vm.user.roleId = r.user.roleId;
+                if (vm.user.largeArea == "ALL") {
+                    vm.user.areaMans = "ALL";
+                    vm.user.largeArea = "全部";
                 }
                 var o = new Object();
                 o.type = vm.user.type;
+                $("#type").selectpicker("val",o.type);
                 vm.getRoleList(o);
                 vm.getGroupList(vm.user.jobNumber);
             });
         },
         getRoleList: function (params) {
-            var roleId=vm.user.roleId;
+            var roleId = vm.user.roleId;
+            $("#roleList").empty();
             $.get("../forfront/role/select", params, function (r) {
                 var roleList = r.list;
-                if (roleId=="undefined"&&roleList.length > 0) {
+                if (roleId == "undefined" && roleList.length > 0) {
                     vm.user.roleId = roleList[0].value;
                 }
                 for (var i = 0; i < roleList.length; i++) {
@@ -285,6 +295,8 @@ var vm = new Vue({
                 // refresh刷新和render渲染操作，必不可少  +r.data[i].id+"<===>"
                 $('#roleList').selectpicker('refresh');
                 $('#roleList').selectpicker('render');
+
+                $("#roleList").selectpicker('val', roleId);
             });
         },
         reload: function (event) {
@@ -310,9 +322,10 @@ var vm = new Vue({
             $.get("../common/getDataList?reportLabel=2", function (r) {
                 var areaMansList = r.data.list;
                 if (areaMansList.length > 0) {
-                    vm.user.areaMans = areaMansList[0].value;
-                    vm.user.largeArea =areaMansList[0].pid;
+                    vm.user.areaMans = "ALL";
+                    vm.user.largeArea = "全部";
                 }
+                $("#areaMansList").empty();
                 $("#areaMansList").append("<option value='ALL'>全部</option>");
                 for (var i = 0; i < areaMansList.length; i++) {
                     $("#areaMansList").append("<option value='" + areaMansList[i].value + "'>" + areaMansList[i].label + "</option>");
@@ -320,26 +333,39 @@ var vm = new Vue({
                 // refresh刷新和render渲染操作，必不可少  +r.data[i].id+"<===>"
                 $('#areaMansList').selectpicker('refresh');
                 $('#areaMansList').selectpicker('render');
+
+                $("#areaMansList").selectpicker('val', vm.user.areaMans);
             });
         },
-        getGroupList: function (userNum){
-            var url=userNum==null?"../app/groups/select":"../app/groups/selectGroups?userNum="+userNum;
+        getGroupList: function (userNum) {
+            var areaMans=$("#areaMansList").selectpicker('val');
+            var url = "../app/groups/select?areaMans="+areaMans;
             $.get(url, function (r) {
                 var groupList = r.groupList;
-                var isInited=false;
+                $("#groupList").empty();
                 for (var i = 0; i < groupList.length; i++) {
                     $("#groupList").append("<option value='" + groupList[i].id + "'>" + groupList[i].groupName + "</option>");
-                    if(groupList[i].active>0){
-                        vm.user.groupId=groupList[i].id;
-                        isInited=true;
-                    }
                 }
                 // refresh刷新和render渲染操作，必不可少  +r.data[i].id+"<===>"
                 $('#groupList').selectpicker('refresh');
                 $('#groupList').selectpicker('render');
-                if (!isInited&&groupList.length > 0) {
-                    vm.user.groupId = groupList[0].id;
+
+                if (userNum != null) {
+                    $.get("../app/groups/selectGroups?userNum=" + userNum, function (r) {
+                        console.log(r);
+                        var list = r.groupList;
+                        if (list.length > 0) {
+                            vm.user.groupId = list[0].id;
+                            $("#groupList").selectpicker('val', vm.user.groupId);
+                        }
+                    });
+                } else {
+                    if (groupList.length > 0) {
+                        vm.user.groupId = groupList[0].id;
+                        $("#groupList").selectpicker('val', vm.user.groupId);
+                    }
                 }
+
             });
         },
         newUserReload: function (event) {
@@ -364,11 +390,11 @@ var vm = new Vue({
             }
             $.get("../forfront/user/info/" + id, function (r) {
                 vm.user = r.user;
-                var url =  "../forfront/user/newUser/pass" ;
+                var url = "../forfront/user/newUser/pass";
                 $.ajax({
                     type: "POST",
                     url: url,
-                    data:JSON.stringify(vm.user),
+                    data: JSON.stringify(vm.user),
                     success: function (r) {
                         if (r.code === 0) {
                             alert('操作成功', function (index) {
@@ -385,11 +411,11 @@ var vm = new Vue({
             if (id == null) {
                 return;
             }
-            var url =  "../forfront/user/newUser/refuse" ;
+            var url = "../forfront/user/newUser/refuse";
             $.ajax({
                 type: "POST",
                 url: url,
-                data:JSON.stringify(id),
+                data: JSON.stringify(id),
                 success: function (r) {
                     if (r.code === 0) {
                         alert('操作成功', function (index) {
@@ -410,13 +436,22 @@ $(window).on('load', function () {
     });
 });
 vm.getAreaMans();
-$("select#areaMansList").change(function(){
-    var pid= $("select#areaMansList option:selected").val();
-    $.get("../common/getDataList?reportLabel=5&pid="+pid, function (r) {
-        var largeAreaList = r.data.list;
-        if (largeAreaList.length > 0) {
-            vm.user.largeArea = largeAreaList[0].value;
-            $("#largeArea").val(largeAreaList[0].value);
-        }
-    });
+$("select#areaMansList").change(function () {
+    var pid = $("select#areaMansList option:selected").val();
+    if (pid=="ALL"){
+        $("#largeArea").val("ALL");
+    }else {
+        $.get("../common/getDataList?reportLabel=5&pid=" + pid, function (r) {
+            var largeAreaList = r.data.list;
+            if (largeAreaList.length > 0) {
+                vm.user.largeArea = largeAreaList[0].value;
+                $("#largeArea").val(largeAreaList[0].value);
+            }
+        });
+    }
+    vm.getGroupList(vm.user.jobNumber);
+});
+
+$("select#groupList").change(function () {
+    vm.user.groupId= $("#groupList").selectpicker('val');
 });

@@ -262,6 +262,9 @@
             <if test="name != null and name !=''">
                 and name like concat('%',#{name},'%')
             </if>
+            <if test="pid != null and pid !=''">
+                and m.`pid` =#{pid}
+            </if>
         </where>
     </select>
 

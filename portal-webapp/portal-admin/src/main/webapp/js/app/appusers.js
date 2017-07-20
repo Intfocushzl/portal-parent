@@ -51,7 +51,8 @@ var vm = new Vue({
     data: {
         showList: true,
         title: null,
-        appUsers: {}
+        appUsers: {},
+        areaMans: null
     },
     methods: {
         query: function () {
@@ -72,6 +73,8 @@ var vm = new Vue({
                 groupId: vm.groupId,
             };
             vm.getRoleList();
+            vm.getGroupList(null);
+            $("#areaMansList").selectpicker('val', vm.areaMans);
         },
         update: function (event) {
             var userNum = getSelectedRow();
@@ -82,6 +85,7 @@ var vm = new Vue({
             vm.title = "修改";
 
             vm.getInfo(userNum)
+            vm.getGroupList(userNum);
         },
         saveOrUpdate: function (event) {
             var ids = $("span.active").attr("id") + "";
@@ -178,6 +182,68 @@ var vm = new Vue({
                 $("#tagsdlg").html(htmlString);
             });
 
+        },
+        getAreaMans: function () {
+            $.get("../common/getDataList?reportLabel=2", function (r) {
+                var areaMansList = r.data.list;
+                if (areaMansList.length > 0) {
+                    vm.areaMans = "ALL";
+                }
+                $("#areaMansList").empty();
+                $("#areaMansList").append("<option value='ALL'>全部</option>");
+                for (var i = 0; i < areaMansList.length; i++) {
+                    $("#areaMansList").append("<option value='" + areaMansList[i].value + "'>" + areaMansList[i].label + "</option>");
+                }
+                // refresh刷新和render渲染操作，必不可少  +r.data[i].id+"<===>"
+                $('#areaMansList').selectpicker('refresh');
+                $('#areaMansList').selectpicker('render');
+            });
+        },
+        getGroupList: function (userNum) {
+            if (userNum != null) {
+                $.get("../app/groups/selectGroups?userNum=" + userNum, function (r) {
+                    var list = r.groupList;
+                    if (list.length > 0) {
+                        vm.appUsers.groupId = list[0].id;
+                    }
+                    var groupId=vm.appUsers.groupId;
+                    var url = "../app/groups/select?areaMans=";
+                    $.get(url, function (r) {
+                        var groupList = r.groupList;
+                        $("#groupList").empty();
+                        for (var i = 0; i < groupList.length; i++) {
+                            $("#groupList").append("<option value='" + groupList[i].id + "'>" + groupList[i].groupName + "</option>");
+                        }
+                        // refresh刷新和render渲染操作，必不可少  +r.data[i].id+"<===>"
+                        $('#groupList').selectpicker('refresh');
+                        $('#groupList').selectpicker('render');
+
+                        console.log("userNum!=null",groupId);
+                        $("#groupList").selectpicker('val', groupId);
+
+                    });
+                });
+            } else {
+                var areaMans = $("#areaMansList").selectpicker('val');
+                var url = "../app/groups/select?areaMans=" + areaMans;
+                $.get(url, function (r) {
+                    var groupList = r.groupList;
+                    $("#groupList").empty();
+                    for (var i = 0; i < groupList.length; i++) {
+                        $("#groupList").append("<option value='" + groupList[i].id + "'>" + groupList[i].groupName + "</option>");
+                    }
+                    // refresh刷新和render渲染操作，必不可少  +r.data[i].id+"<===>"
+                    $('#groupList').selectpicker('refresh');
+                    $('#groupList').selectpicker('render');
+
+                    if (groupList.length > 0) {
+                        vm.appUsers.groupId = groupList[0].id;
+                        console.log("userNum==null",vm.appUsers.groupId);
+                        $("#groupList").selectpicker('val', vm.appUsers.groupId)
+                    }
+
+                });
+            }
         }
     }
 });
@@ -201,15 +267,11 @@ function selectRoleIds() {
     console.log(role_id);
 }
 
-$.get("../app/groups/select", function (r) {
-    var groupList = r.groupList;
-    for (var i = 0; i < groupList.length; i++) {
-        $("#groupList").append("<option value='" + groupList[i].id + "'>" + groupList[i].groupName + "</option>");
-    }
-    // refresh刷新和render渲染操作，必不可少  +r.data[i].id+"<===>"
-    $('#groupList').selectpicker('refresh');
-    $('#groupList').selectpicker('render');
-    if (groupList.length > 0) {
-        vm.groupId = groupList[0].id;
-    }
+vm.getAreaMans();
+$("select#areaMansList").change(function () {
+    vm.getGroupList(vm.appUsers.userNum);
+});
+
+$("select#groupList").change(function () {
+    vm.appUsers.groupId = $("#groupList").selectpicker('val');
 });
