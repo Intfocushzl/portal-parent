@@ -11,26 +11,30 @@
     <script src="${rc.contextPath}/statics/plugins/jquery-jsonview/autosize.js"></script>
 
     <style>
-        .form-group {
-            margin-top: 20px;
-            padding: 20px;
+        #rrapp {
+            margin-left: 10%;
         }
 
         .json_formatter {
-            padding: 20px;
+            padding: 15px;
             min-height: 500px;;
             height: auto;
             width: 100%;
             float: left;
         }
 
+        .json_formatter_btn button {
+            margin-bottom: 5px;
+        }
+
+        .form-horizontal .control-label {
+            padding-top: 2px;
+            text-align: left;
+        }
+
         #json {
             border: 1px solid rgba(82, 168, 236, 0.8);
             min-height: 400px;
-        }
-
-        .json_btn {
-            margin-bottom: 10px;
         }
 
         #goTopBtn {
@@ -47,55 +51,75 @@
         .col-sm-2 {
             width: 120px;
         }
+
     </style>
 
 </head>
 <body>
 <div id="rrapp">
-    <div class="form-group">
-        <div class="col-sm-2 control-label"><button class="btn btn-success" onclick="vm.getInfo(0)">报表编码</button></div>
-        <div class="col-sm-10">
-            <input type="text" name="code" id="code" class="form-control"
-                   placeholder="报表唯一编码，api接口请求必须参数(格式例：REP_000001)"/>
-        </div>
-    </div>
 
-    <div class="form-group">
-        <div class="col-sm-2 control-label"><b>标题</b></div>
-        <div class="col-sm-10">
-            <input type="text" class="form-control" id="title" placeholder="标题" readonly/>
-        </div>
-    </div>
-
-    <div class="form-group">
-        <div class="col-sm-2 control-label">
-            <button class="btn btn-success" onclick="vm.getJsonTest()">测试环境</button>
-        </div>
-        <div class="col-sm-10">
-            <input type="text" name="test_url" id="test_url" class="form-control" placeholder="请求地址"/>
-        </div>
-    </div>
-
-    <div class="form-group">
-        <div class="col-sm-2 control-label">
-            <button class="btn btn-success" onclick="vm.getJsonDev()">生产环境</button>
-        </div>
-        <div class="col-sm-10">
-            <input type="text" name="dev_url" id="dev_url" class="form-control" placeholder="请求地址"/>
-        </div>
-    </div>
-
-    <div class="form-group form-group-json">
-        <div class="json_formatter">
-            <div class="json_btn json_formatter_btn">
-                <button id="toggle-btn" class="btn btn-primary">　展　开　</button>
-                <button id="toggle-level1-btn" class="btn btn-danger">　一　级　</button>
-                <button id="toggle-level2-btn" class="btn btn-danger">　二　级　</button>
-                <button id="toggle-level3-btn" class="btn btn-danger">　三　级　</button>
-                <button id="toggle-level4-btn" class="btn btn-danger">　四　级　</button>
-                <button id="toggle-level5-btn" class="btn btn-danger">　五　级　</button>
+    <div class="form-horizontal">
+        <div class="form-group">
+            <div class="col-sm-2 control-label">
+                <button class="btn btn-success" onclick="vm.getInfo(0)">报表编码</button>
             </div>
-            <div id="json"></div>
+            <div class="col-sm-10">
+                <input type="text" name="code" id="code" class="form-control"
+                       placeholder="报表唯一编码，api接口请求必须参数(格式例：REP_000001)"/>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-sm-2 control-label">
+                <button class="btn btn-success" onclick="vm.getJsonTest()">测试环境</button>
+            </div>
+            <div class="col-sm-10">
+                <input type="text" name="test_url" id="test_url" class="form-control" placeholder="请求地址"/>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-sm-2 control-label">
+                <button class="btn btn-success" onclick="vm.getJsonDev()">生产环境</button>
+            </div>
+            <div class="col-sm-10">
+                <input type="text" name="dev_url" id="dev_url" class="form-control" placeholder="请求地址"/>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-sm-2 control-label"><b>标题</b></div>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" id="title" placeholder="标题" readonly/>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-sm-2 control-label"><b>字段描述</b></div>
+            <div class="col-sm-10">
+            <textarea id="reportTitleName" class="form-control" readonly placeholder="aa=啊啊&#10;bb=报表&#10;cc=存储"></textarea>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-sm-2 control-label"><b>其他说明</b></div>
+            <div class="col-sm-10">
+                <textarea class="form-control" id="remark" readonly placeholder="说明"></textarea>
+            </div>
+        </div>
+
+        <div class="form-group form-group-json">
+            <div class="col-sm-2 control-label json_formatter_btn">
+                <button id="toggle-btn" class="btn btn-primary">　展开　</button>
+                <button id="toggle-level1-btn" class="btn btn-danger">　一级　</button>
+                <button id="toggle-level2-btn" class="btn btn-danger">　二级　</button>
+                <button id="toggle-level3-btn" class="btn btn-danger">　三级　</button>
+                <button id="toggle-level4-btn" class="btn btn-danger">　四级　</button>
+                <button id="toggle-level5-btn" class="btn btn-danger">　五级　</button>
+            </div>
+            <div class="col-sm-10">
+                <div id="json" class="json_formatter"></div>
+            </div>
         </div>
     </div>
 </div>

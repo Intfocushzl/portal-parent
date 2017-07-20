@@ -106,6 +106,9 @@ var vm = new Vue({
             toTest: function (code) {
                 window.open("http://" + window.location.host + "/sys/portalapi.html?code=" + escape(code));
             },
+            toTest2: function (code) {
+                window.open("http://" + window.location.host + "/sys/portalapi.html?code=" + escape(vm.portalReport.code));
+            },
             saveOrUpdate: function () {
                 var code = vm.portalReport.code;
                 var id = vm.portalReport.id;

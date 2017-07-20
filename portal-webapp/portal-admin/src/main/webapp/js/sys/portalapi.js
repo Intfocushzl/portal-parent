@@ -14,13 +14,30 @@ var vm = new Vue({
     },
     methods: {
         getInfo: function (code) {
-            if (code == 0){
+            if (code == 0) {
                 code = $("#code").val();
             }
             $.get(rcContextPath + "/portalreport/info/" + code, function (r) {
-                vm.portalReport = r.portalReport;
-                init();
+                if (r.portalReport != null) {
+                    vm.portalReport = r.portalReport;
+                    init();
+                } else {
+                    alert("没有查到配置信息");
+                }
             });
+
+            /*$.ajax({
+             type: "POST",
+             url: rcContextPath + "/portalreport/info/" + code,
+             success: function (r) {
+             if (r.portalReport != null) {
+             vm.portalReport = r.portalReport;
+             init();
+             } else {
+             alert("没有查到配置信息");
+             }
+             }
+             });*/
         },
         getJsonTest: function () {
             $.get(test_url, function (r) {
@@ -37,16 +54,20 @@ var vm = new Vue({
     }
 });
 
-vm.getInfo(code);
 
 // 初始化信息
-function init(){
+function init() {
     $("#code").val(vm.portalReport.code);
     $("#title").val(vm.portalReport.title);
+    $("#reportTitleName").val(vm.portalReport.reportTitleName);
+    $("#remark").val(vm.portalReport.remark);
 }
 
 // 格式化json
 $(function () {
+    // 初始加载
+    vm.getInfo(code);
+
     $('#toggle-formatter').on('click', function () {
         $("#json").JSONView($("#json_str_text").val());
     });
