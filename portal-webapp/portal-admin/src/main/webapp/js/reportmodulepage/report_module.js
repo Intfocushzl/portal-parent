@@ -187,5 +187,8 @@ function rendererModule(reportModulePage) {
  * 打开json view
  */
 function open_jsonview() {
-    window.open("http://" + window.location.host + "/statics/plugins/jquery-jsonview/json-view.html?jsonstr=" + escape($("#jsonstr").val()));
+    window.open(
+        rcContextPath
+        + "/sys/jsonview.html?jsonstr=" + escape($("#jsonstr").val())
+    );
 };

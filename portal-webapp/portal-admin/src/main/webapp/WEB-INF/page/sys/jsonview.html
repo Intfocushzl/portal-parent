@@ -1,0 +1,72 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>JSONView</title>
+
+    #parse("sys/header.html")
+
+    <link rel="stylesheet" href="${rc.contextPath}/statics/plugins/jquery-jsonview/jquery.jsonview.css"/>
+    <script src="${rc.contextPath}/statics/plugins/jquery-jsonview/jquery.jsonview.js"></script>
+    <script src="${rc.contextPath}/statics/plugins/jquery-jsonview/autosize.js"></script>
+
+</head>
+<body>
+<div id="rrapp">
+    <div class="panel panel-default" style="padding: 20px 20px;">
+        <div class="form-group">
+            <div style="padding: 20px;">
+                <button id="toggle-btn" class="btn btn-primary">　展　开　</button>
+                <button id="toggle-level1-btn" class="btn btn-danger">　一　级　</button>
+                <button id="toggle-level2-btn" class="btn btn-danger">　二　级　</button>
+                <button id="toggle-level3-btn" class="btn btn-danger">　三　级　</button>
+                <button id="toggle-level4-btn" class="btn btn-danger">　四　级　</button>
+                <button id="toggle-level5-btn" class="btn btn-danger">　五　级　</button>
+            </div>
+            <div id="json" style="border: 1px solid #3b5998; padding: 20px;"></div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    // 获取 window.location.href参数
+    function getQueryString(name) {
+        var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
+        var r = window.location.search.substr(1).match(reg);
+        if (r != null) return unescape(r[2]);
+        return null;
+    }
+
+    var json = JSON.parse(unescape(getQueryString("jsonstr")));
+
+    $(function () {
+        $("#json").JSONView(json);
+
+        $('#toggle-btn').on('click', function () {
+            $('#json').JSONView('toggle');
+        });
+
+        $('#toggle-level1-btn').on('click', function () {
+            $('#json').JSONView('toggle', 1);
+        });
+
+        $('#toggle-level2-btn').on('click', function () {
+            $('#json').JSONView('toggle', 2);
+        });
+
+        $('#toggle-level3-btn').on('click', function () {
+            $('#json').JSONView('toggle', 3);
+        });
+
+        $('#toggle-level4-btn').on('click', function () {
+            $('#json').JSONView('toggle', 4);
+        });
+
+        $('#toggle-level5-btn').on('click', function () {
+            $('#json').JSONView('toggle', 5);
+        });
+    });
+</script>
+
+</body>
+</html>
