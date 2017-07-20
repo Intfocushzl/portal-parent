@@ -83,13 +83,9 @@ var vm = new Vue({
         },
         getInfo: function (code) {
             $.get(rcContextPath + "/portalreport/info/" + code, function (r) {
-                if (r.portalReport != null) {
-                    vm.portalReport = r.portalReport;
-                    init();
-                    vm.getParameter(r.portalReport);
-                } else {
-                    alert("没有查到配置信息");
-                }
+                vm.portalReport = r.portalReport;
+                init();
+                vm.getParameter(r.portalReport);
             });
         },
         getJsonTest: function () {

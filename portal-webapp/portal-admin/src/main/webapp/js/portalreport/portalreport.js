@@ -105,7 +105,7 @@ var vm = new Vue({
             },
             toTest: function (code, executeType, executeCode) {
                 window.open(
-                    "http://" + window.location.host
+                    rcContextPath
                     + "/sys/portalapi.html?code=" + code
                     + "&executeType=" + executeType
                     + "&executeCode=" + executeCode
@@ -113,7 +113,7 @@ var vm = new Vue({
             },
             toTest2: function () {
                 window.open(
-                    "http://" + window.location.host
+                    rcContextPath
                     + "/sys/portalapi.html?code=" + escape(vm.portalReport.code)
                     + "&executeType=" + escape(vm.portalReport.executeType)
                     + "&executeCode=" + escape(vm.portalReport.executeCode)
