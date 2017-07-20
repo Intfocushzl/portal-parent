@@ -14,6 +14,7 @@ import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -45,6 +46,19 @@ public class PortalReportController extends AbstractController {
         PageUtils pageUtil = new PageUtils(portalReportList, total, query.getLimit(), query.getPage());
 
         return R.success().put("page", pageUtil);
+    }
+
+    /**
+     * 列表
+     *
+     * @return
+     */
+    @RequestMapping("/repList")
+    @ResponseBody
+    public R repList() {
+        Map<String, Object> map = new HashMap<>();
+        List<PortalReport> portalReportList = portalReportService.queryList(map);
+        return R.success().put("repList", portalReportList);
     }
 
     /**

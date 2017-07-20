@@ -64,8 +64,7 @@
                 <button class="btn btn-success" onclick="vm.intInfoSelect()">报表编码</button>
             </div>
             <div class="col-sm-10">
-                <input type="text" name="code" id="code" class="form-control"
-                       placeholder="报表唯一编码，api接口请求必须参数(格式例：REP_000001)"/>
+                <select class="selectpicker form-control" name="code" id="code" data-live-search="true"></select>
             </div>
         </div>
 
@@ -90,7 +89,8 @@
         <div class="form-group">
             <div class="col-sm-2 control-label"><b>请求参数</b></div>
             <div class="col-sm-10">
-                <textarea id="parameters" class="form-control" placeholder="请求参数格式如：code=编码&token=密钥&canshu_1=参数1&canshu_2=参数2"></textarea>
+                <textarea id="parameters" class="form-control"
+                          placeholder="请求参数格式如：code=编码&token=密钥&canshu_1=参数1&canshu_2=参数2"></textarea>
             </div>
         </div>
 
@@ -104,7 +104,8 @@
         <div class="form-group">
             <div class="col-sm-2 control-label"><b>字段描述</b></div>
             <div class="col-sm-10">
-            <textarea id="reportTitleName" class="form-control" readonly placeholder="aa=啊啊&#10;bb=报表&#10;cc=存储"></textarea>
+                <textarea id="reportTitleName" class="form-control" readonly
+                          placeholder="aa=啊啊&#10;bb=报表&#10;cc=存储"></textarea>
             </div>
         </div>
 

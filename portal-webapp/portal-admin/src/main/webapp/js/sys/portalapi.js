@@ -12,7 +12,8 @@ var executeCode = unescape(getQueryString("executeCode"));
 
 // 初始化信息
 function init() {
-    $("#code").val(vm.portalReport.code);
+    /*$("#code").val(vm.portalReport.code);*/
+    vm.getRepCode();
     $("#title").val(vm.portalReport.title);
     $("#reportTitleName").val(vm.portalReport.reportTitleName);
     $("#remark").val(vm.portalReport.remark);
@@ -59,6 +60,11 @@ $(function () {
     $('#toggle-level5-btn').on('click', function () {
         $('#json').JSONView('toggle', 5);
     });
+
+    $('#code').on('change', function () {
+        vm.intInfoSelect();
+    });
+
 });
 
 var vm = new Vue({
@@ -117,6 +123,22 @@ var vm = new Vue({
                 vm.portalExecuteSql = r.portalExecuteSql;
                 vm.parameters = getParametersStr(vm.portalExecuteSql.parameter);
                 $("#parameters").val(vm.parameters);
+            });
+        },
+        getRepCode: function () {
+            $("#code").empty();
+            $.get(rcContextPath + "/portalreport/repList/", function (r) {
+                for (var i = 0; i < r.repList.length; i++) {
+                    vm.selectOption = "<option value='" + r.repList[i].code + "'";
+                    if (repCode == r.repList[i].code) {
+                        vm.selectOption = vm.selectOption + " selected = 'selected'";
+                    }
+                    vm.selectOption = vm.selectOption + " >" + r.repList[i].code + " " + r.repList[i].title + "</option>";
+                    $("#code").append(vm.selectOption);
+                }
+                // refresh刷新和render渲染操作，必不可少
+                $('#code').selectpicker('refresh');
+                $('#code').selectpicker('render');
             });
         },
     }
