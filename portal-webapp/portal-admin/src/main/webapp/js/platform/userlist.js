@@ -1,7 +1,6 @@
-var baseUrl = "..";
 $(function () {
     $("#jqGrid").jqGrid({
-        url: baseUrl + '/forfront/user/list',     // 请求后台json数据的url
+        url: rcContextPath + '/forfront/user/list',     // 请求后台json数据的url
         datatype: "json",                // 后台返回的数据格式
         // 列表标题及列表模型
         colModel: [
@@ -84,7 +83,7 @@ $(function () {
     });
 
     $("#jqNewGrid").jqGrid({
-        url: baseUrl + '/forfront/user/newUserList',     // 请求后台json数据的url
+        url: rcContextPath + '/forfront/user/newUserList',     // 请求后台json数据的url
         datatype: "json",                // 后台返回的数据格式
         // 列表标题及列表模型
         colModel: [
@@ -200,7 +199,7 @@ var vm = new Vue({
             vm.title = "新增";
             var o = new Object();
             o.type = (vm.user.type == null ? 1 : vm.user.type);
-            $("#type").selectpicker("val",o.type);
+            $("#type").selectpicker("val", o.type);
             vm.getRoleList(o);
             vm.getGroupList(null);
         },
@@ -221,7 +220,7 @@ var vm = new Vue({
             if (vm.user.largeArea == "全部") {
                 vm.user.largeArea = "ALL";
             }
-            var url = vm.user.id == null ? baseUrl + "/forfront/user/save" : baseUrl + "/forfront/user/update";
+            var url = vm.user.id == null ? rcContextPath + "/forfront/user/save" : rcContextPath + "/forfront/user/update";
             console.log(vm.user);
             $.ajax({
                 type: "POST",
@@ -247,7 +246,7 @@ var vm = new Vue({
             confirm('确定要删除选中的记录？', function () {
                 $.ajax({
                     type: "POST",
-                    url: baseUrl + "/forfront/user/delete",
+                    url: rcContextPath + "/forfront/user/delete",
                     data: JSON.stringify(ids),
                     success: function (r) {
                         if (r.code == 0) {
@@ -267,7 +266,7 @@ var vm = new Vue({
         }
         ,
         getInfo: function (id) {
-            $.get(baseUrl + "/forfront/user/info/" + id, function (r) {
+            $.get(rcContextPath + "/forfront/user/info/" + id, function (r) {
                 vm.user = r.user;
                 vm.user.roleId = r.user.roleId;
                 if (vm.user.largeArea == "ALL") {
@@ -276,7 +275,7 @@ var vm = new Vue({
                 }
                 var o = new Object();
                 o.type = vm.user.type;
-                $("#type").selectpicker("val",o.type);
+                $("#type").selectpicker("val", o.type);
                 vm.getRoleList(o);
                 vm.getGroupList(vm.user.jobNumber);
             });
@@ -338,8 +337,9 @@ var vm = new Vue({
             });
         },
         getGroupList: function (userNum) {
-            var areaMans=$("#areaMansList").selectpicker('val');
-            var url = "../app/groups/select?areaMans="+areaMans;
+            var groupId = vm.user.groupId;
+            var areaMans = $("#areaMansList").selectpicker('val');
+            var url = "../app/groups/select?areaMans=" + areaMans;
             $.get(url, function (r) {
                 var groupList = r.groupList;
                 $("#groupList").empty();
@@ -351,14 +351,19 @@ var vm = new Vue({
                 $('#groupList').selectpicker('render');
 
                 if (userNum != null) {
-                    $.get("../app/groups/selectGroups?userNum=" + userNum, function (r) {
-                        console.log(r);
-                        var list = r.groupList;
-                        if (list.length > 0) {
-                            vm.user.groupId = list[0].id;
-                            $("#groupList").selectpicker('val', vm.user.groupId);
-                        }
-                    });
+                    if (groupId == null) {
+                        $.get("../app/groups/selectGroups?userNum=" + userNum, function (r) {
+                            console.log(r);
+                            var list = r.groupList;
+                            if (list.length > 0) {
+                                vm.user.groupId = list[0].id;
+                                $("#groupList").selectpicker('val', vm.user.groupId);
+                            }
+                        });
+                    } else {
+                        $("#groupList").selectpicker('val', vm.user.groupId);
+                    }
+
                 } else {
                     if (groupList.length > 0) {
                         vm.user.groupId = groupList[0].id;
@@ -438,9 +443,9 @@ $(window).on('load', function () {
 vm.getAreaMans();
 $("select#areaMansList").change(function () {
     var pid = $("select#areaMansList option:selected").val();
-    if (pid=="ALL"){
+    if (pid == "ALL") {
         $("#largeArea").val("ALL");
-    }else {
+    } else {
         $.get("../common/getDataList?reportLabel=5&pid=" + pid, function (r) {
             var largeAreaList = r.data.list;
             if (largeAreaList.length > 0) {
@@ -453,5 +458,5 @@ $("select#areaMansList").change(function () {
 });
 
 $("select#groupList").change(function () {
-    vm.user.groupId= $("#groupList").selectpicker('val');
+    vm.user.groupId = $("#groupList").selectpicker('val');
 });
