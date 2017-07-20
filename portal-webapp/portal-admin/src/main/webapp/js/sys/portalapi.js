@@ -6,54 +6,9 @@ function getQueryString(name) {
     return null;
 }
 
-var code = unescape(getQueryString("code"));
-
-var vm = new Vue({
-    data: {
-        portalReport: {}
-    },
-    methods: {
-        getInfo: function (code) {
-            if (code == 0) {
-                code = $("#code").val();
-            }
-            $.get(rcContextPath + "/portalreport/info/" + code, function (r) {
-                if (r.portalReport != null) {
-                    vm.portalReport = r.portalReport;
-                    init();
-                } else {
-                    alert("没有查到配置信息");
-                }
-            });
-
-            /*$.ajax({
-             type: "POST",
-             url: rcContextPath + "/portalreport/info/" + code,
-             success: function (r) {
-             if (r.portalReport != null) {
-             vm.portalReport = r.portalReport;
-             init();
-             } else {
-             alert("没有查到配置信息");
-             }
-             }
-             });*/
-        },
-        getJsonTest: function () {
-            $.get(test_url, function (r) {
-                $(".json_str_text").val(JSON.stringify(r));
-                $("#json").JSONView(JSON.stringify(r));
-            });
-        },
-        getJsonDev: function () {
-            $.get(dev_url, function (r) {
-                $(".json_str_text").val(JSON.stringify(r));
-                $("#json").JSONView(JSON.stringify(r));
-            });
-        }
-    }
-});
-
+var repCode = unescape(getQueryString("code"));
+var executeType = unescape(getQueryString("executeType"));
+var executeCode = unescape(getQueryString("executeCode"));
 
 // 初始化信息
 function init() {
@@ -63,10 +18,20 @@ function init() {
     $("#remark").val(vm.portalReport.remark);
 }
 
+// 测试请求
+//var test_url = "http://10.67.241.218/yhportal/userAuthMenu/listRoleMenu?roleId=1&token=adminMGdp1nT0Q3qxBqDvFNKW0QM9354d8db013b4bb08d4e116e6fd1893e";
+//var test_url = "http://10.67.241.218/yhportal/api/portal/custom?yongHuiReportCustomCode=REP_000003&reportLabel=2&sDate=2017/6/19&eDate=2017/7/19&holdName=%E7%AC%AC%E4%BA%8C%E9%9B%86%E7%BE%A4&classId=&areaId=&areaMans=&shopId=&token=adminMGdp1nT0Q3qxBqDvFNKW0QM9354d8db013b4bb08d4e116e6fd1893e";
+var test_url = "http://10.67.241.218/yhportal/api/portal/custom";
+var dev_url = "http://10.67.241.234/yhportal/api/portal/custom";
+
+$("#test_url").val(test_url);
+$("#dev_url").val(dev_url);
+var token = "CS123456mXB84h6U5FUO7nsdu0Eq7c5373b211054c7b8681fe829c62cc2c";
+
 // 格式化json
 $(function () {
     // 初始加载
-    vm.getInfo(code);
+    vm.intInfo(repCode);
 
     $('#toggle-formatter').on('click', function () {
         $("#json").JSONView($("#json_str_text").val());
@@ -97,6 +62,75 @@ $(function () {
     });
 });
 
+var vm = new Vue({
+    data: {
+        parameters: "",
+        portalReport: {},
+        portalProcedure: {},
+        portalExecuteSql: {}
+    },
+    methods: {
+        intInfo: function (repCode) {
+            vm.getInfo(repCode);
+        },
+        intInfoSelect: function () {
+            vm.getInfo($("#code").val());
+        },
+        getInfo: function (code) {
+            $.get(rcContextPath + "/portalreport/info/" + code, function (r) {
+                if (r.portalReport != null) {
+                    vm.portalReport = r.portalReport;
+                    init();
+                    vm.getParameter(r.portalReport);
+                } else {
+                    alert("没有查到配置信息");
+                }
+            });
+        },
+        getJsonTest: function () {
+            $.get(test_url + "?" + parameters, function (r) {
+                $(".json_str_text").val(JSON.stringify(r));
+                $("#json").JSONView(JSON.stringify(r));
+            });
+        },
+        getJsonDev: function () {
+            $.get(dev_url + "?" + parameters, function (r) {
+                $(".json_str_text").val(JSON.stringify(r));
+                $("#json").JSONView(JSON.stringify(r));
+            });
+        },
+        getParameter: function (portalReportObj) {
+            if (portalReportObj.executeType == 1) {
+                vm.getProInfo(portalReportObj.executeCode);
+            } else if (portalReportObj.executeType == 2) {
+                vm.getSqlInfo(portalReportObj.executeCode);
+            }
+        },
+        getProInfo: function (executeCode) {
+            $.get(rcContextPath + "/portalprocedure/info/" + executeCode, function (r) {
+                vm.portalProcedure = r.portalProcedure;
+                vm.parameters = getParametersStr(vm.portalProcedure.parameter);
+                $("#parameters").val(vm.parameters);
+            });
+        },
+        getSqlInfo: function (executeCode) {
+            $.get(rcContextPath + "/portalexecutesql/info/" + executeCode, function (r) {
+                vm.portalExecuteSql = r.portalExecuteSql;
+                vm.parameters = getParametersStr(vm.portalExecuteSql.parameter);
+                $("#parameters").val(vm.parameters);
+            });
+        },
+    }
+});
+
+function getParametersStr(parameters) {
+    var pmt = "yongHuiReportCustomCode=" + vm.portalReport.code + "&token=" + token;
+    if (getStringValue(parameters) != "") {
+        pmt = pmt + "&" + parameters.replace(/@@/g, "=&");
+    }
+    return pmt;
+}
+
 /*返回顶部*/
 $(window).scroll(function () {
     var sc = $(window).scrollTop();
@@ -108,16 +142,11 @@ $(window).scroll(function () {
         $("#goTopBtn").css("display", "none");
     }
 })
+
 $("#goTopBtn").click(function () {
     var sc = $(window).scrollTop();
     $('body,html').animate({scrollTop: 0}, 500);
 })
 
-// 测试请求
-var test_url = "http://10.67.241.218/yhportal/userAuthMenu/listRoleMenu?roleId=1&token=adminMGdp1nT0Q3qxBqDvFNKW0QM9354d8db013b4bb08d4e116e6fd1893e";
-//var test_url = "http://10.67.241.218/yhportal/api/portal/custom?yongHuiReportCustomCode=REP_000003&reportLabel=2&sDate=2017/6/19&eDate=2017/7/19&holdName=%E7%AC%AC%E4%BA%8C%E9%9B%86%E7%BE%A4&classId=&areaId=&areaMans=&shopId=&token=adminMGdp1nT0Q3qxBqDvFNKW0QM9354d8db013b4bb08d4e116e6fd1893e";
-//var test_url = "http://10.67.241.218/yhportal/api/portal/custom?token=CS123456mXB84h6U5FUO7nsdu0Eq7c5373b211054c7b8681fe829c62cc2c";
-var dev_url = "http://10.67.241.234/yhportal/api/portal/custom?token=CS123456mXB84h6U5FUO7nsdu0Eq7c5373b211054c7b8681fe829c62cc2c";
-
-$("#test_url").val(test_url);
-$("#dev_url").val(dev_url);
+// textarea 高度自动扩展
+autosize($('textarea'));

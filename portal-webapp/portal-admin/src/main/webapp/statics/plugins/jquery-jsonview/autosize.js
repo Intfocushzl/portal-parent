@@ -1,148 +1,292 @@
 /*!
- Autosize 2.0.0
- license: MIT
- http://www.jacklmoore.com/autosize
- */
-(function (root, factory) {
-    'use strict';
+	Autosize 4.0.0
+	license: MIT
+	http://www.jacklmoore.com/autosize
+*/
+(function (global, factory) {
+	if (typeof define === 'function' && define.amd) {
+		define(['exports', 'module'], factory);
+	} else if (typeof exports !== 'undefined' && typeof module !== 'undefined') {
+		factory(exports, module);
+	} else {
+		var mod = {
+			exports: {}
+		};
+		factory(mod.exports, mod);
+		global.autosize = mod.exports;
+	}
+})(this, function (exports, module) {
+	'use strict';
 
-    if (typeof define === 'function' && define.amd) {
-        // AMD. Register as an anonymous module.
-        define([], factory);
-    } else if (typeof exports === 'object') {
-        // Node. Does not work with strict CommonJS, but
-        // only CommonJS-like environments that support module.exports,
-        // like Node.
-        module.exports = factory();
-    } else {
-        // Browser globals (root is window)
-        root.autosize = factory();
-    }
-}(this, function () {
-    function main(ta) {
-        if (!ta || !ta.nodeName || ta.nodeName !== 'TEXTAREA' || ta.hasAttribute('data-autosize-on')) {
-            return;
-        }
+	var map = typeof Map === "function" ? new Map() : (function () {
+		var keys = [];
+		var values = [];
 
-        var maxHeight;
-        var heightOffset;
+		return {
+			has: function has(key) {
+				return keys.indexOf(key) > -1;
+			},
+			get: function get(key) {
+				return values[keys.indexOf(key)];
+			},
+			set: function set(key, value) {
+				if (keys.indexOf(key) === -1) {
+					keys.push(key);
+					values.push(value);
+				}
+			},
+			'delete': function _delete(key) {
+				var index = keys.indexOf(key);
+				if (index > -1) {
+					keys.splice(index, 1);
+					values.splice(index, 1);
+				}
+			}
+		};
+	})();
 
-        function init() {
-            var style = window.getComputedStyle(ta, null);
+	var createEvent = function createEvent(name) {
+		return new Event(name, { bubbles: true });
+	};
+	try {
+		new Event('test');
+	} catch (e) {
+		// IE does not support `new Event()`
+		createEvent = function (name) {
+			var evt = document.createEvent('Event');
+			evt.initEvent(name, true, false);
+			return evt;
+		};
+	}
 
-            if (style.resize === 'vertical') {
-                ta.style.resize = 'none';
-            } else if (style.resize === 'both') {
-                ta.style.resize = 'horizontal';
-            }
+	function assign(ta) {
+		if (!ta || !ta.nodeName || ta.nodeName !== 'TEXTAREA' || map.has(ta)) return;
 
-            // horizontal overflow is hidden, so break-word is necessary for handling words longer than the textarea width
-            ta.style.wordWrap = 'break-word';
+		var heightOffset = null;
+		var clientWidth = ta.clientWidth;
+		var cachedHeight = null;
 
-            // Chrome/Safari-specific fix:
-            // When the textarea y-overflow is hidden, Chrome/Safari doesn't reflow the text to account for the space
-            // made available by removing the scrollbar. This workaround will cause the text to reflow.
-            var width = ta.style.width;
-            ta.style.width = '0px';
-            // Force reflow:
-            /* jshint ignore:start */
-            ta.offsetWidth;
-            /* jshint ignore:end */
-            ta.style.width = width;
+		function init() {
+			var style = window.getComputedStyle(ta, null);
 
-            maxHeight = style.maxHeight !== 'none' ? parseFloat(style.maxHeight) : false;
+			if (style.resize === 'vertical') {
+				ta.style.resize = 'none';
+			} else if (style.resize === 'both') {
+				ta.style.resize = 'horizontal';
+			}
 
-            if (style.boxSizing === 'content-box') {
-                heightOffset = -(parseFloat(style.paddingTop) + parseFloat(style.paddingBottom));
-            } else {
-                heightOffset = parseFloat(style.borderTopWidth) + parseFloat(style.borderBottomWidth);
-            }
+			if (style.boxSizing === 'content-box') {
+				heightOffset = -(parseFloat(style.paddingTop) + parseFloat(style.paddingBottom));
+			} else {
+				heightOffset = parseFloat(style.borderTopWidth) + parseFloat(style.borderBottomWidth);
+			}
+			// Fix when a textarea is not on document body and heightOffset is Not a Number
+			if (isNaN(heightOffset)) {
+				heightOffset = 0;
+			}
 
-            adjust();
-        }
+			update();
+		}
 
-        function adjust() {
-            var startHeight = ta.style.height;
-            var htmlTop = document.documentElement.scrollTop;
-            var bodyTop = document.body.scrollTop;
+		function changeOverflow(value) {
+			{
+				// Chrome/Safari-specific fix:
+				// When the textarea y-overflow is hidden, Chrome/Safari do not reflow the text to account for the space
+				// made available by removing the scrollbar. The following forces the necessary text reflow.
+				var width = ta.style.width;
+				ta.style.width = '0px';
+				// Force reflow:
+				/* jshint ignore:start */
+				ta.offsetWidth;
+				/* jshint ignore:end */
+				ta.style.width = width;
+			}
 
-            ta.style.height = 'auto';
+			ta.style.overflowY = value;
+		}
 
-            var endHeight = ta.scrollHeight + heightOffset;
+		function getParentOverflows(el) {
+			var arr = [];
 
-            if (maxHeight !== false && maxHeight < endHeight) {
-                endHeight = maxHeight;
-                if (ta.style.overflowY !== 'scroll') {
-                    ta.style.overflowY = 'scroll';
-                }
-            } else if (ta.style.overflowY !== 'hidden') {
-                ta.style.overflowY = 'hidden';
-            }
+			while (el && el.parentNode && el.parentNode instanceof Element) {
+				if (el.parentNode.scrollTop) {
+					arr.push({
+						node: el.parentNode,
+						scrollTop: el.parentNode.scrollTop
+					});
+				}
+				el = el.parentNode;
+			}
 
-            ta.style.height = endHeight + 'px';
+			return arr;
+		}
 
-            // prevents scroll-position jumping
-            document.documentElement.scrollTop = htmlTop;
-            document.body.scrollTop = bodyTop;
+		function resize() {
+			var originalHeight = ta.style.height;
+			var overflows = getParentOverflows(ta);
+			var docTop = document.documentElement && document.documentElement.scrollTop; // Needed for Mobile IE (ticket #240)
 
-            if (startHeight !== ta.style.height) {
-                var evt = document.createEvent('Event');
-                evt.initEvent('autosize.resized', true, false);
-                ta.dispatchEvent(evt);
-            }
-        }
+			ta.style.height = '';
 
-        // IE9 does not fire onpropertychange or oninput for deletions,
-        // so binding to onkeyup to catch most of those events.
-        // There is no way that I know of to detect something like 'cut' in IE9.
-        if ('onpropertychange' in ta && 'oninput' in ta) {
-            ta.addEventListener('keyup', adjust);
-        }
+			var endHeight = ta.scrollHeight + heightOffset;
 
-        window.addEventListener('resize', adjust);
-        ta.addEventListener('input', adjust);
+			if (ta.scrollHeight === 0) {
+				// If the scrollHeight is 0, then the element probably has display:none or is detached from the DOM.
+				ta.style.height = originalHeight;
+				return;
+			}
 
-        ta.addEventListener('autosize.update', adjust);
+			ta.style.height = endHeight + 'px';
 
-        ta.addEventListener('autosize.destroy', function (style) {
-            window.removeEventListener('resize', adjust);
-            ta.removeEventListener('input', adjust);
-            ta.removeEventListener('keyup', adjust);
-            ta.removeEventListener('autosize.destroy');
+			// used to check if an update is actually necessary on window.resize
+			clientWidth = ta.clientWidth;
 
-            Object.keys(style).forEach(function (key) {
-                ta.style[key] = style[key];
-            });
+			// prevents scroll-position jumping
+			overflows.forEach(function (el) {
+				el.node.scrollTop = el.scrollTop;
+			});
 
-            ta.removeAttribute('data-autosize-on');
-        }.bind(ta, {
-            height: ta.style.height,
-            overflow: ta.style.overflow,
-            overflowY: ta.style.overflowY,
-            wordWrap: ta.style.wordWrap,
-            resize: ta.style.resize
-        }));
+			if (docTop) {
+				document.documentElement.scrollTop = docTop;
+			}
+		}
 
-        ta.setAttribute('data-autosize-on', true);
-        ta.style.overflow = 'hidden';
-        ta.style.overflowY = 'hidden';
+		function update() {
+			resize();
 
-        init();
-    }
+			var styleHeight = Math.round(parseFloat(ta.style.height));
+			var computed = window.getComputedStyle(ta, null);
 
-    // Do nothing in IE8 or lower
-    if (typeof window.getComputedStyle !== 'function') {
-        return function (elements) {
-            return elements;
-        };
-    } else {
-        return function (elements) {
-            if (elements && elements.length) {
-                Array.prototype.forEach.call(elements, main);
-            } else if (elements && elements.nodeName) {
-                main(elements);
-            }
-            return elements;
-        };
-    }
-}));
+			// Using offsetHeight as a replacement for computed.height in IE, because IE does not account use of border-box
+			var actualHeight = computed.boxSizing === 'content-box' ? Math.round(parseFloat(computed.height)) : ta.offsetHeight;
+
+			// The actual height not matching the style height (set via the resize method) indicates that
+			// the max-height has been exceeded, in which case the overflow should be allowed.
+			if (actualHeight !== styleHeight) {
+				if (computed.overflowY === 'hidden') {
+					changeOverflow('scroll');
+					resize();
+					actualHeight = computed.boxSizing === 'content-box' ? Math.round(parseFloat(window.getComputedStyle(ta, null).height)) : ta.offsetHeight;
+				}
+			} else {
+				// Normally keep overflow set to hidden, to avoid flash of scrollbar as the textarea expands.
+				if (computed.overflowY !== 'hidden') {
+					changeOverflow('hidden');
+					resize();
+					actualHeight = computed.boxSizing === 'content-box' ? Math.round(parseFloat(window.getComputedStyle(ta, null).height)) : ta.offsetHeight;
+				}
+			}
+
+			if (cachedHeight !== actualHeight) {
+				cachedHeight = actualHeight;
+				var evt = createEvent('autosize:resized');
+				try {
+					ta.dispatchEvent(evt);
+				} catch (err) {
+					// Firefox will throw an error on dispatchEvent for a detached element
+					// https://bugzilla.mozilla.org/show_bug.cgi?id=889376
+				}
+			}
+		}
+
+		var pageResize = function pageResize() {
+			if (ta.clientWidth !== clientWidth) {
+				update();
+			}
+		};
+
+		var destroy = (function (style) {
+			window.removeEventListener('resize', pageResize, false);
+			ta.removeEventListener('input', update, false);
+			ta.removeEventListener('keyup', update, false);
+			ta.removeEventListener('autosize:destroy', destroy, false);
+			ta.removeEventListener('autosize:update', update, false);
+
+			Object.keys(style).forEach(function (key) {
+				ta.style[key] = style[key];
+			});
+
+			map['delete'](ta);
+		}).bind(ta, {
+			height: ta.style.height,
+			resize: ta.style.resize,
+			overflowY: ta.style.overflowY,
+			overflowX: ta.style.overflowX,
+			wordWrap: ta.style.wordWrap
+		});
+
+		ta.addEventListener('autosize:destroy', destroy, false);
+
+		// IE9 does not fire onpropertychange or oninput for deletions,
+		// so binding to onkeyup to catch most of those events.
+		// There is no way that I know of to detect something like 'cut' in IE9.
+		if ('onpropertychange' in ta && 'oninput' in ta) {
+			ta.addEventListener('keyup', update, false);
+		}
+
+		window.addEventListener('resize', pageResize, false);
+		ta.addEventListener('input', update, false);
+		ta.addEventListener('autosize:update', update, false);
+		ta.style.overflowX = 'hidden';
+		ta.style.wordWrap = 'break-word';
+
+		map.set(ta, {
+			destroy: destroy,
+			update: update
+		});
+
+		init();
+	}
+
+	function destroy(ta) {
+		var methods = map.get(ta);
+		if (methods) {
+			methods.destroy();
+		}
+	}
+
+	function update(ta) {
+		var methods = map.get(ta);
+		if (methods) {
+			methods.update();
+		}
+	}
+
+	var autosize = null;
+
+	// Do nothing in Node.js environment and IE8 (or lower)
+	if (typeof window === 'undefined' || typeof window.getComputedStyle !== 'function') {
+		autosize = function (el) {
+			return el;
+		};
+		autosize.destroy = function (el) {
+			return el;
+		};
+		autosize.update = function (el) {
+			return el;
+		};
+	} else {
+		autosize = function (el, options) {
+			if (el) {
+				Array.prototype.forEach.call(el.length ? el : [el], function (x) {
+					return assign(x, options);
+				});
+			}
+			return el;
+		};
+		autosize.destroy = function (el) {
+			if (el) {
+				Array.prototype.forEach.call(el.length ? el : [el], destroy);
+			}
+			return el;
+		};
+		autosize.update = function (el) {
+			if (el) {
+				Array.prototype.forEach.call(el.length ? el : [el], update);
+			}
+			return el;
+		};
+	}
+
+	module.exports = autosize;
+});

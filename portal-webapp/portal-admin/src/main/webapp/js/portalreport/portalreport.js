@@ -8,7 +8,7 @@ $(function () {
             {
                 label: '唯一编码', name: 'code', index: 'code', width: 80, key: true,
                 formatter: function (value, options, row) {
-                    return '<a class="a_text" onclick="vm.toTest(\'' + row.code + '\')">' + value + '</a>';
+                    return '<a class="a_text" onclick="vm.toTest(\'' + row.code + '\',\'' + row.execute_type + '\',\'' + row.execute_code + '\')">' + value + '</a>';
                 }
             },
             {label: '标题', name: 'title', index: 'title', width: 80},
@@ -103,11 +103,21 @@ var vm = new Vue({
                  vm.bindReportDimIndex("tm");
                  vm.bindCindexRefer("tb");*/
             },
-            toTest: function (code) {
-                window.open("http://" + window.location.host + "/sys/portalapi.html?code=" + escape(code));
+            toTest: function (code, executeType, executeCode) {
+                window.open(
+                    "http://" + window.location.host
+                    + "/sys/portalapi.html?code=" + code
+                    + "&executeType=" + executeType
+                    + "&executeCode=" + executeCode
+                );
             },
-            toTest2: function (code) {
-                window.open("http://" + window.location.host + "/sys/portalapi.html?code=" + escape(vm.portalReport.code));
+            toTest2: function () {
+                window.open(
+                    "http://" + window.location.host
+                    + "/sys/portalapi.html?code=" + escape(vm.portalReport.code)
+                    + "&executeType=" + escape(vm.portalReport.executeType)
+                    + "&executeCode=" + escape(vm.portalReport.executeCode)
+                );
             },
             saveOrUpdate: function () {
                 var code = vm.portalReport.code;
