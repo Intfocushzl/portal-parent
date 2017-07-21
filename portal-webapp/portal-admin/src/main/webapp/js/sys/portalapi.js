@@ -86,6 +86,8 @@ var vm = new Vue({
                 vm.portalReport = r.portalReport;
                 init();
                 vm.getParameter(r.portalReport);
+                //更新输入框高度
+                autosize.update($('textarea'));
             });
         },
         getJsonTest: function () {
