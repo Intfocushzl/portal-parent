@@ -42,15 +42,15 @@
 
     <select id="queryList" resultType="com.yonghui.portal.model.shrio.SysMenu">
         SELECT
-          m.*, pm.`name` AS parentName
+        m.*, pm.`name` AS parentName
         FROM
-          sys_menu m
+        sys_menu m
         LEFT JOIN sys_menu pm ON m.parent_id = pm.menu_id
         <where>
             <if test="keyword != null and keyword !=''">
                 and (
-                  m.`name` like concat('%',#{keyword},'%')
-                  or pm.`name` like concat('%',#{keyword},'%')
+                m.`name` like concat('%',#{keyword},'%')
+                or pm.`name` like concat('%',#{keyword},'%')
                 )
             </if>
         </where>
