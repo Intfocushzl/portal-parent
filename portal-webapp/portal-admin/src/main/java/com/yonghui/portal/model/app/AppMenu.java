@@ -22,6 +22,8 @@ public class AppMenu implements Serializable {
     private String subName2;
     //标题
     private  String title;
+    //关联报表ID
+    private Integer kpiId;
     //报表ID
     private Integer reportId;
     //模板ID
@@ -106,6 +108,14 @@ public class AppMenu implements Serializable {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public Integer getKpiId() {
+        return kpiId;
+    }
+
+    public void setKpiId(Integer kpiId) {
+        this.kpiId = kpiId;
     }
 
     public Integer getReportId() {

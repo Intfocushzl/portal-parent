@@ -106,6 +106,8 @@ public class AppMenusController extends AbstractController {
                                 appMenu.setSubName2(subName2);
                                 String title = array.getJSONObject(i).getString("kpi_name");
                                 appMenu.setTitle(StringUtils.isEmpty(title) ? "" : title);
+                                Integer kpiId = array.getJSONObject(i).getInteger("kpi_id");
+                                appMenu.setKpiId(kpiId);
                                 Integer reportId = array.getJSONObject(i).getInteger("report_id");
                                 appMenu.setReportId(reportId);
                                 Integer templateId = array.getJSONObject(i).getInteger("template_id");
@@ -196,7 +198,7 @@ public class AppMenusController extends AbstractController {
         map.put("page", 0);
         map.put("page_size", 10000);
         try {
-            String result = httpUtil.getGetResult(ConstantsUtil.AppBaseUrl.APP_BASE_GET_KPI_URL , map);
+            String result = httpUtil.getGetResult(ConstantsUtil.AppBaseUrl.APP_BASE_GET_KPI_URL, map);
 
             System.out.println(result);
             if (!StringUtils.isEmpty(result)) {
@@ -323,7 +325,7 @@ public class AppMenusController extends AbstractController {
         map.put("page", 0);
         map.put("page_size", 10000);
         try {
-            String result = httpUtil.getGetResult(ConstantsUtil.AppBaseUrl.APP_BASE_GET_ANALYSE_URL , map);
+            String result = httpUtil.getGetResult(ConstantsUtil.AppBaseUrl.APP_BASE_GET_ANALYSE_URL, map);
 
             if (!StringUtils.isEmpty(result)) {
                 List<AppMenu> menuList = new ArrayList<>();
@@ -495,7 +497,7 @@ public class AppMenusController extends AbstractController {
         map.put("page", 0);
         map.put("page_size", 10000);
         try {
-            String result = httpUtil.getGetResult(ConstantsUtil.AppBaseUrl.APP_BASE_GET_APP_URL , map);
+            String result = httpUtil.getGetResult(ConstantsUtil.AppBaseUrl.APP_BASE_GET_APP_URL, map);
 
             System.out.println(result);
             if (!StringUtils.isEmpty(result)) {
@@ -611,7 +613,6 @@ public class AppMenusController extends AbstractController {
 //
 //        return R.success().put("list", list);
     }
-
 
     /**
      * 信息
@@ -751,7 +752,7 @@ public class AppMenusController extends AbstractController {
             child.put("publicly", appMenu.getPublicly());
             child.put("kpi_name", appMenu.getTitle());
             child.put("kpi_group", appMenu.getSubName2());
-            child.put("kpi_id", 0);
+            child.put("kpi_id", appMenu.getKpiId() == null ? 0 : appMenu.getKpiId());
             child.put("link", 0);
             map.put("kpi", child);
         } else if (type == 2) {
@@ -1008,6 +1009,67 @@ public class AppMenusController extends AbstractController {
             e.printStackTrace();
             list = new ArrayList<>();
             return R.error().put("list", list);
+        }
+    }
+
+    //获取报表列表
+    @RequestMapping("/selectReport")
+    public R selectReport() {
+        List<AppMenu> list = new ArrayList<>();
+        HttpMethodUtil httpUtil = new HttpMethodUtil();
+        Map<String, Object> map = new HashedMap();
+        map.put("api_token", "api_token");
+        try {
+            String result = httpUtil.getGetResult(ConstantsUtil.AppBaseUrl.APP_BASE_GET_REPORT_URL, map);
+            log.info(result);
+            if (!StringUtils.isEmpty(result)) {
+                JSONObject jsonObject = JSONObject.parseObject(result);
+                if (jsonObject.getInteger("code") == 200) {
+
+                    JSONArray array = jsonObject.getJSONArray("data");
+                    if (array == null) {
+                        array = new JSONArray();
+                    }
+                    for (int i = 0; i < array.size(); i++) {
+                        AppMenu appMenu = new AppMenu();
+                        Integer id = array.getJSONObject(i).getInteger("id");
+                        appMenu.setId(id);
+                        String title = array.getJSONObject(i).getString("title");
+                        appMenu.setTitle(StringUtils.isEmpty(title) ? "" : title);
+                        Integer kpi_id = array.getJSONObject(i).getInteger("kpi_id");
+                        appMenu.setKpiId(kpi_id);
+                        Integer reportId = array.getJSONObject(i).getInteger("report_id");
+                        appMenu.setReportId(reportId);
+                        Integer templateId = array.getJSONObject(i).getInteger("template_id");
+                        appMenu.setTemplateId(templateId);
+                        Boolean hasAudio = array.getJSONObject(i).getBoolean("has_audio");
+                        appMenu.setHasAudio(hasAudio);
+                        String remark = array.getJSONObject(i).getString("remark");
+                        appMenu.setRemark(StringUtils.isEmpty(remark) ? "" : remark);
+                        list.add(appMenu);
+                    }
+                    Map<String, Object> res = new HashedMap();
+                    res.put("list", list);
+                    return R.success().setData(res);
+                } else {
+                    Map<String, Object> res = new HashedMap();
+                    res.put("list", list);
+                    String info = jsonObject.getString("message");
+                    return R.error().setData(res).setMsg(info);
+                }
+            } else {
+                list = new ArrayList<>();
+                Map<String, Object> res = new HashedMap();
+                res.put("list", list);
+                return R.error().setData(res);
+            }
+        } catch (Exception e) {
+            log.error(e);
+            e.printStackTrace();
+            list = new ArrayList<>();
+            Map<String, Object> res = new HashedMap();
+            res.put("list", list);
+            return R.error().setData(res);
         }
     }
 

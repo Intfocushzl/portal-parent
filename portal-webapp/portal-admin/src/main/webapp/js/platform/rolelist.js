@@ -1,6 +1,6 @@
 $(function () {
     $("#jqGrid").jqGrid({
-        url: '${rc.contextPath}/forfront/role/list',     // 请求后台json数据的url
+        url: rcContextPath+'forfront/role/list',     // 请求后台json数据的url
         datatype: "json",                // 后台返回的数据格式
         // 列表标题及列表模型
         colModel: [
