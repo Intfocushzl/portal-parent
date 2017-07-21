@@ -20,6 +20,13 @@
             <if test="title != null and title !=''">
                 and title like concat('%',#{title},'%')
             </if>
+            <if test="keyword != null and keyword !=''">
+                and (
+                procode like concat('%',#{keyword},'%')
+                or title like concat('%',#{keyword},'%')
+                or proname like concat('%',#{keyword},'%')
+                )
+            </if>
         </where>
         <choose>
             <when test="sidx != null and sidx.trim() != ''">
@@ -125,9 +132,11 @@
         <![CDATA[
 
 
+
 		    {
 		      call ${proname}(${parameter})
 		    }
+
 
 
         ]]>
@@ -137,9 +146,11 @@
         <![CDATA[
 
 
+
 		    {
 		      call ${proname}(${parameter})
 		    }
+
 
 
         ]]>
@@ -149,9 +160,11 @@
         <![CDATA[
 
 
+
 		    {
 		      call ${proname}(${parameter})
 		    }
+
 
 
         ]]>
@@ -162,9 +175,11 @@
         <![CDATA[
 
 
+
 		    {
 		      call ${proname}(${parameter})
 		    }
+
 
 
         ]]>
