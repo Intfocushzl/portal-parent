@@ -11,7 +11,7 @@
     </select>
 
     <select id="queryList" parameterType="map" resultType="Map">
-        select a.`code`,a.title,a.execute_code,a.execute_type,a.create_time,b.username from portal_report a
+        select a.`code`,a.title,a.describe,a.execute_code,a.execute_type,a.create_time,b.username from portal_report a
         LEFT JOIN sys_user b ON a.creater = b.user_id
         <where>
             <if test="code != null and code !=''">
@@ -19,6 +19,14 @@
             </if>
             <if test="title != null and title !=''">
                 and title like concat('%',#{title},'%')
+            </if>
+            <if test="keyword != null and keyword !=''">
+                and (
+                  code like concat('%',#{keyword},'%')
+                  or title like concat('%',#{keyword},'%')
+                  or `describe` like concat('%',#{keyword},'%')
+                  or execute_code like concat('%',#{keyword},'%')
+                )
             </if>
         </where>
         <choose>
@@ -62,6 +70,7 @@
 			`id`,
 			`code`,
 			`title`,
+			`describe`,
 			`execute_code`,
 			`execute_type`,
 			`report_headers_count_rows`,
@@ -86,6 +95,7 @@
 			#{id},
 			#{code},
 			#{title},
+			#{describe},
 			#{executeCode},
 			#{executeType},
 			#{reportHeadersCountRows},
@@ -112,6 +122,7 @@
         <set>
             <if test="code != null">`code` = #{code},</if>
             <if test="title != null">`title` = #{title},</if>
+            <if test="describe != null">`describe` = #{describe},</if>
             <if test="executeCode != null">`execute_code` = #{executeCode},</if>
             <if test="executeType != null">`execute_type` = #{executeType},</if>
             <if test="reportHeadersCountRows != null">`report_headers_count_rows` = #{reportHeadersCountRows},</if>

@@ -15,6 +15,8 @@ public class PortalReport extends AuditAuto {
     private String codeOld;
     // 标题
     private String title;
+    // 描述信息
+    private String describe;
     // 执行类型 1,存储过程，2，select查询
     private int executeType;
     // 绑定的存储过程唯一编码
@@ -56,6 +58,14 @@ public class PortalReport extends AuditAuto {
     @Override
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getDescribe() {
+        return describe;
+    }
+
+    public void setDescribe(String describe) {
+        this.describe = describe;
     }
 
     public String getCode() {

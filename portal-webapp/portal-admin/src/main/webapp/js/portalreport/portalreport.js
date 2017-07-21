@@ -6,28 +6,29 @@ $(function () {
         colModel: [
             {label: 'id', name: 'id', index: 'id', width: 50, hidden: true},
             {
-                label: '唯一编码', name: 'code', index: 'code', width: 80, key: true,
+                label: '唯一编码', name: 'code', index: 'code', width: 50, key: true,
                 formatter: function (value, options, row) {
                     return '<a class="a_text" onclick="vm.toTest(\'' + row.code + '\',\'' + row.execute_type + '\',\'' + row.execute_code + '\')">' + value + '</a>';
                 }
             },
             {label: '标题', name: 'title', index: 'title', width: 80},
             {
-                label: '数据脚本',
-                name: 'execute_code',
-                index: 'execute_code',
-                width: 80
+                label: '数据脚本', name: 'execute_code', index: 'execute_code', width: 50,
+                formatter: function (value, options, row) {
+                    return row.execute_type === 1 ?
+                    '<span class="label label-info">' + value + '</span>' :
+                    '<span class="label label-warning">' + value + '</span>';
+                }
             },
             {
-                label: '执行类型', name: 'execute_type', index: 'execute_type', width: 80,
+                label: '执行类型', name: 'execute_type', index: 'execute_type', width: 50, hidden: true,
                 formatter: function (value, options, row) {
                     return value === 1 ?
                         '<span class="label label-info">存储</span>' :
                         '<span class="label label-warning">SQL</span>';
                 }
             },
-            {label: '创建人', name: 'username', index: 'username', width: 80},
-            {label: '创建时间', name: 'create_time', index: 'create_time', width: 80},
+            {label: '描述', name: 'describe', index: 'describe', width: 180},
         ],
         viewrecords: true,     // 是否显示行号，默认值是false，不显示
         height: 385,            // 表格高度
@@ -76,8 +77,7 @@ var vm = new Vue({
                 // vm.reload();
                 $("#jqGrid").jqGrid('setGridParam', {
                     postData: {
-                        code: vm.portalReport.code,
-                        remark: vm.portalReport.remark
+                        keyword: $("#keyword").val()
                     },
                     page: 1
                 }).trigger("reloadGrid");

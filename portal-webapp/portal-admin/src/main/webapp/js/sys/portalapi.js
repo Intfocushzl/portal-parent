@@ -129,7 +129,7 @@ var vm = new Vue({
                     if (repCode == r.repList[i].code) {
                         vm.selectOption = vm.selectOption + " selected = 'selected'";
                     }
-                    vm.selectOption = vm.selectOption + " >" + r.repList[i].code + " " + r.repList[i].title + "</option>";
+                    vm.selectOption = vm.selectOption + " >" + r.repList[i].code + " | " + r.repList[i].title + " | " + r.repList[i].describe + "</option>";
                     $("#code").append(vm.selectOption);
                 }
                 // refresh刷新和render渲染操作，必不可少
