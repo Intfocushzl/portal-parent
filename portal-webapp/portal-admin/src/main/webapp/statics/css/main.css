@@ -348,7 +348,6 @@ tbody > tr > th {
 
 textarea {
     overflow-x: hidden;
-    overflow-y: hidden !important;
     word-wrap: break-word;
     min-height: 100px;
     border-color: rgba(82, 168, 236, 0.8);
