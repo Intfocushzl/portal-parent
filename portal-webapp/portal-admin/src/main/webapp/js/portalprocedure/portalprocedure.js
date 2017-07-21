@@ -9,10 +9,7 @@ $(function () {
             {label: '标题', name: 'title', index: 'title', width: 80},
             {label: '数据源编码', name: 'data_source_code', index: 'data_source_code', width: 80},
             {label: '存储过程名', name: 'proname', index: 'proname', width: 80},
-            /*{label: '执行参数', name: 'parameter', index: 'parameter', width: 80 },*/
             {label: '数据库', name: 'prodb', index: 'prodb', width: 80},
-            {label: '创建人', name: 'username', index: 'username', width: 80},
-            {label: '创建时间', name: 'create_time', index: 'create_time', width: 80},
         ],
         viewrecords: true,     // 是否显示行号，默认值是false，不显示
         height: 385,            // 表格高度

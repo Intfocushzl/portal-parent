@@ -6,14 +6,10 @@ $(function () {
         colModel: [
             {label: 'id', name: 'id', index: 'id', width: 50, hidden: true},
             {label: '唯一编码', name: 'sqlcode', index: 'sqlcode', width: 80, key: true},
-            {label: '标题简介', name: 'title', index: 'title', width: 80},
-            /* {label: '执行语句', name: 'executeSql', index: 'execute_sql', width: 80 }, */
+            {label: '标题简介', name: 'title', index: 'title', width: 100},
             {label: '数据源唯一编码', name: 'data_source_code', index: 'data_source_code', width: 80},
-            /* {label: '执行参数', name: 'parameter', index: 'parameter', width: 80 },*/
-            {label: '创建人', name: 'username', index: 'username', width: 80},
-            {label: '创建时间', name: 'create_time', index: 'create_time', width: 80},
         ],
-        viewrecords: true,     // 是否显示行号，默认值是false，不显示
+        viewrecords: true,     // 是否显示行号，默认值是faalse，不显示
         height: 385,            // 表格高度
         rowNum: 50,             // 一页显示的行记录数
         rowList: [50, 100],     // 翻页控制条中 每页显示记录数可选集合
