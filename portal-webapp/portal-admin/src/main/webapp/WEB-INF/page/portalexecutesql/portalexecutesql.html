@@ -3,18 +3,24 @@
 <head>
 <title></title>
     #parse("sys/header.html")
+	<style>
+		#keyword{
+			width: 220px;
+		}
+		.keyword{
+			max-width: 240px;
+		}
+	</style>
 </head>
 <body>
 <div id="rrapp" v-cloak>
 	<div v-show="showList">
         <div id="queryDiv" class="queryDiv">
             <div class="grid-btn">
-                <div class="form-group col-sm-2">
-                    <input type="text" class="form-control" v-model="portalExecuteSql.sqlcode" @keyup.enter="query" placeholder="唯一编码">
-                </div>
-                <div class="form-group col-sm-2">
-                	<input type="text" class="form-control" v-model="portalExecuteSql.title" @keyup.enter="query" placeholder="标题">
-                </div>
+				<div class="form-group col-sm-2 keyword">
+					<input type="text" class="form-control" id="keyword" @keyup.enter="query"
+						   placeholder="编码 / 标题 / 数据源编码">
+				</div>
                 <a class="btn btn-primary" @click="query">查询</a>
 				#if($shiro.hasPermission("portalexecutesql:save"))
 				<a class="btn btn-primary" @click="add"><i class="fa fa-plus"></i>&nbsp;新增</a>
