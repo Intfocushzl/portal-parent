@@ -120,6 +120,8 @@ var vm = new Vue({
         getInfo: function(${pk.attrname}){
             $.get("../${pathName}/info/"+${pk.attrname}, function(r){
                 vm.${classname} = r.${classname};
+                //更新输入框高度
+                autosize.update($('textarea'));
             });
         },
         reload: function (event) {
