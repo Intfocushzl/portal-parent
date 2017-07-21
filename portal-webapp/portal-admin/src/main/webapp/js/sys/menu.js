@@ -104,6 +104,15 @@ var vm = new Vue({
             $('#icon').selectpicker('val',icon);
         }
         ,
+        query: function () {
+            // vm.reload();
+            $("#jqGrid").jqGrid('setGridParam', {
+                postData: {
+                    keyword: $("#keyword").val()
+                },
+                page: 1
+            }).trigger("reloadGrid");
+        },
         add: function () {
             vm.showList = false;
             vm.title = "新增";
