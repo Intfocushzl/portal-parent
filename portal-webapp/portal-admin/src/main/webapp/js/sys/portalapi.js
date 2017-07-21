@@ -167,3 +167,11 @@ $("#goTopBtn").click(function () {
 
 // textarea 高度自动扩展
 autosize($('textarea'));
+
+$(window).on('load',function(){
+    alert(1);
+    $(this).height($(this).height());
+}).resize();
+
+
+
