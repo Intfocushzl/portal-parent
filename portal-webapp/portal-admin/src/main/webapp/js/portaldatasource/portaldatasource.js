@@ -5,18 +5,11 @@ $(function () {
         // 列表标题及列表模型
         colModel: [
             {label: 'id', name: 'id', index: 'id', width: 50, hidden: true},
-            {label: '唯一编码', name: 'code', index: 'code', width: 80, key: true},
-            {label: '标题简介', name: 'title', index: 'title', width: 80},
-            {label: '连接地址', name: 'url', index: 'url', width: 80},
+            {label: '唯一编码', name: 'code', index: 'code', width: 40, key: true},
+            {label: '用户名', name: 'user', index: 'user', width: 40},
+            {label: '标题', name: 'title', index: 'title', width: 80},
+            {label: '连接地址', name: 'url', index: 'url', width: 100},
             {label: '类型驱动', name: 'jdbc_driver', index: 'jdbc_driver', width: 80},
-            {label: '用户名', name: 'user', index: 'user', width: 80},
-            {label: '创建人', name: 'username', index: 'username', width: 80},
-            {label: '创建时间', name: 'create_time', index: 'create_time', width: 80},
-            /* {label: '用户密码', name: 'password', index: 'password', width: 80 },
-             {label: '连接池最小连接', name: 'minConnectionsPerPartition', index: 'min_connections_per_partition', width: 80 },
-             {label: '连接池最大连接', name: 'maxConnectionsPerPartition', index: 'max_connections_per_partition', width: 80 },
-             {label: '连接选项', name: 'connectionTag', index: 'connection_tag', width: 80 },
-             */
         ],
         viewrecords: true,     // 是否显示行号，默认值是false，不显示
         height: 385,            // 表格高度
