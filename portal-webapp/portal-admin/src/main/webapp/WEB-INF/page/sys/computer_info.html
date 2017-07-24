@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>服务器信息</title>
+    #parse("sys/header.html")
+    <style>
+        .queryDiv{
+            margin: 10px;
+        }
+    </style>
+</head>
+<body>
+<div class="panel panel-default" id="rrapp" v-cloak>
+
+    <div id="queryDiv" class="queryDiv">
+        <div class="grid-btn">
+            <button type="button" id="btnQueryAtuo" class="btn btn-success" @click="queryAuto">自动刷新</button>
+            <button type="button" id="btnQueryClear" class="btn btn-danger" @click="queryClear">取消自动刷新</button>
+            <button type="button" id="m_danger" class="btn btn-danger">警告！内存紧张！</button>
+        </div>
+    </div>
+    <form class="form-horizontal">
+        <div class="form-group">
+            <div class="col-sm-2 control-label">操作系统</div>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" id= "os_name" placeholder="" readonly/>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-2 control-label">JAVA运行环境</div>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" id= "java_runtime_version" placeholder="" readonly/>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-2 control-label">JAVA虚拟机</div>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" id= "java_vm_version" placeholder="" readonly/>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-2 control-label">系统用户</div>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" id= "user_name" placeholder="" readonly/>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-2 control-label">用户主目录</div>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" id= "user_home" placeholder="" readonly/>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-2 control-label">用户工作目录</div>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" id= "user_dir" placeholder="" readonly/>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-2 control-label">用户临时目录</div>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" id= "java_io_tmpdir" placeholder="" readonly/>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-2 control-label">系统内存总计(M)</div>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" v-model="computerInfo.sysTotalPhysicalMemorySize" placeholder="" readonly/>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-2 control-label">系统可用内存总计(M)</div>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" v-model="computerInfo.sysFreePhysicalMemorySize" placeholder="" readonly/>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-2 control-label">JVM可用处理器数量</div>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" v-model="computerInfo.availableProcessors" placeholder="" readonly/>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-2 control-label">JVM最大内存(M)</div>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" v-model="computerInfo.maxControl" placeholder="" readonly/>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-2 control-label">JVM当前占用内存(M)</div>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" v-model="computerInfo.currentUse" placeholder="" readonly/>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-2 control-label">JVM当前已用内存(M)</div>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" v-model="computerInfo.jvmUse" placeholder="" readonly/>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-2 control-label">JVM当前空闲内存(M)</div>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" v-model="computerInfo.freeMemory" placeholder="" readonly/>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-2 control-label">JVM实际可用内存(M)</div>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" v-model="computerInfo.jvmFreeMemory" placeholder="" readonly/>
+            </div>
+        </div>
+    </form>
+</div>
+
+<script src="${rc.contextPath}/js/sys/computer_info.js"></script>
+</body>
+</html>
