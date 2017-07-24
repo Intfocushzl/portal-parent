@@ -58,7 +58,21 @@ public interface HrProfitMapper {
     //门店分红，查询该用户所属门店
     List<Map<String, Object>> queryShop(List<String> list);
 
+    //查询所有门店
     List<Map<String, Object>> queryShopAll();
 
-    List<Map<String, Object>> queryDimRule(@Param("groupId") String groupId , @Param("empNum") String empNum);
+    //查询联动规则
+    List<Map<String, Object>> queryDimRule(@Param("groupId") String groupId, @Param("empNum") String empNum);
+
+    //查询某个门店所有员工分红信息
+    List<Map<String, Object>> queryEmpProfit(@Param("shopId") String shopId, @Param("areaMans") String areaMans);
+
+    //查询某个区域下所有门店的所有员工分红信息
+    List<Map<String, Object>> queryEmpProfit1(@Param("shopId") String shopId, @Param("areaMans") String areaMans);
+
+    //更新数据库分红人员的推送状态和信息
+    int updateEmpProfit(@Param("jobNumber") String jobNumber , @Param("status") String status , @Param("msg") String msg);
+
+    //查询某个人用户的分红信息
+    List<Map<String, Object>> queryProfit(@Param("shopId") String shopId , @Param("empNo") String empNo);
 }
