@@ -56,6 +56,7 @@
         <fasterxml.jackson.version>2.8.5</fasterxml.jackson.version>
         <quartz-version>2.2.3</quartz-version>
         <jsch-version>0.1.51</jsch-version>
+        <joda-time-version>2.9.9</joda-time-version>
     </properties>
 
     <build>

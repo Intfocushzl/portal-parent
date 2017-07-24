@@ -3,7 +3,86 @@
 
 <mapper namespace="com.yonghui.portal.mapper.sys.SysOperationLogMapper">
 
-	<insert id="saveLog" parameterType="com.yonghui.portal.model.sys.SysOperationLog" useGeneratedKeys="true" keyProperty="id">
+    <!-- 可根据自己的需求，是否要使用 -->
+    <resultMap id="sysOperationLogMap" type="com.yonghui.portal.model.sys.SysOperationLog">
+        <result property="id" column="id"/>
+        <result property="jobnumber" column="jobNumber"/>
+        <result property="url" column="url"/>
+        <result property="starttime" column="startTime"/>
+        <result property="endtime" column="endTime"/>
+        <result property="parameter" column="parameter"/>
+        <result property="ip" column="ip"/>
+        <result property="browser" column="browser"/>
+        <result property="country" column="country"/>
+        <result property="area" column="area"/>
+        <result property="remark" column="remark"/>
+    </resultMap>
+
+    <select id="queryVisit" resultType="Map" parameterType="Map">
+        SELECT
+            DATE_FORMAT(t.startTime,'%Y-%m-%d') AS _date,
+            count(1) AS _pv,
+            count(DISTINCT t.jobNumber) AS _uv,
+            count(DISTINCT t.ip) AS _ip
+        FROM
+          sys_operation_log t
+        <![CDATA[
+            WHERE
+            t.startTime >= #{begin}
+            AND t.startTime <= #{endNext}
+            GROUP BY
+            DATE_FORMAT(t.startTime,'%Y-%m-%d')
+            ORDER BY
+            DATE_FORMAT(t.startTime,'%Y-%m-%d')
+        ]]>
+    </select>
+
+    <select id="queryObject" resultType="com.yonghui.portal.model.sys.SysOperationLog">
+		select * from sys_operation_log where id = #{value}
+	</select>
+
+    <select id="queryList" resultType="com.yonghui.portal.model.sys.SysOperationLog">
+        select * from sys_operation_log
+        <where>
+            <if test="id != null and id !=''">
+                and id like concat('%',#{id},'%')
+            </if>
+            <if test="remark != null and remark !=''">
+                and remark like concat('%',#{remark},'%')
+            </if>
+            <if test="keyword != null and keyword !=''">
+                and (
+                id like concat('%',#{keyword},'%')
+                or remark like concat('%',#{keyword},'%')
+                )
+            </if>
+        </where>
+        <choose>
+            <when test="sidx != null and sidx.trim() != ''">
+                order by ${sidx} ${order}
+            </when>
+            <otherwise>
+                order by id desc
+            </otherwise>
+        </choose>
+        <if test="offset != null and limit != null">
+            limit #{offset}, #{limit}
+        </if>
+    </select>
+
+    <select id="queryTotal" resultType="int">
+        select count(*) from sys_operation_log
+        <where>
+            <if test="id != null and id !=''">
+                and id = #{id}
+            </if>
+            <if test="remark != null and remark !=''">
+                and remark like concat('%',#{remark},'%')
+            </if>
+        </where>
+    </select>
+
+    <insert id="save" parameterType="com.yonghui.portal.model.sys.SysOperationLog" useGeneratedKeys="true" keyProperty="id">
 		insert into sys_operation_log
 		(
 			`jobNumber`,
@@ -12,18 +91,52 @@
 			`endTime`,
 			`parameter`,
 			`ip`,
+			`browser`,
+			`country`,
+			`area`,
 			`remark`
 		)
 		values
 		(
-			#{jobNumber},
+			#{jobnumber},
 			#{url},
-			#{startTime},
-			#{endTime},
+			#{starttime},
+			#{endtime},
 			#{parameter},
 			#{ip},
+			#{browser},
+			#{country},
+			#{area},
 			#{remark}
 		)
 	</insert>
+
+    <update id="update" parameterType="com.yonghui.portal.model.sys.SysOperationLog">
+        update sys_operation_log
+        <set>
+            <if test="jobnumber != null">`jobNumber` = #{jobnumber},</if>
+            <if test="url != null">`url` = #{url},</if>
+            <if test="starttime != null">`startTime` = #{starttime},</if>
+            <if test="endtime != null">`endTime` = #{endtime},</if>
+            <if test="parameter != null">`parameter` = #{parameter},</if>
+            <if test="ip != null">`ip` = #{ip},</if>
+            <if test="browser != null">`browser` = #{browser},</if>
+            <if test="country != null">`country` = #{country},</if>
+            <if test="area != null">`area` = #{area},</if>
+            <if test="remark != null">`remark` = #{remark}</if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <delete id="delete">
+        delete from sys_operation_log where id = #{value}
+    </delete>
+
+    <delete id="deleteBatch">
+        delete from sys_operation_log where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
 
 </mapper>

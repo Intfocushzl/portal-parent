@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>访问统计</title>
+    #parse("sys/header.html")
+    <script src="${rc.contextPath}/statics/plugins/echats/echarts.js"></script>
+    <style>
+        .queryDiv {
+            margin: 10px;
+        }
+
+        .panel-default {
+            border-color: rgba(255, 255, 255, 0) !important;
+        }
+
+        #visit_div {
+            padding: 0px 30px 30px 30px;
+        }
+    </style>
+</head>
+<body>
+<div class="panel panel-default" id="rrapp" v-cloak>
+    <div id="visit_div">
+        <div id="queryDiv" class="queryDiv">
+            <div class="grid-btn">
+                <button type="button" id="btnQueryAtuo" class="btn btn-success" @click="queryAuto">自动刷新</button>
+                <button type="button" id="btnQueryClear" class="btn btn-danger" @click="queryClear">取消自动刷新</button>
+            </div>
+        </div>
+        <div class="box-body">
+            <div id="visitChart" style="height:300px;"></div>
+        </div>
+    </div>
+</div>
+
+<script src="${rc.contextPath}/js/sys/visit_log.js"></script>
+</body>
+</html>
