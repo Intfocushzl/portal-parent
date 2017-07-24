@@ -17,7 +17,7 @@ public interface HrProfitService {
 
     List<Map<String, Object>> tmpProfitList(String jobNumber);
 
-    List<Map<String, Object>> profitList(@Param("sMonth") String sMonth, @Param("shopid") String shopid ,@Param("oldshopid") String oldshopid );
+    List<Map<String, Object>> profitList(@Param("sMonth") String sMonth, @Param("shopid") String shopid, @Param("oldshopid") String oldshopid);
 
     //根据jobNumber查询商品海报重复导入吻合的数据(posterId+area+goodsId)
     List<Map<String, Object>> profitTmpJoinList(String jobNumber);
@@ -38,7 +38,7 @@ public interface HrProfitService {
     int editRule(Integer id, Integer empNum, BigDecimal standardRule, BigDecimal friRule, BigDecimal secRule, Integer runtype);
 
     //分红人员维护
-    int editEmp(Integer id , Float guarantees, Integer flagBonus, Date turnDate , String shopName , String groupName) throws Exception;
+    int editEmp(Integer id, Float guarantees, Integer flagBonus, Date turnDate, String shopName, String groupName) throws Exception;
 
     //查询分红标准
     List<Map<String, Object>> queryRule(Map<String, Object> map);
@@ -50,5 +50,11 @@ public interface HrProfitService {
     List<Map<String, Object>> queryShop(User user);
 
     //联动规则查询
-    List<Map<String, Object>> queryDimRule(String groupId , String empNum);
+    List<Map<String, Object>> queryDimRule(String groupId, String empNum);
+
+    //按照区域或者门店查询出分红数据
+    List<Map<String, Object>> queryEmpProfit(String shopId, String areaMans);
+
+    //取消某个用户的分红
+    Map<String, Object> cancelProfit(String shopId, String empNo);
 }

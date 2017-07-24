@@ -59,6 +59,7 @@ public class HrProfitController {
      */
     private static final String[] extensionPermit = {"xls", "xlsx"};
 
+
     /**
      * 同期利润导入
      *
@@ -262,7 +263,7 @@ public class HrProfitController {
      * 查询联动规则
      */
     @RequestMapping(value = "queryDimRule", method = RequestMethod.GET)
-    public R queryDimRule(HttpServletRequest request, HttpServletResponse response, String groupId, String empNum) {
+    public R queryDimRule(String groupId, String empNum) {
         List<Map<String, Object>> list = null;
         try {
             list = hrProfitService.queryDimRule(groupId, empNum);
@@ -271,6 +272,36 @@ public class HrProfitController {
             return R.error("查询联动规则,程序出现异常");
         }
         return R.success(list);
+    }
+
+    /**
+     * 推送分红数据到sap
+     */
+    @RequestMapping(value = "push", method = RequestMethod.GET)
+    public R push(String shopId, String areaMans) {
+        List<Map<String, Object>> list = null;
+        try {
+            list = hrProfitService.queryEmpProfit(shopId, areaMans);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return R.error("推送分红数据到sap,程序出现异常");
+        }
+        return R.success(list);
+    }
+
+    /**
+     * 撤销分红数据到sap
+     */
+    @RequestMapping(value = "cancelProfit", method = RequestMethod.GET)
+    public R cancelProfit(String shopId, String empNo) {
+        Map<String, Object> map = null;
+        try {
+            map = hrProfitService.cancelProfit(shopId, empNo);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return R.error("撤销分红数据到sap,程序出现异常");
+        }
+        return R.success(map);
     }
 
 

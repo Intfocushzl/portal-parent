@@ -1,13 +1,18 @@
 package com.yonghui.portal.service.impl.manage;
 
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.yonghui.portal.mapper.manage.HrProfitMapper;
 import com.yonghui.portal.model.global.User;
 import com.yonghui.portal.model.manage.HrProfit;
 import com.yonghui.portal.service.manage.HrProfitService;
+import com.yonghui.portal.util.StringUtils;
+import com.yonghui.portal.util.report.columns.HttpBasicPostUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -18,6 +23,11 @@ public class HrProfitServiceImpl implements HrProfitService {
 
     @Autowired
     private HrProfitMapper hrProfitMapper;
+
+    @Autowired
+    private HttpBasicPostUtil util;
+
+    private static final String URL = "http://10.0.66.65:50000/RESTAdapter/HR_NOR028";
 
 
     public List<Map<String, Object>> tmpProfitList(String jobNumber) {
@@ -212,5 +222,113 @@ public class HrProfitServiceImpl implements HrProfitService {
 
     public List<Map<String, Object>> queryDimRule(String groupId, String empNum) {
         return hrProfitMapper.queryDimRule(groupId, empNum);
+    }
+
+    public List<Map<String, Object>> queryEmpProfit(String shopId, String areaMans) {
+        List<Map<String, Object>> resList = new ArrayList<>();
+        Map<String, Object> resMap = null;
+        List<Map<String, Object>> list = new ArrayList<>();
+        String result = null;
+        JSONObject jsonObject = null;
+        boolean flag = true;
+        //按照区域或者门店查询出分红数据
+        if (shopId != null) {
+            list = hrProfitMapper.queryEmpProfit(shopId, areaMans);
+        }
+        if (areaMans != null) {
+            list = hrProfitMapper.queryEmpProfit1(shopId, areaMans);
+        }
+        //推送到sap
+        JSONObject node1 = new JSONObject();
+        JSONArray jsonAry1 = new JSONArray();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+        String time = sdf.format(new Date());
+        for (Map<String, Object> item : list) {
+            JSONObject node = new JSONObject();
+            node.put("PERNR", item.get("empNo"));
+            node.put("BEGDA", time);
+            node.put("LGART", "3031");
+            node.put("BETRG1", item.get("endProfit"));
+            node.put("BETRG2", "");
+            node.put("ZUORD", "ni");
+            node.put("FLAG", "I");
+            jsonAry1.add(node);
+        }
+        node1.put("ITEM", jsonAry1);
+        System.out.println("调用sap参数=======" + node1.toJSONString());
+        result = util.getPostJsonResult(URL, node1.toJSONString());
+        System.out.print("调用sap返回结果=======" + result);
+        //并且更新数据库状态和信息
+        if (!StringUtils.isEmpty(result)) {
+            jsonObject = JSONObject.parseObject(result);
+            JSONArray jsonArray = (JSONArray) jsonObject.get("ITEM");
+            for (int i = 0; i < jsonArray.size(); i++) {
+                JSONObject job = jsonArray.getJSONObject(i);
+                if (job.get("MSGTYP") != null && job.get("MESSAGE") != null) {
+                    if (job.get("MSGTYP").equals("E")) {
+                        flag = false;
+                        hrProfitMapper.updateEmpProfit(job.getString("PERNR"), "2", job.getString("MESSAGE"));
+                        resMap = new HashMap<>();
+                        resMap.put("empNo",job.getString("PERNR"));
+                        resMap.put("status", "2");
+                        resMap.put("msg", job.get("MESSAGE"));
+                        resList.add(resMap);
+                    } else if (job.get("MSGTYP").equals("S")) {
+                        hrProfitMapper.updateEmpProfit(job.getString("PERNR"), "1", job.getString("MESSAGE"));
+                    }
+                }
+            }
+        }
+        return resList;
+    }
+
+    public Map<String, Object> cancelProfit(String shopId, String empNo) {
+        String result = null;
+        JSONObject jsonObject = null;
+        Map<String, Object> map = new HashMap<>();
+        //查询某个人的分红信息
+        List<Map<String, Object>> list = hrProfitMapper.queryProfit(shopId, empNo);
+        //封装参数，推送到sap
+        JSONObject node = new JSONObject();
+        for (Map<String, Object> item : list) {
+            node.put("BETRG1", item.get("endProfit"));
+            map.put("status", item.get("push_status"));
+            map.put("msg", item.get("push_message"));
+        }
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+        String time = sdf.format(new Date());
+        JSONArray jsonAry1 = new JSONArray();
+        node.put("PERNR", empNo);
+        node.put("BEGDA", time);
+        node.put("LGART", "3031");
+        node.put("BETRG2", "");
+        node.put("ZUORD", "ni");
+        node.put("FLAG", "D");
+        jsonAry1.add(node);
+        JSONObject node1 = new JSONObject();
+        node1.put("ITEM", jsonAry1);
+        System.out.println("调用sap参数=======" + node1.toJSONString());
+        result = util.getPostJsonResult(URL, node1.toJSONString());
+        System.out.print("调用sap返回结果=========" + result);
+        //根据返回信息，更新数据库状态
+        if (!StringUtils.isEmpty(result)) {
+            jsonObject = JSONObject.parseObject(result);
+            JSONArray jsonArray = (JSONArray) jsonObject.get("ITEM");
+            for (int i = 0; i < jsonArray.size(); i++) {
+                JSONObject job = jsonArray.getJSONObject(i);
+                if (job.get("MSGTYP") != null && job.get("MESSAGE") != null) {
+                    if (job.get("MSGTYP").equals("E")) {
+                        hrProfitMapper.updateEmpProfit(job.getString("PERNR"), "4", job.getString("MESSAGE"));
+                        map.put("status", "4");
+                        map.put("msg", job.get("MESSAGE"));
+                    } else if (job.get("MSGTYP").equals("S")) {
+                        hrProfitMapper.updateEmpProfit(job.getString("PERNR"), "3", job.getString("MESSAGE"));
+                        map.put("status", "3");
+                        map.put("msg", job.get("MESSAGE"));
+                    }
+                }
+            }
+        }
+        return map;
     }
 }

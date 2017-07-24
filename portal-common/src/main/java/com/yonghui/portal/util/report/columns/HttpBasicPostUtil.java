@@ -11,6 +11,7 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
+import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -19,6 +20,8 @@ import java.nio.charset.Charset;
 /**
  * Created by liuwei on 2017/07/19
  */
+
+@Component
 public class HttpBasicPostUtil {
 
 
@@ -29,6 +32,7 @@ public class HttpBasicPostUtil {
     /**
      * 使用httpclient进行调用
      * 发送 post请求访问本地应用并根据传递参数不同返回不同结果
+     *
      * @param url
      * @param json
      * @return
@@ -47,7 +51,7 @@ public class HttpBasicPostUtil {
 
         try {
             if (json != null && !json.isEmpty()) {
-                StringEntity se = new StringEntity(json,"UTF-8");
+                StringEntity se = new StringEntity(json, "UTF-8");
                 se.setContentType("text/json");
                 httppost.setEntity(se);
             }
@@ -63,21 +67,21 @@ public class HttpBasicPostUtil {
                     return result;
                 }
 
-                System.out.println("POST请求接口信息出错！"+ "请求URL:"+url +"==状态码：=="+status + "==返回结果：=="+result);
+                System.out.println("POST请求接口信息出错！" + "请求URL:" + url + "==状态码：==" + status + "==返回结果：==" + result);
             } finally {
 
                 response.close();
             }
         } catch (UnsupportedEncodingException e) {
-            System.out.println("参数转码错误！"+ e);
+            System.out.println("参数转码错误！" + e);
         } catch (IOException e) {
-            System.out.println("获取httpclient错误！"+ e);
+            System.out.println("获取httpclient错误！" + e);
         } finally {
             // 关闭连接,释放资源
             try {
                 httpclient.close();
             } catch (IOException e) {
-                System.out.println("关闭httpclient失败！"+e);
+                System.out.println("关闭httpclient失败！" + e);
             }
         }
         return null;
@@ -110,6 +114,6 @@ public class HttpBasicPostUtil {
         JSONObject node1 = new JSONObject();
         node1.put("ITEM", jsonAry1);
         HttpBasicPostUtil util = new HttpBasicPostUtil();
-        System.out.println(util.getPostJsonResult(URL ,node1.toJSONString()));
+        System.out.println(util.getPostJsonResult(URL, node1.toJSONString()));
     }
 }

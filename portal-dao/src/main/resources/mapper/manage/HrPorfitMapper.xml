@@ -140,4 +140,31 @@
     <select id="queryDimRule" resultType="Map" parameterType="Map">
       SELECT a.standardRule , a.friRule , a.secRule FROM application.hrbonus_rule_dim_str a where a.groupId = #{groupId} AND a.empNum = #{empNum}
     </select>
+
+    <select id="queryEmpProfit" resultType="Map" parameterType="Map">
+       SELECT * FROM application.hrbonus_emp_detail_str a
+        WHERE a.shopId IN (
+            #{shopId}
+        )
+	 AND a.lkpMonth = date_format(DATE(DATE_ADD(NOW(), INTERVAL - 1 MONTH)), '%Y%m');
+    </select>
+
+    <select id="queryEmpProfit1" resultType="Map" parameterType="Map">
+        SELECT * FROM application.hrbonus_emp_detail_str a
+        WHERE a.shopId IN (
+            SELECT DISTINCT b.ShopID FROM dim.dim_bravo_shop b
+            WHERE b.AreaMans LIKE concat('%',#{areaMans},'%')
+        )
+        AND a.lkpMonth = date_format(DATE(DATE_ADD(NOW(), INTERVAL - 1 MONTH)), '%Y%m');
+    </select>
+
+    <update id="updateEmpProfit" parameterType="Map">
+       UPDATE application.hrbonus_emp_detail_str a SET a.push_status = #{status} , a.push_message = #{msg}
+         WHERE a.lkpMonth = date_format(DATE(DATE_ADD(NOW(), INTERVAL - 1 MONTH)), '%Y%m')
+        AND a.empNo = #{jobNumber}
+    </update>
+
+    <select id="queryProfit" parameterType="Map" resultType="Map">
+   SELECT a.endProfit , a.push_status , a.push_message FROM application.hrbonus_emp_detail_str a WHERE a.shopId = #{shopId} AND a.empNo = #{empNo}
+    </select>
 </mapper>
