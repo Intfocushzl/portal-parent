@@ -34,6 +34,11 @@
             <if test="remark != null and remark !=''">
                 and remark like concat('%',#{remark},'%')
             </if>
+            <if test="keyword != null and keyword !=''">
+                and (
+                title like concat('%',#{keyword},'%')
+                )
+            </if>
         </where>
         <choose>
             <when test="sidx != null and sidx.trim() != ''">

@@ -32,6 +32,12 @@
             <if test="address != null and address !=''">
                 and address like concat('%',#{address},'%')
             </if>
+            <if test="keyword != null and keyword !=''">
+                and (
+                shopid like concat('%',#{keyword},'%')
+                or address like concat('%',#{keyword},'%')
+                )
+            </if>
         </where>
         <choose>
             <when test="sidx != null and sidx.trim() != ''">

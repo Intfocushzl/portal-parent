@@ -52,8 +52,7 @@ var vm = new Vue({
             //vm.reload();
             $("#jqGrid").jqGrid('setGridParam', {
                 postData: {
-                    procode: vm.portalProcedure.procode,
-                    title: vm.portalProcedure.title
+                    keyword: $("#keyword").val()
                 },
                 page: 1
             }).trigger("reloadGrid");
