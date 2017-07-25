@@ -82,7 +82,7 @@
         </where>
     </select>
 
-    <insert id="save" parameterType="com.yonghui.portal.model.sys.SysOperationLog" useGeneratedKeys="true" keyProperty="id">
+    <insert id="saveLog" parameterType="com.yonghui.portal.model.sys.SysOperationLog" useGeneratedKeys="true" keyProperty="id">
 		insert into sys_operation_log
 		(
 			`jobNumber`,

@@ -12,6 +12,9 @@ import java.util.Map;
  */
 public interface SysOperationLogMapper extends BaseMapper<SysOperationLog> {
 
+    //保存用户操作日志
+    Integer saveLog(SysOperationLog log);
+
     /**
      * 访问日志
      * @param map
