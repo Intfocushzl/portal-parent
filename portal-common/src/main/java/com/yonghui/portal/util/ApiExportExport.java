@@ -77,13 +77,14 @@ public class ApiExportExport {
             cellInde = 0;
             HSSFCell cell = null;
             for (String str : cellTitleName) {
-                cell = row.createCell(++cellInde);
+                cell = row.createCell(cellInde);
                 if (map.get(str.split("=")[0]) == null) {
                     cell.setCellValue("");
                 } else {
                     cell.setCellValue(map.get(str.split("=")[0]).toString());
                 }
                 cell.setCellStyle(styleCenter);
+                cellInde = cellInde + 1;
             }
 
         }
