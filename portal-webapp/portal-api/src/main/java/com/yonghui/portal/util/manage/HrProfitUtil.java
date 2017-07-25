@@ -67,7 +67,7 @@ public class HrProfitUtil {
                     try {
                         stringToDate(cell.getStringCellValue().trim());
                     } catch (Exception e) {
-                        throw new Exception("不是日期类型的数据！！" + "第" + r + "行" + (c + 1) + "正确格式yy.MM");
+                        throw new Exception("不是日期类型的数据！！" + "第" + r + "行" + (c + 1) + "正确格式yyyyMM");
                     }
                     profit.setLkpMonth(cell.getStringCellValue().trim());
                 } else if (c == 2) {
@@ -90,7 +90,7 @@ public class HrProfitUtil {
     }
 
     public Date stringToDate(String dateStr) throws Exception {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM");//小写的mm表示的是分钟
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMM");//小写的mm表示的是分钟
         return sdf.parse(dateStr);
     }
 }
