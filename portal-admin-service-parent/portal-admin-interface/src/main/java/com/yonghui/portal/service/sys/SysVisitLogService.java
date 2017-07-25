@@ -18,6 +18,8 @@ public interface SysVisitLogService {
 
     List<Map<String, Object>> queryVisit(Map<String, Object> map);
 
+    List<Map<String, Object>> queryVisitByData(Map<String, Object> map);
+
     int queryTotal(Map<String, Object> map);
 
     void save(SysOperationLog sysOperationLog);

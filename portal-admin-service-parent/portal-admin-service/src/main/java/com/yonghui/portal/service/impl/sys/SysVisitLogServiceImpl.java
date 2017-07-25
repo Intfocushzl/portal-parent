@@ -30,6 +30,11 @@ public class SysVisitLogServiceImpl implements SysVisitLogService {
 	}
 
 	@Override
+	public List<Map<String, Object>> queryVisitByData(Map<String, Object> map) {
+		return sysOperationLogMapper.queryVisitByData(map);
+	}
+
+	@Override
 	public int queryTotal(Map<String, Object> map){
 		return sysOperationLogMapper.queryTotal(map);
 	}

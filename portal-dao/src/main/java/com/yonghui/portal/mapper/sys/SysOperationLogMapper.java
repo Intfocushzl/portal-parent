@@ -16,9 +16,17 @@ public interface SysOperationLogMapper extends BaseMapper<SysOperationLog> {
     Integer saveLog(SysOperationLog log);
 
     /**
-     * 访问日志
+     * 近30天访问日志
      * @param map
      * @return
      */
     List<Map<String, Object>> queryVisit(Map<String, Object> map);
+
+    /**
+     * 当日各时段访问日志
+     * @param map
+     * @return
+     */
+    List<Map<String, Object>> queryVisitByData(Map<String, Object> map);
+
 }
