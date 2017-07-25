@@ -109,7 +109,7 @@ public class HrProfitServiceImpl implements HrProfitService {
         }
         //处理editRecord字段，有可能记录多个
         List<Map<String, Object>> record = hrProfitMapper.queryRuleById(map.get("id").toString());
-        if (record.get(0).get("editRecord") != null) {
+        if (record.size() != 0 && record.get(0).get("editRecord") != null) {
             String result = record.get(0).get("editRecord").toString() + editRecord;
             Map<String, Object> ruleMap = new HashMap<>();
             StringBuffer strBuf = new StringBuffer();
@@ -155,7 +155,7 @@ public class HrProfitServiceImpl implements HrProfitService {
         }
         //处理editRecord字段，有可能记录多个
         List<Map<String, Object>> record = hrProfitMapper.queryEmpById(map.get("id").toString());
-        if (record.get(0).get("editRecord") != null) {
+        if (record.size() != 0 && record.get(0).get("editRecord") != null) {
             String result = record.get(0).get("editRecord").toString() + editRecord;
             Map<String, Object> ruleMap = new HashMap<>();
             StringBuffer strBuf = new StringBuffer();
