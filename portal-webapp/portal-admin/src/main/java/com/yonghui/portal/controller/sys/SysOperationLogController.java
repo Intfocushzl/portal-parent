@@ -27,7 +27,7 @@ public class SysOperationLogController extends AbstractController {
     private SysVisitLogService sysVisitLogService;
 
     /**
-     * 访问日志图表
+     * 近30天访问日志图表
      */
     @RequestMapping("/visit")
     @RequiresPermissions("sysoperationlog:visit")
@@ -41,6 +41,23 @@ public class SysOperationLogController extends AbstractController {
         List<Map<String, Object>> visit = sysVisitLogService.queryVisit(params);
 
         return R.success().put("visit", visit);
+    }
+
+    /**
+     * 当日访各时段问日志图表
+     */
+    @RequestMapping("/visitData")
+    @RequiresPermissions("sysoperationlog:visit")
+    public R visitData(@RequestParam Map<String, Object> params) {
+
+        Date endNext = new DateTime().plusDays(1).withMillisOfDay(0).toDate();
+        Date begin = new DateTime().withMillisOfDay(0).toDate();
+        params.put("endNext", endNext);
+        params.put("begin", begin);
+
+        List<Map<String, Object>> visitData = sysVisitLogService.queryVisitByData(params);
+
+        return R.success().put("visitData", visitData);
     }
 
     /**

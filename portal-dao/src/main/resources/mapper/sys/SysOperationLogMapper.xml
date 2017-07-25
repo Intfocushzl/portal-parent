@@ -37,6 +37,25 @@
         ]]>
     </select>
 
+    <select id="queryVisitByData" resultType="Map" parameterType="Map">
+        SELECT
+            SUBSTR(t.startTime,12,2) AS _date_h,
+            count(1) AS _pv,
+            count(DISTINCT t.jobNumber) AS _uv,
+            count(DISTINCT t.ip) AS _ip
+        FROM
+            sys_operation_log t
+        WHERE
+        <![CDATA[
+            t.startTime >= #{begin}
+            AND t.startTime <= #{endNext}
+            GROUP BY
+            SUBSTR(t.startTime,12,2)
+            ORDER BY
+            SUBSTR(t.startTime,12,2);
+        ]]>
+    </select>
+
     <select id="queryObject" resultType="com.yonghui.portal.model.sys.SysOperationLog">
 		select * from sys_operation_log where id = #{value}
 	</select>
