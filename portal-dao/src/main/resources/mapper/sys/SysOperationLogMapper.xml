@@ -98,10 +98,10 @@
 		)
 		values
 		(
-			#{jobnumber},
+			#{jobNumber},
 			#{url},
-			#{starttime},
-			#{endtime},
+			#{startTime},
+			#{endTime},
 			#{parameter},
 			#{ip},
 			#{browser},
