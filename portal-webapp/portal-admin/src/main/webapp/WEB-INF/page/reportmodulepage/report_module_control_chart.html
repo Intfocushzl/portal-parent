@@ -18,8 +18,17 @@
           <input type='text' id='banner_config_subtitle' placeholder='副标题' class='content-left'>
       </div>
       <div class='content-label-input'>
-          <label class='control-label content-left'>日期/周期</label>
-          <input type='text' id='banner_config_date' placeholder='日期/周期' class='content-left'>
+          <label class='control-label content-left'>日期/时间</label>
+          <select id='banner_config_date' class=content-left' title='日期/时间'>
+              <option value ='yyyyMM'>yyyyMM</option>
+              <option value ='yyyyMMdd'>yyyyMMdd</option>
+              <option value ='yyyyMMdd HH:mm'>yyyyMMdd HH:mm</option>
+              <option value ='yyyyMMdd HH:mm:ss'>yyyyMMdd HH:mm:ss</option>
+              <option value ='yyyy-MM'>yyyy-MM</option>
+              <option value ='yyyy-MM-dd'>yyyy-MM-dd</option>
+              <option value ='yyyy-MM-dd HH:mm'>yyyy-MM-dd HH:mm</option>
+              <option value ='yyyy-MM-dd HH:mm:ss'>yyyy-MM-dd HH:mm:ss</option>
+          </select>
       </div>
       <div class='content-label-input'>
           <label class='control-label content-left'>描述</label>

@@ -44,6 +44,7 @@ LPB.plugins['banner'] = function (active_component, leipiplugins) {
     });
     // 右弹form  确定控件
     $(popover).delegate(".btn-info", "click", function (e) {
+
         var inputs = $(popover).find("input");
         $.each(inputs, function (i, e) {
             var attr_name = $(e).attr("id");//属性名称
@@ -54,9 +55,6 @@ LPB.plugins['banner'] = function (active_component, leipiplugins) {
                     break;
                 case 'banner_config_subtitle':
                     jsonObj.config.subtitle = attr_val;
-                    break;
-                case 'banner_config_date':
-                    jsonObj.config.date = attr_val;
                     break;
                 case 'banner_config_info':
                     jsonObj.config.info = attr_val;
@@ -70,6 +68,8 @@ LPB.plugins['banner'] = function (active_component, leipiplugins) {
             active_component.popover("hide");
             LPB.genSource();// 重置源代码
         });
+        jsonObj.config.date = $("#banner_config_date").val();
+
         setLeipipluginsVal(leipiplugins, jsonObj);
     });
 }
