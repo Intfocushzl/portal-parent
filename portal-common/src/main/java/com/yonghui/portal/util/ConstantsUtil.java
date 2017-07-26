@@ -40,6 +40,7 @@ public class ConstantsUtil {
     public abstract class ExecuteType {
         public static final int PROCEDURE = 1;     //存储过程
         public static final int EXECUTESQL = 2;     //自定义sql
+        public static final int FROMOTHER= 3;     //第三方系统
     }
 
     public static final String APP_BASE_URL = "http://yonghui-test.idata.mobi/api/v2";

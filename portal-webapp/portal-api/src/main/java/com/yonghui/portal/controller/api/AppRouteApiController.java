@@ -3,7 +3,6 @@ package com.yonghui.portal.controller.api;
 import com.alibaba.dubbo.config.annotation.Reference;
 import com.alibaba.fastjson.JSONObject;
 import com.yonghui.portal.annotation.OpenAuth;
-import com.yonghui.portal.model.report.PortalRouteReport;
 import com.yonghui.portal.model.sys.SysOperationLog;
 import com.yonghui.portal.service.sys.SysoperationLogService;
 import com.yonghui.portal.util.HttpContextUtils;
@@ -46,55 +45,44 @@ public class AppRouteApiController {
     private RedisBizUtilApi redisBizUtilApi;
 
 
-
     /**
      * APP报表存储过程报表路由外部系统统一入口
      */
     @OpenAuth
     @RequestMapping(value = "report", method = RequestMethod.GET)
     @ResponseBody
-    public R portalCustom(HttpServletRequest req, HttpServletResponse response, String openApiCode,
+    public R portalCustom(HttpServletRequest req, HttpServletResponse response, String provideCode,
                           String sign) {
         String parameter = null;
         List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
         String result = null;
         JSONObject jsonObject = null;
+        SysOperationLog log = new SysOperationLog();
         try {
-            //根据code从redis查报表信息
-            PortalRouteReport report = reportUtil.getPortalRouteReport(openApiCode);
             parameter = HttpContextUtils.getParameterForLog(req);
-            SysOperationLog log = new SysOperationLog();
             IPUtils iputil = new IPUtils();
             log.setIp(iputil.getIpAddr(req));
             log.setStartTime(new Date());
             log.setUrl(req.getRequestURL().toString());
             log.setParameter(parameter);
-            String openApiJsonStr = redisBizUtilApi.getPortalRouteReport(openApiCode);
-            PortalRouteReport portalRouteReport = null;
-            String reportCode = "";
-            if (StringUtils.isBlank(openApiJsonStr)) {
-                reportCode = openApiCode;
-            } else {
-                portalRouteReport = JSONObject.parseObject(openApiJsonStr, PortalRouteReport.class);
-                if(portalRouteReport == null || portalRouteReport.getReportcode() == null){
-                    reportCode = openApiCode;
-                }else{
-                    reportCode = portalRouteReport.getReportcode();
-                }
-            }
+            log.setRemark("第三方接口");
+
             //调用外部接口获取数据
-            result = reportUtil.routeResultByParam(reportCode, parameter, report.getUrl(), report.getKey());
-            log.setEndTime(new Date());
-            log.setRemark("route");
-            sysoperationLogService.SaveLog(log);
+            result = reportUtil.routeResultByParam(provideCode, parameter);
             if (!StringUtils.isEmpty(result)) {
                 jsonObject = JSONObject.parseObject(result);
             } else {
                 return R.success();
             }
         } catch (Exception e) {
-          return  R.error("执行App统一报表路由程序异常");
+            log.setStatus(1);
+            log.setError(e.toString().substring(0, 2000));
+            log.setEndTime(new Date());
+            sysoperationLogService.SaveLog(log);
+            return R.error("调用第三方接口失败");
         }
+        log.setEndTime(new Date());
+        sysoperationLogService.SaveLog(log);
         return R.success(jsonObject.get("data"));
     }
 }
