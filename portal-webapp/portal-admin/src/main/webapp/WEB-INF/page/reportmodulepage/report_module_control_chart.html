@@ -1,13 +1,13 @@
-<!-- 图表控件 -->
+<!-- 图表控件 张海 walk_hai@163.com-->
 
-<!-- 横幅 banner 开始 -->
-<div id="banner" class="control-group component" rel="popover" title="横幅" trigger="manual"
+<!-- 横幅标题栏 banner 开始 -->
+<div id="banner" class="control-group component" rel="popover" title="标题栏" trigger="manual"
      data-content="
   <form class='form'>
     <div class='controls'>
       <div class='content-label-input'>
           <label class='control-label content-left'>控件名称</label>
-          <input type='text' id='orgname' placeholder='必填项' class='content-left'>
+          <input type='text' id='orgname' placeholder='必填项' class='content-left' value='标题栏'>
       </div>
       <div class='content-label-input'>
           <label class='control-label content-left'>标题</label>
@@ -18,8 +18,17 @@
           <input type='text' id='banner_config_subtitle' placeholder='副标题' class='content-left'>
       </div>
       <div class='content-label-input'>
-          <label class='control-label content-left'>日期/周期</label>
-          <input type='text' id='banner_config_date' placeholder='日期/周期' class='content-left'>
+          <label class='control-label content-left'>日期/时间</label>
+          <select id='banner_config_date' class=content-left' title='日期/时间'>
+              <option value ='yyyyMM'>yyyyMM</option>
+              <option value ='yyyyMMdd'>yyyyMMdd</option>
+              <option value ='yyyyMMdd HH:mm'>yyyyMMdd HH:mm</option>
+              <option value ='yyyyMMdd HH:mm:ss'>yyyyMMdd HH:mm:ss</option>
+              <option value ='yyyy-MM'>yyyy-MM</option>
+              <option value ='yyyy-MM-dd'>yyyy-MM-dd</option>
+              <option value ='yyyy-MM-dd HH:mm'>yyyy-MM-dd HH:mm</option>
+              <option value ='yyyy-MM-dd HH:mm:ss'>yyyy-MM-dd HH:mm:ss</option>
+          </select>
       </div>
       <div class='content-label-input'>
           <label class='control-label content-left'>描述</label>
@@ -31,15 +40,45 @@
   </form>"
 >
     <!-- Textarea -->
-    <label class="control-label leipiplugins-orgname">横幅</label>
+    <label class="control-label leipiplugins-orgname">标题栏</label>
     <div class="controls">
         <div class="textarea">
-            <textarea title="横幅" name="leipiNewField" class="leipiplugins plugjsonstr"
+            <textarea title="标题栏" name="leipiNewField" class="leipiplugins plugjsonstr"
                       leipiplugins="banner"/> </textarea>
         </div>
     </div>
 </div>
-<!-- 横幅 banner 结束 -->
+<!-- 横幅标题栏 banner 结束 -->
+
+
+<!-- 信息栏 info 开始 -->
+<div id="info" class="control-group component" rel="popover" title="信息栏" trigger="manual"
+     data-content="
+  <form class='form'>
+    <div class='controls'>
+      <div class='content-label-input'>
+          <label class='control-label content-left'>控件名称</label>
+          <input type='text' id='orgname' placeholder='必填项' class='content-left' value='信息栏'>
+      </div>
+      <div class='content-label-input'>
+          <label class='control-label content-left'>描述</label>
+          <input type='text' id='info_config_text' placeholder='描述' class='content-left'>
+      </div>
+     <hr/>
+      <button class='btn btn-info' type='button'>确定</button><button class='btn btn-danger' type='button'>取消</button>
+    </div>
+  </form>"
+>
+    <!-- Textarea -->
+    <label class="control-label leipiplugins-orgname">信息栏</label>
+    <div class="controls">
+        <div class="textarea">
+            <textarea title="信息栏" name="leipiNewField" class="leipiplugins plugjsonstr"
+                      leipiplugins="info"/> </textarea>
+        </div>
+    </div>
+</div>
+<!-- 信息栏 info 结束 -->
 
 
 <!-- 折线图 chart_line 开始 -->
@@ -49,7 +88,7 @@
     <div class='controls'>
       <div class='content-label-input'>
           <label class='control-label content-left'>控件名称</label>
-          <input type='text' id='orgname' placeholder='必填项' class='content-left'>
+          <input type='text' id='orgname' placeholder='必填项' class='content-left' value='图表-折线图'>
       </div>
       <div class='content-label-input'>
           <label class='control-label content-left'>标题</label>
@@ -83,7 +122,7 @@
     <div class='controls'>
       <div class='content-label-input'>
           <label class='control-label content-left'>控件名称</label>
-          <input type='text' id='orgname' placeholder='必填项' class='content-left'>
+          <input type='text' id='orgname' placeholder='必填项' class='content-left' value='表格TAB'>
       </div>
       <div id='wrapper'>
         <ul id='tabs'>
