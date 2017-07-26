@@ -94,11 +94,10 @@ public class ApiController {
                     sysoperationLogService.SaveLog(log);
                     return R.success(jsonObject.get("data"));
                 } else {
-                    log.setStatus(1);
                     log.setEndTime(new Date());
-                    log.setError("第三方返回结果没有data节点");
+                    log.setRemark("第三方返回结果没有data节点");
                     sysoperationLogService.SaveLog(log);
-                    return R.error("第三方返回结果没有data节点");
+                    return R.success("没有查到数据（第三方返回结果没有data节点）");
                 }
             } else {
                 log.setStatus(1);
