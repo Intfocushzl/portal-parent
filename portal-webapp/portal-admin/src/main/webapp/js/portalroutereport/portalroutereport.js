@@ -6,13 +6,12 @@ $(function () {
         colModel: [
             {label: 'id', name: 'id', index: 'id', width: 50, key: true},
             {label: '唯一编码', name: 'code', index: 'code', width: 80},
-            {label: '对应报表', name: 'reportcode', index: 'reportCode', width: 80},
-            {label: 'key值', name: 'key', index: 'key', width: 80},
+            {label: '密钥', name: 'key', index: 'key', width: 80},
             {label: '请求方式', name: 'requestType', index: 'request_type', width: 80},
             {label: '请求url', name: 'url', index: 'url', width: 80},
             {label: '执行参数', name: 'parameter', index: 'parameter', width: 80},
             {label: '名称', name: 'name', index: 'name', width: 80},
-            {label: '创建时间', name: 'createTime', index: 'create_time', width: 80},
+            {label: '备注', name: 'remark', index: 'remark', width: 120},
         ],
         viewrecords: true,     // 是否显示行号，默认值是false，不显示
         height: 385,            // 表格高度
