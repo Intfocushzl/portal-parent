@@ -7,6 +7,7 @@ var selectOptionJsonObjPro;
 
 /**
  * 初始化数据
+ * <!-- 图表控件 张海 walk_hai@163.com-->
  */
 $(function () {
     module_id = getQueryString("id");

@@ -1,9 +1,10 @@
 /*
  * e.preventDefault();//阻止元素发生默认的行为(例如,当点击提交按钮时阻止对表单的提交
+ * <!-- 图表控件 张海 walk_hai@163.com-->
  */
 
 /*
- * 横幅框控件 banner
+ * 横幅标题栏控件 banner
  * acc  是 class="component" 的DIV
  * e 是 class="leipiplugins" 的控件
  */
@@ -62,6 +63,57 @@ LPB.plugins['banner'] = function (active_component, leipiplugins) {
                     break;
                 case 'orgname':
                     attr_val = getAttrVal(attr_val, "banner");
+                    jsonObj.name = attr_val;
+                    active_component.find(".leipiplugins-orgname").html(attr_val);
+                    break;
+            }
+            active_component.popover("hide");
+            LPB.genSource();// 重置源代码
+        });
+        setLeipipluginsVal(leipiplugins, jsonObj);
+    });
+}
+
+
+/*
+ * 信息栏控件 info
+ * acc  是 class="component" 的DIV
+ * e 是 class="leipiplugins" 的控件
+ */
+LPB.plugins['info'] = function (active_component, leipiplugins) {
+    var popover = $(".popover");
+    var jsonStr = $(leipiplugins).val();
+    var jsonObj = {
+        "type": "info",
+        "name": "",
+        "config": {
+            "text": ""
+        }
+    };
+    if (getStringValue(jsonStr) != "") {
+        jsonObj = JSON.parse($(leipiplugins).val());
+        //右弹form  初始化值
+        $(popover).find("#orgname").val(jsonObj.name);
+        if (jsonObj.config.text !== undefined) {
+            $(popover).find("#info_config_text").val(jsonObj.config.info);
+        }
+    }
+    // 右弹form  取消控件
+    $(popover).delegate(".btn-danger", "click", function (e) {
+        active_component.popover("hide");
+    });
+    // 右弹form  确定控件
+    $(popover).delegate(".btn-info", "click", function (e) {
+        var inputs = $(popover).find("input");
+        $.each(inputs, function (i, e) {
+            var attr_name = $(e).attr("id");//属性名称
+            var attr_val = $(e).val();
+            switch (attr_name) {
+                case 'info_config_text':
+                    jsonObj.config.info = attr_val;
+                    break;
+                case 'orgname':
+                    attr_val = getAttrVal(attr_val, "info");
                     jsonObj.name = attr_val;
                     active_component.find(".leipiplugins-orgname").html(attr_val);
                     break;

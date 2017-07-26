@@ -1,7 +1,7 @@
-<!-- 图表控件 -->
+<!-- 图表控件 张海 walk_hai@163.com-->
 
-<!-- 横幅 banner 开始 -->
-<div id="banner" class="control-group component" rel="popover" title="横幅" trigger="manual"
+<!-- 横幅标题栏 banner 开始 -->
+<div id="banner" class="control-group component" rel="popover" title="标题栏" trigger="manual"
      data-content="
   <form class='form'>
     <div class='controls'>
@@ -31,15 +31,45 @@
   </form>"
 >
     <!-- Textarea -->
-    <label class="control-label leipiplugins-orgname">横幅</label>
+    <label class="control-label leipiplugins-orgname">标题栏</label>
     <div class="controls">
         <div class="textarea">
-            <textarea title="横幅" name="leipiNewField" class="leipiplugins plugjsonstr"
+            <textarea title="标题栏" name="leipiNewField" class="leipiplugins plugjsonstr"
                       leipiplugins="banner"/> </textarea>
         </div>
     </div>
 </div>
-<!-- 横幅 banner 结束 -->
+<!-- 横幅标题栏 banner 结束 -->
+
+
+<!-- 信息栏 info 开始 -->
+<div id="info" class="control-group component" rel="popover" title="信息栏" trigger="manual"
+     data-content="
+  <form class='form'>
+    <div class='controls'>
+      <div class='content-label-input'>
+          <label class='control-label content-left'>控件名称</label>
+          <input type='text' id='orgname' placeholder='必填项' class='content-left'>
+      </div>
+      <div class='content-label-input'>
+          <label class='control-label content-left'>描述</label>
+          <input type='text' id='info_config_text' placeholder='描述' class='content-left'>
+      </div>
+     <hr/>
+      <button class='btn btn-info' type='button'>确定</button><button class='btn btn-danger' type='button'>取消</button>
+    </div>
+  </form>"
+>
+    <!-- Textarea -->
+    <label class="control-label leipiplugins-orgname">信息栏</label>
+    <div class="controls">
+        <div class="textarea">
+            <textarea title="信息栏" name="leipiNewField" class="leipiplugins plugjsonstr"
+                      leipiplugins="info"/> </textarea>
+        </div>
+    </div>
+</div>
+<!-- 信息栏 info 结束 -->
 
 
 <!-- 折线图 chart_line 开始 -->
