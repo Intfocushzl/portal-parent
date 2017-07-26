@@ -46,7 +46,7 @@ public class OpenApiController {
      * 外部系统调用openApi统一入口
      */
     @OpenAuth
-    @RequestMapping(value = "report", method = RequestMethod.POST)
+    @RequestMapping(value = "report", method = RequestMethod.GET)
     @ResponseBody
     public R portalCustom(HttpServletRequest req, HttpServletResponse response, String openApiCode) {
         String parameter = null;
@@ -62,12 +62,12 @@ public class OpenApiController {
             log.setStartTime(new Date());
             log.setUrl(req.getRequestURL().toString());
             log.setParameter(HttpContextUtils.getParameterForLog(req));
-            list = reportUtil.jdbcProListResultListMapByParam(SQLFilter.sqlInject(openApiCode), SQLFilter.sqlInject(parameter));
+            list = reportUtil.jdbcProListResultListMapByParam(SQLFilter.sqlInject(report.getReportcode()), SQLFilter.sqlInject(parameter));
             log.setEndTime(new Date());
             log.setRemark("openApi");
             sysoperationLogService.SaveLog(log);
         } catch (Exception e) {
-           return R.error("执行openApi统一报表程序异常");
+            return R.error("执行openApi统一报表程序异常");
         }
         return R.success(list);
     }

@@ -77,15 +77,18 @@ public class AuthorizationInterceptor extends HandlerInterceptorAdapter {
                 return false;
             } else {
                 portalOpenapiReport = JSONObject.parseObject(openApiJsonStr, PortalOpenapiReport.class);
-                if (portalOpenapiReport == null || portalOpenapiReport.getKey() == null || portalOpenapiReport.getCode() == null) {
+                if (portalOpenapiReport == null) {
                     response.setHeader("Content-type", "application/json;charset=UTF-8");
                     response.getWriter().write(JSON.toJSONString(R.error(ConstantsUtil.ExceptionCode.SIGN_ERROR, "sign不存在")));
                     return false;
+                } else if (portalOpenapiReport.getKey() == null || portalOpenapiReport.getKey().equals("")) {
+                    //完全开放接口，不做请求数据校验
+                    return true;
                 } else {
                     //获取请求参数，并转成这种格式“shppID=9318&barcode=2304348000004”,参数为空也要写成“shppID=”这种
                     String parameter = null;
                     try {
-                         parameter = HttpContextUtils.getParameterForSign(request,portalOpenapiReport);
+                        parameter = HttpContextUtils.getParameterForSign(request, portalOpenapiReport);
                     } catch (Exception e) {
                         response.setHeader("Content-type", "application/json;charset=UTF-8");
                         response.getWriter().write(JSON.toJSONString(R.error(ConstantsUtil.ExceptionCode.SIGN_ERROR, "sign不能为空")));
