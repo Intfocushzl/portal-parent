@@ -95,7 +95,7 @@ LPB.plugins['info'] = function (active_component, leipiplugins) {
         //右弹form  初始化值
         $(popover).find("#orgname").val(jsonObj.name);
         if (jsonObj.config.text !== undefined) {
-            $(popover).find("#info_config_text").val(jsonObj.config.info);
+            $(popover).find("#info_config_text").val(jsonObj.config.text);
         }
     }
     // 右弹form  取消控件
@@ -110,7 +110,7 @@ LPB.plugins['info'] = function (active_component, leipiplugins) {
             var attr_val = $(e).val();
             switch (attr_name) {
                 case 'info_config_text':
-                    jsonObj.config.info = attr_val;
+                    jsonObj.config.text = attr_val;
                     break;
                 case 'orgname':
                     attr_val = getAttrVal(attr_val, "info");
