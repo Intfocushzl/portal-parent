@@ -6,6 +6,7 @@ $(function () {
         colModel: [
             {label: 'id', name: 'id', index: 'id', width: 50, key: true},
             {label: '唯一编码', name: 'code', index: 'code', width: 80},
+            {label: '标题', name: 'title', index: 'title', width: 80},
             {label: '密钥', name: 'key', index: 'key', width: 80},
             {label: '请求方式', name: 'requestType', index: 'request_type', width: 80},
             {label: '请求url', name: 'url', index: 'url', width: 80},
