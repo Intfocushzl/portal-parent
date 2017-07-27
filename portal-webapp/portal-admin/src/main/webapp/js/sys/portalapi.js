@@ -91,13 +91,13 @@ var vm = new Vue({
             });
         },
         getJsonTest: function () {
-            $.get(test_url + "?" + vm.parameters, function (r) {
+            $.get($("#test_url").val() + "?" + $("#parameters").val(), function (r) {
                 $(".json_str_text").val(JSON.stringify(r));
                 $("#json").JSONView(JSON.stringify(r));
             });
         },
         getJsonDev: function () {
-            $.get(dev_url + "?" + vm.parameters, function (r) {
+            $.get($("#dev_url").val() + "?" + $("#parameters").val(), function (r) {
                 $(".json_str_text").val(JSON.stringify(r));
                 $("#json").JSONView(JSON.stringify(r));
             });
