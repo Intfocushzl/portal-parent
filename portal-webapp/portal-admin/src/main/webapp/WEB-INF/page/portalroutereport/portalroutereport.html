@@ -55,41 +55,47 @@
                 </div>
             </div>
             <div class="form-group">
-                <div class="col-sm-2 control-label">key值</div>
+                <div class="col-sm-2 control-label">MD5秘钥</div>
                 <div class="col-sm-10">
-                    <input type="text" class="form-control" v-model="portalRouteReport.key" placeholder="请求外部接口key值"/>
+                    <textarea class="form-control" v-model="portalRouteReport.key" placeholder="MD5秘钥Key"></textarea>
                 </div>
             </div>
             <div class="form-group">
                 <div class="col-sm-2 control-label">请求方式</div>
                 <div class="col-sm-10">
-                    <input type="text" class="form-control" v-model="portalRouteReport.requestType"
-                           placeholder="请求方式；1代表get，2代表post"/>
+                    <label class="radio-inline">
+                        <input type="radio" name="type" value="1" v-model="portalRouteReport.requestType"/>
+                        GET
+                    </label>
+                    <label class="radio-inline">
+                        <input type="radio" name="type" value="2" v-model="portalRouteReport.requestType"/>
+                        POST
+                    </label>
                 </div>
             </div>
             <div class="form-group">
-                <div class="col-sm-2 control-label">请求url</div>
+                <div class="col-sm-2 control-label">请求地址</div>
                 <div class="col-sm-10">
-                    <input type="text" class="form-control" v-model="portalRouteReport.url" placeholder="请求外部系统url"/>
+                    <input type="text" class="form-control" v-model="portalRouteReport.url" placeholder="请求外部系统的URL"/>
                 </div>
             </div>
             <div class="form-group">
-                <div class="col-sm-2 control-label">执行参数</div>
+                <div class="col-sm-2 control-label">请求参数</div>
                 <div class="col-sm-10">
                     <input type="text" class="form-control" v-model="portalRouteReport.parameter"
                            placeholder="格式如aa@@bb@@cc"/>
                 </div>
             </div>
             <div class="form-group">
-                <div class="col-sm-2 control-label">系统名称</div>
+                <div class="col-sm-2 control-label">外部系统名称</div>
                 <div class="col-sm-10">
-                    <input type="text" class="form-control" v-model="portalRouteReport.name" placeholder="系统名称"/>
+                    <input type="text" class="form-control" v-model="portalRouteReport.name" placeholder="外部系统名称"/>
                 </div>
             </div>
             <div class="form-group">
-                <div class="col-sm-2 control-label">说明</div>
+                <div class="col-sm-2 control-label">接口说明</div>
                 <div class="col-sm-10">
-                    <input type="text" class="form-control" v-model="portalRouteReport.remark" placeholder="说明"/>
+                    <textarea class="form-control" v-model="portalRouteReport.remark" placeholder="接口说明"></textarea>
                 </div>
             </div>
             <div class="form-group">

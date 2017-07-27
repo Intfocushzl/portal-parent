@@ -4,15 +4,27 @@ $(function () {
         datatype: "json",                // 后台返回的数据格式
         // 列表标题及列表模型
         colModel: [
-            {label: 'id', name: 'id', index: 'id', width: 50, key: true},
+            {label: 'id', name: 'id', index: 'id', width: 50, key: true, hidden: true},
             {label: '唯一编码', name: 'code', index: 'code', width: 80},
             {label: '标题', name: 'title', index: 'title', width: 80},
-            {label: '密钥', name: 'key', index: 'key', width: 80},
-            {label: '请求方式', name: 'requestType', index: 'request_type', width: 80},
-            {label: '请求url', name: 'url', index: 'url', width: 80},
-            {label: '执行参数', name: 'parameter', index: 'parameter', width: 80},
-            {label: '名称', name: 'name', index: 'name', width: 80},
-            {label: '备注', name: 'remark', index: 'remark', width: 120},
+            {
+                label: 'MD5密钥', name: 'key', index: 'key', width: 80,
+                formatter: function (value, options, row) {
+                    return getStringValue(row.key) == "" ?
+                        '<span class="label label-warning">无秘钥</span>' : value
+                }
+            },
+            {
+                label: '请求方式', name: 'requestType', index: 'request_type', width: 80,
+                formatter: function (value, options, row) {
+                    return row.requestType === 1 ?
+                    '<span class="label label-success">GET</span>' :
+                    '<span class="label label-primary">POST</span>';
+                }
+            },
+            {label: '请求地址', name: 'url', index: 'url', width: 80},
+            {label: '请求参数', name: 'parameter', index: 'parameter', width: 80},
+            {label: '系统名称', name: 'name', index: 'name', width: 80},
         ],
         viewrecords: true,     // 是否显示行号，默认值是false，不显示
         height: 385,            // 表格高度
