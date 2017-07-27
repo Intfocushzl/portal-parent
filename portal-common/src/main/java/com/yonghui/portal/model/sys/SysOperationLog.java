@@ -26,8 +26,39 @@ public class SysOperationLog implements Serializable {
     private String ip;
     //备注
     private String remark;
+    //报表编码
+    private String reportcode;
+    //报表编码
+    private String error;
 
     private String browser;
+
+    //请求状态 0 成功 1失败
+    private Integer status;
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
+
+    public String getError() {
+        return error;
+    }
+
+    public void setError(String error) {
+        this.error = error;
+    }
+
+    public String getReportcode() {
+        return reportcode;
+    }
+
+    public void setReportcode(String reportcode) {
+        this.reportcode = reportcode;
+    }
 
     public String getArea() {
         return area;

@@ -15,9 +15,15 @@ $(function () {
             {
                 label: '数据脚本', name: 'execute_code', index: 'execute_code', width: 50,
                 formatter: function (value, options, row) {
-                    return row.execute_type === 1 ?
-                    '<span class="label label-info">' + value + '</span>' :
-                    '<span class="label label-warning">' + value + '</span>';
+                    if(row.execute_type === 1){
+                        return '<span class="label label-info">' + value + '</span>';
+                    }
+                    if(row.execute_type === 2){
+                        return '<span class="label label-warning">' + value + '</span>';
+                    }
+                    if(row.execute_type === 3){
+                        return '<span class="label label-default">' + value + '</span>';
+                    }
                 }
             },
             {
@@ -187,6 +193,8 @@ var vm = new Vue({
                         vm.getProCode(vm.executeCodeOld);
                     } else if (vm.portalReport.executeType == 2) {
                         vm.getSqlCode(vm.executeCodeOld);
+                    } else if (vm.portalReport.executeType == 3) {
+                        vm.getProvideCode(vm.executeCodeOld);
                     }
 
                     // 清除单元格格式
@@ -249,6 +257,8 @@ var vm = new Vue({
                     this.getProCode(vm.executeCodeOld);
                 } else if (typevalue == 2) {
                     this.getSqlCode(vm.executeCodeOld);
+                } else if (typevalue == 3) {
+                    this.getProvideCode(vm.executeCodeOld);
                 }
             },
             getSqlCode: function (executeCodeOld) {
@@ -276,6 +286,22 @@ var vm = new Vue({
                             vm.selectOption = vm.selectOption + " selected = 'selected'";
                         }
                         vm.selectOption = vm.selectOption + " >" + r.proList[i].procode + "<==>" + r.proList[i].title + "</option>";
+                        $("#onlycode").append(vm.selectOption);
+                    }
+                    // refresh刷新和render渲染操作，必不可少
+                    $('#onlycode').selectpicker('refresh');
+                    $('#onlycode').selectpicker('render');
+                });
+            },
+            getProvideCode: function (executeCodeOld) {
+                $("#onlycode").empty();
+                $.get("../portalroutereport/provideList/", function (r) {
+                    for (var i = 0; i < r.provideList.length; i++) {
+                        vm.selectOption = "<option value='" + r.provideList[i].code + "'";
+                        if (executeCodeOld == r.provideList[i].code) {
+                            vm.selectOption = vm.selectOption + " selected = 'selected'";
+                        }
+                        vm.selectOption = vm.selectOption + " >" + r.provideList[i].code + "<==>" + r.provideList[i].title + "</option>";
                         $("#onlycode").append(vm.selectOption);
                     }
                     // refresh刷新和render渲染操作，必不可少

@@ -12,6 +12,7 @@ import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -45,6 +46,20 @@ public class PortalOpenapiReportController extends AbstractController {
         PageUtils pageUtil = new PageUtils(portalOpenapiReportList, total, query.getLimit(), query.getPage());
 
         return R.success().put("page", pageUtil);
+    }
+
+
+    /**
+     * select 模糊查询
+     *
+     * @return
+     */
+    @RequestMapping("/repList")
+    @ResponseBody
+    public R repList() {
+        Map<String, Object> map = new HashMap<>();
+        List<PortalOpenapiReport> repList = portalOpenapiReportService.queryList(map);
+        return R.success().put("repList", repList);
     }
 
     /**
@@ -90,6 +105,14 @@ public class PortalOpenapiReportController extends AbstractController {
             redisBizUtilAdmin.removeRouteReport(c);
         }
         return R.success();
+    }
+
+    /**
+     * 产生新的编码
+     */
+    @RequestMapping("/getNewMaxCode")
+    public R getNewMaxCode() {
+        return R.success().put("newMaxCode", portalOpenapiReportService.getNewMaxCode());
     }
 
 }

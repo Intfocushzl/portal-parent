@@ -22,6 +22,16 @@ public class PortalOpenapiReport extends AuditAuto {
     private String parameter;
     //请求外部系统名称
     private String name;
+    //标题
+    private String title;
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
 
     /**
      * 设置：报表唯一编码，api接口请求必须参数

@@ -38,42 +38,51 @@
         <div class="panel-heading">{{title}}</div>
         <form class="form-horizontal">
             <div class="form-group">
-                <div class="col-sm-2 control-label">接口唯一编码</div>
+                <div class="col-sm-2 control-label">接口编码</div>
                 <div class="col-sm-10">
-                    <input type="text" name="codeOld" class="form-control" v-model="portalOpenapiReport.code"
+                    <input type="text" name="codeOld" id="codeOld" class="form-control"
+                           v-model="portalOpenapiReport.code"
                            placeholder="唯一编码" readonly="readonly"/>
-                    <input type="hidden" v-model="portalOpenapiReport.codeOld" placeholder="唯一编码"/>
                 </div>
             </div>
             <div class="form-group">
-                <div class="col-sm-2 control-label">对应的报表编码</div>
+                <div class="col-sm-2 control-label">报表编码</div>
                 <div class="col-sm-10">
-                    <input type="text" class="form-control" v-model="portalOpenapiReport.reportcode" placeholder="对应的报表编码"/>
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="col-sm-2 control-label">接口key值</div>
-                <div class="col-sm-10">
-                    <input type="text" class="form-control" v-model="portalOpenapiReport.key" placeholder="接口key值"/>
-                </div>
-            </div>`
-            <div class="form-group">
-                <div class="col-sm-2 control-label">接口url</div>
-                <div class="col-sm-10">
-                    <input type="text" class="form-control" v-model="portalOpenapiReport.url" placeholder="接口url"/>
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="col-sm-2 control-label">执行参数</div>
-                <div class="col-sm-10">
-                    <input type="text" class="form-control" v-model="portalOpenapiReport.parameter"
-                           placeholder="执行参数，格式如aa@@bb@@cc"/>
+                    <select class="form-control" id="repList" v-model="portalOpenapiReport.reportcode"
+                            placeholder="报表编码"></select>
                 </div>
             </div>
             <div class="form-group">
                 <div class="col-sm-2 control-label">接口名称</div>
                 <div class="col-sm-10">
-                    <input type="text" class="form-control" v-model="portalOpenapiReport.name" placeholder="接口名称"/>
+                    <input type="text" class="form-control" v-model="portalOpenapiReport.title" placeholder="接口名称"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">MD5秘钥</div>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" v-model="portalOpenapiReport.key"
+                           placeholder="MD5秘钥，不为空则需要参数验证，为空则不需要参数验证"/>
+                </div>
+            </div>
+            `
+            <div class="form-group">
+                <div class="col-sm-2 control-label">请求地址</div>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" v-model="portalOpenapiReport.url" placeholder="请求地址"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">请求参数</div>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" v-model="portalOpenapiReport.parameter"
+                           placeholder="格式如aa@@bb@@cc"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">系统名称</div>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" v-model="portalOpenapiReport.name" placeholder="系统名称"/>
                 </div>
             </div>
             <div class="form-group">

@@ -177,19 +177,20 @@ public class ReportUtil {
     /**
      * 获取路由报表数据
      *
-     * @param yongHuiReportCustomCode
+     * @param provideCode
      * @param parameter
      * @return
      */
-    public String routeResultByParam(String yongHuiReportCustomCode, String parameter, String url, String key) {
-        Map<String, Object> map = new HashMap<String, Object>();
-        if (StringUtils.isEmpty(yongHuiReportCustomCode) || StringUtils.isEmpty(url)) {
-            throw new RRException("报表编码或者请求url不能为空");
+    public String routeResultByParam(String provideCode, String parameter) {
+        if (StringUtils.isEmpty(provideCode)) {
+            throw new RRException("路由编码不能为空");
         }
         // 根据报表唯一编码查询报表基本信息
-        PortalRouteReport report = getPortalRouteReport(yongHuiReportCustomCode);
+        PortalRouteReport routeReport = getPortalRouteReport(provideCode);
+        Map<String, Object> map = new HashMap<String, Object>();
+
         String result = null;
-        String routeParameter = StringUtils.getRouteParameter(parameter, report.getParameter());
+        String routeParameter = StringUtils.getRouteParameter(parameter, routeReport.getParameter());
         StringBuffer sb = new StringBuffer();
         String[] arr = routeParameter.split("&");
         for (String p : arr) {
@@ -206,12 +207,16 @@ public class ReportUtil {
         }
         //请求参数加密（key + parameter + key）
         Md5Util util = new Md5Util();
-        String sign = util.getMd5("MD5", 0, null, key + sb + key);
+        if (!StringUtils.isEmpty(routeReport.getKey())) {
+            String sign = util.getMd5("MD5", 0, null, routeReport.getKey() + sb + routeReport.getKey());
+            map.put("sign", sign);
+        }
+        //发送请求
         HttpMethodUtil httpUtil = new HttpMethodUtil();
         try {
-            result = httpUtil.getGetResult(url, map);
+            result = httpUtil.getGetResult(routeReport.getUrl(), map);
         } catch (Exception e) {
-            throw new RRException("调用外部系统出错：" + yongHuiReportCustomCode + "异常信息为：" + e.getMessage());
+            throw new RRException("调用外部系统出错：" + provideCode + "异常信息为：" + e.getMessage());
         }
         return result;
     }
@@ -240,18 +245,19 @@ public class ReportUtil {
                 map.put(p.split("=")[0], p.split("=")[1]);
             }
         }
-            url = url + "?shopId=" + map.get("shopID") + "&barcodeId=" + map.get("barcode");
+        url = url + "?shopId=" + map.get("shopID") + "&barcodeId=" + map.get("barcode");
         HttpMethodUtil httpUtil = new HttpMethodUtil();
-        String result = httpUtil.getGetResult(url, new HashMap<String,Object>());
+        String result = httpUtil.getGetResult(url, new HashMap<String, Object>());
         return result;
     }
 
     /**
-     *获取openApi报表信息
+     * 获取openApi报表信息
+     *
      * @param openApiCode
      * @return
      */
-    public PortalOpenapiReport  getPortalOpenApiReport(String openApiCode) {
+    public PortalOpenapiReport getPortalOpenApiReport(String openApiCode) {
         if (StringUtils.isEmpty(openApiCode)) {
             throw new RRException("报表编码不能为空");
         }

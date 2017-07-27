@@ -52,22 +52,67 @@ public class ApiController {
     public R portalCustom(HttpServletRequest req, HttpServletResponse response, String yongHuiReportCustomCode) {
         String parameter = null;
         List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
+        String result = null;
         SysOperationLog log = (SysOperationLog) req.getAttribute(LOGIN_USER_OPERATION_LOG);
+        // 1.根据报表唯一编码查询报表基本信息
+        PortalReport report = reportUtil.getPortalReport(yongHuiReportCustomCode);
         try {
+            // 参数处理
             parameter = HttpContextUtils.getRequestParameter(req);
-            //获取用户ip,url.参数
+
+            // 2.获取用户ip,url.参数
             IPUtils iputil = new IPUtils();
             log.setIp(iputil.getIpAddr(req));
             log.setUrl(req.getRequestURL().toString());
             log.setParameter(HttpContextUtils.getParameterForLog(req));
-            list = reportUtil.jdbcProListResultListMapByParam(SQLFilter.sqlInject(yongHuiReportCustomCode), SQLFilter.sqlInject(parameter));
+            log.setReportcode(yongHuiReportCustomCode);
+
+            // 3.是否从第三方系统数据结果
+            if (report.getExecuteType() == ConstantsUtil.ExecuteType.FROMOTHER) {
+                log.setRemark("第三方接口");
+                // 调用外部接口获取数据
+                result = reportUtil.routeResultByParam(report.getExecuteCode(), SQLFilter.sqlInject(parameter));
+            } else {
+                // 4.从平台数据结果
+                list = reportUtil.jdbcProListResultListMapByParam(SQLFilter.sqlInject(yongHuiReportCustomCode), SQLFilter.sqlInject(parameter));
+            }
+
+        } catch (Exception e) {
+            log.setStatus(1);
+            log.setError(e.toString().substring(0, 2000));
             log.setEndTime(new Date());
             sysoperationLogService.SaveLog(log);
-        } catch (Exception e) {
-            return R.error(e.getMessage());
+            return R.error();
         }
 
-        return R.success(list);
+        // 5.返回数据集，必须固定格式
+        if (report.getExecuteType() == ConstantsUtil.ExecuteType.FROMOTHER) {
+            if (!StringUtils.isEmpty(result)) {
+                JSONObject jsonObject = JSONObject.parseObject(result);
+                if (jsonObject.containsKey("data")) {
+                    log.setEndTime(new Date());
+                    sysoperationLogService.SaveLog(log);
+                    return R.success(jsonObject.get("data"));
+                } else {
+                    log.setEndTime(new Date());
+                    log.setRemark("第三方返回结果没有data节点");
+                    sysoperationLogService.SaveLog(log);
+                    return R.success().put("result", result);
+                }
+            } else {
+                log.setStatus(1);
+                log.setEndTime(new Date());
+                log.setError("第三方返回结果为空");
+                sysoperationLogService.SaveLog(log);
+                return R.error().put("result", result);
+            }
+        } else {
+            log.setEndTime(new Date());
+            sysoperationLogService.SaveLog(log);
+            // 平台数据库结果
+            return R.success(list);
+        }
+
     }
 
     /**
@@ -117,10 +162,12 @@ public class ApiController {
             ouputStream.flush();
             ouputStream.close();
 
+        } catch (Exception e) {
+            log.setStatus(1);
+            log.setError(e.toString().substring(0, 2000));
+        } finally {
             log.setEndTime(new Date());
             sysoperationLogService.SaveLog(log);
-        } catch (Exception e) {
-            R.error("导出excel异常");
         }
     }
 

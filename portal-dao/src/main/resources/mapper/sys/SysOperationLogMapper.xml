@@ -34,6 +34,7 @@
             DATE_FORMAT(t.startTime,'%Y-%m-%d')
             ORDER BY
             DATE_FORMAT(t.startTime,'%Y-%m-%d')
+
         ]]>
     </select>
 
@@ -53,6 +54,7 @@
             SUBSTR(t.startTime,12,2)
             ORDER BY
             SUBSTR(t.startTime,12,2);
+
         ]]>
     </select>
 
@@ -101,19 +103,23 @@
         </where>
     </select>
 
-    <insert id="saveLog" parameterType="com.yonghui.portal.model.sys.SysOperationLog" useGeneratedKeys="true" keyProperty="id">
+    <insert id="saveLog" parameterType="com.yonghui.portal.model.sys.SysOperationLog" useGeneratedKeys="true"
+            keyProperty="id">
 		insert into sys_operation_log
 		(
 			`jobNumber`,
 			`url`,
 			`startTime`,
 			`endTime`,
+			`reportcode`,
 			`parameter`,
 			`ip`,
 			`browser`,
 			`country`,
 			`area`,
-			`remark`
+			`remark`,
+			`error`,
+			`status`
 		)
 		values
 		(
@@ -121,12 +127,15 @@
 			#{url},
 			#{startTime},
 			#{endTime},
+			#{reportcode},
 			#{parameter},
 			#{ip},
 			#{browser},
 			#{country},
 			#{area},
-			#{remark}
+			#{remark},
+			#{error},
+			#{status}
 		)
 	</insert>
 
@@ -137,12 +146,14 @@
             <if test="url != null">`url` = #{url},</if>
             <if test="starttime != null">`startTime` = #{starttime},</if>
             <if test="endtime != null">`endTime` = #{endtime},</if>
+            <if test="reportcode != null">`reportcode` = #{reportcode},</if>
             <if test="parameter != null">`parameter` = #{parameter},</if>
             <if test="ip != null">`ip` = #{ip},</if>
             <if test="browser != null">`browser` = #{browser},</if>
             <if test="country != null">`country` = #{country},</if>
             <if test="area != null">`area` = #{area},</if>
-            <if test="remark != null">`remark` = #{remark}</if>
+            <if test="remark != null">`remark` = #{remark},</if>
+            <if test="error != null">`error` = #{error}</if>
         </set>
         where id = #{id}
     </update>

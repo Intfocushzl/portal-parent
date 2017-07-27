@@ -3,11 +3,11 @@
 
 <mapper namespace="com.yonghui.portal.mapper.report.PortalRouteReportMapper">
 
-	<!-- 可根据自己的需求，是否要使用 -->
+    <!-- 可根据自己的需求，是否要使用 -->
     <resultMap id="portalRouteReportMap" type="com.yonghui.portal.model.report.PortalRouteReport">
         <result property="id" column="id"/>
         <result property="code" column="code"/>
-		<result property="reportcode" column="reportCode"/>
+        <result property="reportcode" column="reportCode"/>
         <result property="key" column="key"/>
         <result property="requestType" column="request_type"/>
         <result property="url" column="url"/>
@@ -22,16 +22,16 @@
         <result property="version" column="version"/>
     </resultMap>
 
-	<select id="queryObject" resultType="com.yonghui.portal.model.report.PortalRouteReport">
+    <select id="queryObject" resultType="com.yonghui.portal.model.report.PortalRouteReport">
 		select * from portal_route_report where id = #{value}
 	</select>
 
-	<select id="queryObjectByCode" resultType="com.yonghui.portal.model.report.PortalRouteReport">
+    <select id="queryObjectByCode" resultType="com.yonghui.portal.model.report.PortalRouteReport">
 		select * from portal_route_report where code = #{code}
 	</select>
 
-	<select id="queryList" resultType="com.yonghui.portal.model.report.PortalRouteReport">
-		select * from portal_route_report
+    <select id="queryList" resultType="com.yonghui.portal.model.report.PortalRouteReport">
+        select * from portal_route_report
         <where>
             <if test="id != null and id !=''">
                 and id like concat('%',#{id},'%')
@@ -44,17 +44,17 @@
             <when test="sidx != null and sidx.trim() != ''">
                 order by ${sidx} ${order}
             </when>
-			<otherwise>
+            <otherwise>
                 order by id desc
-			</otherwise>
+            </otherwise>
         </choose>
-		<if test="offset != null and limit != null">
-			limit #{offset}, #{limit}
-		</if>
-	</select>
-	
- 	<select id="queryTotal" resultType="int">
-		select count(*) from portal_route_report
+        <if test="offset != null and limit != null">
+            limit #{offset}, #{limit}
+        </if>
+    </select>
+
+    <select id="queryTotal" resultType="int">
+        select count(*) from portal_route_report
         <where>
             <if test="id != null and id !=''">
                 and id = #{id}
@@ -63,13 +63,29 @@
                 and remark like concat('%',#{remark},'%')
             </if>
         </where>
-	</select>
+    </select>
 
-    <insert id="save" parameterType="com.yonghui.portal.model.report.PortalRouteReport" useGeneratedKeys="true" keyProperty="id">
+    <select id="getNewMaxCode" parameterType="map" resultType="string">
+        SELECT
+            CONCAT(
+                'PROVIDE_',
+                LPAD(
+                    SUBSTR(max(code), 9) + 1,
+                    6,
+                    0
+                )
+            )
+        FROM
+	    portal_route_report
+    </select>
+
+    <insert id="save" parameterType="com.yonghui.portal.model.report.PortalRouteReport" useGeneratedKeys="true"
+            keyProperty="id">
 		insert into portal_route_report
 		(
 			`code`,
 			`reportCode`,
+			`title`,
 			`key`, 
 			`request_type`, 
 			`url`, 
@@ -87,6 +103,7 @@
 		(
 			#{code},
 			#{reportcode},
+			#{title},
 			#{key}, 
 			#{requestType}, 
 			#{url}, 
@@ -105,33 +122,34 @@
     <update id="update" parameterType="com.yonghui.portal.model.report.PortalRouteReport">
         update portal_route_report
         <set>
-			<if test="code != null">`code` = #{code}, </if>
-			<if test="reportcode != null">`reportCode` = #{reportcode}, </if>
-			<if test="key != null">`key` = #{key}, </if>
-			<if test="requestType != null">`request_type` = #{requestType}, </if>
-			<if test="url != null">`url` = #{url}, </if>
-			<if test="parameter != null">`parameter` = #{parameter}, </if>
-			<if test="name != null">`name` = #{name}, </if>
-			<if test="remark != null">`remark` = #{remark}, </if>
-			<if test="creater != null">`creater` = #{creater}, </if>
-			<if test="createTime != null">`create_time` = #{createTime}, </if>
-			<if test="modifier != null">`modifier` = #{modifier}, </if>
-			`modify_time` = NOW(), 
-			<if test="disabled != null">`disabled` = #{disabled}, </if>
-			<if test="version != null">`version` = #{version}</if>
+            <if test="code != null">`code` = #{code},</if>
+            <if test="reportcode != null">`reportCode` = #{reportcode},</if>
+            <if test="title != null">`title` = #{title},</if>
+            <if test="key != null">`key` = #{key},</if>
+            <if test="requestType != null">`request_type` = #{requestType},</if>
+            <if test="url != null">`url` = #{url},</if>
+            <if test="parameter != null">`parameter` = #{parameter},</if>
+            <if test="name != null">`name` = #{name},</if>
+            <if test="remark != null">`remark` = #{remark},</if>
+            <if test="creater != null">`creater` = #{creater},</if>
+            <if test="createTime != null">`create_time` = #{createTime},</if>
+            <if test="modifier != null">`modifier` = #{modifier},</if>
+            `modify_time` = NOW(),
+            <if test="disabled != null">`disabled` = #{disabled},</if>
+            <if test="version != null">`version` = #{version}</if>
         </set>
         where id = #{id}
     </update>
-	
-	<delete id="delete">
+
+    <delete id="delete">
 		delete from portal_route_report where id = #{value}
 	</delete>
-	
-	<delete id="deleteBatch">
-		delete from portal_route_report where id in 
-		<foreach item="id" collection="array" open="(" separator="," close=")">
-			#{id}
-		</foreach>
-	</delete>
+
+    <delete id="deleteBatch">
+        delete from portal_route_report where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
 
 </mapper>

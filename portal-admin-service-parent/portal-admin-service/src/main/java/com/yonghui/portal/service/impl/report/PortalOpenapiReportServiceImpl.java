@@ -49,5 +49,10 @@ public class PortalOpenapiReportServiceImpl implements PortalOpenapiReportServic
 	public void deleteBatch(String[] codes){
 		portalOpenapiReportMapper.deleteBatch(codes);
 	}
-	
+
+	@Override
+	public String getNewMaxCode() {
+		return portalOpenapiReportMapper.getNewMaxCode();
+	}
+
 }
