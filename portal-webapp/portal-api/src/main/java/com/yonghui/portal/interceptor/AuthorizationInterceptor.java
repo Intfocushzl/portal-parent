@@ -60,12 +60,11 @@ public class AuthorizationInterceptor extends HandlerInterceptorAdapter {
         }
         //如果有@OpenAuth注解，则校验sign
         if (openAuthAnnotation != null) {
-            Map paramsMap = request.getParameterMap();
             String openApiCode = request.getParameter("openApiCode");
             String sign = request.getParameter("sign");
-            if (StringUtils.isBlank(openApiCode) || StringUtils.isBlank(sign)) {
+            if (StringUtils.isBlank(openApiCode)) {
                 response.setHeader("Content-type", "application/json;charset=UTF-8");
-                response.getWriter().write(JSON.toJSONString(R.error(ConstantsUtil.ExceptionCode.SIGN_ERROR, "sign或者code不能为空")));
+                response.getWriter().write(JSON.toJSONString(R.error(ConstantsUtil.ExceptionCode.SIGN_ERROR, "sopenApiCode不能为空")));
                 return false;
             }
             // 从redis中查询key信息
@@ -85,6 +84,11 @@ public class AuthorizationInterceptor extends HandlerInterceptorAdapter {
                     //完全开放接口，不做请求数据校验
                     return true;
                 } else {
+                    if (StringUtils.isBlank(sign)) {
+                        response.setHeader("Content-type", "application/json;charset=UTF-8");
+                        response.getWriter().write(JSON.toJSONString(R.error(ConstantsUtil.ExceptionCode.SIGN_ERROR, "sign不能为空")));
+                        return false;
+                    }
                     //获取请求参数，并转成这种格式“shppID=9318&barcode=2304348000004”,参数为空也要写成“shppID=”这种
                     String parameter = null;
                     try {
