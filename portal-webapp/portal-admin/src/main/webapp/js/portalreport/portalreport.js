@@ -15,9 +15,15 @@ $(function () {
             {
                 label: '数据脚本', name: 'execute_code', index: 'execute_code', width: 50,
                 formatter: function (value, options, row) {
-                    return row.execute_type === 1 ?
-                    '<span class="label label-info">' + value + '</span>' :
-                    '<span class="label label-warning">' + value + '</span>';
+                    if(row.execute_type === 1){
+                        return '<span class="label label-info">' + value + '</span>';
+                    }
+                    if(row.execute_type === 2){
+                        return '<span class="label label-warning">' + value + '</span>';
+                    }
+                    if(row.execute_type === 3){
+                        return '<span class="label label-default">' + value + '</span>';
+                    }
                 }
             },
             {
