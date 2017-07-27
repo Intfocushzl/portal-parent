@@ -40,10 +40,10 @@ public class InitProperties {
                     InputStream inStream = new FileInputStream(fileCatalina);
                     // 载入输入流
                     propertiesRead.load(inStream);
-                    // app接口地址
+                    // app接口地址 后期删除此代码
                     APP_BASE_URL = propertiesRead.getProperty("APP_BASE_URL");
                     intAppUrl();
-                    System.out.println("=============================" + APP_BASE_URL);
+
                     // 取得配置文件里所有的key值
                     Enumeration enumeration = propertiesRead.propertyNames();
                     // 读取并写入项目资源文件
@@ -54,7 +54,7 @@ public class InitProperties {
                     OutputStream outputStream = new FileOutputStream(file);
                     while (enumeration.hasMoreElements()) {
                         String key = (String) enumeration.nextElement();
-                        logger.info(propertiesList[i] + "=" + propertiesRead.getProperty(key));
+                        logger.info(propertiesList[i] + ":" + key + "=" + propertiesRead.getProperty(key));
                         propertiesWrite.setProperty(StringEscapeUtils.unescapeJava(key), StringEscapeUtils.unescapeJava(propertiesRead.getProperty(key)));
                     }
                     propertiesWrite.store(outputStream, propertiesList[i]);
@@ -69,7 +69,7 @@ public class InitProperties {
     }
 
 
-    //APP的常量接口
+    //APP的常量接口  后期删除以下代码
     //菜单
     public static String APP_BASE_GET_REPORT_URL;      //获取生意概况菜单列表
     public static String APP_BASE_GET_KPI_URL;      //仪表盘列表
