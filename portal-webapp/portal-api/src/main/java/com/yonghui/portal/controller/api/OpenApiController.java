@@ -67,7 +67,7 @@ public class OpenApiController {
             log.setRemark("openApi");
             sysoperationLogService.SaveLog(log);
         } catch (Exception e) {
-            return R.error("执行openApi统一报表程序异常");
+            return R.error().put("msg", "执行openApi统一报表程序异常");
         }
         return R.success(list);
     }

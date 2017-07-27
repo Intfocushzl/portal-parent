@@ -72,14 +72,14 @@ public class AppRouteApiController {
             if (!StringUtils.isEmpty(result)) {
                 jsonObject = JSONObject.parseObject(result);
             } else {
-                return R.success("转JSON格式失败").put("result", result);
+                return R.success().put("result", result);
             }
         } catch (Exception e) {
             log.setStatus(1);
             log.setError(e.toString().substring(0, 2000));
             log.setEndTime(new Date());
             sysoperationLogService.SaveLog(log);
-            return R.error("调用第三方接口失败");
+            return R.error();
         }
         log.setEndTime(new Date());
         sysoperationLogService.SaveLog(log);
