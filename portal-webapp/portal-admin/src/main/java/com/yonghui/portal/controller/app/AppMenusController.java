@@ -1105,13 +1105,13 @@ public class AppMenusController extends AbstractController {
             String result = "";
             switch (type) {
                 case 1:
-                    result = httpUtil.getGetResult(ConstantsUtil.AppBaseUrl.APP_BASE_GET_KPI_URL, map);
+                    result = httpUtil.getGetResult(InitProperties.APP_BASE_GET_KPI_URL, map);
                     break;
                 case 2:
-                    result = httpUtil.getGetResult(ConstantsUtil.AppBaseUrl.APP_BASE_GET_ANALYSE_URL, map);
+                    result = httpUtil.getGetResult(InitProperties.APP_BASE_GET_ANALYSE_URL, map);
                     break;
                 case 3:
-                    result = httpUtil.getGetResult(ConstantsUtil.AppBaseUrl.APP_BASE_GET_APP_URL, map);
+                    result = httpUtil.getGetResult(InitProperties.APP_BASE_GET_APP_URL, map);
                     break;
             }
             log.info(result);
@@ -1258,19 +1258,19 @@ public class AppMenusController extends AbstractController {
                     if (map.get("subName2") != null) {
                         map.put("kpi_group", map.get("subName2"));
                     }
-                    result = httpUtil.getGetResult(ConstantsUtil.AppBaseUrl.APP_BASE_GET_KPI_URL, map);
+                    result = httpUtil.getGetResult(InitProperties.APP_BASE_GET_KPI_URL, map);
                     break;
                 case 2:
                     if (map.get("subName2") != null) {
                         map.put("group_name", map.get("subName2"));
                     }
-                    result = httpUtil.getGetResult(ConstantsUtil.AppBaseUrl.APP_BASE_GET_ANALYSE_URL, map);
+                    result = httpUtil.getGetResult(InitProperties.APP_BASE_GET_ANALYSE_URL, map);
                     break;
                 case 3:
                     if (map.get("subName2") != null) {
                         map.put("group_name", map.get("subName2"));
                     }
-                    result = httpUtil.getGetResult(ConstantsUtil.AppBaseUrl.APP_BASE_GET_APP_URL, map);
+                    result = httpUtil.getGetResult(InitProperties.APP_BASE_GET_APP_URL, map);
                     break;
             }
             log.info(result);
@@ -1400,13 +1400,13 @@ public class AppMenusController extends AbstractController {
                 String result = "";
                 switch (menuType) {
                     case 1:
-                        result = httpUtil.getPostJsonResult(ConstantsUtil.AppBaseUrl.APP_BASE_POST_KPI_URL + "/" + sortStrs[i].trim(), JSON.toJSONString(map));
+                        result = httpUtil.getPostJsonResult(InitProperties.APP_BASE_POST_KPI_URL + "/" + sortStrs[i].trim(), JSON.toJSONString(map));
                         break;
                     case 2:
-                        result = httpUtil.getPostJsonResult(ConstantsUtil.AppBaseUrl.APP_BASE_POST_ANALYSE_URL + "/" + sortStrs[i].trim(), JSON.toJSONString(map));
+                        result = httpUtil.getPostJsonResult(InitProperties.APP_BASE_POST_ANALYSE_URL + "/" + sortStrs[i].trim(), JSON.toJSONString(map));
                         break;
                     case 3:
-                        result = httpUtil.getPostJsonResult(ConstantsUtil.AppBaseUrl.APP_BASE_POST_APP_URL + "/" + sortStrs[i].trim(), JSON.toJSONString(map));
+                        result = httpUtil.getPostJsonResult(InitProperties.APP_BASE_POST_APP_URL + "/" + sortStrs[i].trim(), JSON.toJSONString(map));
                         break;
                 }
                 if (!StringUtils.isEmpty(result)) {
@@ -1449,13 +1449,13 @@ public class AppMenusController extends AbstractController {
                 String result = "";
                 switch (menuType) {
                     case 1:
-                        result = httpUtil.getPostJsonResult(ConstantsUtil.AppBaseUrl.APP_BASE_POST_KPI_URL + "/" + sortStrs[i].trim(), JSON.toJSONString(map));
+                        result = httpUtil.getPostJsonResult(InitProperties.APP_BASE_POST_KPI_URL + "/" + sortStrs[i].trim(), JSON.toJSONString(map));
                         break;
                     case 2:
-                        result = httpUtil.getPostJsonResult(ConstantsUtil.AppBaseUrl.APP_BASE_POST_ANALYSE_URL + "/" + sortStrs[i].trim(), JSON.toJSONString(map));
+                        result = httpUtil.getPostJsonResult(InitProperties.APP_BASE_POST_ANALYSE_URL + "/" + sortStrs[i].trim(), JSON.toJSONString(map));
                         break;
                     case 3:
-                        result = httpUtil.getPostJsonResult(ConstantsUtil.AppBaseUrl.APP_BASE_POST_APP_URL + "/" + sortStrs[i].trim(), JSON.toJSONString(map));
+                        result = httpUtil.getPostJsonResult(InitProperties.APP_BASE_POST_APP_URL + "/" + sortStrs[i].trim(), JSON.toJSONString(map));
                         break;
                 }
                 if (!StringUtils.isEmpty(result)) {
