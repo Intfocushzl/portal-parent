@@ -70,6 +70,7 @@ var vm = new Vue({
             vm.showList = false;
             vm.title = "新增";
             vm.portalOpenapiReport = {};
+            vm.getRepList();
             $("input[name='codeOld']").removeAttr("readonly");
             vm.getNewMaxCode();
         },
@@ -80,7 +81,7 @@ var vm = new Vue({
             }
             vm.showList = false;
             vm.title = "修改";
-
+            vm.getRepList();
             vm.getInfo(id);
             $("input[name='codeOld']").attr("readonly", "readonly");
         },
@@ -128,6 +129,14 @@ var vm = new Vue({
             $.get("../portalopenapireport/info/" + id, function (r) {
                 vm.portalOpenapiReport = r.portalOpenapiReport;
                 vm.portalOpenapiReport.codeOld = vm.portalOpenapiReport.code;
+            });
+        },
+        getRepList: function () {
+            $("#repList").empty();
+            $.get("../portalreport/repList/", function (r) {
+                for (var i = 0; i < r.repList.length; i++) {
+                    $("#repList").append("<option value='" + r.repList[i].code + "'>" + r.repList[i].code + "<===>" + r.repList[i].title + "</option>");
+                }
             });
         },
         getNewMaxCode: function () {
