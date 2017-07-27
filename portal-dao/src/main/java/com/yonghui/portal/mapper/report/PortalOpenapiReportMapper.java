@@ -11,5 +11,10 @@ import com.yonghui.portal.model.report.PortalOpenapiReport;
  * @date 2017-06-07 14:01:50
  */
 public interface PortalOpenapiReportMapper extends BaseMapper<PortalOpenapiReport> {
-	
+    /**
+     * 产生新的编码
+     *
+     * @return
+     */
+    String getNewMaxCode();
 }

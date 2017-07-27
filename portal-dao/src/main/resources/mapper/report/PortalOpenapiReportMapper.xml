@@ -3,11 +3,11 @@
 
 <mapper namespace="com.yonghui.portal.mapper.report.PortalOpenapiReportMapper">
 
-	<!-- 可根据自己的需求，是否要使用 -->
+    <!-- 可根据自己的需求，是否要使用 -->
     <resultMap id="portalOpenapiReportMap" type="com.yonghui.portal.model.report.PortalOpenapiReport">
         <result property="id" column="id"/>
         <result property="code" column="code"/>
-		<result property="reportcode" column="reportCode"/>
+        <result property="reportcode" column="reportCode"/>
         <result property="key" column="key"/>
         <result property="url" column="url"/>
         <result property="parameter" column="parameter"/>
@@ -21,12 +21,12 @@
         <result property="version" column="version"/>
     </resultMap>
 
-	<select id="queryObject" resultType="com.yonghui.portal.model.report.PortalOpenapiReport">
+    <select id="queryObject" resultType="com.yonghui.portal.model.report.PortalOpenapiReport">
 		select * from portal_openapi_report where id = #{value}
 	</select>
 
-	<select id="queryList" resultType="com.yonghui.portal.model.report.PortalOpenapiReport">
-		select * from portal_openapi_report
+    <select id="queryList" resultType="com.yonghui.portal.model.report.PortalOpenapiReport">
+        select * from portal_openapi_report
         <where>
             <if test="id != null and id !=''">
                 and id like concat('%',#{id},'%')
@@ -39,17 +39,17 @@
             <when test="sidx != null and sidx.trim() != ''">
                 order by ${sidx} ${order}
             </when>
-			<otherwise>
+            <otherwise>
                 order by id desc
-			</otherwise>
+            </otherwise>
         </choose>
-		<if test="offset != null and limit != null">
-			limit #{offset}, #{limit}
-		</if>
-	</select>
-	
- 	<select id="queryTotal" resultType="int">
-		select count(*) from portal_openapi_report
+        <if test="offset != null and limit != null">
+            limit #{offset}, #{limit}
+        </if>
+    </select>
+
+    <select id="queryTotal" resultType="int">
+        select count(*) from portal_openapi_report
         <where>
             <if test="id != null and id !=''">
                 and id = #{id}
@@ -58,13 +58,25 @@
                 and remark like concat('%',#{remark},'%')
             </if>
         </where>
+    </select>
+
+    <select id="getNewMaxCode" parameterType="map" resultType="string">
+		SELECT
+			CONCAT(
+				'OPENAPI_',
+				LPAD(SUBSTR(max(CODE), 9) + 1, 6, 0)
+			)
+		FROM
+			portal_openapi_report
 	</select>
 
-    <insert id="save" parameterType="com.yonghui.portal.model.report.PortalOpenapiReport" useGeneratedKeys="true" keyProperty="id">
+    <insert id="save" parameterType="com.yonghui.portal.model.report.PortalOpenapiReport" useGeneratedKeys="true"
+            keyProperty="id">
 		insert into portal_openapi_report
 		(
 			`code`,
 			`reportCode`,
+			`title`,
 			`key`, 
 			`url`, 
 			`parameter`, 
@@ -81,6 +93,7 @@
 		(
 			#{code},
 			#{reportcode},
+			#{title},
 			#{key}, 
 			#{url}, 
 			#{parameter}, 
@@ -98,32 +111,33 @@
     <update id="update" parameterType="com.yonghui.portal.model.report.PortalOpenapiReport">
         update portal_openapi_report
         <set>
-			<if test="code != null">`code` = #{code}, </if>
-			<if test="reportcode != null">`reportCode` = #{reportcode}, </if>
-			<if test="key != null">`key` = #{key}, </if>
-			<if test="url != null">`url` = #{url}, </if>
-			<if test="parameter != null">`parameter` = #{parameter}, </if>
-			<if test="name != null">`name` = #{name}, </if>
-			<if test="remark != null">`remark` = #{remark}, </if>
-			<if test="creater != null">`creater` = #{creater}, </if>
-			<if test="createTime != null">`create_time` = #{createTime}, </if>
-			<if test="modifier != null">`modifier` = #{modifier}, </if>
-			`modify_time` = NOW(), 
-			<if test="disabled != null">`disabled` = #{disabled}, </if>
-			<if test="version != null">`version` = #{version}</if>
+            <if test="code != null">`code` = #{code},</if>
+            <if test="reportcode != null">`reportCode` = #{reportcode},</if>
+            <if test="title != null">`title` = #{title},</if>
+            <if test="key != null">`key` = #{key},</if>
+            <if test="url != null">`url` = #{url},</if>
+            <if test="parameter != null">`parameter` = #{parameter},</if>
+            <if test="name != null">`name` = #{name},</if>
+            <if test="remark != null">`remark` = #{remark},</if>
+            <if test="creater != null">`creater` = #{creater},</if>
+            <if test="createTime != null">`create_time` = #{createTime},</if>
+            <if test="modifier != null">`modifier` = #{modifier},</if>
+            `modify_time` = NOW(),
+            <if test="disabled != null">`disabled` = #{disabled},</if>
+            <if test="version != null">`version` = #{version}</if>
         </set>
         where id = #{id}
     </update>
-	
-	<delete id="delete">
+
+    <delete id="delete">
 		delete from portal_openapi_report where id = #{value}
 	</delete>
-	
-	<delete id="deleteBatch">
-		delete from portal_openapi_report where id in 
-		<foreach item="id" collection="array" open="(" separator="," close=")">
-			#{id}
-		</foreach>
-	</delete>
+
+    <delete id="deleteBatch">
+        delete from portal_openapi_report where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
 
 </mapper>

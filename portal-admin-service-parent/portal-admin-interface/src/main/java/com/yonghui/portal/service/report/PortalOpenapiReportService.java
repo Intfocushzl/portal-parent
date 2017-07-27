@@ -28,4 +28,11 @@ public interface PortalOpenapiReportService {
 	void delete(Integer id);
 	
 	void deleteBatch(String[] codes);
+
+	/**
+	 * 产生新的编码
+	 *
+	 * @return
+	 */
+	String getNewMaxCode();
 }

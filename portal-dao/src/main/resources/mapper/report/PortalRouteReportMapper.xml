@@ -65,6 +65,20 @@
         </where>
     </select>
 
+    <select id="getNewMaxCode" parameterType="map" resultType="string">
+        SELECT
+            CONCAT(
+                'PROVIDE_',
+                LPAD(
+                    SUBSTR(max(code), 9) + 1,
+                    6,
+                    0
+                )
+            )
+        FROM
+	    portal_route_report
+    </select>
+
     <insert id="save" parameterType="com.yonghui.portal.model.report.PortalRouteReport" useGeneratedKeys="true"
             keyProperty="id">
 		insert into portal_route_report

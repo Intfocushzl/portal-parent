@@ -18,8 +18,8 @@ $(function () {
                 label: '请求方式', name: 'requestType', index: 'request_type', width: 80,
                 formatter: function (value, options, row) {
                     return row.requestType === 1 ?
-                    '<span class="label label-success">GET</span>' :
-                    '<span class="label label-primary">POST</span>';
+                        '<span class="label label-success">GET</span>' :
+                        '<span class="label label-primary">POST</span>';
                 }
             },
             {label: '请求地址', name: 'url', index: 'url', width: 80},
@@ -78,6 +78,7 @@ var vm = new Vue({
             vm.title = "新增";
             vm.portalRouteReport = {};
             $("input[name='codeOld']").removeAttr("readonly");
+            vm.getNewMaxCode();
         },
         update: function (event) {
             var id = getSelectedRow();
@@ -89,6 +90,13 @@ var vm = new Vue({
 
             vm.getInfo(id);
             $("input[name='codeOld']").attr("readonly", "readonly");
+        },
+        getNewMaxCode: function () {
+            $.get("../portalroutereport/getNewMaxCode/", function (r) {
+                console.info(r.newMaxCode);
+                $("#codeOld").val(r.newMaxCode);
+                vm.portalRouteReport.code = r.newMaxCode;
+            });
         },
         saveOrUpdate: function (event) {
             var url = vm.portalRouteReport.id == null ? "../portalroutereport/save" : "../portalroutereport/update";

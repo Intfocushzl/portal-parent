@@ -19,4 +19,11 @@ public interface PortalRouteReportMapper extends BaseMapper<PortalRouteReport> {
      * @return
      */
     PortalRouteReport queryObjectByCode(@Param("code") String code);
+
+    /**
+     * 产生新的编码
+     *
+     * @return
+     */
+    String getNewMaxCode();
 }

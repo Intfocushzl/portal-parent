@@ -72,7 +72,7 @@ public class AppRouteApiController {
             if (!StringUtils.isEmpty(result)) {
                 jsonObject = JSONObject.parseObject(result);
             } else {
-                return R.success();
+                return R.success("转JSON格式失败").put("result", result);
             }
         } catch (Exception e) {
             log.setStatus(1);

@@ -97,14 +97,14 @@ public class ApiController {
                     log.setEndTime(new Date());
                     log.setRemark("第三方返回结果没有data节点");
                     sysoperationLogService.SaveLog(log);
-                    return R.success("没有查到数据（第三方返回结果没有data节点）");
+                    return R.success("没有查到数据（第三方返回结果没有data节点）").put("result", result);
                 }
             } else {
                 log.setStatus(1);
                 log.setEndTime(new Date());
                 log.setError("第三方返回结果为空");
                 sysoperationLogService.SaveLog(log);
-                return R.error("第三方返回结果为空");
+                return R.error("第三方返回结果为空").put("result", result);
             }
         } else {
             log.setEndTime(new Date());

@@ -54,5 +54,10 @@ public class PortalRouteReportServiceImpl implements PortalRouteReportService {
 	public PortalRouteReport queryObjectByCode(String code){
 		return portalRouteReportMapper.queryObjectByCode(code);
 	}
-	
+
+	@Override
+	public String getNewMaxCode() {
+		return portalRouteReportMapper.getNewMaxCode();
+	}
+
 }
