@@ -21,7 +21,6 @@ import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Date;
-import java.util.Map;
 
 
 /**
@@ -64,7 +63,7 @@ public class AuthorizationInterceptor extends HandlerInterceptorAdapter {
             String sign = request.getParameter("sign");
             if (StringUtils.isBlank(openApiCode)) {
                 response.setHeader("Content-type", "application/json;charset=UTF-8");
-                response.getWriter().write(JSON.toJSONString(R.error(ConstantsUtil.ExceptionCode.SIGN_ERROR, "sopenApiCode不能为空")));
+                response.getWriter().write(JSON.toJSONString(R.error(ConstantsUtil.ExceptionCode.SIGN_ERROR, "openApiCode不能为空")));
                 return false;
             }
             // 从redis中查询key信息
