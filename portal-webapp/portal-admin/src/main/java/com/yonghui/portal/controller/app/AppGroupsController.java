@@ -4,10 +4,9 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.yonghui.portal.controller.AbstractController;
+import com.yonghui.portal.init.InitProperties;
 import com.yonghui.portal.model.app.AppGroups;
-import com.yonghui.portal.service.app.AppGroupsService;
 import com.yonghui.portal.service.global.UserAdminService;
-import com.yonghui.portal.util.ConstantsUtil;
 import com.yonghui.portal.util.PageUtils;
 import com.yonghui.portal.util.Query;
 import com.yonghui.portal.util.R;
@@ -55,7 +54,7 @@ public class AppGroupsController extends AbstractController {
             map.put("group_name", query.get("groupName"));
         }
         try {
-            String result = httpUtil.getGetResult(ConstantsUtil.AppBaseUrl.APP_BASE_GET_GROUP_URL, map);
+            String result = httpUtil.getGetResult(InitProperties.APP_BASE_GET_GROUP_URL, map);
 
             log.info(result);
             if (!StringUtils.isEmpty(result)) {
@@ -127,7 +126,7 @@ public class AppGroupsController extends AbstractController {
         map.put("api_token", "api_token");
         map.put("id", id);
         try {
-            String result = httpUtil.getGetResult(ConstantsUtil.AppBaseUrl.APP_BASE_POST_GROUP_URL + "/" + id, map);
+            String result = httpUtil.getGetResult(InitProperties.APP_BASE_POST_GROUP_URL + "/" + id, map);
 
             log.info(result);
             if (!StringUtils.isEmpty(result)) {
@@ -179,7 +178,7 @@ public class AppGroupsController extends AbstractController {
         appMap.put("memo", appGroups.getMemo());
         map.put("group", appMap);
         try {
-            String result = httpUtil.getPostJsonResult(ConstantsUtil.AppBaseUrl.APP_BASE_POST_GROUP_URL, JSON.toJSONString(map));
+            String result = httpUtil.getPostJsonResult(InitProperties.APP_BASE_POST_GROUP_URL, JSON.toJSONString(map));
             log.info(result);
             if (!StringUtils.isEmpty(result)) {
                 JSONObject jsonObject = JSONObject.parseObject(result);
@@ -218,7 +217,7 @@ public class AppGroupsController extends AbstractController {
         appMap.put("memo", appGroups.getMemo());
         map.put("group", appMap);
         try {
-            String result = httpUtil.getPostJsonResult(ConstantsUtil.AppBaseUrl.APP_BASE_POST_GROUP_URL+ "/" + appGroups.getId(), JSON.toJSONString(map));
+            String result = httpUtil.getPostJsonResult(InitProperties.APP_BASE_POST_GROUP_URL+ "/" + appGroups.getId(), JSON.toJSONString(map));
 
             log.info(result);
             if (!StringUtils.isEmpty(result)) {
@@ -273,7 +272,7 @@ public class AppGroupsController extends AbstractController {
             map.put("page_size", 10000);
         }
         try {
-            String result = httpUtil.getGetResult(ConstantsUtil.AppBaseUrl.APP_BASE_GET_GROUP_URL, map);
+            String result = httpUtil.getGetResult(InitProperties.APP_BASE_GET_GROUP_URL, map);
 
             log.info(result);
             if (!StringUtils.isEmpty(result)) {
@@ -331,7 +330,7 @@ public class AppGroupsController extends AbstractController {
         map.put("api_token", "api_token");
        // map.put("lazy_load", true);
         try {
-            String result = httpUtil.getGetResult(ConstantsUtil.AppBaseUrl.APP_BASE_POST_USER_URL + "/" + userNum + "/groups", map);
+            String result = httpUtil.getGetResult(InitProperties.APP_BASE_POST_USER_URL + "/" + userNum + "/groups", map);
             log.info(result);
             if (!StringUtils.isEmpty(result)) {
                 JSONObject jsonObject = JSONObject.parseObject(result);

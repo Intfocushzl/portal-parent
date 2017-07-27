@@ -3,6 +3,7 @@ package com.yonghui.portal.controller.platform;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.yonghui.portal.controller.AbstractController;
+import com.yonghui.portal.init.InitProperties;
 import com.yonghui.portal.model.global.Menu;
 import com.yonghui.portal.model.global.Role;
 import com.yonghui.portal.service.global.RoleService;
@@ -107,7 +108,7 @@ public class RoleController extends AbstractController {
         map.put("role", appMap);
 
         try {
-            String result = httpUtil.getPostJsonResult(ConstantsUtil.AppBaseUrl.APP_BASE_POST_ROLE_URL, JSON.toJSONString(map));
+            String result = httpUtil.getPostJsonResult(InitProperties.APP_BASE_POST_ROLE_URL, JSON.toJSONString(map));
 
             System.out.println(result);
             if (!StringUtils.isEmpty(result)) {
@@ -148,7 +149,7 @@ public class RoleController extends AbstractController {
         map.put("role", appMap);
 
         try {
-            String result = httpUtil.getPostJsonResult(ConstantsUtil.AppBaseUrl.APP_BASE_POST_ROLE_URL + "/" + role.getRoleId(), JSON.toJSONString(map));
+            String result = httpUtil.getPostJsonResult(InitProperties.APP_BASE_POST_ROLE_URL + "/" + role.getRoleId(), JSON.toJSONString(map));
 
             System.out.println(result);
             if (!StringUtils.isEmpty(result)) {

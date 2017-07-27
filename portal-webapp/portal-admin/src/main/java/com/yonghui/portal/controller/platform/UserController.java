@@ -3,9 +3,13 @@ package com.yonghui.portal.controller.platform;
 import com.alibaba.dubbo.common.json.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.yonghui.portal.controller.AbstractController;
+import com.yonghui.portal.init.InitProperties;
 import com.yonghui.portal.model.global.User;
 import com.yonghui.portal.service.global.UserAdminService;
-import com.yonghui.portal.util.*;
+import com.yonghui.portal.util.PageUtils;
+import com.yonghui.portal.util.Query;
+import com.yonghui.portal.util.R;
+import com.yonghui.portal.util.StringUtils;
 import com.yonghui.portal.util.report.columns.HttpMethodUtil;
 import org.apache.commons.collections.map.HashedMap;
 import org.apache.log4j.Logger;
@@ -121,7 +125,7 @@ public class UserController extends AbstractController {
         map.put("user", userMap);
         try {
             if (res == 1) {
-                String result = httpUtil.getPostJsonResult(ConstantsUtil.AppBaseUrl.APP_BASE_POST_USER_URL, JSON.json(map));
+                String result = httpUtil.getPostJsonResult(InitProperties.APP_BASE_POST_USER_URL, JSON.json(map));
 
                 System.out.println(result);
                 if (!StringUtils.isEmpty(result)) {

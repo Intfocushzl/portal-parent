@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.yonghui.portal.controller.AbstractController;
+import com.yonghui.portal.init.InitProperties;
 import com.yonghui.portal.model.app.AppRoles;
 import com.yonghui.portal.model.app.AppUsers;
 import com.yonghui.portal.service.app.AppRolesService;
@@ -65,7 +66,7 @@ public class AppUsersController extends AbstractController {
             map.put("user_num", query.get("userNum"));
         }
         try {
-            String result = httpUtil.getGetResult(ConstantsUtil.AppBaseUrl.APP_BASE_GET_USER_URL, map);
+            String result = httpUtil.getGetResult(InitProperties.APP_BASE_GET_USER_URL, map);
 
             System.out.println(result);
             if (!StringUtils.isEmpty(result)) {
@@ -146,7 +147,7 @@ public class AppUsersController extends AbstractController {
         Map<String, Object> map = new HashedMap();
         map.put("api_token", "api_token");
         try {
-            String result = httpUtil.getGetResult(ConstantsUtil.AppBaseUrl.APP_BASE_POST_USER_URL + "/" + userNum, map);
+            String result = httpUtil.getGetResult(InitProperties.APP_BASE_POST_USER_URL + "/" + userNum, map);
 
             System.out.println(result);
             if (!StringUtils.isEmpty(result)) {
@@ -203,7 +204,7 @@ public class AppUsersController extends AbstractController {
         map.put("api_token", "api_token");
         map.put("lazy_load", true);
         try {
-            String result = httpUtil.getGetResult(ConstantsUtil.AppBaseUrl.APP_BASE_POST_USER_URL + "/" + userNum + "/roles", map);
+            String result = httpUtil.getGetResult(InitProperties.APP_BASE_POST_USER_URL + "/" + userNum + "/roles", map);
             log.info(result);
             if (!StringUtils.isEmpty(result)) {
                 JSONObject jsonObject = JSONObject.parseObject(result);
@@ -276,7 +277,7 @@ public class AppUsersController extends AbstractController {
         map.put("user", appMap);
 
         try {
-            String result = httpUtil.getPostJsonResult(ConstantsUtil.AppBaseUrl.APP_BASE_POST_USER_URL, JSON.toJSONString(map));
+            String result = httpUtil.getPostJsonResult(InitProperties.APP_BASE_POST_USER_URL, JSON.toJSONString(map));
 
             System.out.println(result);
             if (!StringUtils.isEmpty(result)) {
@@ -330,7 +331,7 @@ public class AppUsersController extends AbstractController {
         map.put("user", appMap);
 
         try {
-            String result = httpUtil.getPostJsonResult(ConstantsUtil.AppBaseUrl.APP_BASE_POST_USER_URL + "/" + appUsers.getUserNum(), JSON.toJSONString(map));
+            String result = httpUtil.getPostJsonResult(InitProperties.APP_BASE_POST_USER_URL + "/" + appUsers.getUserNum(), JSON.toJSONString(map));
 
             System.out.println(result);
             if (!StringUtils.isEmpty(result)) {
@@ -369,7 +370,7 @@ public class AppUsersController extends AbstractController {
     public void updateRole(HttpMethodUtil httpUtil, String userNum, Map<String, Object> map) throws Exception {
         log.info("============>更新用户-角色开始");
         try {
-            String result = httpUtil.getPostJsonResult(ConstantsUtil.AppBaseUrl.APP_BASE_POST_USER_URL + "/" + userNum + "/roles", JSON.toJSONString(map));
+            String result = httpUtil.getPostJsonResult(InitProperties.APP_BASE_POST_USER_URL + "/" + userNum + "/roles", JSON.toJSONString(map));
             if (!StringUtils.isEmpty(result)) {
                 JSONObject jsonObject = JSONObject.parseObject(result);
                 if (jsonObject.getInteger("code") == 201) {
@@ -394,7 +395,7 @@ public class AppUsersController extends AbstractController {
     public void updateGroup(HttpMethodUtil httpUtil, String userNum, Map<String, Object> map) throws Exception {
         log.info("============>更新用户-群组开始");
         try {
-            String result = httpUtil.getPostJsonResult(ConstantsUtil.AppBaseUrl.APP_BASE_POST_USER_URL + "/" + userNum + "/groups", JSON.toJSONString(map));
+            String result = httpUtil.getPostJsonResult(InitProperties.APP_BASE_POST_USER_URL + "/" + userNum + "/groups", JSON.toJSONString(map));
             if (!StringUtils.isEmpty(result)) {
                 JSONObject jsonObject = JSONObject.parseObject(result);
                 if (jsonObject.getInteger("code") == 201) {

@@ -43,7 +43,7 @@ public class ConstantsUtil {
         public static final int FROMOTHER= 3;     //第三方系统
     }
 
-    public static final String APP_BASE_URL = "http://yonghui-test.idata.mobi/api/v2";
+    /*public static final String APP_BASE_URL = "http://yonghui-test.idata.mobi/api/v2";
 
     //APP的常量接口
     public abstract class AppBaseUrl {
@@ -69,7 +69,7 @@ public class ConstantsUtil {
         public static final String APP_BASE_POST_USER_URL = APP_BASE_URL + "/user";      //创建用户
         //用户与角色
     }
-
+*/
 }
 
 

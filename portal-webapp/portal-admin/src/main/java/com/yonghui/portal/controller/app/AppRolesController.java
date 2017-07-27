@@ -4,11 +4,15 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.yonghui.portal.controller.AbstractController;
+import com.yonghui.portal.init.InitProperties;
 import com.yonghui.portal.model.app.AppMenu;
 import com.yonghui.portal.model.app.AppRoles;
 import com.yonghui.portal.model.global.Role;
 import com.yonghui.portal.service.global.RoleService;
-import com.yonghui.portal.util.*;
+import com.yonghui.portal.util.PageUtils;
+import com.yonghui.portal.util.Query;
+import com.yonghui.portal.util.R;
+import com.yonghui.portal.util.StringUtils;
 import com.yonghui.portal.util.report.columns.HttpMethodUtil;
 import org.apache.commons.collections.map.HashedMap;
 import org.apache.log4j.Logger;
@@ -62,7 +66,7 @@ public class AppRolesController extends AbstractController {
             map.put("role_name", query.get("roleName"));
         }
         try {
-            String result = httpUtil.getGetResult(ConstantsUtil.AppBaseUrl.APP_BASE_GET_ROLE_URL, map);
+            String result = httpUtil.getGetResult(InitProperties.APP_BASE_GET_ROLE_URL, map);
 
             System.out.println(result);
             if (!StringUtils.isEmpty(result)) {
@@ -122,7 +126,7 @@ public class AppRolesController extends AbstractController {
         map.put("api_token", "api_token");
         map.put("page_size", 1000);
         try {
-            String result = httpUtil.getGetResult(ConstantsUtil.AppBaseUrl.APP_BASE_GET_ROLE_URL, map);
+            String result = httpUtil.getGetResult(InitProperties.APP_BASE_GET_ROLE_URL, map);
 
             System.out.println(result);
             if (!StringUtils.isEmpty(result)) {
@@ -188,7 +192,7 @@ public class AppRolesController extends AbstractController {
         map.put("api_token", "api_token");
         map.put("role_id", id);
         try {
-            String result = httpUtil.getGetResult(ConstantsUtil.AppBaseUrl.APP_BASE_POST_ROLE_URL + "/" + id, map);
+            String result = httpUtil.getGetResult(InitProperties.APP_BASE_POST_ROLE_URL + "/" + id, map);
 
             System.out.println(result);
             if (!StringUtils.isEmpty(result)) {
@@ -244,7 +248,7 @@ public class AppRolesController extends AbstractController {
         role.setMenuIdList(new ArrayList<>());
         roleService.save(role);
         try {
-            String result = httpUtil.getPostJsonResult(ConstantsUtil.AppBaseUrl.APP_BASE_POST_ROLE_URL, JSON.toJSONString(map));
+            String result = httpUtil.getPostJsonResult(InitProperties.APP_BASE_POST_ROLE_URL, JSON.toJSONString(map));
 
             System.out.println(result);
             if (!StringUtils.isEmpty(result)) {
@@ -291,7 +295,7 @@ public class AppRolesController extends AbstractController {
         List<Map<String, Object>> menus = appRoles.getMenuList();
 
         try {
-            String result = httpUtil.getPostJsonResult(ConstantsUtil.AppBaseUrl.APP_BASE_POST_ROLE_URL + "/" + appRoles.getRoleId(), JSON.toJSONString(map));
+            String result = httpUtil.getPostJsonResult(InitProperties.APP_BASE_POST_ROLE_URL + "/" + appRoles.getRoleId(), JSON.toJSONString(map));
 
             System.out.println(result);
             if (!StringUtils.isEmpty(result)) {
@@ -347,28 +351,28 @@ public class AppRolesController extends AbstractController {
         try {
             String info = "";
             int x = 0;
-            String result1 = httpUtil.getPostJsonResult(ConstantsUtil.AppBaseUrl.APP_BASE_POST_ROLE_URL + "/" + roleId + "/kpis", JSON.toJSONString(map));
+            String result1 = httpUtil.getPostJsonResult(InitProperties.APP_BASE_POST_ROLE_URL + "/" + roleId + "/kpis", JSON.toJSONString(map));
             if (!StringUtils.isEmpty(result1)) {
                 JSONObject jsonObject = JSONObject.parseObject(result1);
                 if (jsonObject.getInteger("code") == 201) {
-                    log.info(ConstantsUtil.AppBaseUrl.APP_BASE_POST_ROLE_URL + "/" + roleId + "/kpis"+"\n"+result1);
+                    log.info(InitProperties.APP_BASE_POST_ROLE_URL + "/" + roleId + "/kpis"+"\n"+result1);
                     map.clear();
                     map.put("api_token", "api_token");
                     map.put("analyse_ids", analyse_ids);
-                    String result2 = httpUtil.getPostJsonResult(ConstantsUtil.AppBaseUrl.APP_BASE_POST_ROLE_URL + "/" + roleId + "/analyses", JSON.toJSONString(map));
+                    String result2 = httpUtil.getPostJsonResult(InitProperties.APP_BASE_POST_ROLE_URL + "/" + roleId + "/analyses", JSON.toJSONString(map));
                     if (!StringUtils.isEmpty(result2)) {
                          jsonObject = JSONObject.parseObject(result2);
                         if (jsonObject.getInteger("code") == 201) {
-                            log.info(ConstantsUtil.AppBaseUrl.APP_BASE_POST_ROLE_URL + "/" + roleId + "/analyses"+"\n"+result2);
+                            log.info(InitProperties.APP_BASE_POST_ROLE_URL + "/" + roleId + "/analyses"+"\n"+result2);
                             map.clear();
                             map.put("api_token", "api_token");
                             map.put("app_ids", app_ids);
-                            String result3 = httpUtil.getPostJsonResult(ConstantsUtil.AppBaseUrl.APP_BASE_POST_ROLE_URL + "/" + roleId + "/apps", JSON.toJSONString(map));
+                            String result3 = httpUtil.getPostJsonResult(InitProperties.APP_BASE_POST_ROLE_URL + "/" + roleId + "/apps", JSON.toJSONString(map));
                             if (!StringUtils.isEmpty(result3)) {
                                  jsonObject = JSONObject.parseObject(result3);
                                 if (jsonObject.getInteger("code") == 201) {
                                     info = jsonObject.getString("message");
-                                    log.info(ConstantsUtil.AppBaseUrl.APP_BASE_POST_ROLE_URL + "/" + roleId + "/apps"+"\n"+result3);
+                                    log.info(InitProperties.APP_BASE_POST_ROLE_URL + "/" + roleId + "/apps"+"\n"+result3);
                                     log.info("============>更新角色-菜单结束");
                                     return R.success().setMsg(info);
                                 } else {
@@ -414,7 +418,7 @@ public class AppRolesController extends AbstractController {
         map.put("api_token", "api_token");
         map.put("id", ids[0]);
         try {
-            String result = httpUtil.getDeleteResult(ConstantsUtil.AppBaseUrl.APP_BASE_POST_ROLE_URL, map);
+            String result = httpUtil.getDeleteResult(InitProperties.APP_BASE_POST_ROLE_URL, map);
 
             System.out.println(result);
             if (!StringUtils.isEmpty(result)) {
@@ -447,7 +451,7 @@ public class AppRolesController extends AbstractController {
         map.put("lazy_load", true);
 
         try {
-            String result = httpUtil.getGetResult(ConstantsUtil.AppBaseUrl.APP_BASE_POST_ROLE_URL + "/" + roleId + "/kpis", map);
+            String result = httpUtil.getGetResult(InitProperties.APP_BASE_POST_ROLE_URL + "/" + roleId + "/kpis", map);
 
             System.out.println(result);
             if (!StringUtils.isEmpty(result)) {
@@ -573,7 +577,7 @@ public class AppRolesController extends AbstractController {
         map.put("api_token", "api_token");
         map.put("lazy_load", true);
         try {
-            String result = httpUtil.getGetResult(ConstantsUtil.AppBaseUrl.APP_BASE_POST_ROLE_URL + "/" + roleId + "/analyses", map);
+            String result = httpUtil.getGetResult(InitProperties.APP_BASE_POST_ROLE_URL + "/" + roleId + "/analyses", map);
 
             if (!StringUtils.isEmpty(result)) {
                 List<AppMenu> menuList = new ArrayList<>();
@@ -744,7 +748,7 @@ public class AppRolesController extends AbstractController {
         map.put("api_token", "api_token");
         map.put("lazy_load", true);
         try {
-            String result = httpUtil.getGetResult(ConstantsUtil.AppBaseUrl.APP_BASE_POST_ROLE_URL + "/" + roleId + "/apps", map);
+            String result = httpUtil.getGetResult(InitProperties.APP_BASE_POST_ROLE_URL + "/" + roleId + "/apps", map);
 
             System.out.println(result);
             if (!StringUtils.isEmpty(result)) {
