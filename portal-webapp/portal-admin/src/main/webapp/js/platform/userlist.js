@@ -27,8 +27,6 @@ $(function () {
             },
             {label: '大区', name: 'largeArea', index: 'largeArea', width: 80},
             {label: '新大区', name: 'areaMans', index: 'areaMans', width: 80},
-            {label: '省份', name: 'province', index: 'province', width: 80},
-            {label: '城市', name: 'city', index: 'city', width: 80},
             {label: '员工号', name: 'jobNumber', index: 'jobNumber', width: 80},
             {
                 label: '状态', name: 'status', index: 'status', width: 80, formatter: function (value) {
@@ -48,7 +46,6 @@ $(function () {
             },
             {label: '门店', name: 'storeNumber', index: 'storeNumber', width: 80},
             {label: '商行', name: 'firm', index: 'firm', width: 80},
-            {label: '创建时间', name: 'createTime', index: 'createTime', width: 80}
         ],
 
         viewrecords: true,

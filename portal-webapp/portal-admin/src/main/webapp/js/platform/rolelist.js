@@ -107,6 +107,7 @@ var vm = new Vue({
             vm.role = {};
             vm.role.roleId=vm.nextRoleId;
             vm.getMenuTree(null);
+            vm.getNextRoleId();
         },
         update: function () {
             var roleId = getSelectedRow();

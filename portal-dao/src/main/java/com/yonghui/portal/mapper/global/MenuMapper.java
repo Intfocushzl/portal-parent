@@ -35,7 +35,7 @@ public interface MenuMapper extends BaseMapper<Menu>{
      * 根据父菜单，查询子菜单
      * @param pid 父菜单ID
      */
-    List<Menu> queryListParentId(Integer pid);
+    List<Menu> queryChildrenList(Integer pid);
 
     /**
      * 查询用户的权限列表
@@ -47,6 +47,8 @@ public interface MenuMapper extends BaseMapper<Menu>{
     List<Map<String,Object>> getNewAreaMansListByLargeArea(Map<String, Object> map);
 
     List<Menu> listRoleMenuByRoleId(Integer roleId);
+
+    List<Menu> queryMenuSort(Integer pid);
 }
 
 

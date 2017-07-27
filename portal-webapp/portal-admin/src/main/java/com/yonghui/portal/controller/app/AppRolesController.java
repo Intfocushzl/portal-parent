@@ -540,11 +540,17 @@ public class AppRolesController extends AbstractController {
 //                            list.add(node);
 //                        }
 //                    }
-                    List<AppMenu> menuKpiList = new ArrayList<>();
+
+                    List<Map<String, Object>> menuKpiList = new ArrayList<>();
 
                     for (AppMenu appMenu : menuList) {
                         if (appMenu.getActive() == 1) {
-                            menuKpiList.add(appMenu);
+                            Map<String, Object> menu=new HashedMap();
+                            menu.put("menuId",appMenu.getMenuId());
+                            menuKpiList.add(menu);
+                            Map<String, Object> parentMenu=new HashedMap();
+                            parentMenu.put("menuId","b"+appMenu.getMenuId());
+                            menuKpiList.add(parentMenu);
                         }
                     }
                     list = parseListToTree(menuList);
@@ -674,17 +680,25 @@ public class AppRolesController extends AbstractController {
                         List<AppMenu> appMenus = (List<AppMenu>) list.get(k).get("children");
                         List<Map<String, Object>> children = parseListToTree(appMenus);
 
-                        newMap.put("id", id);
+                        newMap.put("id",id);
                         newMap.put("name", name);
                         newMap.put("children", children);
                         newList.add(newMap);
                     }
 
-                    List<AppMenu> menuAnalysesList = new ArrayList<>();
+                    List<Map<String,Object>> menuAnalysesList = new ArrayList<>();
 
                     for (AppMenu appMenu : menuList) {
                         if (appMenu.getActive() == 1) {
-                            menuAnalysesList.add(appMenu);
+                            Map<String, Object> menu=new HashedMap();
+                            menu.put("menuId",appMenu.getMenuId());
+                            menuAnalysesList.add(menu);
+                            Map<String, Object> parentMenu=new HashedMap();
+                            parentMenu.put("menuId","b"+appMenu.getMenuId());
+                            menuAnalysesList.add(parentMenu);
+                            Map<String, Object> groundParentMenu=new HashedMap();
+                            parentMenu.put("menuId","a"+appMenu.getMenuId());
+                            menuAnalysesList.add(groundParentMenu);
                         }
                     }
                     return R.success().put("list", newList).put("menuAnalysesList", menuAnalysesList);
@@ -837,11 +851,16 @@ public class AppRolesController extends AbstractController {
 //                        }
 //                    }
                     list = parseListToTree(menuList);
-                    List<AppMenu> menuAppList = new ArrayList<>();
+                    List<Map<String,Object>> menuAppList = new ArrayList<>();
 
                     for (AppMenu appMenu : menuList) {
                         if (appMenu.getActive() == 1) {
-                            menuAppList.add(appMenu);
+                            Map<String, Object> menu=new HashedMap();
+                            menu.put("menuId",appMenu.getMenuId());
+                            menuAppList.add(menu);
+                            Map<String, Object> parentMenu=new HashedMap();
+                            parentMenu.put("menuId","b"+appMenu.getMenuId());
+                            menuAppList.add(parentMenu);
                         }
                     }
                     return R.success().put("list", list).put("menuAppList", menuAppList);

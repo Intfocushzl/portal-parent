@@ -3,6 +3,9 @@
 <head>
     <title></title>
     #parse("sys/header.html")
+    <!--列表拖动排序-->
+    <script type="text/javascript"
+            src="${rc.contextPath}/statics/plugins/jquery-dragsort/jquery.dragsort-0.5.2.min.js"></script>
     <style type="text/css">
         /* 标签样式 */
 
@@ -30,6 +33,40 @@
             border-color: #00956d;
             background-color: #00956d;
         }
+        .dragfunction {
+            margin: 40px 0 0 0;
+        }
+
+        .dragfunction dt {
+            height: 30px;
+            font-weight: 800;
+        }
+
+        .dragfunction dd {
+            line-height: 22px;
+            padding: 0 0 20px 0;
+            color: #5e5e5e;
+        }
+
+        /* dragsort */
+        .dragsort-ver li {
+            height: 30px;
+            line-height: 30px;
+        }
+
+        .dragsort {
+            width: 350px;
+            list-style-type: none;
+            margin: 0px;
+        }
+
+        .dragsort li {
+            float: left;
+            padding: 5px;
+            width: 100px;
+            height: 100px;
+        }
+
     </style>
 </head>
 <body>
@@ -75,6 +112,27 @@
         </div>
         <table id="jqGrid"></table>
         <div id="jqGridPager"></div>
+
+        <div id="dialog-div1" style="overflow:hidden" title="三级菜单排序">
+            <div class="tab_container">
+                <div id="tab1" class="tab_content" style="display: block; ">
+                    <ul id="list1" class="dragsort-ver">
+                    </ul>
+                    <!-- 排序保存在这里可以检索服务器上的回传 -->
+                    <input name="list1SortOrder" type="hidden"/>
+                </div>
+
+            </div>
+        </div>
+        <div id="dialog-div2" style="overflow:hidden" title="四级菜单排序">
+            <div class="tab_container">
+
+                <ul id="list2" class="dragsort-ver">
+                </ul>
+                <!-- 排序保存在这里可以检索服务器上的回传 -->
+                <input name="list2SortOrder" type="hidden"/>
+            </div>
+        </div>
     </div>
 
     <div v-show="!showList" class="panel panel-default">
@@ -146,7 +204,7 @@
                     <input type="text" class="form-control" v-model="appMenu.url" placeholder=""/>
                 </div>
             </div>
-            <div class="form-group">
+            <div class="form-group" v-if="appMenu.type ==1">
                 <div class="col-sm-2 control-label">关联报表ID</div>
                 <div class="col-sm-10">
                     <select id="reportList" class="selectpicker form-control" title="关联报表ID">

@@ -290,8 +290,10 @@ public class AppUsersController extends AbstractController {
                     updateRole(httpUtil, appUsers.getUserNum(), map);
                     map.clear();
                     map.put("api_token", "api_token");
-                    map.put("group_ids", new ArrayList<>().add(appUsers.getGroupId()));
-                    updateRole(httpUtil, appUsers.getUserNum(), map);
+                    List<Integer> group_ids = new ArrayList<Integer>();
+                    group_ids.add(appUsers.getGroupId());
+                    map.put("group_ids", group_ids);
+                    updateGroup(httpUtil, appUsers.getUserNum(), map);
                     return R.success().setMsg(info);
                 } else if (jsonObject.getInteger("code") == 200) {
                     String info = jsonObject.getString("message");

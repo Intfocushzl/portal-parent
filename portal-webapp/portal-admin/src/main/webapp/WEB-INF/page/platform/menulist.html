@@ -3,6 +3,44 @@
 <head>
     <title>菜单表</title>
     #parse("sys/header.html")
+    <script type="text/javascript"
+            src="${rc.contextPath}/statics/plugins/jquery-dragsort/jquery.dragsort-0.5.2.min.js"></script>
+    <style type="text/css">
+        .dragfunction {
+            margin: 40px 0 0 0;
+        }
+
+        .dragfunction dt {
+            height: 30px;
+            font-weight: 800;
+        }
+
+        .dragfunction dd {
+            line-height: 22px;
+            padding: 0 0 20px 0;
+            color: #5e5e5e;
+        }
+
+        /* dragsort */
+        .dragsort-ver li {
+            height: 30px;
+            line-height: 30px;
+        }
+
+        .dragsort {
+            width: 350px;
+            list-style-type: none;
+            margin: 0px;
+        }
+
+        .dragsort li {
+            float: left;
+            padding: 5px;
+            width: 100px;
+            height: 100px;
+        }
+
+    </style>
 </head>
 <body>
 <div id="rrapp" v-cloak>
@@ -56,7 +94,7 @@
             <div class="form-group">
                 <div class="col-sm-2 control-label">排序</div>
                 <div class="col-sm-10">
-                    <input type="number" class="form-control" v-model="menu.sort" placeholder="排序号"/>
+                    <input type="text" class="form-control" style="cursor:pointer;" @click="showDialog"  readonly v-model="menu.sort" placeholder="排序"/>
                 </div>
             </div>
             <div class="form-group">
@@ -75,6 +113,18 @@
                 &nbsp;&nbsp;<input type="button" class="btn btn-warning" @click="reload" value="返回"/>
             </div>
         </form>
+
+        <div id="dialog-div" style="overflow:hidden" title="菜单排序">
+            <div class="tab_container">
+                <div id="tab" class="tab_content" style="display: block; ">
+                    <ul id="list" class="dragsort-ver">
+                    </ul>
+                    <!-- 排序保存在这里可以检索服务器上的回传 -->
+                    <input name="listSortOrder" type="hidden"/>
+                </div>
+
+            </div>
+        </div>
     </div>
 </div>
 

@@ -2,13 +2,13 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://www.mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.yonghui.portal.mapper.global.MenuMapper">
     <resultMap id="BaseResultMap" type="com.yonghui.portal.model.global.Menu">
-        <result column="id" property="id" />
-        <result column="name" property="name" />
-        <result column="url" property="url" />
-        <result column="pid" property="pid" />
+        <result column="id" property="id"/>
+        <result column="name" property="name"/>
+        <result column="url" property="url"/>
+        <result column="pid" property="pid"/>
         <result column="icon" property="icon"/>
         <result column="createTime" property="createTime"/>
-        <result column="status" property="status" />
+        <result column="status" property="status"/>
         <result column="created_at" property="createdAt"/>
         <result column="updated_at" property="updatedAt"/>
         <result column="sort" property="sort"/>
@@ -136,7 +136,7 @@
         select DISTINCT AreaName as district,AreaID from platform.`d_bravo_shop`
     </select>
 
-    <select id="getNewAreaMansListByUser"  resultType="Map">
+    <select id="getNewAreaMansListByUser" resultType="Map">
         select DISTINCT areaMans from platform.`d_bravo_shop`
         <where>
             Congou=1
@@ -150,7 +150,7 @@
         select DISTINCT areaMans from platform.`d_bravo_shop` WHERE Congou=1;
     </select>
 
-    <select id="getNewAreaMansListByLargeArea" parameterType="Map"  resultType="Map">
+    <select id="getNewAreaMansListByLargeArea" parameterType="Map" resultType="Map">
         select DISTINCT areaMans from platform.`d_bravo_shop`
         <where>
             Congou=1
@@ -161,12 +161,12 @@
     </select>
 
 
-    <select id="getFifthRotation"  resultType="Map">
+    <select id="getFifthRotation" resultType="Map">
         select groupId as id,gName as text from platform.d_grouplist_sm group by groupId
     </select>
 
     <select id="getBravoShopList" parameterType="Map" resultType="Map">
-        select  sap_shopId as id, SName as text
+        select sap_shopId as id, SName as text
         from platform.d_bravo_shop
         <where>
             Congou=1
@@ -183,7 +183,7 @@
                 and city = #{city}
             </if>
         </where>
-       order by AreaName,AreaMans;
+        order by AreaName,AreaMans;
     </select>
     <!--以上确认有用到-->
     <!--区域公共部分 end-->
@@ -201,12 +201,12 @@
         order by sort asc
     </select>
 
-    <select id="listRoleMenuByRoleId"  resultMap="BaseResultMap">
+    <select id="listRoleMenuByRoleId" resultMap="BaseResultMap">
         call platform.query_role_menu(#{value});
         <!--select *,1 as checked from platform.menu_forfront-->
         <!--<if test="null != value ">-->
-            <!--where id in-->
-            <!--(select menuId from platform.r_role_menu_forfront where roleId = #{value})-->
+        <!--where id in-->
+        <!--(select menuId from platform.r_role_menu_forfront where roleId = #{value})-->
         <!--</if>-->
         <!--order by sort asc-->
     </select>
@@ -216,14 +216,15 @@
     </select>
 
     <select id="getUserRoleId" parameterType="Integer" resultType="com.yonghui.portal.model.global.RoleMenu">
-        select * from  platform.r_role_menu_forfront where roleid=#{roleid}
+        select * from platform.r_role_menu_forfront where roleid=#{roleid}
     </select>
 
     <!--用户角色菜单 end-->
 
     <!--用户角色菜单 增删改查 begin-->
     <select id="queryObject" resultType="com.yonghui.portal.model.global.Menu">
-        select * from platform.menu_forfront where id = #{value}
+        select m.*,(select p.name from platform.menu_forfront p where p.id = m.pid) as pName
+        from platform.menu_forfront m where m.id = #{value}
     </select>
 
     <select id="queryList" resultType="com.yonghui.portal.model.global.Menu">
@@ -237,7 +238,7 @@
                 and m.`name` like concat('%',#{name},'%')
             </if>
             <if test="pid != null and pid !=''">
-                and m.`pid` =#{pid}
+                and m.`pid` =#{pid} or m.id=#{pid}
             </if>
         </where>
         <choose>
@@ -254,16 +255,16 @@
     </select>
 
     <select id="queryTotal" resultType="int">
-        select count(*) from platform.menu_forfront
+        select count(*) from platform.menu_forfront m
         <where>
             <if test="id != null and id !=''">
                 and id = #{id}
             </if>
             <if test="name != null and name !=''">
-                and name like concat('%',#{name},'%')
+                and `name` like concat('%',#{name},'%')
             </if>
             <if test="pid != null and pid !=''">
-                and m.`pid` =#{pid}
+                and m.`pid` =#{pid} or m.id=#{pid}
             </if>
         </where>
     </select>
@@ -312,11 +313,11 @@
     <update id="update" parameterType="com.yonghui.portal.model.global.Menu">
         update platform.menu_forfront
         <set>
-            <if test="name != null">`name` = #{name}, </if>
-            <if test="url != null">`url` = #{url}, </if>
-            <if test="pid != null">`pid` = #{pid}, </if>
-            <if test="icon != null">`icon` = #{icon}, </if>
-            <if test="status != null">`status` = #{status}, </if>
+            <if test="name != null">`name` = #{name},</if>
+            <if test="url != null">`url` = #{url},</if>
+            <if test="pid != null">`pid` = #{pid},</if>
+            <if test="icon != null">`icon` = #{icon},</if>
+            <if test="status != null">`status` = #{status},</if>
             <if test="sort != null">`sort` = #{sort},</if>
             `position` = 0,
             `updated_at` = now()
@@ -335,8 +336,20 @@
         </foreach>
     </delete>
 
-    <!--用户角色菜单 增删改查 end-->
 
+    <select id="queryChildrenList" resultType="com.yonghui.portal.model.global.Menu">
+        select m.*,(select p.name from platform.menu_forfront p where p.id = m.pid) as pName
+        from platform.menu_forfront m where m.`pid` =#{value}
+        order by m.sort asc
+    </select>
+
+
+    <select id="queryMenuSort" resultType="com.yonghui.portal.model.global.Menu">
+        select m.`id`,m.`sort`
+        from platform.menu_forfront m where m.`id` =#{value}
+        order by m.sort asc
+    </select>
+    <!--用户角色菜单 增删改查 end-->
 
 
 </mapper>

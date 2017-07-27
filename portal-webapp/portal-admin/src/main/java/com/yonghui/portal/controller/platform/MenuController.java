@@ -1,13 +1,12 @@
 package com.yonghui.portal.controller.platform;
 
+import com.alibaba.fastjson.JSON;
 import com.yonghui.portal.controller.AbstractController;
 import com.yonghui.portal.model.global.Menu;
 import com.yonghui.portal.service.global.MenuService;
-import com.yonghui.portal.util.PageUtils;
-import com.yonghui.portal.util.Query;
-import com.yonghui.portal.util.R;
-import com.yonghui.portal.utils.Constant;
+import com.yonghui.portal.util.*;
 import org.apache.commons.collections.map.HashedMap;
+import org.apache.log4j.Logger;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -24,6 +23,8 @@ import java.util.Map;
 @RestController
 @RequestMapping("/forfront/menu")
 public class MenuController extends AbstractController {
+
+    Logger log = Logger.getLogger(this.getClass());
 
     @Autowired
     private MenuService menuService;
@@ -45,13 +46,12 @@ public class MenuController extends AbstractController {
         return R.success().put("page", pageUtil);
     }
 
-
     /**
      * 选择菜单(添加、修改菜单)
      */
     @RequestMapping("/select")
     @RequiresPermissions("menu:select")
-    public R select(@RequestParam Map<String, Object> params){
+    public R select(@RequestParam Map<String, Object> params) {
         //查询列表数据
         List<Menu> menuList = menuService.queryList(params);
 
@@ -71,13 +71,13 @@ public class MenuController extends AbstractController {
      */
     @RequestMapping("/perms")
     @RequiresPermissions("menu:perms")
-    public R perms(){
+    public R perms() {
         //查询列表数据
         List<Menu> menuList = null;
 
         //只有超级管理员，才能查看所有管理员列表
 //        if(getUserId() == Constant.SUPER_ADMIN){
-            menuList = menuService.queryList(new HashMap<String, Object>());
+        menuList = menuService.queryList(new HashMap<String, Object>());
 //        }else{
 //            menuList = menuService.queryUserList(getUserId());
 //        }
@@ -125,34 +125,96 @@ public class MenuController extends AbstractController {
         return R.success();
     }
 
-
     @RequestMapping("/getLargeArea")
-    public R getLargeArea(){
+    public R getLargeArea() {
         //查询老大区列表数据
-        List<Map<String,Object>> areaList = menuService.queryLargeAreaList();
+        List<Map<String, Object>> areaList = menuService.queryLargeAreaList();
         return R.success().put("largeArea", areaList);
     }
+
     @RequestMapping("/getAreaMans")
-    public R getAreaMans(String largeArea){
+    public R getAreaMans(String largeArea) {
         //查询新大区列表数据
-        List<Map<String,Object>> areaMansList = menuService.queryAreamsList(largeArea);
+        List<Map<String, Object>> areaMansList = menuService.queryAreamsList(largeArea);
         return R.success().put("areaMans", areaMansList);
     }
+
     @RequestMapping("/getFirms")
-    public R getFirms(){
+    public R getFirms() {
         //查询商行列表数据
-        List<Map<String,Object>> firmList = menuService.queryFirmsList();
+        List<Map<String, Object>> firmList = menuService.queryFirmsList();
         return R.success().put("firm", firmList);
     }
 
     @RequestMapping("/getBravoShop")
-    public R getBravoShopList(String largeArea,String areaMans){
+    public R getBravoShopList(String largeArea, String areaMans) {
         //查询门店列表数据
-        Map<String,Object> map=new HashedMap();
-        map.put("largeArea",largeArea);
-        map.put("areaMans",areaMans);
-        List<Map<String,Object>> shopList = menuService.queryShopsList(map);
+        Map<String, Object> map = new HashedMap();
+        map.put("largeArea", largeArea);
+        map.put("areaMans", areaMans);
+        List<Map<String, Object>> shopList = menuService.queryShopsList(map);
         return R.success().put("shop", shopList);
+    }
+
+    @RequestMapping("/menuSortParentList")
+    public R menuSortParentList(@RequestParam Map<String, Object> map) {
+        int pid = 0;
+        if (StringUtils.isNumeric(map.get("pid"))) {
+            pid = Integer.parseInt(map.get("pid").toString());
+        }
+
+        List<Menu> menusList = null;
+        try {
+            menusList = menuService.queryChildrenList(pid);
+            if (pid==0){
+                menusList.remove(0);
+            }
+            System.out.println(JSON.toJSONString(menusList));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return R.success().put("list", menusList);
+    }
+
+    @RequestMapping("/doMenuSort")
+    public R doMenuSort(String sortStr) {
+        System.out.println(sortStr);
+        try {
+            String[] sortStrs = sortStr.split("\\|");
+            for (int i = 0; i < sortStrs.length; i++) {
+                int id=-1;
+                if (StringUtils.isNumeric(sortStrs[i].trim())){
+                    id=Integer.parseInt(sortStrs[i].trim());
+                }
+                Menu menu=new Menu();
+                menu.setId(id);
+                menu.setSort(i + 1);
+                menuService.update(menu);
+            }
+        } catch (Exception e) {
+            log.error(e);
+            e.printStackTrace();
+            return R.error();
+        }
+        return R.success();
+    }
+
+    @RequestMapping("/queryMenuSort")
+    public R queryMenuSort(Integer id) {
+        System.out.println(id);
+        try {
+            List<Menu> list=  menuService.queryMenuSort(id);
+            if (list!=null&&list.size()>0){
+                Menu menu=list.get(0);
+                return R.success().put("sort",menu.getSort());
+            }
+        } catch (Exception e) {
+            log.error(e);
+            e.printStackTrace();
+            return R.error();
+        }
+        return R.success().put("sort",98);
     }
 
 }

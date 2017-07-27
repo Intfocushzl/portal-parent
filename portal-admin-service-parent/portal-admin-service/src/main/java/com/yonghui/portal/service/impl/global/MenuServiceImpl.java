@@ -94,4 +94,14 @@ public class MenuServiceImpl implements MenuService {
         return menuMapper.getBravoShopList(map);
     }
 
+    @Override
+    public List<Menu> queryChildrenList(Integer pid) {
+        return menuMapper.queryChildrenList(pid);
+    }
+
+    @Override
+    public List<Menu> queryMenuSort(Integer id) {
+        return menuMapper.queryMenuSort(id);
+    }
+
 }

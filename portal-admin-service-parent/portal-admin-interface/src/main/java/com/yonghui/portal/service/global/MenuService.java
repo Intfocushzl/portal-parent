@@ -41,4 +41,9 @@ public interface MenuService {
     List<Map<String,Object>> queryFirmsList();
 
     List<Map<String,Object>> queryShopsList(Map<String, Object> map);
+
+    List<Menu> queryChildrenList(Integer pid);
+
+    List<Menu> queryMenuSort(Integer id);
 }
+

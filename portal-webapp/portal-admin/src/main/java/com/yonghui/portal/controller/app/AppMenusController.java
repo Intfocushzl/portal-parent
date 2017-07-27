@@ -198,6 +198,12 @@ public class AppMenusController extends AbstractController {
         map.put("api_token", "api_token");
         map.put("page", 0);
         map.put("page_size", 10000);
+        if (map.get("subName2") != null) {
+            map.put("kpi_group", map.get("subName2"));
+        }
+        if (map.get("title") != null) {
+            map.put("kpi_name", map.get("title"));
+        }
         try {
             String result = httpUtil.getGetResult(InitProperties.APP_BASE_GET_KPI_URL, map);
 
@@ -288,11 +294,16 @@ public class AppMenusController extends AbstractController {
 //                            list.add(node);
 //                        }
 //                    }
-                    List<AppMenu> menuKpiList = new ArrayList<>();
+                    List<Map<String, Object>> menuKpiList = new ArrayList<>();
 
                     for (AppMenu appMenu : menuList) {
                         if (appMenu.getActive() == 1) {
-                            menuKpiList.add(appMenu);
+                            Map<String, Object> menu = new HashedMap();
+                            menu.put("menuId", appMenu.getMenuId());
+                            menuKpiList.add(menu);
+                            Map<String, Object> parentMenu = new HashedMap();
+                            parentMenu.put("menuId", "b" + appMenu.getMenuId());
+                            menuKpiList.add(parentMenu);
                         }
                     }
                     list = parseListToTree(menuList);
@@ -325,6 +336,12 @@ public class AppMenusController extends AbstractController {
         map.put("api_token", "api_token");
         map.put("page", 0);
         map.put("page_size", 10000);
+        if (map.get("subName2") != null) {
+            map.put("group_name", map.get("subName2"));
+        }
+        if (map.get("title") != null) {
+            map.put("name", map.get("title"));
+        }
         try {
             String result = httpUtil.getGetResult(InitProperties.APP_BASE_GET_ANALYSE_URL, map);
 
@@ -429,11 +446,19 @@ public class AppMenusController extends AbstractController {
                         newList.add(newMap);
                     }
 
-                    List<AppMenu> menuAnalysesList = new ArrayList<>();
+                    List<Map<String, Object>> menuAnalysesList = new ArrayList<>();
 
                     for (AppMenu appMenu : menuList) {
                         if (appMenu.getActive() == 1) {
-                            menuAnalysesList.add(appMenu);
+                            Map<String, Object> menu = new HashedMap();
+                            menu.put("menuId", appMenu.getMenuId());
+                            menuAnalysesList.add(menu);
+                            Map<String, Object> parentMenu = new HashedMap();
+                            parentMenu.put("menuId", "b" + appMenu.getMenuId());
+                            menuAnalysesList.add(parentMenu);
+                            Map<String, Object> groundParentMenu = new HashedMap();
+                            parentMenu.put("menuId", "a" + appMenu.getMenuId());
+                            menuAnalysesList.add(groundParentMenu);
                         }
                     }
                     return R.success().put("list", newList).put("menuAnalysesList", menuAnalysesList);
@@ -463,12 +488,13 @@ public class AppMenusController extends AbstractController {
             Map<String, Object> node = new HashedMap();
             node.put("id", "b" + appMenu.getMenuId());
             node.put("name", appMenu.getSubName2());
+            node.put("groupOrder", appMenu.getGroupOrder());
 
             List<Map<String, Object>> children = new ArrayList<Map<String, Object>>();
             Map<String, Object> childrenNode = new HashedMap();
             childrenNode.put("id", appMenu.getMenuId());
             childrenNode.put("name", appMenu.getTitle());
-            childrenNode.put("type", appMenu.getType());
+            childrenNode.put("itemOrder", appMenu.getItemOrder());
 
             boolean isExist = false;
             for (int i = 0; i < list.size(); i++) {
@@ -497,6 +523,12 @@ public class AppMenusController extends AbstractController {
         map.put("api_token", "api_token");
         map.put("page", 0);
         map.put("page_size", 10000);
+        if (map.get("subName2") != null) {
+            map.put("group_name", map.get("subName2"));
+        }
+        if (map.get("title") != null) {
+            map.put("name", map.get("title"));
+        }
         try {
             String result = httpUtil.getGetResult(InitProperties.APP_BASE_GET_APP_URL, map);
 
@@ -559,41 +591,19 @@ public class AppMenusController extends AbstractController {
                         appMenu.setActive((active != null && active) ? 1 : 0);
                         menuList.add(appMenu);
                     }
-//                    for (AppMenu appMenu : menuList) {
-//                        Map<String, Object> node = new HashedMap();
-//                        node.put("id", appMenu.getMenuId());
-//                        node.put("name", appMenu.getSubName2());
-//
-//                        List<Map<String, Object>> children = new ArrayList<Map<String, Object>>();
-//                        Map<String, Object> childrenNode = new HashedMap();
-//                        childrenNode.put("id", appMenu.getMenuId());
-//                        childrenNode.put("name", appMenu.getTitle());
-//                        childrenNode.put("type", appMenu.getType());
-//
-//                        boolean isExist = false;
-//                        for (int i = 0; i < list.size(); i++) {
-//                            String name = list.get(i).get("name") + "";
-//                            if (name.equals(appMenu.getSubName2())) {
-//                                isExist = true;
-//                                children = (List<Map<String, Object>>) list.get(i).get("children");
-//                                children.add(childrenNode);
-//                                break;
-//                            }
-//                        }
-//                        if (!isExist) {
-//                            children.add(childrenNode);
-//                            node.put("children", children);
-//                            list.add(node);
-//                        }
-//                    }
-                    list = parseListToTree(menuList);
-                    List<AppMenu> menuAppList = new ArrayList<>();
+                    List<Map<String, Object>> menuAppList = new ArrayList<>();
 
                     for (AppMenu appMenu : menuList) {
                         if (appMenu.getActive() == 1) {
-                            menuAppList.add(appMenu);
+                            Map<String, Object> menu = new HashedMap();
+                            menu.put("menuId", appMenu.getMenuId());
+                            menuAppList.add(menu);
+                            Map<String, Object> parentMenu = new HashedMap();
+                            parentMenu.put("menuId", "b" + appMenu.getMenuId());
+                            menuAppList.add(parentMenu);
                         }
                     }
+                    list = parseListToTree(menuList);
                     return R.success().put("list", list).put("menuAppList", menuAppList);
                 } else {
                     String info = jsonObject.getString("message");
@@ -659,6 +669,8 @@ public class AppMenusController extends AbstractController {
                             appMenu.setSubName2(subName2);
                             String title = object.getString("kpi_name");
                             appMenu.setTitle(StringUtils.isEmpty(title) ? "" : title);
+                            Integer kpiId = object.getInteger("kpi_id");
+                            appMenu.setKpiId(kpiId);
                             Integer reportId = object.getInteger("report_id");
                             appMenu.setReportId(reportId);
                             Integer templateId = object.getInteger("template_id");
@@ -1037,9 +1049,8 @@ public class AppMenusController extends AbstractController {
                         appMenu.setId(id);
                         String title = array.getJSONObject(i).getString("title");
                         appMenu.setTitle(StringUtils.isEmpty(title) ? "" : title);
-                        Integer kpi_id = array.getJSONObject(i).getInteger("kpi_id");
-                        appMenu.setKpiId(kpi_id);
                         Integer reportId = array.getJSONObject(i).getInteger("report_id");
+                        appMenu.setKpiId(reportId);
                         appMenu.setReportId(reportId);
                         Integer templateId = array.getJSONObject(i).getInteger("template_id");
                         appMenu.setTemplateId(templateId);
@@ -1074,4 +1085,393 @@ public class AppMenusController extends AbstractController {
         }
     }
 
+    @RequestMapping("/menuSortParentList")
+    public R menuSortParentList(@RequestParam Map<String, Object> map) {
+        int type = 1;
+        if (StringUtils.isNumeric(map.get("type"))) {
+            type = Integer.parseInt(map.get("type").toString());
+        }
+        String subName1 = map.get("subName1") == null ? null : map.get("subName1").toString();
+
+        List<Map<String, Object>> list = new ArrayList<>();
+
+        HttpMethodUtil httpUtil = new HttpMethodUtil();
+        map.put("api_token", "api_token");
+        map.put("page", 0);
+        map.put("page_size", 10000);
+        List<AppMenu> appMenusList = new ArrayList<>();
+
+        try {
+            String result = "";
+            switch (type) {
+                case 1:
+                    result = httpUtil.getGetResult(ConstantsUtil.AppBaseUrl.APP_BASE_GET_KPI_URL, map);
+                    break;
+                case 2:
+                    result = httpUtil.getGetResult(ConstantsUtil.AppBaseUrl.APP_BASE_GET_ANALYSE_URL, map);
+                    break;
+                case 3:
+                    result = httpUtil.getGetResult(ConstantsUtil.AppBaseUrl.APP_BASE_GET_APP_URL, map);
+                    break;
+            }
+            log.info(result);
+            if (!StringUtils.isEmpty(result)) {
+                JSONObject jsonObject = JSONObject.parseObject(result);
+                if (jsonObject.getInteger("code") == 200) {
+
+                    JSONArray array = jsonObject.getJSONArray("data");
+                    if (array == null) {
+                        array = new JSONArray();
+                    }
+                    for (int i = 0; i < array.size(); i++) {
+                        AppMenu appMenu = new AppMenu();
+                        Integer id = array.getJSONObject(i).getInteger("id");
+                        appMenu.setId(id);
+                        appMenu.setMenuId(id);
+                        switch (type) {
+                            case 1:
+                                String subName2 = array.getJSONObject(i).getString("kpi_group");
+                                appMenu.setSubName2(subName2);
+                                String title = array.getJSONObject(i).getString("kpi_name");
+                                appMenu.setTitle(StringUtils.isEmpty(title) ? "" : title);
+                                Integer kpiId = array.getJSONObject(i).getInteger("kpi_id");
+                                appMenu.setKpiId(kpiId);
+                                Integer reportId = array.getJSONObject(i).getInteger("report_id");
+                                appMenu.setReportId(reportId);
+                                Integer templateId = array.getJSONObject(i).getInteger("template_id");
+                                appMenu.setTemplateId(templateId);
+                                Boolean hasAudio = array.getJSONObject(i).getBoolean("has_audio");
+                                appMenu.setHasAudio(hasAudio);
+                                String url = array.getJSONObject(i).getString("url");
+                                appMenu.setUrl(StringUtils.isEmpty(url) ? "" : url);
+                                break;
+                            case 2:
+                                String category = array.getJSONObject(i).getString("category");
+                                appMenu.setSubName1(StringUtils.isEmpty(category) ? "" : category);
+                            case 3:
+                                String group_name = array.getJSONObject(i).getString("group_name");
+                                appMenu.setSubName2(StringUtils.isEmpty(group_name) ? "" : group_name);
+                                String name = array.getJSONObject(i).getString("name");
+                                appMenu.setTitle(StringUtils.isEmpty(name) ? "" : name);
+                                String link_path = array.getJSONObject(i).getString("link_path");
+                                appMenu.setUrl(StringUtils.isEmpty(link_path) ? "" : link_path);
+                                break;
+                        }
+                        String icon = array.getJSONObject(i).getString("icon");
+                        appMenu.setIcon(StringUtils.isEmpty(icon) ? "" : icon);
+                        String icon_link = array.getJSONObject(i).getString("icon_link");
+                        appMenu.setIconUrl(StringUtils.isEmpty(icon_link) ? "" : icon_link);
+
+                        String remark = array.getJSONObject(i).getString("remark");
+                        appMenu.setRemark(StringUtils.isEmpty(remark) ? "" : remark);
+
+                        Boolean publicly = array.getJSONObject(i).getBoolean("publicly");
+                        if (publicly != null) {
+                            appMenu.setPublicly(publicly);
+                        }
+
+                        Integer healthValue = array.getJSONObject(i).getInteger("health_value");
+                        if (healthValue != null) {
+                            appMenu.setHealthValue(healthValue);
+                        }
+                        Integer groupOrder = array.getJSONObject(i).getInteger("group_order");
+                        if (groupOrder != null) {
+                            appMenu.setGroupOrder(groupOrder);
+                        }
+                        Integer itemOrder = array.getJSONObject(i).getInteger("item_order");
+                        if (itemOrder != null) {
+                            appMenu.setItemOrder(itemOrder);
+                        }
+
+                        appMenu.setType(type);
+
+                        String createdAt = array.getJSONObject(i).getString("created_at");
+                        appMenu.setCreatedAt(StringUtils.isEmpty(createdAt) ? "" : createdAt);
+                        String updatedAt = array.getJSONObject(i).getString("updated_at");
+                        appMenu.setUpdatedAt(StringUtils.isEmpty(updatedAt) ? "" : updatedAt);
+                        appMenusList.add(appMenu);
+                    }
+
+                    for (AppMenu appMenu : appMenusList) {
+                        Map node = new HashedMap();
+                        node.put("id", appMenu.getMenuId());
+                        node.put("name", appMenu.getSubName2());
+                        node.put("groupOrder", appMenu.getGroupOrder());
+                        List<Map<String, Object>> children = new ArrayList<>();
+
+                        Map childrenNode = new HashedMap();
+                        childrenNode.put("id", appMenu.getMenuId());
+                        childrenNode.put("name", appMenu.getTitle());
+                        childrenNode.put("itemOrder", appMenu.getItemOrder());
+                        boolean isExist = false;
+                        for (int i = 0; i < list.size(); i++) {
+                            String name = list.get(i).get("name") + "";
+                            if (name.equals(appMenu.getSubName2())) {
+                                isExist = true;
+                                children = (List<Map<String, Object>>) list.get(i).get("children");
+                                children.add(childrenNode);
+                                break;
+                            }
+                        }
+                        if (!isExist) {
+                            children.add(childrenNode);
+                            node.put("children", children);
+                            list.add(node);
+                        }
+                    }
+                    return R.success().put("list", list);
+                } else {
+                    String info = jsonObject.getString("message");
+                    list = new ArrayList<>();
+                    return R.error().put("list", list).setMsg(info);
+                }
+            } else {
+                list = new ArrayList<>();
+                return R.error().put("list", list);
+            }
+        } catch (Exception e) {
+            log.error(e);
+            e.printStackTrace();
+            list = new ArrayList<>();
+            return R.error().put("list", list);
+        }
+    }
+
+    @RequestMapping("/menuSortChildrenList")
+    public R menuSortChildrenList(@RequestParam Map<String, Object> map) {
+        int type = 1;
+        if (StringUtils.isNumeric(map.get("type"))) {
+            type = Integer.parseInt(map.get("type").toString());
+        }
+        List<Map<String, Object>> list = new ArrayList<>();
+
+        HttpMethodUtil httpUtil = new HttpMethodUtil();
+        map.put("api_token", "api_token");
+        map.put("page", 0);
+        map.put("page_size", 10000);
+        List<AppMenu> appMenusList = new ArrayList<>();
+
+        try {
+            String result = "";
+            switch (type) {
+                case 1:
+                    if (map.get("subName2") != null) {
+                        map.put("kpi_group", map.get("subName2"));
+                    }
+                    result = httpUtil.getGetResult(ConstantsUtil.AppBaseUrl.APP_BASE_GET_KPI_URL, map);
+                    break;
+                case 2:
+                    if (map.get("subName2") != null) {
+                        map.put("group_name", map.get("subName2"));
+                    }
+                    result = httpUtil.getGetResult(ConstantsUtil.AppBaseUrl.APP_BASE_GET_ANALYSE_URL, map);
+                    break;
+                case 3:
+                    if (map.get("subName2") != null) {
+                        map.put("group_name", map.get("subName2"));
+                    }
+                    result = httpUtil.getGetResult(ConstantsUtil.AppBaseUrl.APP_BASE_GET_APP_URL, map);
+                    break;
+            }
+            log.info(result);
+            if (!StringUtils.isEmpty(result)) {
+                JSONObject jsonObject = JSONObject.parseObject(result);
+                if (jsonObject.getInteger("code") == 200) {
+
+                    JSONArray array = jsonObject.getJSONArray("data");
+                    if (array == null) {
+                        array = new JSONArray();
+                    }
+                    for (int i = 0; i < array.size(); i++) {
+                        AppMenu appMenu = new AppMenu();
+                        Integer id = array.getJSONObject(i).getInteger("id");
+                        appMenu.setId(id);
+                        appMenu.setMenuId(id);
+                        switch (type) {
+                            case 1:
+                                String subName2 = array.getJSONObject(i).getString("kpi_group");
+                                appMenu.setSubName2(subName2);
+                                String title = array.getJSONObject(i).getString("kpi_name");
+                                appMenu.setTitle(StringUtils.isEmpty(title) ? "" : title);
+                                Integer kpiId = array.getJSONObject(i).getInteger("kpi_id");
+                                appMenu.setKpiId(kpiId);
+                                Integer reportId = array.getJSONObject(i).getInteger("report_id");
+                                appMenu.setReportId(reportId);
+                                Integer templateId = array.getJSONObject(i).getInteger("template_id");
+                                appMenu.setTemplateId(templateId);
+                                Boolean hasAudio = array.getJSONObject(i).getBoolean("has_audio");
+                                appMenu.setHasAudio(hasAudio);
+                                String url = array.getJSONObject(i).getString("url");
+                                appMenu.setUrl(StringUtils.isEmpty(url) ? "" : url);
+                                break;
+                            case 2:
+                                String category = array.getJSONObject(i).getString("category");
+                                appMenu.setSubName1(StringUtils.isEmpty(category) ? "" : category);
+                            case 3:
+                                String group_name = array.getJSONObject(i).getString("group_name");
+                                appMenu.setSubName2(StringUtils.isEmpty(group_name) ? "" : group_name);
+                                String name = array.getJSONObject(i).getString("name");
+                                appMenu.setTitle(StringUtils.isEmpty(name) ? "" : name);
+                                String link_path = array.getJSONObject(i).getString("link_path");
+                                appMenu.setUrl(StringUtils.isEmpty(link_path) ? "" : link_path);
+                                break;
+                        }
+                        String icon = array.getJSONObject(i).getString("icon");
+                        appMenu.setIcon(StringUtils.isEmpty(icon) ? "" : icon);
+                        String icon_link = array.getJSONObject(i).getString("icon_link");
+                        appMenu.setIconUrl(StringUtils.isEmpty(icon_link) ? "" : icon_link);
+
+                        String remark = array.getJSONObject(i).getString("remark");
+                        appMenu.setRemark(StringUtils.isEmpty(remark) ? "" : remark);
+
+                        Boolean publicly = array.getJSONObject(i).getBoolean("publicly");
+                        if (publicly != null) {
+                            appMenu.setPublicly(publicly);
+                        }
+
+                        Integer healthValue = array.getJSONObject(i).getInteger("health_value");
+                        if (healthValue != null) {
+                            appMenu.setHealthValue(healthValue);
+                        }
+                        Integer groupOrder = array.getJSONObject(i).getInteger("group_order");
+                        if (groupOrder != null) {
+                            appMenu.setGroupOrder(groupOrder);
+                        }
+                        Integer itemOrder = array.getJSONObject(i).getInteger("item_order");
+                        if (itemOrder != null) {
+                            appMenu.setItemOrder(itemOrder);
+                        }
+
+                        appMenu.setType(type);
+
+                        String createdAt = array.getJSONObject(i).getString("created_at");
+                        appMenu.setCreatedAt(StringUtils.isEmpty(createdAt) ? "" : createdAt);
+                        String updatedAt = array.getJSONObject(i).getString("updated_at");
+                        appMenu.setUpdatedAt(StringUtils.isEmpty(updatedAt) ? "" : updatedAt);
+                        appMenusList.add(appMenu);
+                    }
+
+                    for (AppMenu appMenu : appMenusList) {
+
+                        Map childrenNode = new HashedMap();
+                        childrenNode.put("id", appMenu.getMenuId());
+                        childrenNode.put("name", appMenu.getTitle());
+                        childrenNode.put("itemOrder", appMenu.getItemOrder());
+                        list.add(childrenNode);
+                    }
+                    return R.success().put("list", list);
+                } else {
+                    String info = jsonObject.getString("message");
+                    list = new ArrayList<>();
+                    return R.error().put("list", list).setMsg(info);
+                }
+            } else {
+                list = new ArrayList<>();
+                return R.error().put("list", list);
+            }
+        } catch (Exception e) {
+            log.error(e);
+            e.printStackTrace();
+            list = new ArrayList<>();
+            return R.error().put("list", list);
+        }
+    }
+
+    @RequestMapping("/doParentSort")
+    public R doParentSort(String sortStr, Integer menuType) {
+        System.out.println(sortStr);
+        try {
+            String[] sortStrs = sortStr.split("\\|");
+            HttpMethodUtil httpUtil = new HttpMethodUtil();
+            for (int i = 0; i < sortStrs.length; i++) {
+                Map<String, Object> map = new HashedMap();
+                map.put("api_token", "api_token");
+                Map<String, Object> child = new HashedMap();
+                if (menuType == 1) {
+                    child.put("group_order", i + 1);
+                    map.put("kpi", child);
+                } else if (menuType == 2) {
+                    child.put("group_order", i + 1);
+                    map.put("analyse", child);
+                } else {
+                    child.put("group_order", i + 1);
+                    map.put("app", child);
+                }
+                String result = "";
+                switch (menuType) {
+                    case 1:
+                        result = httpUtil.getPostJsonResult(ConstantsUtil.AppBaseUrl.APP_BASE_POST_KPI_URL + "/" + sortStrs[i].trim(), JSON.toJSONString(map));
+                        break;
+                    case 2:
+                        result = httpUtil.getPostJsonResult(ConstantsUtil.AppBaseUrl.APP_BASE_POST_ANALYSE_URL + "/" + sortStrs[i].trim(), JSON.toJSONString(map));
+                        break;
+                    case 3:
+                        result = httpUtil.getPostJsonResult(ConstantsUtil.AppBaseUrl.APP_BASE_POST_APP_URL + "/" + sortStrs[i].trim(), JSON.toJSONString(map));
+                        break;
+                }
+                if (!StringUtils.isEmpty(result)) {
+                    JSONObject jsonObject = JSONObject.parseObject(result);
+                    if (jsonObject.getInteger("code") == 201) {
+                        log.info("============>排序结束");
+                    }
+                } else {
+                    log.info("============>排序失败");
+                }
+            }
+        } catch (Exception e) {
+            log.error(e);
+            e.printStackTrace();
+            return R.error();
+        }
+        return R.success();
+    }
+
+    @RequestMapping("/doChildrenSort")
+    public R doChildrenSort(String sortStr, Integer menuType) {
+        System.out.println(sortStr);
+        try {
+            String[] sortStrs = sortStr.split("\\|");
+            HttpMethodUtil httpUtil = new HttpMethodUtil();
+            for (int i = 0; i < sortStrs.length; i++) {
+                Map<String, Object> map = new HashedMap();
+                map.put("api_token", "api_token");
+                Map<String, Object> child = new HashedMap();
+                if (menuType == 1) {
+                    child.put("item_order", i + 1);
+                    map.put("kpi", child);
+                } else if (menuType == 2) {
+                    child.put("item_order", i + 1);
+                    map.put("analyse", child);
+                } else {
+                    child.put("item_order", i + 1);
+                    map.put("app", child);
+                }
+                String result = "";
+                switch (menuType) {
+                    case 1:
+                        result = httpUtil.getPostJsonResult(ConstantsUtil.AppBaseUrl.APP_BASE_POST_KPI_URL + "/" + sortStrs[i].trim(), JSON.toJSONString(map));
+                        break;
+                    case 2:
+                        result = httpUtil.getPostJsonResult(ConstantsUtil.AppBaseUrl.APP_BASE_POST_ANALYSE_URL + "/" + sortStrs[i].trim(), JSON.toJSONString(map));
+                        break;
+                    case 3:
+                        result = httpUtil.getPostJsonResult(ConstantsUtil.AppBaseUrl.APP_BASE_POST_APP_URL + "/" + sortStrs[i].trim(), JSON.toJSONString(map));
+                        break;
+                }
+                if (!StringUtils.isEmpty(result)) {
+                    JSONObject jsonObject = JSONObject.parseObject(result);
+                    if (jsonObject.getInteger("code") == 201) {
+                        log.info("============>排序结束");
+                    }
+                } else {
+                    log.info("============>排序失败");
+                }
+            }
+        } catch (Exception e) {
+            log.error(e);
+            e.printStackTrace();
+            return R.error();
+        }
+        return R.success();
+    }
 }

@@ -13,6 +13,7 @@ $(function () {
             {label: '菜单名称', name: 'name', index: 'name', width: 80},
             {label: '菜单地址', name: 'url', index: 'url', width: 80},
             {label: '父菜单id', name: 'pid', index: 'pid', sortable: false, width: 80},
+            {label: '父菜单', name: 'pName', index: 'pName', sortable: false, width: 80},
             {
                 label: '菜单图标', name: 'icon', sortable: false, width: 50, formatter: function (value, options, row) {
                 return value == null ? '' : '<i class="' + value + ' fa-lg"></i>';
@@ -53,6 +54,58 @@ $(function () {
         }
     });
 });
+
+// 属性设置框
+$("#dialog-div").dialog({
+    autoOpen: false,
+    width: 400,
+    minHeight: 480,
+    modal: true,
+    show: {
+        effect: "explode",//eblind
+        duration: 100
+    },
+    hide: {
+        effect: "explode",
+        duration: 100
+    },
+    buttons: {
+        "确定": function () {
+            $('.ui-dialog-buttonpane').find('button:contains("确定")').attr("disabled", "disabled");
+            saveOrder();
+            console.log($("input[name=listSortOrder]").val());
+            var strs = $("input[name=listSortOrder]").val().split("|");
+            console.log(strs);
+            $.ajax({
+                type: "GET",
+                url: "../forfront/menu/doMenuSort",
+                data: {
+                    sortStr: $("input[name=listSortOrder]").val(),
+                },
+                success: function (r) {
+                    // 关闭窗口
+                    $("#dialog-div").dialog("close");
+                    if (r.code === 0) {
+                        alert('操作成功', function () {
+                            $.get("../forfront/menu/queryMenuSort?id="+vm.menu.id, function (r) {
+                               vm.menu.sort=r.sort;
+                            })
+                        });
+                    } else {
+                        alert(r.msg);
+                        $('.ui-dialog-buttonpane').find('button:contains("确定")').removeAttr("disabled");
+                    }
+                },
+            });
+        },
+        "取消": function () {
+            $(this).dialog("close");
+        }
+    },
+    close: function () {
+    }
+});
+
 var setting = {
     data: {
         simpleData: {
@@ -76,8 +129,7 @@ var vm = new Vue({
         menu: {
             parentName: null,
             pid: 0,
-            type: 1,
-            sort: 0
+            sort: 98
         }
     },
     methods: {
@@ -91,7 +143,7 @@ var vm = new Vue({
                 page: 1
             }).trigger("reloadGrid");
         },
-        getMenu: function (id) {
+        getMenu: function () {
             //加载菜单树
             $.get("../forfront/menu/select", function (r) {
                 ztree = $.fn.zTree.init($("#menuTree"), setting, r.menuList);
@@ -107,7 +159,7 @@ var vm = new Vue({
         add: function () {
             vm.showList = false;
             vm.title = "新增";
-            vm.menu = {parentName: null, pid: 0, type: 1, sort: 0};
+            vm.menu = {parentName: null, pid: 0, sort: 98};
             vm.getMenu();
         },
         update: function (event) {
@@ -120,8 +172,9 @@ var vm = new Vue({
                 vm.showList = false;
                 vm.title = "修改";
                 vm.menu = r.menu;
-                vm.parentName = r.menu.pName;
+                vm.menu.parentName = r.menu.pName;
 
+                console.log(vm.menu);
                 vm.getMenu();
                 vm.bindIcon(vm.menu.icon);
             });
@@ -203,6 +256,27 @@ var vm = new Vue({
             $("#jqGrid").jqGrid('setGridParam', {
                 page: page
             }).trigger("reloadGrid");
+        },
+        showDialog: function () {
+            vm.getSortList();
+            $("#dialog-div").dialog("open");
+        },
+        getSortList: function () {
+            var level = $("#level").selectpicker('val');
+            var url = "../forfront/menu/menuSortParentList";
+            var obj = {
+                pid: vm.menu.pid
+            };
+            $.get(url, obj, function (r) {
+                var list = r.list;
+                console.log(list);
+                $('#list li').remove();
+                for (var i = 0; i < list.length; i++) {
+                    var parent = list[i];
+                    $("#list").append("<li value='" + parent.id + " '>" + parent.name + "<span   class='remove'     style='float: right'>" + parent.sort + "</span></li>");
+                }
+            });
+            return false;
         }
     }
 });
@@ -214,3 +288,32 @@ $(function () {
     }
     ;
 });
+//可拖拽列表
+//Default Action
+$(".tab_content").hide(); //Hide all content
+$("ul.tabs li:first").addClass("active").show(); //Activate first tab
+$(".tab_content:first").show(); //Show first tab content
+
+//On Click Event
+$("ul.tabs li").click(function () {
+    $("ul.tabs li").removeClass("active"); //Remove any "active" class
+    $(this).addClass("active"); //Add "active" class to selected tab
+    $(".tab_content").hide(); //Hide all tab content
+    var activeTab = $(this).find("a").attr("href"); //Find the rel attribute value to identify the active tab + content
+    $(activeTab).fadeIn(); //Fade in the active content
+    return false;
+});
+
+$("#list").dragsort({
+    dragSelector: "li",
+    dragBetween: false,
+    dragEnd: saveOrder,
+    placeHolderTemplate: "<li></li>"
+});
+
+function saveOrder() {
+    var data = $("#list li").map(function () {
+        return $(this).attr("value");
+    }).get();
+    $("input[name=listSortOrder]").val(data.join("|"));
+}

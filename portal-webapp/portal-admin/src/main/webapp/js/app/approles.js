@@ -82,7 +82,7 @@ var vm = new Vue({
         showList: true,
         title: null,
         appRoles: {},
-        nextRoleId:-1
+        nextRoleId: -1
     },
     methods: {
         query: function () {
@@ -99,7 +99,7 @@ var vm = new Vue({
             vm.showList = false;
             vm.title = "新增";
             vm.appRoles = {};
-            vm.appRoles.roleId=vm.nextRoleId;
+            vm.appRoles.roleId = vm.nextRoleId;
             vm.getMenuTree(-1);
         },
         update: function (event) {
@@ -114,7 +114,7 @@ var vm = new Vue({
             vm.getInfo(id);
         },
         saveOrUpdate: function (event) {
-            if (vm.appRoles.roleName==null||vm.appRoles.roleName==""){
+            if (vm.appRoles.roleName == null || vm.appRoles.roleName == "") {
                 alert("角色名不能为空");
                 return;
             }
@@ -206,7 +206,7 @@ var vm = new Vue({
             }).trigger("reloadGrid");
         },
         getMenuTree: function (roleId) {
-            var kpiUrl= roleId==-1?"../app/menus/selectKpisMenu":("../app/roles/selectKpisMenu?roleId=" + roleId);
+            var kpiUrl = roleId == -1 ? "../app/menus/selectKpisMenu" : ("../app/roles/selectKpisMenu?roleId=" + roleId);
             //加载菜单树
             $.get(kpiUrl, function (r) {
                 ztree1 = $.fn.zTree.init($("#menuTree1"), setting, r.list);
@@ -216,11 +216,15 @@ var vm = new Vue({
                 //勾选角色所拥有的菜单
                 var menuIds = r.menuKpiList;
                 for (var i = 0; i < menuIds.length; i++) {
+                    console.log(i, menuIds[i].menuId);
                     var node = ztree1.getNodeByParam("id", menuIds[i].menuId);
-                    ztree1.checkNode(node, true, false);
+                    if (node != null) {
+                        ztree1.checkNode(node, true, false);
+                    }
+
                 }
             });
-            var analyseUrl= roleId==-1?"../app/menus/selectAnalysesMenu":("../app/roles/selectAnalysesMenu?roleId=" + roleId);
+            var analyseUrl = roleId == -1 ? "../app/menus/selectAnalysesMenu" : ("../app/roles/selectAnalysesMenu?roleId=" + roleId);
             //加载菜单树
             $.get(analyseUrl, function (r) {
                 ztree2 = $.fn.zTree.init($("#menuTree2"), setting, r.list);
@@ -231,10 +235,12 @@ var vm = new Vue({
                 var menuIds = r.menuAnalysesList;
                 for (var i = 0; i < menuIds.length; i++) {
                     var node = ztree2.getNodeByParam("id", menuIds[i].menuId);
-                    ztree2.checkNode(node, true, false);
+                    if (node != null) {
+                        ztree2.checkNode(node, true, false);
+                    }
                 }
             });
-            var appUrl= roleId==-1?"../app/menus/selectAppsMenu":("../app/roles/selectAppsMenu?roleId=" + roleId);
+            var appUrl = roleId == -1 ? "../app/menus/selectAppsMenu" : ("../app/roles/selectAppsMenu?roleId=" + roleId);
             //加载菜单树
             $.get(appUrl, function (r) {
                 ztree3 = $.fn.zTree.init($("#menuTree3"), setting, r.list);
@@ -245,7 +251,9 @@ var vm = new Vue({
                 var menuIds = r.menuAppList;
                 for (var i = 0; i < menuIds.length; i++) {
                     var node = ztree3.getNodeByParam("id", menuIds[i].menuId);
-                    ztree3.checkNode(node, true, false);
+                    if (node != null) {
+                        ztree3.checkNode(node, true, false);
+                    }
                 }
             });
         },

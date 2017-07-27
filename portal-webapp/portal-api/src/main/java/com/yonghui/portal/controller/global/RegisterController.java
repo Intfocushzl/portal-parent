@@ -32,7 +32,7 @@ import java.util.Map;
 public class RegisterController {
     Logger log = Logger.getLogger(this.getClass());
 
-    public static final String APP_BASE_URL = "http://yonghui-test.idata.mobi/api/v2/user";
+//    public static final String APP_BASE_URL = "http://yonghui-test.idata.mobi/api/v2/user";
 
     @Reference
     private UserService userService;

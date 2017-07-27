@@ -52,7 +52,8 @@ var vm = new Vue({
         showList: true,
         title: null,
         appUsers: {},
-        areaMans: null
+        areaMans: null,
+        userNum:""
     },
     methods: {
         query: function () {
@@ -72,6 +73,7 @@ var vm = new Vue({
             vm.appUsers = {
                 groupId: vm.groupId,
             };
+            vm.userNum=null;
             vm.getRoleList();
             vm.getGroupList(null);
             $("#areaMansList").selectpicker('val', vm.areaMans);
@@ -83,7 +85,7 @@ var vm = new Vue({
             }
             vm.showList = false;
             vm.title = "修改";
-
+            vm.userNum=vm.appUsers.userNum;
             vm.getInfo(userNum)
             vm.getGroupList(userNum);
         },
@@ -269,7 +271,7 @@ function selectRoleIds() {
 
 vm.getAreaMans();
 $("select#areaMansList").change(function () {
-    vm.getGroupList(vm.appUsers.userNum);
+    vm.getGroupList(vm.userNum);
 });
 
 $("select#groupList").change(function () {
