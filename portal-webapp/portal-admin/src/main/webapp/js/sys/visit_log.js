@@ -97,6 +97,7 @@ function initVisitDataChart() {
         },
         yAxis: {
             type: 'value'
+            /*name: '次'*/
             /*axisLabel: {
              formatter: '{value} °C'
              }*/
