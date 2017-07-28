@@ -50,6 +50,13 @@
             <if test="remark != null and remark !=''">
                 and remark like concat('%',#{remark},'%')
             </if>
+            <if test="keyword != null and keyword !=''">
+                and (
+                sqlcode like concat('%',#{keyword},'%')
+                or title like concat('%',#{keyword},'%')
+                or data_source_code like concat('%',#{keyword},'%')
+                )
+            </if>
         </where>
     </select>
 
@@ -94,7 +101,7 @@
 			#{parameter},
 			#{remark},
 			#{creater},
-			#{createTime},
+			NOW(),
 			#{modifier},
 			NOW(),
 			#{disabled},

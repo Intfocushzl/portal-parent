@@ -2,10 +2,13 @@ package com.yonghui.portal.controller.common;
 
 import com.yonghui.portal.controller.AbstractController;
 import com.yonghui.portal.model.common.DBravoShopAddress;
+import com.yonghui.portal.model.sys.SysLog;
 import com.yonghui.portal.service.common.DBravoShopAddressService;
+import com.yonghui.portal.util.ComputerUtils;
 import com.yonghui.portal.util.PageUtils;
 import com.yonghui.portal.util.Query;
 import com.yonghui.portal.util.R;
+import com.yonghui.portal.utils.ShiroUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -59,6 +62,7 @@ public class DBravoShopAddressController extends AbstractController {
     @RequestMapping("/save")
     @RequiresPermissions("dbravoshopaddress:save")
     public R save(@RequestBody DBravoShopAddress dBravoShopAddress) {
+        dBravoShopAddress.setCreater(ShiroUtils.getUserId());
         dBravoShopAddressService.save(dBravoShopAddress);
         return R.success();
     }
@@ -69,6 +73,7 @@ public class DBravoShopAddressController extends AbstractController {
     @RequestMapping("/update")
     @RequiresPermissions("dbravoshopaddress:update")
     public R update(@RequestBody DBravoShopAddress dBravoShopAddress) {
+        dBravoShopAddress.setModifier(ShiroUtils.getUserId());
         dBravoShopAddressService.update(dBravoShopAddress);
         return R.success();
     }
@@ -79,6 +84,20 @@ public class DBravoShopAddressController extends AbstractController {
     @RequestMapping("/delete")
     @RequiresPermissions("dbravoshopaddress:delete")
     public R delete(@RequestBody Long[] ids) {
+
+        StringBuffer str = new StringBuffer();
+        for (int i = 0; i < ids.length; i++) {
+            DBravoShopAddress dBravoShopAddress = dBravoShopAddressService.queryObject(ids[i]);
+            str.append("shopid:"+dBravoShopAddress.getShopid()+"==address:"+dBravoShopAddress.getAddress()+"===");
+        }
+
+        SysLog log = new SysLog();
+        log.setIp(ComputerUtils.getIp());
+        log.setUsername(ShiroUtils.getUserEntity().getUsername());
+        log.setOperation(str.toString());
+
+        dBravoShopAddressService.savelog(log);
+
         dBravoShopAddressService.deleteBatch(ids);
         return R.success();
     }

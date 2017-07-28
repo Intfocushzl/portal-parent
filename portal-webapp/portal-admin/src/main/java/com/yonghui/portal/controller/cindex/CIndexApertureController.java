@@ -6,6 +6,7 @@ import com.yonghui.portal.service.cindex.CIndexApertureService;
 import com.yonghui.portal.util.PageUtils;
 import com.yonghui.portal.util.Query;
 import com.yonghui.portal.util.R;
+import com.yonghui.portal.utils.ShiroUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -66,6 +67,7 @@ public class CIndexApertureController extends AbstractController {
     @RequestMapping("/save")
     @RequiresPermissions("cindexaperture:save")
     public R save(@RequestBody CIndexAperture cIndexAperture) {
+        cIndexAperture.setCreater(ShiroUtils.getUserId());
         cIndexApertureService.save(cIndexAperture);
         return R.success();
     }
@@ -76,6 +78,7 @@ public class CIndexApertureController extends AbstractController {
     @RequestMapping("/update")
     @RequiresPermissions("cindexaperture:update")
     public R update(@RequestBody CIndexAperture cIndexAperture) {
+        cIndexAperture.setModifier(ShiroUtils.getUserId());
         cIndexApertureService.update(cIndexAperture);
         return R.success();
     }

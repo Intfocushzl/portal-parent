@@ -6,6 +6,7 @@ import com.yonghui.portal.service.businessman.ImgsInfoService;
 import com.yonghui.portal.util.PageUtils;
 import com.yonghui.portal.util.Query;
 import com.yonghui.portal.util.R;
+import com.yonghui.portal.utils.ShiroUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -59,6 +60,7 @@ public class ImgsInfoController extends AbstractController {
     @RequestMapping("/save")
     @RequiresPermissions("imgsinfo:save")
     public R save(@RequestBody ImgsInfo imgsInfo){
+        imgsInfo.setCreater(ShiroUtils.getUserId());
 		imgsInfoService.save(imgsInfo);
         return R.success();
     }
@@ -69,6 +71,7 @@ public class ImgsInfoController extends AbstractController {
     @RequestMapping("/update")
     @RequiresPermissions("imgsinfo:update")
     public R update(@RequestBody ImgsInfo imgsInfo){
+        imgsInfo.setModifier(ShiroUtils.getUserId());
 		imgsInfoService.update(imgsInfo);
         return R.success();
     }

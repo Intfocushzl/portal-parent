@@ -1,8 +1,10 @@
 package com.yonghui.portal.service.impl.global;
 
 import com.yonghui.portal.mapper.global.MenuMapper;
+import com.yonghui.portal.mapper.sys.SysLogMapper;
 import com.yonghui.portal.model.global.Menu;
 import com.yonghui.portal.model.global.RoleMenu;
+import com.yonghui.portal.model.sys.SysLog;
 import com.yonghui.portal.service.global.MenuService;
 import org.apache.commons.collections.map.HashedMap;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,10 +18,15 @@ import java.util.Map;
  */
 @Service
 public class MenuServiceImpl implements MenuService {
-
     @Autowired
     private MenuMapper menuMapper;
+    @Autowired
+    private SysLogMapper sysLogMapper;
 
+    @Override
+    public void savelog(SysLog sysLog) {
+        sysLogMapper.save(sysLog);
+    }
     @Override
     public RoleMenu getUserRoleId(Integer roleId) throws Exception {
         return menuMapper.getUserRoleId(roleId);

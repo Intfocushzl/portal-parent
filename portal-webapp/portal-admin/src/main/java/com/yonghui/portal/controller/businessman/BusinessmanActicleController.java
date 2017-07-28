@@ -12,6 +12,7 @@ import com.yonghui.portal.service.businessman.BusinessmanTagInfoService;
 import com.yonghui.portal.util.PageUtils;
 import com.yonghui.portal.util.Query;
 import com.yonghui.portal.util.R;
+import com.yonghui.portal.utils.ShiroUtils;
 import org.apache.commons.collections.map.HashedMap;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -74,6 +75,7 @@ public class BusinessmanActicleController extends AbstractController {
     @RequestMapping("/save")
     @RequiresPermissions("businessmanacticle:save")
     public R save(@RequestBody BusinessmanActicle businessmanActicle) {
+        businessmanActicle.setCreater(ShiroUtils.getUserId());
         businessmanActicle.setContentManuscript(businessmanActicle.getContentManuscript().replace("\\\"", "'").replace("	", "").replace("\\r\\n", "<br/>"));
         businessmanActicleService.save(businessmanActicle);
         return R.success();
@@ -85,6 +87,7 @@ public class BusinessmanActicleController extends AbstractController {
     @RequestMapping("/update")
     @RequiresPermissions("businessmanacticle:update")
     public R update(@RequestBody BusinessmanActicle businessmanActicle) {
+        businessmanActicle.setModifier(ShiroUtils.getUserId());
         businessmanActicle.setContentManuscript(businessmanActicle.getContentManuscript().replace("\\\"", "'").replace("	", "").replace("\\r\\n", "<br/>"));
         businessmanActicleService.update(businessmanActicle);
         return R.success();
@@ -128,6 +131,7 @@ public class BusinessmanActicleController extends AbstractController {
         }
         businessmanActicleRecommendService.deleteAll();
         Map<String, Object> map = new HashedMap();
+        map.put("creater",ShiroUtils.getUserId());
         map.put("recommendList", recommendList);
         businessmanActicleRecommendService.saveRecommend(map);
         for (int i = 0; i < sliderStrs.length; i++) {
@@ -143,6 +147,7 @@ public class BusinessmanActicleController extends AbstractController {
         }
         businessmanActicleSliderService.deleteAll();
         map.put("sliderList", sliderList);
+        map.put("creater",ShiroUtils.getUserId());
         businessmanActicleSliderService.saveSlider(map);
         return R.success();
     }

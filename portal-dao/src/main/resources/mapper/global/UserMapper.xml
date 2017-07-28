@@ -39,12 +39,19 @@
         <result column="rold" property="rold" jdbcType="VARCHAR"/>
         <result column="areaMans" property="areaMans" jdbcType="TIMESTAMP"/>
         <result column="changeAreaMans" property="changeAreaMans" jdbcType="VARCHAR"/>
+        <result column="creater" property="creater" jdbcType="BIGINT" />
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="modifier" property="modifier" jdbcType="BIGINT" />
+        <result column="modify_time" property="modifyTime" jdbcType="TIMESTAMP" />
+        <result column="disabled" property="disabled" jdbcType="BIGINT" />
+        <result column="version" property="version" jdbcType="BIGINT" />
     </resultMap>
 
     <sql id="Base_Column_List">
 		id, account, `name`,email, roleId,jobNumber, storeNumber,
 		createTime,status,type,firm,largeArea,province,city,changeRoleId, changeType, changeLargeArea,
-    changeProvince, changeCity, changeFirm, changeStatus,changeStoreNumber,remark,changeTime,rold,areaMans,changeAreaMans
+    changeProvince, changeCity, changeFirm, changeStatus,changeStoreNumber,remark,changeTime,rold,areaMans,changeAreaMans,
+    creater, create_time, modifier, modify_time, disabled, version
 	</sql>
 
     <insert id="insert" parameterType="com.yonghui.portal.model.global.User">
@@ -228,6 +235,13 @@
             <if test="remark != null and remark !=''">
                 and  u.`remark` like concat('%',#{remark},'%')
             </if>
+            <if test="keyword != null and keyword !=''">
+                  and (
+                u.account like concat('%',#{keyword},'%')
+                or u.`name` like concat('%',#{keyword},'%')
+                or r.name like concat('%',#{keyword},'%')
+                )
+            </if>
         </where>
         <choose>
             <when test="sidx != null and sidx.trim() != ''">
@@ -257,6 +271,13 @@
             </if>
             <if test="remark != null and remark !=''">
                 and  u.`remark` like concat('%',#{remark},'%')
+            </if>
+            <if test="keyword != null and keyword !=''">
+                and (
+                u.account like concat('%',#{keyword},'%')
+                or u.`name` like concat('%',#{keyword},'%')
+                or r.name like concat('%',#{keyword},'%')
+                )
             </if>
         </where>
     </select>
@@ -293,7 +314,9 @@
 		`remark`,
 		`areaMans`,
 		`changeAreaMans`,
-		`rold`
+		`rold`,
+		creater, create_time, modifier,
+      modify_time, disabled, version
 		)
 		values
 		(
@@ -326,7 +349,9 @@
 		#{remark},
 		#{areaMans},
 		#{changeAreaMans},
-		#{rold}
+		#{rold},
+		#{creater,jdbcType=BIGINT}, now(), #{modifier,jdbcType=BIGINT},
+      now(), #{disabled,jdbcType=BIGINT}, #{version,jdbcType=BIGINT}
 		)
 	</insert>
 
@@ -357,7 +382,17 @@
             <if test="areaMans != null">`areaMans` = #{areaMans},</if>
             <if test="changeAreaMans != null">`changeAreaMans` = #{changeAreaMans},</if>
             <if test="rold != null">`rold` = #{rold},</if>
-            `updated_at` = NOW()
+            `updated_at` = NOW(),
+            <if test="modifier != null" >
+                modifier = #{modifier,jdbcType=BIGINT},
+            </if>
+            now(),
+            <if test="disabled != null" >
+                disabled = #{disabled,jdbcType=BIGINT},
+            </if>
+            <if test="version != null" >
+                version = #{version,jdbcType=BIGINT},
+            </if>
         </set>
         where id = #{id}
     </update>

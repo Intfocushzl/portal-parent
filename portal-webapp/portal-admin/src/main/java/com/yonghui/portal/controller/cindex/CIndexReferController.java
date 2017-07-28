@@ -6,6 +6,7 @@ import com.yonghui.portal.service.cindex.CIndexReferService;
 import com.yonghui.portal.util.PageUtils;
 import com.yonghui.portal.util.Query;
 import com.yonghui.portal.util.R;
+import com.yonghui.portal.utils.ShiroUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -66,6 +67,7 @@ public class CIndexReferController extends AbstractController {
     @RequestMapping("/save")
     @RequiresPermissions("cindexrefer:save")
     public R save(@RequestBody CIndexRefer cIndexRefer) {
+        cIndexRefer.setCreater(ShiroUtils.getUserId());
         cIndexReferService.save(cIndexRefer);
         return R.success();
     }
@@ -76,6 +78,7 @@ public class CIndexReferController extends AbstractController {
     @RequestMapping("/update")
     @RequiresPermissions("cindexrefer:update")
     public R update(@RequestBody CIndexRefer cIndexRefer) {
+        cIndexRefer.setModifier(ShiroUtils.getUserId());
         cIndexReferService.update(cIndexRefer);
         return R.success();
     }

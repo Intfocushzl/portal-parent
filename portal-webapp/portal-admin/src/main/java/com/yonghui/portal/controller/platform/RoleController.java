@@ -6,10 +6,13 @@ import com.yonghui.portal.controller.AbstractController;
 import com.yonghui.portal.init.InitProperties;
 import com.yonghui.portal.model.global.Menu;
 import com.yonghui.portal.model.global.Role;
+import com.yonghui.portal.model.report.PortalProcedure;
+import com.yonghui.portal.model.sys.SysLog;
 import com.yonghui.portal.service.global.RoleService;
 import com.yonghui.portal.service.global.UserMenuService;
 import com.yonghui.portal.util.*;
 import com.yonghui.portal.util.report.columns.HttpMethodUtil;
+import com.yonghui.portal.utils.ShiroUtils;
 import com.yonghui.portal.utils.redis.RedisBizUtilAdmin;
 import com.yonghui.portal.utils.validator.ValidatorUtils;
 import org.apache.commons.collections.map.HashedMap;
@@ -96,6 +99,7 @@ public class RoleController extends AbstractController {
     public R save(@RequestBody Role role) {
         role.setCreater(getUserId());
         ValidatorUtils.validateEntity(role);
+        role.setCreater(ShiroUtils.getUserId());
         roleService.save(role);
         getRoleMenu(role);
         HttpMethodUtil httpUtil = new HttpMethodUtil();
@@ -137,6 +141,7 @@ public class RoleController extends AbstractController {
     @RequiresPermissions("role:update")
     public R update(@RequestBody Role role) {
         ValidatorUtils.validateEntity(role);
+        role.setModifier(ShiroUtils.getUserId());
         roleService.update(role);
         getRoleMenu(role);
         HttpMethodUtil httpUtil = new HttpMethodUtil();
@@ -177,6 +182,20 @@ public class RoleController extends AbstractController {
     @RequestMapping("/delete")
     @RequiresPermissions("role:delete")
     public R delete(@RequestBody Integer[] ids) {
+
+        StringBuffer str = new StringBuffer();
+        for (int i = 0; i < ids.length; i++) {
+            Role role = roleService.queryObject(ids[i]);
+            str.append("roleid:"+role.getId()+"==name:"+role.getName()+"===");
+        }
+
+        SysLog log = new SysLog();
+        log.setIp(ComputerUtils.getIp());
+        log.setUsername(ShiroUtils.getUserEntity().getUsername());
+        log.setOperation(str.toString());
+
+        roleService.savelog(log);
+
         roleService.deleteBatch(ids);
         for (Integer id : ids) {
             redisBizUtilAdmin.removeRoleMenu(id);

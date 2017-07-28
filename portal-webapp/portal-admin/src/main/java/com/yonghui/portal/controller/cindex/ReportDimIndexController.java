@@ -6,6 +6,7 @@ import com.yonghui.portal.service.cindex.ReportDimIndexService;
 import com.yonghui.portal.util.PageUtils;
 import com.yonghui.portal.util.Query;
 import com.yonghui.portal.util.R;
+import com.yonghui.portal.utils.ShiroUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -66,6 +67,7 @@ public class ReportDimIndexController extends AbstractController {
     @RequestMapping("/save")
     @RequiresPermissions("reportdimindex:save")
     public R save(@RequestBody ReportDimIndex reportDimIndex) {
+        reportDimIndex.setCreater(ShiroUtils.getUserId());
         reportDimIndexService.save(reportDimIndex);
         return R.success();
     }
@@ -76,6 +78,7 @@ public class ReportDimIndexController extends AbstractController {
     @RequestMapping("/update")
     @RequiresPermissions("reportdimindex:update")
     public R update(@RequestBody ReportDimIndex reportDimIndex) {
+        reportDimIndex.setModifier(ShiroUtils.getUserId());
         reportDimIndexService.update(reportDimIndex);
         return R.success();
     }

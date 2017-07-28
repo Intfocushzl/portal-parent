@@ -3,7 +3,9 @@ package com.yonghui.portal.controller.report;
 import com.alibaba.fastjson.JSONObject;
 import com.yonghui.portal.controller.AbstractController;
 import com.yonghui.portal.model.report.PortalDataSource;
+import com.yonghui.portal.model.sys.SysLog;
 import com.yonghui.portal.service.report.PortalDataSourceService;
+import com.yonghui.portal.util.ComputerUtils;
 import com.yonghui.portal.util.PageUtils;
 import com.yonghui.portal.util.Query;
 import com.yonghui.portal.util.R;
@@ -65,7 +67,7 @@ public class PortalDataSourceController extends AbstractController {
     @RequestMapping("/save")
     @RequiresPermissions("portaldatasource:save")
     public R save(@RequestBody PortalDataSource portalDataSource){
-        portalDataSource.setCreater(ShiroUtils.getUserEntity().getUserId());
+        portalDataSource.setCreater(ShiroUtils.getUserId());
 		portalDataSourceService.save(portalDataSource);
         redisBizUtilAdmin.setPortalDataSource(portalDataSource.getCodeOld(), portalDataSource.getCode(), JSONObject.toJSONString(portalDataSource));
         return R.success();
@@ -77,7 +79,7 @@ public class PortalDataSourceController extends AbstractController {
     @RequestMapping("/update")
     @RequiresPermissions("portaldatasource:update")
     public R update(@RequestBody PortalDataSource portalDataSource){
-        portalDataSource.setCreater(ShiroUtils.getUserEntity().getUserId());
+        portalDataSource.setModifier(ShiroUtils.getUserId());
 		portalDataSourceService.update(portalDataSource);
         redisBizUtilAdmin.setPortalDataSource(portalDataSource.getCodeOld(), portalDataSource.getCode(), JSONObject.toJSONString(portalDataSource));
         return R.success();
@@ -89,6 +91,20 @@ public class PortalDataSourceController extends AbstractController {
     @RequestMapping("/delete")
     @RequiresPermissions("portaldatasource:delete")
     public R delete(@RequestBody String[] codes){
+
+        StringBuffer str = new StringBuffer();
+        for (int i = 0; i < codes.length; i++) {
+            PortalDataSource portalDataSource = portalDataSourceService.queryObjectByCode(codes[i]);
+            str.append("procode:"+portalDataSource.getCode()+"==title:"+portalDataSource.getTitle()+"===");
+        }
+
+        SysLog log = new SysLog();
+        log.setIp(ComputerUtils.getIp());
+        log.setUsername(ShiroUtils.getUserEntity().getUsername());
+        log.setOperation(str.toString());
+
+        portalDataSourceService.savelog(log);
+
         portalDataSourceService.deleteBatchByCodes(codes);
         for (String c:codes) {
             redisBizUtilAdmin.removePortalDataSource(c);

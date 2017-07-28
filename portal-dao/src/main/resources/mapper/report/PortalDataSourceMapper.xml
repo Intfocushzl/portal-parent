@@ -20,6 +20,12 @@
             <if test="title != null and title !=''">
                 and title like concat('%',#{title},'%')
             </if>
+            <if test="keyword != null and keyword !=''">
+                and (
+                code like concat('%',#{keyword},'%')
+                or title like concat('%',#{keyword},'%')
+                )
+            </if>
         </where>
         <choose>
             <when test="sidx != null and sidx.trim() != ''">
@@ -38,6 +44,12 @@
         select count(*) from portal_data_source where 1 = 1
         <if test="key != null and key.trim() != ''">
             and `key` like concat('%',#{key},'%')
+        </if>
+        <if test="keyword != null and keyword !=''">
+            and (
+            code like concat('%',#{keyword},'%')
+            or title like concat('%',#{keyword},'%')
+            )
         </if>
     </select>
 
@@ -90,7 +102,7 @@
 			#{connectionTag},
 			#{remark},
 			#{creater},
-			#{createTime},
+			NOW(),
 			#{modifier},
 			NOW(),
 			#{disabled},
@@ -111,8 +123,6 @@
             <if test="maxConnectionsPerPartition != null">`max_connections_per_partition` = #{maxConnectionsPerPartition}, </if>
             <if test="connectionTag != null">`connection_tag` = #{connectionTag}, </if>
             <if test="remark != null">`remark` = #{remark}, </if>
-            <if test="creater != null">`creater` = #{creater}, </if>
-            <if test="createTime != null">`create_time` = #{createTime}, </if>
             <if test="modifier != null">`modifier` = #{modifier}, </if>
             `modify_time` = NOW(),
             <if test="disabled != null">`disabled` = #{disabled}, </if>

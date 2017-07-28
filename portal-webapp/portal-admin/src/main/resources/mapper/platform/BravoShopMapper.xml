@@ -47,7 +47,16 @@
 			<if test="areamans != null and areamans !=''">
 				and AreaMans like concat('%',#{areamans},'%')
 			</if>
-        </where>
+			<if test="keyword != null and keyword !=''">
+				and (
+				ShopID like concat('%',#{keyword},'%')
+				or SAP_ShopID like concat('%',#{keyword},'%')
+				or SName like concat('%',#{keyword},'%')
+				or AreaName like concat('%',#{keyword},'%')
+				or AreaMans like concat('%',#{keyword},'%')
+				)
+			</if>
+		</where>
         <choose>
             <when test="sidx != null and sidx.trim() != ''">
                 order by ${sidx} ${order}
@@ -79,6 +88,15 @@
 			<if test="areamans != null and areamans !=''">
 				and AreaMans like concat('%',#{areamans},'%')
 			</if>
+			<if test="keyword != null and keyword !=''">
+				and (
+				ShopID like concat('%',#{keyword},'%')
+				or SAP_ShopID like concat('%',#{keyword},'%')
+				or SName like concat('%',#{keyword},'%')
+				or AreaName like concat('%',#{keyword},'%')
+				or AreaMans like concat('%',#{keyword},'%')
+				)
+			</if>
         </where>
 	</select>
 
@@ -102,7 +120,10 @@
 			`ShopGroupID`, 
 			`ShopGroupName`, 
 			`AreaMans`, 
-			`updatetime`
+			`updatetime`,
+		remark, creater, create_time,
+		modifier, modify_time, disabled,
+		version
 		)
 		values
 		(
@@ -123,7 +144,10 @@
 			#{shopgroupid}, 
 			#{shopgroupname}, 
 			#{areamans}, 
-			#{updatetime}
+			#{updatetime},
+      #{remark,jdbcType=VARCHAR}, #{creater,jdbcType=BIGINT}, now(),
+      #{modifier,jdbcType=BIGINT}, now(), #{disabled,jdbcType=BIGINT},
+      #{version,jdbcType=BIGINT}
 		)
 	</insert>
 
@@ -146,7 +170,20 @@
 			<if test="shopgroupid != null">`ShopGroupID` = #{shopgroupid}, </if>
 			<if test="shopgroupname != null">`ShopGroupName` = #{shopgroupname}, </if>
 			<if test="areamans != null">`AreaMans` = #{areamans}, </if>
-			`updatetime` = now()
+			`updatetime` = now(),
+			<if test="remark != null" >
+				remark = #{remark,jdbcType=VARCHAR},
+			</if>
+			<if test="modifier != null" >
+				modifier = #{modifier,jdbcType=BIGINT},
+			</if>
+			now(),
+			<if test="disabled != null" >
+				disabled = #{disabled,jdbcType=BIGINT},
+			</if>
+			<if test="version != null" >
+				version = #{version,jdbcType=BIGINT},
+			</if>
         </set>
         where ShopID = #{shopid}
     </update>

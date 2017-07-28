@@ -2,6 +2,7 @@ package com.yonghui.portal.service.report;
 
 
 import com.yonghui.portal.model.report.PortalDataSource;
+import com.yonghui.portal.model.sys.SysLog;
 
 import java.util.List;
 import java.util.Map;
@@ -14,7 +15,9 @@ import java.util.Map;
  * @date 2017-05-17 16:35:37
  */
 public interface PortalDataSourceService {
-	
+
+	void savelog(SysLog sysLog);
+
 	PortalDataSource queryObject(Integer id);
 	
 	List<PortalDataSource> queryList(Map<String, Object> map);

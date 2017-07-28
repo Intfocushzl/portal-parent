@@ -9,37 +9,9 @@
     <div v-show="showList">
         <div id="queryDiv" class="queryDiv">
             <div class="grid-btn">
-                <!--<div class="form-group col-sm-2">-->
-                <!--<input type="text" class="form-control" v-model="bravoShop.areaname" @keyup.enter="query"-->
-                <!--placeholder="老大区">-->
-                <!--</div>-->
-                <!--<div class="form-group col-sm-2">-->
-                <!--<input type="text" class="form-control" v-model="bravoShop.areamans" @keyup.enter="query"-->
-                <!--placeholder="新大区">-->
-                <!--</div>-->
-                <!--<div class="form-group col-sm-2">-->
-                <!--<input type="text" class="form-control" v-model="bravoShop.shopid" @keyup.enter="query"-->
-                <!--placeholder="老店编">-->
-                <!--</div>-->
-                <!--<div class="form-group col-sm-2">-->
-                <!--<input type="text" class="form-control" v-model="bravoShop.sapShopid" @keyup.enter="query"-->
-                <!--placeholder="新店编">-->
-                <!--</div>-->
-                <!--<div class="form-group col-sm-2">-->
-                <!--<input type="text" class="form-control" v-model="bravoShop.sname" @keyup.enter="query"-->
-                <!--placeholder="门店名称">-->
-                <!--</div>-->
-                <div class="form-group col-sm-2">
-                    <select id="select" class="form-control">
-                        <option value="areaname">按老大区</option>
-                        <option value="areamans">按新大区</option>
-                        <option value="shopid">按老店编</option>
-                        <option value="sapShopid">按新店编</option>
-                        <option value="sname">按门店名</option>
-                    </select>
-                </div>
-                <div class="form-group col-sm-2">
-                    <input type="text" class="form-control" id="show" @keyup.enter="query"/>
+                <div class="form-group col-sm-2" style="width: 300px;max-width: 300px;" >
+                    <input type="text" class="form-control" id="serchword" @keyup.enter="query"
+                           placeholder="老大区/新大区/老店编/新店编/门店名 ">
                 </div>
                 <a class="btn btn-primary" @click="query">查询</a>
                 #if($shiro.hasPermission("bravoshop:save"))

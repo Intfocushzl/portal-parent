@@ -1,7 +1,9 @@
 package com.yonghui.portal.service.impl.common;
 
 import com.yonghui.portal.mapper.common.DBravoShopAddressMapper;
+import com.yonghui.portal.mapper.sys.SysLogMapper;
 import com.yonghui.portal.model.common.DBravoShopAddress;
+import com.yonghui.portal.model.sys.SysLog;
 import com.yonghui.portal.service.common.DBravoShopAddressService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,7 +16,13 @@ import java.util.Map;
 public class DBravoShopAddressServiceImpl implements DBravoShopAddressService {
     @Autowired
     private DBravoShopAddressMapper dBravoShopAddressMapper;
+    @Autowired
+    private SysLogMapper sysLogMapper;
 
+    @Override
+    public void savelog(SysLog sysLog) {
+        sysLogMapper.save(sysLog);
+    }
     @Override
     public DBravoShopAddress queryObject(Long id) {
         return dBravoShopAddressMapper.queryObject(id);

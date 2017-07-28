@@ -52,6 +52,12 @@
             <if test="remark != null and remark !=''">
                 and x.remark like concat('%',#{remark},'%')
             </if>
+            <if test="keyword != null and keyword !=''">
+                and (
+                tag_info like concat('%',#{keyword},'%')
+                or title like concat('%',#{keyword},'%')
+                )
+            </if>
         </where>
         <if test="sidx != null and sidx.trim() != ''">
             order by x.${sidx} ${order}
@@ -88,6 +94,12 @@
             </if>
             <if test="remark != null and remark !=''">
                 and remark like concat('%',#{remark},'%')
+            </if>
+            <if test="keyword != null and keyword !=''">
+                and (
+                tag_info like concat('%',#{keyword},'%')
+                or title like concat('%',#{keyword},'%')
+                )
             </if>
         </where>
     </select>
@@ -140,7 +152,7 @@
 			#{pageview}, 
 			#{remark}, 
 			#{creater}, 
-			#{createTime}, 
+			now(),
 			#{modifier}, 
 			NOW(), 
 			#{disabled}, 
@@ -168,8 +180,6 @@
             <if test="status != null">`status` = #{status},</if>
             <if test="pageview != null">`pageview` = #{pageview},</if>
             <if test="remark != null">`REMARK` = #{remark},</if>
-            <if test="creater != null">`CREATER` = #{creater},</if>
-            <if test="createTime != null">`CREATE_TIME` = #{createTime},</if>
             <if test="modifier != null">`MODIFIER` = #{modifier},</if>
             `MODIFY_TIME` = NOW(),
             <if test="disabled != null">`DISABLED` = #{disabled},</if>

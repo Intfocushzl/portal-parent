@@ -1,7 +1,9 @@
 package com.yonghui.portal.service.impl.global;
 
 import com.yonghui.portal.mapper.global.UserMapper;
+import com.yonghui.portal.mapper.sys.SysLogMapper;
 import com.yonghui.portal.model.global.User;
+import com.yonghui.portal.model.sys.SysLog;
 import com.yonghui.portal.service.global.UserAdminService;
 import com.yonghui.portal.util.Md5Util;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +20,13 @@ public class UserAdminServiceImpl implements UserAdminService {
 
     @Autowired
     private UserMapper userMapper;
+    @Autowired
+    private SysLogMapper sysLogMapper;
 
+    @Override
+    public void savelog(SysLog sysLog) {
+        sysLogMapper.save(sysLog);
+    }
     @Override
     public User queryObject(Integer id) {
         return userMapper.queryObject(id);

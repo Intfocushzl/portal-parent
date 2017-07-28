@@ -1,7 +1,9 @@
 package com.yonghui.portal.service.impl.report;
 
 import com.yonghui.portal.mapper.report.PortalReportMapper;
+import com.yonghui.portal.mapper.sys.SysLogMapper;
 import com.yonghui.portal.model.report.PortalReport;
+import com.yonghui.portal.model.sys.SysLog;
 import com.yonghui.portal.service.report.PortalReportService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,7 +15,13 @@ import java.util.Map;
 public class PortalReportServiceImpl implements PortalReportService {
 	@Autowired
 	private PortalReportMapper portalReportMapper;
-	
+	@Autowired
+	private SysLogMapper sysLogMapper;
+
+	@Override
+	public void savelog(SysLog sysLog) {
+		sysLogMapper.save(sysLog);
+	}
 	@Override
 	public PortalReport queryObject(Integer id){
 		return portalReportMapper.queryObject(id);

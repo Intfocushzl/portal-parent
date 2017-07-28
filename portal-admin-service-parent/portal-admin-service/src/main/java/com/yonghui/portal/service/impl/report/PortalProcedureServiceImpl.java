@@ -1,20 +1,32 @@
 package com.yonghui.portal.service.impl.report;
 
 import com.yonghui.portal.mapper.report.PortalProcedureMapper;
+import com.yonghui.portal.mapper.sys.SysLogMapper;
 import com.yonghui.portal.model.report.PortalProcedure;
+import com.yonghui.portal.model.sys.SysLog;
 import com.yonghui.portal.service.report.PortalProcedureService;
+import com.yonghui.portal.util.ComputerUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Map;
 
+import static com.itextpdf.text.html.HtmlTags.S;
+
 @Service("portalProcedureService")
 public class PortalProcedureServiceImpl implements PortalProcedureService {
 
 	@Autowired
 	private PortalProcedureMapper portalProcedureMapper;
-	
+	@Autowired
+	private SysLogMapper sysLogMapper;
+
+	@Override
+	public void savelog(SysLog sysLog) {
+		sysLogMapper.save(sysLog);
+	}
+
 	@Override
 	public PortalProcedure queryObject(Integer id){
 		return portalProcedureMapper.queryObject(id);
