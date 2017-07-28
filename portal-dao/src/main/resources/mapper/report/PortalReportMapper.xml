@@ -51,6 +51,14 @@
             <if test="remark != null and remark !=''">
                 and remark like concat('%',#{remark},'%')
             </if>
+            <if test="keyword != null and keyword !=''">
+                and (
+                code like concat('%',#{keyword},'%')
+                or title like concat('%',#{keyword},'%')
+                or `describe` like concat('%',#{keyword},'%')
+                or execute_code like concat('%',#{keyword},'%')
+                )
+            </if>
         </where>
     </select>
 
@@ -109,7 +117,7 @@
 			#{cellTitleName},
 			#{remark},
 			#{creater},
-			#{createTime},
+			NOW(),
 			#{modifier},
 			NOW(),
 			#{disabled},
@@ -139,8 +147,6 @@
             <if test="reportTitleName != null">`report_title_name` = #{reportTitleName},</if>
             <if test="cellTitleName != null">`cell_title_name` = #{cellTitleName},</if>
             <if test="remark != null">`remark` = #{remark},</if>
-            <if test="creater != null">`creater` = #{creater},</if>
-            <if test="createTime != null">`create_time` = #{createTime},</if>
             <if test="modifier != null">`modifier` = #{modifier},</if>
             `modify_time` = NOW(),
             <if test="disabled != null">`disabled` = #{disabled},</if>

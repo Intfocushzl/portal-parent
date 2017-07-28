@@ -46,7 +46,7 @@
 			#{method}, 
 			#{params}, 
 			#{ip}, 
-			#{createDate}
+			NOW()
 		)
 	</insert>
 	 

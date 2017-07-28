@@ -5,12 +5,15 @@ import com.alibaba.fastjson.JSONObject;
 import com.yonghui.portal.controller.AbstractController;
 import com.yonghui.portal.init.InitProperties;
 import com.yonghui.portal.model.global.User;
+import com.yonghui.portal.model.report.PortalProcedure;
+import com.yonghui.portal.model.sys.SysLog;
 import com.yonghui.portal.service.global.UserAdminService;
 import com.yonghui.portal.util.PageUtils;
 import com.yonghui.portal.util.Query;
 import com.yonghui.portal.util.R;
 import com.yonghui.portal.util.StringUtils;
 import com.yonghui.portal.util.report.columns.HttpMethodUtil;
+import com.yonghui.portal.utils.ShiroUtils;
 import org.apache.commons.collections.map.HashedMap;
 import org.apache.log4j.Logger;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -77,6 +80,7 @@ public class UserController extends AbstractController {
     public R save(HttpServletResponse response, HttpServletRequest request, @RequestBody User user) {
         response.addHeader("Access-Control-Allow-Origin", "*");
         response.setContentType("text/html;charset=UTF-8");
+        user.setCreater(ShiroUtils.getUserId());
         userAdminService.save(user);
         return R.success();
     }
@@ -89,6 +93,7 @@ public class UserController extends AbstractController {
     public R update(HttpServletResponse response, @RequestBody User user) {
         response.addHeader("Access-Control-Allow-Origin", "*");
         response.setContentType("text/html;charset=UTF-8");
+        user.setModifier(ShiroUtils.getUserId());
         userAdminService.update(user);
         return R.success();
     }
@@ -101,6 +106,20 @@ public class UserController extends AbstractController {
     public R delete(HttpServletResponse response, @RequestBody Integer[] ids) {
         response.addHeader("Access-Control-Allow-Origin", "*");
         response.setContentType("text/html;charset=UTF-8");
+
+        StringBuffer str = new StringBuffer();
+        for (int i = 0; i < ids.length; i++) {
+            User user = userAdminService.queryObject(ids[i]);
+            str.append("account:"+user.getAccount()+"==title:"+user.getName()+"===");
+        }
+
+        SysLog log = new SysLog();
+        log.setIp(ComputerUtils.getIp());
+        log.setUsername(ShiroUtils.getUserEntity().getUsername());
+        log.setOperation(str.toString());
+
+        userAdminService.savelog(log);
+
         userAdminService.deleteBatch(ids);
         return R.success();
     }
@@ -110,6 +129,7 @@ public class UserController extends AbstractController {
         User newUser = new User();
         newUser.setId(user.getId());
         newUser.setStatus(user.getStatus());
+        newUser.setModifier(ShiroUtils.getUserId());
         int res = userAdminService.updateStatus(user);
 
         User appUser = userAdminService.queryObjectAll(user.getId());
@@ -199,6 +219,7 @@ public class UserController extends AbstractController {
     @RequestMapping("/newUser/pass")
     public R userPass(@RequestBody User user) {
         user.setStatus(1);
+        user.setModifier(ShiroUtils.getUserId());
         int res = userAdminService.updateStatus(user);
         if (res == 1) {
             return R.success();
@@ -212,6 +233,7 @@ public class UserController extends AbstractController {
         User user = new User();
         user.setId(Long.valueOf(id));
         user.setStatus(-1);
+        user.setModifier(ShiroUtils.getUserId());
         int res = userAdminService.updateStatus(user);
         if (res == 1) {
             return R.success();

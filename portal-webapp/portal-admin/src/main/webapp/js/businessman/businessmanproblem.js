@@ -53,8 +53,7 @@ var vm = new Vue({
             //vm.reload();
             $("#jqGrid").jqGrid('setGridParam', {
                 postData: {
-                    id: vm.businessmanProblem.id,
-                    remark: vm.businessmanProblem.remark
+                    keyword: $("#keyword").val()
                 },
                 page: 1
             }).trigger("reloadGrid");

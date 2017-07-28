@@ -2,8 +2,10 @@ package com.yonghui.portal.service.impl.global;
 
 import com.yonghui.portal.mapper.global.MenuMapper;
 import com.yonghui.portal.mapper.global.RoleMapper;
+import com.yonghui.portal.mapper.sys.SysLogMapper;
 import com.yonghui.portal.model.global.Menu;
 import com.yonghui.portal.model.global.Role;
+import com.yonghui.portal.model.sys.SysLog;
 import com.yonghui.portal.service.global.RoleService;
 import com.yonghui.portal.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +24,13 @@ public class RoleServiceImpl implements RoleService {
 
     @Autowired
     private MenuMapper menuMapper;
+    @Autowired
+    private SysLogMapper sysLogMapper;
 
+    @Override
+    public void savelog(SysLog sysLog) {
+        sysLogMapper.save(sysLog);
+    }
     @Override
     public Role queryObject(Integer id) {
         return roleMapper.queryObject(id);

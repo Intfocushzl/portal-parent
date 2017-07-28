@@ -1,7 +1,7 @@
 package com.yonghui.portal.service.global;
 
 import com.yonghui.portal.model.global.User;
-import com.yonghui.portal.util.Query;
+import com.yonghui.portal.model.sys.SysLog;
 
 import java.util.List;
 import java.util.Map;
@@ -10,6 +10,8 @@ import java.util.Map;
  * Created by xrr on 2017/6/2.
  */
 public interface UserAdminService {
+
+    void savelog(SysLog sysLog);
 
     User queryObject(Integer id);
 

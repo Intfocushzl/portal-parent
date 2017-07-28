@@ -110,11 +110,7 @@ var vm = new Vue({
             }
             $("#jqGrid").jqGrid('setGridParam', {
                 postData: {
-                    areaname: vm.bravoShop.areaname,
-                    areamans: vm.bravoShop.areamans,
-                    shopid: vm.bravoShop.shopid,
-                    sapShopid: vm.bravoShop.sapShopid,
-                    sname: vm.bravoShop.sname,
+                    keyword: $("#serchword").val()
                 },
                 page: 1
             }).trigger("reloadGrid");

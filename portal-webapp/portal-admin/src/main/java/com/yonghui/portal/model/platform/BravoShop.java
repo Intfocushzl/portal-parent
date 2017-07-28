@@ -1,5 +1,7 @@
 package com.yonghui.portal.model.platform;
 
+import com.yonghui.portal.model.base.AuditAuto;
+
 import java.util.Date;
 
 /**
@@ -9,7 +11,7 @@ import java.util.Date;
  * @email 80715104@yonghui.cn
  * @date 2017-05-26 17:02:43
  */
-public class BravoShop {
+public class BravoShop extends AuditAuto{
 
     //旧的店编号
     private String shopid;

@@ -1,10 +1,11 @@
 package com.yonghui.portal.model.global;
 
 
-import java.io.Serializable;
+import com.yonghui.portal.model.base.AuditAuto;
+
 import java.util.Date;
 
-public class User  implements Serializable{
+public class User extends AuditAuto{
 
 	//生成唯一系统号
 	private String account;

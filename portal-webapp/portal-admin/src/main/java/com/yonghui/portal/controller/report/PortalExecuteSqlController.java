@@ -3,7 +3,9 @@ package com.yonghui.portal.controller.report;
 import com.alibaba.fastjson.JSONObject;
 import com.yonghui.portal.controller.AbstractController;
 import com.yonghui.portal.model.report.PortalExecuteSql;
+import com.yonghui.portal.model.sys.SysLog;
 import com.yonghui.portal.service.report.PortalExecuteSqlService;
+import com.yonghui.portal.util.ComputerUtils;
 import com.yonghui.portal.util.PageUtils;
 import com.yonghui.portal.util.Query;
 import com.yonghui.portal.util.R;
@@ -76,7 +78,7 @@ public class PortalExecuteSqlController extends AbstractController {
     @RequestMapping("/update")
     @RequiresPermissions("portalexecutesql:update")
     public R update(@RequestBody PortalExecuteSql portalExecuteSql) {
-        portalExecuteSql.setCreater(ShiroUtils.getUserId());
+        portalExecuteSql.setModifier(ShiroUtils.getUserId());
         portalExecuteSqlService.update(portalExecuteSql);
         redisBizUtilAdmin.setPortalExecuteSql(portalExecuteSql.getSqlcodeOld(), portalExecuteSql.getSqlcode(), JSONObject.toJSONString(portalExecuteSql));
         return R.success();
@@ -88,6 +90,18 @@ public class PortalExecuteSqlController extends AbstractController {
     @RequestMapping("/delete")
     @RequiresPermissions("portalexecutesql:delete")
     public R delete(@RequestBody String[] sqlcodes) {
+        StringBuffer str = new StringBuffer();
+        for (int i = 0; i < sqlcodes.length; i++) {
+            PortalExecuteSql portalExecuteSql = portalExecuteSqlService.queryObjectBySqlcode(sqlcodes[i]);
+            str.append("procode:"+portalExecuteSql.getSqlcode()+"==title:"+portalExecuteSql.getTitle()+"===");
+        }
+
+        SysLog log = new SysLog();
+        log.setIp(ComputerUtils.getIp());
+        log.setUsername(ShiroUtils.getUserEntity().getUsername());
+        log.setOperation(str.toString());
+
+        portalExecuteSqlService.savelog(log);
         portalExecuteSqlService.deleteBatchBySqlcodes(sqlcodes);
         for (String sqlcode : sqlcodes) {
             redisBizUtilAdmin.removePortalExecuteSql(sqlcode);

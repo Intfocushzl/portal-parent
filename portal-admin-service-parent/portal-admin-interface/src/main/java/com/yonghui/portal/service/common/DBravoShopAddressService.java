@@ -2,6 +2,7 @@ package com.yonghui.portal.service.common;
 
 
 import com.yonghui.portal.model.common.DBravoShopAddress;
+import com.yonghui.portal.model.sys.SysLog;
 
 import java.util.List;
 import java.util.Map;
@@ -14,6 +15,8 @@ import java.util.Map;
  * @date 2017-07-17 19:56:17
  */
 public interface DBravoShopAddressService {
+
+    void savelog(SysLog sysLog);
 
     DBravoShopAddress queryObject(Long id);
 

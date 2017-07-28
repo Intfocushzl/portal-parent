@@ -2,6 +2,7 @@ package com.yonghui.portal.service.global;
 
 import com.yonghui.portal.model.global.Menu;
 import com.yonghui.portal.model.global.RoleMenu;
+import com.yonghui.portal.model.sys.SysLog;
 
 import java.util.List;
 import java.util.Map;
@@ -11,6 +12,7 @@ import java.util.Map;
  */
 public interface MenuService {
 
+    void savelog(SysLog sysLog);
     //获取角色对应的菜单id
     RoleMenu getUserRoleId(Integer roleId) throws Exception;
 

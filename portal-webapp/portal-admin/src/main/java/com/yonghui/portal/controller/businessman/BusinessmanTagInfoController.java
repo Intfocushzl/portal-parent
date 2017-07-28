@@ -6,6 +6,7 @@ import com.yonghui.portal.service.businessman.BusinessmanTagInfoService;
 import com.yonghui.portal.util.PageUtils;
 import com.yonghui.portal.util.Query;
 import com.yonghui.portal.util.R;
+import com.yonghui.portal.utils.ShiroUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -59,6 +60,7 @@ public class BusinessmanTagInfoController extends AbstractController {
     @RequestMapping("/save")
     @RequiresPermissions("businessmantaginfo:save")
     public R save(@RequestBody BusinessmanTagInfo businessmanTagInfo){
+        businessmanTagInfo.setCreater(ShiroUtils.getUserId());
 		businessmanTagInfoService.save(businessmanTagInfo);
         return R.success();
     }
@@ -69,6 +71,7 @@ public class BusinessmanTagInfoController extends AbstractController {
     @RequestMapping("/update")
     @RequiresPermissions("businessmantaginfo:update")
     public R update(@RequestBody BusinessmanTagInfo businessmanTagInfo){
+        businessmanTagInfo.setModifier(ShiroUtils.getUserId());
 		businessmanTagInfoService.update(businessmanTagInfo);
         return R.success();
     }

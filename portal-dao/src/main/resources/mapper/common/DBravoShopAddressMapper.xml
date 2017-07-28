@@ -89,7 +89,7 @@
 			#{latitude}, 
 			#{remark}, 
 			#{creater}, 
-			#{createTime}, 
+			now(),
 			#{modifier}, 
 			NOW(), 
 			#{disabled}, 
@@ -105,8 +105,6 @@
             <if test="longitude != null">`longitude` = #{longitude},</if>
             <if test="latitude != null">`Latitude` = #{latitude},</if>
             <if test="remark != null">`REMARK` = #{remark},</if>
-            <if test="creater != null">`CREATER` = #{creater},</if>
-            <if test="createTime != null">`CREATE_TIME` = #{createTime},</if>
             <if test="modifier != null">`MODIFIER` = #{modifier},</if>
             `MODIFY_TIME` = NOW(),
             <if test="disabled != null">`DISABLED` = #{disabled},</if>

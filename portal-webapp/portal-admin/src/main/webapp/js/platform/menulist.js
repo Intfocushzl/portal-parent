@@ -137,7 +137,6 @@ var vm = new Vue({
             //vm.reload();
             $("#jqGrid").jqGrid('setGridParam', {
                 postData: {
-                    pid: vm.menu.pid,
                     name: vm.menu.name
                 },
                 page: 1

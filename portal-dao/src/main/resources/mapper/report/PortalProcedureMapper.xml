@@ -43,6 +43,15 @@
 
     <select id="queryTotal" parameterType="map" resultType="int">
         select count(*) from portal_procedure
+        <where>
+            <if test="keyword != null and keyword !=''">
+                and (
+                procode like concat('%',#{keyword},'%')
+                or title like concat('%',#{keyword},'%')
+                or proname like concat('%',#{keyword},'%')
+                )
+            </if>
+        </where>
     </select>
 
     <select id="getNewMaxCode" parameterType="map" resultType="string">
@@ -88,7 +97,7 @@
 			#{prodb},
 			#{remark},
 			#{creater},
-			#{createTime},
+			NOW(),
 			#{modifier},
 			NOW(),
 			#{disabled},
@@ -106,8 +115,6 @@
             <if test="parameter != null">`parameter` = #{parameter},</if>
             <if test="prodb != null">`prodb` = #{prodb},</if>
             <if test="remark != null">`remark` = #{remark},</if>
-            <if test="creater != null">`creater` = #{creater},</if>
-            <if test="createTime != null">`create_time` = #{createTime},</if>
             <if test="modifier != null">`modifier` = #{modifier},</if>
             `modify_time` = NOW(),
             <if test="disabled != null">`disabled` = #{disabled},</if>

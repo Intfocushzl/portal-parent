@@ -43,6 +43,12 @@
             <if test="remark != null and remark !=''">
                 and remark like concat('%',#{remark},'%')
             </if>
+			<if test="keyword != null and keyword !=''">
+				and (
+				theme like concat('%',#{keyword},'%')
+				or indexname like concat('%',#{keyword},'%')
+				)
+			</if>
         </where>
         <choose>
             <when test="sidx != null and sidx.trim() != ''">
@@ -70,6 +76,12 @@
             <if test="remark != null and remark !=''">
                 and remark like concat('%',#{remark},'%')
             </if>
+			<if test="keyword != null and keyword !=''">
+				and (
+				theme like concat('%',#{keyword},'%')
+				or indexname like concat('%',#{keyword},'%')
+				)
+			</if>
         </where>
 	</select>
 
@@ -97,7 +109,14 @@
 			`created_by`, 
 			`cindexname`, 
 			`ctablename`, 
-			`bloodrelation`
+			`bloodrelation`,
+			`REMARK`,
+			`CREATER`,
+			`CREATE_TIME`,
+			`MODIFIER`,
+			`MODIFY_TIME`,
+			`DISABLED`,
+			`VERSION`
 		)
 		values
 		(
@@ -122,7 +141,14 @@
 			#{createdBy}, 
 			#{cindexname}, 
 			#{ctablename}, 
-			#{bloodrelation}
+			#{bloodrelation},
+			#{remark},
+			#{creater},
+			now(),
+			#{modifier},
+			NOW(),
+			#{disabled},
+			#{version}
 		)
 	</insert>
 
@@ -150,7 +176,14 @@
 			<if test="createdBy != null">`created_by` = #{createdBy}, </if>
 			<if test="cindexname != null">`cindexname` = #{cindexname}, </if>
 			<if test="ctablename != null">`ctablename` = #{ctablename}, </if>
-			<if test="bloodrelation != null">`bloodrelation` = #{bloodrelation}</if>
+			<if test="bloodrelation != null">`bloodrelation` = #{bloodrelation},</if>
+			<if test="remark != null">`REMARK` = #{remark}, </if>
+			<if test="creater != null">`CREATER` = #{creater}, </if>
+			<if test="createTime != null">`CREATE_TIME` = #{createTime}, </if>
+			<if test="modifier != null">`MODIFIER` = #{modifier}, </if>
+			`MODIFY_TIME` = NOW(),
+			<if test="disabled != null">`DISABLED` = #{disabled}, </if>
+			<if test="version != null">`VERSION` = #{version}</if>
         </set>
         where id = #{id}
     </update>

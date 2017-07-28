@@ -25,6 +25,13 @@
             <if test="remark != null and remark !=''">
                 and remark like concat('%',#{remark},'%')
             </if>
+			<if test="keyword != null and keyword !=''">
+				 and (
+				refername like concat('%',#{keyword},'%')
+				or referchar like concat('%',#{keyword},'%')
+				or `def` like concat('%',#{keyword},'%')
+				)
+			</if>
         </where>
         <choose>
             <when test="sidx != null and sidx.trim() != ''">
@@ -52,6 +59,13 @@
             <if test="remark != null and remark !=''">
                 and remark like concat('%',#{remark},'%')
             </if>
+			<if test="keyword != null and keyword !=''">
+				and (
+				refername like concat('%',#{keyword},'%')
+				or referchar like concat('%',#{keyword},'%')
+				or `def` like concat('%',#{keyword},'%')
+				)
+			</if>
         </where>
 	</select>
 
@@ -61,14 +75,18 @@
 			`refername`, 
 			`referchar`, 
 			`def`, 
-			`updatetime`
+			`updatetime`,
+			creater,
+			create_time
 		)
 		values
 		(
 			#{refername}, 
 			#{referchar}, 
 			#{def}, 
-			#{updatetime}
+			#{updatetime},
+			#{creater},
+			now()
 		)
 	</insert>
 
@@ -78,7 +96,9 @@
 			<if test="refername != null">`refername` = #{refername}, </if>
 			<if test="referchar != null">`referchar` = #{referchar}, </if>
 			<if test="def != null">`def` = #{def}, </if>
-			<if test="updatetime != null">`updatetime` = #{updatetime}</if>
+			<if test="updatetime != null">`updatetime` = #{updatetime},</if>
+			<if test="modifier != null">`MODIFIER` = #{modifier}, </if>
+			`MODIFY_TIME` = NOW()
         </set>
         where id = #{id}
     </update>

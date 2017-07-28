@@ -6,6 +6,7 @@ import com.yonghui.portal.service.businessman.BusinessmanProblemReplyService;
 import com.yonghui.portal.util.PageUtils;
 import com.yonghui.portal.util.Query;
 import com.yonghui.portal.util.R;
+import com.yonghui.portal.utils.ShiroUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -59,6 +60,7 @@ public class BusinessmanProblemReplyController extends AbstractController {
     @RequestMapping("/save")
     @RequiresPermissions("businessmanproblemreply:save")
     public R save(@RequestBody BusinessmanProblemReply businessmanProblemReply){
+        businessmanProblemReply.setCreater(ShiroUtils.getUserId());
 		businessmanProblemReplyService.save(businessmanProblemReply);
         return R.success();
     }
@@ -69,6 +71,7 @@ public class BusinessmanProblemReplyController extends AbstractController {
     @RequestMapping("/update")
     @RequiresPermissions("businessmanproblemreply:update")
     public R update(@RequestBody BusinessmanProblemReply businessmanProblemReply){
+        businessmanProblemReply.setModifier(ShiroUtils.getUserId());
 		businessmanProblemReplyService.update(businessmanProblemReply);
         return R.success();
     }

@@ -6,6 +6,7 @@ import com.yonghui.portal.service.businessman.BusinessmanNoticeService;
 import com.yonghui.portal.util.PageUtils;
 import com.yonghui.portal.util.Query;
 import com.yonghui.portal.util.R;
+import com.yonghui.portal.utils.ShiroUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -59,6 +60,7 @@ public class BusinessmanNoticeController extends AbstractController {
     @RequestMapping("/save")
     @RequiresPermissions("businessmannotice:save")
     public R save(@RequestBody BusinessmanNotice businessmanNotice){
+        businessmanNotice.setCreater(ShiroUtils.getUserId());
 		businessmanNoticeService.save(businessmanNotice);
         return R.success();
     }
@@ -69,6 +71,7 @@ public class BusinessmanNoticeController extends AbstractController {
     @RequestMapping("/update")
     @RequiresPermissions("businessmannotice:update")
     public R update(@RequestBody BusinessmanNotice businessmanNotice){
+        businessmanNotice.setModifier(ShiroUtils.getUserId());
 		businessmanNoticeService.update(businessmanNotice);
         return R.success();
     }

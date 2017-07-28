@@ -185,8 +185,7 @@ var vm = new Vue({
             //vm.reload();
             $("#jqGrid").jqGrid('setGridParam', {
                 postData: {
-                    jobNumber: vm.user.jobNumber,
-                    name: vm.user.name
+                    keyword: $("#keyword").val()
                 },
                 page: 1
             }).trigger("reloadGrid");

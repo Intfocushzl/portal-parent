@@ -1,7 +1,9 @@
 package com.yonghui.portal.service.impl.report;
 
 import com.yonghui.portal.mapper.report.PortalExecuteSqlMapper;
+import com.yonghui.portal.mapper.sys.SysLogMapper;
 import com.yonghui.portal.model.report.PortalExecuteSql;
+import com.yonghui.portal.model.sys.SysLog;
 import com.yonghui.portal.service.report.PortalExecuteSqlService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,6 +15,13 @@ import java.util.Map;
 public class PortalExecuteSqlServiceImpl implements PortalExecuteSqlService {
 	@Autowired
 	private PortalExecuteSqlMapper portalExecuteSqlMapper;
+	@Autowired
+	private SysLogMapper sysLogMapper;
+
+	@Override
+	public void savelog(SysLog sysLog) {
+		sysLogMapper.save(sysLog);
+	}
 	
 	@Override
 	public PortalExecuteSql queryObject(Integer id){

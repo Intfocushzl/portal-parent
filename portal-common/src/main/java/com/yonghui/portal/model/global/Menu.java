@@ -1,11 +1,12 @@
 package com.yonghui.portal.model.global;
 
-import java.io.Serializable;
+import com.yonghui.portal.model.base.AuditAuto;
+
 import java.util.Date;
 import java.util.List;
 
-public class Menu implements Serializable{
-    private Integer id;
+public class Menu extends AuditAuto {
+//    private Integer id;
 
     private String name;
 
@@ -38,13 +39,13 @@ public class Menu implements Serializable{
 //    
     private String checked;
 
-    public Integer getId() {
+   /* public Integer getId() {
         return id;
     }
 
     public void setId(Integer id) {
         this.id = id;
-    }
+    }*/
 
     public String getName() {
         return name;
