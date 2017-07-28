@@ -6,6 +6,7 @@ import com.yonghui.portal.model.global.Menu;
 import com.yonghui.portal.model.sys.SysLog;
 import com.yonghui.portal.service.global.MenuService;
 import com.yonghui.portal.util.*;
+import com.yonghui.portal.utils.ShiroUtils;
 import org.apache.commons.collections.map.HashedMap;
 import org.apache.log4j.Logger;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -199,9 +200,9 @@ public class MenuController extends AbstractController {
         try {
             String[] sortStrs = sortStr.split("\\|");
             for (int i = 0; i < sortStrs.length; i++) {
-                int id=-1;
+                Long id=-1L;
                 if (StringUtils.isNumeric(sortStrs[i].trim())){
-                    id=Integer.parseInt(sortStrs[i].trim());
+                    id=Long.parseLong(sortStrs[i].trim());
                 }
                 Menu menu=new Menu();
                 menu.setId(id);

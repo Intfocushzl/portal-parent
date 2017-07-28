@@ -62,6 +62,7 @@
 			and (
 			content like concat('%',#{keyword},'%')
 			)
+            </if>
         </where>
 	</select>
 
