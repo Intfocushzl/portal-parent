@@ -1,0 +1,488 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yonghui.portal.mapper.app.AppRoleMapper">
+	<resultMap id="BaseResultMap" type="com.yonghui.portal.model.message.AppRole">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="role_name" property="roleName" jdbcType="VARCHAR" />
+		<result column="create_user" property="createUser" jdbcType="INTEGER" />
+		<result column="update_user" property="updateUser" jdbcType="INTEGER" />
+		<result column="memo" property="memo" jdbcType="VARCHAR" />
+		<result column="load_time" property="loadTime" jdbcType="TIMESTAMP" />
+		<result column="created_at" property="createdAt" jdbcType="TIMESTAMP" />
+		<result column="updated_at" property="updatedAt" jdbcType="TIMESTAMP" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, role_name, create_user, update_user, memo, load_time, created_at,
+		updated_at
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		from appauthority.sys_roles
+		where id = #{id,jdbcType=INTEGER}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from appauthority.sys_roles
+		where id = #{id,jdbcType=INTEGER}
+	</delete>
+	<insert keyProperty="id" id="insert" parameterType="com.yonghui.portal.model.message.AppRole">
+		insert into appauthority.sys_roles (id, role_name, create_user,
+		update_user, memo, load_time,
+		created_at, updated_at)
+		values (#{id,jdbcType=INTEGER}, #{roleName,jdbcType=VARCHAR},
+		#{createUser,jdbcType=INTEGER},
+		#{updateUser,jdbcType=INTEGER}, #{memo,jdbcType=VARCHAR}, #{loadTime,jdbcType=TIMESTAMP},
+		#{createdAt,jdbcType=TIMESTAMP}, #{updatedAt,jdbcType=TIMESTAMP})
+	</insert>
+	<insert id="insertSelective" parameterType="com.yonghui.portal.model.message.AppRole">
+		<selectKey resultType="java.lang.Integer" order="AFTER"
+			keyProperty="id">
+			SELECT LAST_INSERT_ID() AS id
+		</selectKey>
+		insert into appauthority.sys_roles
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="roleName != null">
+				role_name,
+			</if>
+			<if test="createUser != null">
+				create_user,
+			</if>
+			<if test="updateUser != null">
+				update_user,
+			</if>
+			<if test="memo != null">
+				memo,
+			</if>
+			<if test="loadTime != null">
+				load_time,
+			</if>
+			<if test="createdAt != null">
+				created_at,
+			</if>
+			<if test="updatedAt != null">
+				updated_at,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=INTEGER},
+			</if>
+			<if test="roleName != null">
+				#{roleName,jdbcType=VARCHAR},
+			</if>
+			<if test="createUser != null">
+				#{createUser,jdbcType=INTEGER},
+			</if>
+			<if test="updateUser != null">
+				#{updateUser,jdbcType=INTEGER},
+			</if>
+			<if test="memo != null">
+				#{memo,jdbcType=VARCHAR},
+			</if>
+			<if test="loadTime != null">
+				#{loadTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="createdAt != null">
+				#{createdAt,jdbcType=TIMESTAMP},
+			</if>
+			<if test="updatedAt != null">
+				#{updatedAt,jdbcType=TIMESTAMP},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.yonghui.portal.model.message.AppRole">
+		update appauthority.sys_roles
+		<set>
+			<if test="roleName != null">
+				role_name = #{roleName,jdbcType=VARCHAR},
+			</if>
+			<if test="createUser != null">
+				create_user = #{createUser,jdbcType=INTEGER},
+			</if>
+			<if test="updateUser != null">
+				update_user = #{updateUser,jdbcType=INTEGER},
+			</if>
+			<if test="memo != null">
+				memo = #{memo,jdbcType=VARCHAR},
+			</if>
+			<if test="loadTime != null">
+				load_time = #{loadTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="createdAt != null">
+				created_at = #{createdAt,jdbcType=TIMESTAMP},
+			</if>
+			<if test="updatedAt != null">
+				updated_at = #{updatedAt,jdbcType=TIMESTAMP},
+			</if>
+		</set>
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.yonghui.portal.model.message.AppRole">
+		update appauthority.sys_roles
+		set role_name = #{roleName,jdbcType=VARCHAR},
+		create_user = #{createUser,jdbcType=INTEGER},
+		update_user = #{updateUser,jdbcType=INTEGER},
+		memo = #{memo,jdbcType=VARCHAR},
+		load_time = #{loadTime,jdbcType=TIMESTAMP},
+		created_at = #{createdAt,jdbcType=TIMESTAMP},
+		updated_at = #{updatedAt,jdbcType=TIMESTAMP}
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+
+	<select id="selectAll" resultMap="BaseResultMap">
+		select * from
+		appauthority.sys_roles
+	</select>
+
+	<select id="selectRoleForComboBox" resultType="Map">
+		select 0 as id , 'ALL' as roleName union all
+		select id , role_name as roleName
+		from appauthority.sys_roles
+		/*
+		where appUse = 1 */
+	</select>
+
+	<select id="selectRoleBywhere" parameterType="java.util.Map"
+		resultMap="BaseResultMap">
+		SELECT
+		r.id,
+		r.role_name,
+		r.create_user,
+		r.update_user,
+		r.memo,
+		r.load_time,
+		r.created_at,
+		r.updated_at
+		FROM
+		appauthority.sys_roles AS r
+		<where>
+			1=1
+			<if test=" null != roleName and '' != roleName ">
+				and role_name like "%"#{roleName , jdbcType=VARCHAR}"%"
+			</if>
+
+			<if test=" null != roleId and '' != roleId ">
+				and id = #{roleId , jdbcType=VARCHAR}
+			</if>
+			limit #{page_index , jdbcType = INTEGER} , #{rows , jdbcType =
+			INTEGER}
+		</where>
+	</select>
+	<select id="getTotal" resultType="Integer" parameterType="java.util.Map">
+		SELECT
+		count(1)
+		FROM
+		appauthority.sys_roles AS r
+		<where>
+			1=1
+			<if test=" null != roleName and '' != roleName ">
+				and role_name like "%"#{roleName , jdbcType=VARCHAR}"%"
+			</if>
+
+			<if test=" null != roleId and '' != roleId ">
+				and id = #{roleId , jdbcType=VARCHAR}
+			</if>
+		</where>
+	</select>
+	<resultMap type="com.yonghui.portal.model.message.AppRoleResources" id="RoleResources">
+		<id column="role_id" property="roleId" jdbcType="INTEGER" />
+		<result column="role_name" property="roleName" jdbcType="VARCHAR" />
+		<result column="obj_id" property="objId" jdbcType="INTEGER" />
+		<result column="obj_type" property="objType" jdbcType="INTEGER" />
+		<result column="obj_name" property="objName" jdbcType="INTEGER" />
+		<result column="memo" property="memo" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<select id="selectRoleResources" parameterType="java.util.Map"
+		resultMap="RoleResources">
+		SELECT
+		r.id as role_id ,
+		r.role_name ,
+		rr.obj_id,
+		rr.obj_type,
+		(case when
+		obj_type = 1 then (select kpi_name from appauthority.kpi_bases where id =
+		rr.obj_id)
+		when obj_type = 2 THEN (select `name` from appauthority.analysis_bases where
+		id = rr.obj_id)
+		when obj_type = 3 THEN (select `name` from appauthority.app_bases where id =
+		rr.obj_id)
+		else 0 end ) as obj_name ,
+		rr.memo
+		FROM
+		appauthority.sys_roles AS r
+		INNER JOIN
+		appauthority.sys_role_resources AS rr ON r.id = rr.role_id
+		<where>
+			1=1
+			<if test="null != roleName and '' != roleName">
+				and r.role_name like "%"#{roleName , jdbcType=VARCHAR}"%"
+			</if>
+		</where>
+		limit #{page_index , jdbcType = INTEGER} , #{rows , jdbcType =
+		INTEGER}
+	</select>
+
+	<select id="selectRoleResourcesCount" parameterType="java.util.Map"
+		resultType="Integer">
+		SELECT
+		count(1) as rowno
+		FROM
+		appauthority.sys_roles AS r
+		INNER JOIN appauthority.sys_role_resources AS rr
+		ON r.id = rr.role_id
+		<where>
+			1=1
+			<if test="null != roleName and '' != roleName">
+				and r.role_name like "%"#{roleName , jdbcType=VARCHAR}"%"
+			</if>
+
+		</where>
+	</select>
+
+	<resultMap type="com.yonghui.portal.model.message.AppResource" id="resList">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="resourceName" property="resourceName" jdbcType="VARCHAR" />
+		<result column="resourceGroup" property="resourceGroup" jdbcType="VARCHAR" />
+		<result column="obj_type" property="objType" jdbcType="VARCHAR" />
+		<result column="isCheck" property="isCheck" jdbcType="INTEGER" />
+	</resultMap>
+
+
+	<select id="selectRoleKpiBases" parameterType="java.util.Map"
+		resultMap="resList">
+		SELECT
+		DISTINCT k.id as id , k.kpi_name as
+		resourceName
+		FROM appauthority.sys_role_resources AS rr
+		JOIN appauthority.kpi_bases as k on k.id = rr.obj_id
+		WHERE rr.obj_type = 1
+	</select>
+	<select id="selectReportsInfo" parameterType="java.util.Map"
+		resultMap="resList">
+		select id, resourceGroup , resourceName, obj_type 
+		 ,(case when  EXISTs (
+           select role_id ,  obj_type , obj_id 
+           from appauthority.sys_role_resources as b
+           where b.obj_type = a.obj_type and b.obj_id = a.id
+           and b.role_id = @role_id
+           )
+           then 1 else 0 end 
+           ) as isCheck
+		from (
+		select
+				distinct k.id as id,
+				k.kpi_name as resourceName,
+				1 as obj_type , kpi_group  as resourceGroup 
+			from
+				appauthority.kpi_bases as k
+		union select
+				distinct k.id as id,
+				k.name as resourceName,
+				2 as obj_type, k.group_name  as resourceGroup 
+			from
+				appauthority.analysis_bases as k
+		union select
+				distinct k.id as id,
+				k.name as resourceName,
+				3 as obj_type, k.group_name  as resourceGroup 
+			from
+				appauthority.app_bases as k
+		) as a
+		<choose>
+            <when test=" null != roleId and '' != roleId ">
+				left join (
+				  select @role_id:=  #{roleId}   
+				) as b on 1=1
+		    </when>
+		    <otherwise>
+				left join (
+				  select @role_id:= null
+				) as b on 1=1
+		    </otherwise>
+		</choose>
+		
+		<where>
+		 1=1
+				<if test=" null != resourceName">
+		           and   a.resourceName like CONCAT('%',#{resourceName},'%') 		   
+				</if>
+              <if test=" null != ObjTypes">
+               and  a.obj_type in 
+                   <foreach collection="ObjTypes" item="e"  open="(" separator="," close=")">     
+                                #{e}      
+                  </foreach>   
+              </if>		
+           
+              <if test=" null == ObjTypes">
+               and  a.obj_type = -1 
+              </if>		
+<!--               <if test="null != roleId">
+               and EXISTs (
+							select role_id ,  obj_type , obj_id 
+							from appauthority.sys_role_resources as b
+							where b.obj_type = a.obj_type and b.obj_id = a.id
+							      and b.role_id = #{roleId}
+							)
+              
+              </if>		
+ -->		</where> 
+	</select>
+
+	<select id="selectRoleAnalysisBases" parameterType="java.util.Map"
+		resultMap="resList">
+		SELECT
+		DISTINCT k.id as id , k.name as resourceName
+		FROM appauthority.sys_role_resources AS rr
+		JOIN appauthority.analysis_bases as k on k.id = rr.obj_id
+		WHERE rr.obj_type = 2
+	</select>
+
+	<select id="selectRoleAppBases" parameterType="java.util.Map"
+		resultMap="resList">
+		SELECT
+		DISTINCT k.id as id , k.name as resourceName
+		FROM appauthority.sys_role_resources AS rr
+		JOIN appauthority.app_bases as k on k.id = rr.obj_id
+		WHERE rr.obj_type = 3
+	</select>
+
+
+	<delete id="deleteRoleResources" parameterType="java.util.Map">
+		delete from appauthority.sys_role_resources
+		<where>
+			<if test=" null != roleId ">
+				role_id = #{roleId , jdbcType = INTEGER}
+			</if>
+			<if test=" null != ObjIds ">
+				and obj_id in
+				<foreach item="item" index="index" collection="ObjIds" open="("
+					separator="," close=")">
+					#{item, jdbcType = INTEGER}
+				</foreach>
+			</if>
+			<if test=" null != objType ">
+				and obj_type = #{objType , jdbcType = INTEGER}
+			</if>
+		</where>
+	</delete>
+
+	<insert id="updateRoleAppBases" parameterType="java.util.Map">
+		INSERT into appauthority.sys_role_resources (role_id , obj_type , obj_id)
+		select #{roleId , jdbcType = INTEGER} , #{ObjType , jdbcType =
+		INTEGER} , ID
+		from appauthority.app_bases
+		<if test="null != objIds ">
+			where id in
+			<foreach item="item" index="index" collection="objIds" open="("
+				separator="," close=")">
+				#{item, jdbcType = INTEGER}
+			</foreach>
+		</if>
+	</insert>
+
+	<insert id="updateRoleAnalysisBases" parameterType="java.util.Map">
+		INSERT into appauthority.sys_role_resources (role_id , obj_type , obj_id)
+		select #{roleId , jdbcType = INTEGER} , #{ObjType , jdbcType =
+		INTEGER} , ID
+		from appauthority.analysis_bases
+		<if test="null != objIds ">
+			where id in
+			<foreach item="item" index="index" collection="objIds" open="("
+				separator="," close=")">
+				#{item, jdbcType = INTEGER}
+			</foreach>
+		</if>
+	</insert>
+	<insert id="updateRoleKpiBases" parameterType="java.util.Map">
+		INSERT into appauthority.sys_role_resources (role_id , obj_type , obj_id)
+		select #{roleId , jdbcType = INTEGER} , #{ObjType , jdbcType =
+		INTEGER} , ID
+		from appauthority.kpi_bases
+		<if test="null != objIds ">
+			where kpi_id in
+			<foreach item="item" index="index" collection="objIds" open="("
+				separator="," close=")">
+				#{item, jdbcType = INTEGER}
+			</foreach>
+		</if>
+	</insert>
+	
+	
+	<!-- <insert id="addTrainRecordBatch" useGeneratedKeys="true" parameterType="java.util.List"> 
+		<selectKey resultType="long" keyProperty="id" order="AFTER"> SELECT LAST_INSERT_ID() 
+		</selectKey> insert into t_train_record (add_time,emp_id,activity_id,flag) 
+		values <foreach collection="list" item="item" index="index" separator="," 
+		> (#{item.addTime},#{item.empId},#{item.activityId},#{item.flag}) </foreach> 
+		</insert> -->
+	<!-- select group_name , SUBSTRING(group_name,LOCATE('大区',group_name)) , 
+		SUBSTRING( SUBSTRING(group_name,LOCATE('大区',group_name)) ,LOCATE('大区',SUBSTRING(group_name,LOCATE('大区',group_name))) 
+		+ 3 , LOCATE(')',SUBSTRING(group_name,LOCATE('大区',group_name))) - 3 - LOCATE('大区',SUBSTRING(group_name,LOCATE('大区',group_name))) 
+		) , SUBSTRING( SUBSTRING(group_name,LOCATE('商行',group_name)) ,LOCATE('商行',SUBSTRING(group_name,LOCATE('商行',group_name))) 
+		+ 3 , LOCATE(')',SUBSTRING(group_name,LOCATE('商行',group_name))) - 3 - LOCATE('商行',SUBSTRING(group_name,LOCATE('商行',group_name))) 
+		) from appauthority.sys_groups -->
+
+
+	<select id="selectAllWithResId" resultMap="RoleResources" parameterType="java.util.Map">
+		select * from appauthority.sys_role_resources 
+ 		<where>
+	       obj_id = #{obj_id ,jdbcType = INTEGER} and obj_type = #{obj_type,jdbcType = INTEGER} 
+	    </where>
+	</select>
+	
+
+	<insert id="insertAppRoleResouces" parameterType="java.util.Map">
+		INSERT into appauthority.sys_role_resources (role_id , obj_type , obj_id)
+		select a.id , #{ObjType , jdbcType = INTEGER} , #{ObjId , jdbcType = INTEGER}
+		from appauthority.sys_roles as a
+		<if test="null != roleIds ">
+			where a.id in
+			<foreach item="item" index="index" collection="roleIds" open="("
+				separator="," close=")">
+				#{item, jdbcType = INTEGER}
+			</foreach>
+		</if> 
+	</insert>
+	
+	<update id="updateAppRoleResouces" parameterType="java.util.Map">
+		UPDATE  appauthority.sys_role_resources set 
+		updated_at=now()
+		where 1=1
+		<if test="null != ObjId">
+			and obj_id = #{ObjId ,jdbcType = INTEGER}
+		</if>
+		<if test="null != ObjType">
+			and obj_type = #{ObjType,jdbcType = INTEGER} 
+		</if>
+		<if test="null != roleIds ">
+			and role_id in
+			<foreach item="item" index="index" collection="roleIds" open="("
+				separator="," close=")">
+				#{item, jdbcType = INTEGER}
+			</foreach>
+		</if> 
+		
+	</update>
+	
+	<delete id="deleteAppRoleResouces" parameterType="java.util.Map">
+		delete from  appauthority.sys_role_resources 
+		where 1=1
+		<if test="null != ObjId">
+			and obj_id = #{ObjId ,jdbcType = INTEGER}
+		</if>
+		<if test="null != ObjType">
+			and obj_type = #{ObjType,jdbcType = INTEGER} 
+		</if>
+		<if test="null != roleIds ">
+			and role_id in
+			<foreach item="item" index="index" collection="roleIds" open="("
+				separator="," close=")">
+				#{item, jdbcType = INTEGER}
+			</foreach>
+		</if> 
+	</delete>
+</mapper>

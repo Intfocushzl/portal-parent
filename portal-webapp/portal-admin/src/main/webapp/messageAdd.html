@@ -1,0 +1,994 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<title>消息推送</title>
+<script type="text/javascript" src="/portal-admin/statics/libs/jquery.min.js" charset="UTF-8"></script>
+<script type="text/javascript" src="/portal-admin/statics/libs/jquery.form.js" charset="UTF-8"></script>
+<script src="/portal-admin/statics/libs/bootstrap.min.js"></script>
+<script type="text/javascript" src="/portal-admin/statics/libs/bootstrap-datetimepicker.js" charset="UTF-8"></script>
+<script type="text/javascript" src="/portal-admin/statics/libs/bootstrap-datetimepicker.zh-CN.js" charset="UTF-8"></script>
+<link rel="stylesheet" href="/portal-admin/statics/css/bootstrap.min.css">
+<link href="/portal-admin/statics/css/bootstrap-datetimepicker.min.css" rel="stylesheet" media="screen">
+
+<link rel="stylesheet" href="/portal-admin/statics/libs/bootstrap-table/bootstrap-table.min.css">
+<script src="/portal-admin/statics/libs/bootstrap-table/bootstrap-table.min.js"></script>
+<script src="/portal-admin/statics/libs/bootstrap-table/bootstrap-table.js"></script>
+<script src="/portal-admin/statics/libs/bootstrap-table/bootstrap-table-locale-all.js"></script>
+<script src="/portal-admin/statics/libs/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"></script>
+<script src="/portal-admin/statics/libs/bootstrap-table/extensions/export/bootstrap-table-export.min.js"></script>
+
+ <script type="text/javascript" src="/portal-admin/statics/plugins/summernote/dist/summernote.min.js"></script>
+ <link rel="stylesheet" href="/portal-admin/statics/plugins/summernote/dist/summernote.css">
+    <link rel="stylesheet" href="/portal-admin/statics/css/magicsuggest-1.2.2.css">
+    <script type="text/javascript" src="/portal-admin/statics/libs/magicsuggest-1.2.2.js"></script>
+<script type="text/javascript">
+    	var ctx="/portal-admin";
+</script>
+<script type="text/javascript">
+var params = function() {
+    var query = {},
+    search = window.location.search.substring(1),
+    parts = search.split('&'),
+    pairs = [];
+
+    for (var i = 0, len = parts.length; i < len; i++) {
+        pairs = parts[i].split('=');
+        query[pairs[0]] = (pairs.length > 1 ? decodeURIComponent(pairs[1]) : null);
+     }
+
+    return query;
+ }();
+var jobToModify = {};
+
+if(undefined != params["jobKey"]){
+
+	$.ajax({
+		url:'/portal-admin/message/gotoModify',
+	    dataType:'json',
+	  	data:{
+	  		jobKey:params["jobKey"]
+	  	},
+	  	success:function(res){
+	  		jobToModify= res.messageJob;
+	  		loadJob(jobToModify);
+	  	},
+	  	error:function(res){
+	  		console.log(res);
+	  	}
+	});
+}
+
+</script>
+</head>
+<body>
+<div id ='alert_div' >
+
+</div>
+<button onclick="submit()" class="btn btn-default">保存</button>
+
+<div class="panel panel-default">
+
+  <div class="panel-heading">
+    <h3 class="panel-title">定时任务名称</h3>
+  </div>
+  <div class="panel-body">
+  	    <input type="text" onblur="javascript:checkJobName()" id="job_name" style='width:200px'>
+  </div>
+  <div class="panel-heading">
+    <h3 class="panel-title">时间设置</h3>
+  </div>
+  <div class="panel-body">
+
+	<ul class="nav nav-tabs">
+	  <li role="presentation" id = "once" class="active"><a href="javascrip:void(0)" onclick="changType(1)">一次</a></li>
+	  <li role="presentation" id = "minute" ><a href="javascrip:void(0)" onclick="changType(2)">按分钟</a></li>
+	  <li role="presentation" id = "day" ><a href="javascrip:void(0)" onclick="changType(3)">按天</a></li>
+	  <li role="presentation" id = "week" ><a href="javascrip:void(0)" onclick="changType(4)">按周</a></li>
+	  <li role="presentation" id = "month" ><a href="javascrip:void(0)" onclick="changType(5)">按月</a></li>
+	  <li role="presentation" id = "event" ><a href="javascrip:void(0)" onclick="changType(6)">事件</a></li>
+	</ul>
+
+	<div id="form_id">
+		<form>
+  <div class="form-group">
+    <label for="exampleInputEmail1">开始时间</label>
+        <div class="input-append date" id="datetimepicker" data-date-format="yyyy-mm-dd hh:ii:ss">
+	    <input class="span2" size="25" type="text" id="startTime" placeholder="输入开始时间" class="form-control" style='width:200px'>
+	    <span class="add-on"><i class="icon-remove"></i></span>
+	    <span class="add-on"><i class="icon-th"></i></span>
+	</div>  
+   <div class="form-group" id = 'div_end_time'>
+    <label for="exampleInputEmail1">结束时间</label>
+        <div class="input-append date" id="datetimepicker1" data-date-format="yyyy-mm-dd hh:ii:ss">
+	    <input class="span2" size="25" type="text" id="endTime" placeholder="输入结束时间" class="form-control" style='width:200px'>
+	    <span class="add-on"><i class="icon-remove"></i></span>
+	    <span class="add-on"><i class="icon-th"></i></span>
+	</div>  
+  </div>
+  </div>
+  <div class="form-group" id="div_cycle">
+    <label for="exampleInputPassword1">每</label>
+    <input type="text" class="form-control" id="cycle" placeholder="天、周、月" style='width:200px' >
+  </div>
+  <div class="form-group" id="div_excute_times" >
+    <label for="exampleInputFile">执行次数</label>
+    <input type="text" id="excute_times" placeholder="共执行多少次，0代表无穷次" class="form-control" style='width:200px'>
+  </div>
+	<div class="form-group" id="div_month">
+	    <label for="exampleInputFile">月选项</label><br/>
+<!-- 		<select id='monthItem' class='flexselect' style='width:200px'>
+		<option value="startMonth">月初</option>
+		<option value="endMonth">月末</option>
+		<option value="middleMonth">月中</option>
+		</select> -->
+	<!-- 	<input id='monthItem'/> -->
+		  <label>月选项规则</label>
+  		<h5 style="color:red">除每月最后一天使用 L 表示，其他日期使用数字表示。<br/>
+  		例如：<br/>
+  		每月的第一天执行推送，可以输入 1<br/>
+  		每月的最后一天执行推送，可以输入 L<br/>
+  		</h5>
+		<input id="dayMonth" class="form-control" style='width:200px'  type = "text" placeholder="输入月中的第几天"/>
+	</div>
+	<div class="form-group" id="div_week">
+	    <label for="exampleInputFile">周选项</label><br/>
+<!-- 		<select id='weekItem' multipl='multiple' class='flexselect' style='width:200px' placeholder="选择周几">
+		<option value="1">周一</option>
+		<option value="2">周二</option>
+		<option value="3">周三</option>
+		<option value="4">周四</option>
+		<option value="5">周五</option>
+		<option value="6">周六</option>
+		<option value="7">周日</option>
+		</select> -->
+		<input id = 'weekItem'/>
+	</div>
+	
+<!--   <button class="btn btn-default">下一步</button> -->
+</form>
+	</div>
+
+  </div>
+</div>
+
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h3 class="panel-title">通知和跳转</h3>
+  </div>
+  <div class="panel-body">
+  
+     <label>通知方式:</label>
+	<div class="radio">
+	    <label>
+	      <input type="radio" name="message_type" value="sms" > 短信<br/>
+	</label>
+  </div>	
+	<div class="radio">
+	    <label>
+  	      <input type="radio" name="message_type" value="push" > 推送<br/>
+	</label>
+  </div>	
+	<div class="radio">
+	    <label>
+	      <input type="radio" name="message_type" value="email" > 邮件<br/>
+	</label>
+  </div>	
+  <label>跳转方式:</label>
+	<div class="radio">
+	     <label>
+		      <input type="radio" name="jump_type" value="kpi" onclick="changeJumpType()" >报表<br/>
+		  </label>
+	</div>
+	<div class="radio">
+	     <label>
+  	      <input type="radio" name="jump_type" value="analysis" onclick="changeJumpType()"> 分析<br/>
+		  </label>
+	</div>
+	<div class="radio">
+	     <label>
+	      <input type="radio" name="jump_type" value="app" onclick="changeJumpType()" > 应用<br/>
+		  </label>
+	</div>
+   	<div class="form-group">
+  		<select id='obj_id'  style='width:200px'>
+		</select>
+     </div>
+
+		</div>
+  </div>
+
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h3 class="panel-title">规则和跳转</h3>
+  </div>
+  <div class="panel-body">
+
+	  <label>异常规则:</label>
+  		<h5 style="color:red">sql 语句的字段部分不要使用子查询，否则不能再下一步中选择字段<br/>
+  		以下是必写的字段<br/>
+		1.account<br/>
+		2.email<br/>
+		3.phone<br/>
+  		</h5>
+  <div class="checkbox">
+    <label>
+  		<input type="checkbox" value="" id="noRule">无规则   
+   </label>
+ </div>
+  <div class="checkbox">
+    <label>
+  	<input type="checkbox" value="" id="incluedReceiver">是否包含通知对象
+   </label>
+ </div>
+  <textarea class="summernote" id="sql_script"></textarea>
+  
+  <br/>
+  <button id="b1">解析</button>
+</div>
+</div>
+  
+
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h3 class="panel-title">发送内容</h3>
+  </div>
+  <div class="panel-body">
+
+	  <label>可选字段:</label>
+  
+  <div >
+   	<div class="form-group">
+   		<select id='selectable' onchange="javascript:insertField()" class='flexselect' style='width:200px'>
+		</select>
+     </div>
+  <textarea class="summernote" id = "message"></textarea>
+</div>
+
+</div>
+
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h3 class="panel-title">发送对象</h3>
+  </div>
+  <div class="panel-body">
+  	  <div class="radio">
+	    <label>
+	  	   <input type="radio" value="firstRecord" name = "record_selected">发送首条
+	    </label>
+ 	   </div>
+  	  <div class="radio">
+	    <label>
+	  	   <input type="radio" value="allRecord" name = "record_selected">逐条发送
+	    </label>
+ 	   </div>
+ 	    <label>
+				账号： 	   
+	    </label>
+   	<div class="form-group">
+   	  <input id = 'accountUser' type = 'text'/>
+     </div> 
+	    <label>
+				角色： 	   
+	    </label>
+   	<div class="form-group">
+<!--   		<select id='role' class='flexselect' style='width:200px'>
+
+		</select> -->
+	<input id = 'role' style='width:200px'>
+     </div>
+	<div class="radio">
+	     <label>
+		      <input type="radio" name="obj_type" value="report" onclick="changeObjType()" >报表<br/>
+		  </label>
+	</div>
+	<div class="radio">
+	     <label>
+  	      <input type="radio" name="obj_type" value="analysis" onclick="changeObjType()"> 分析<br/>
+		  </label>
+	</div>
+	<div class="radio">
+	     <label>
+	      <input type="radio" name="obj_type" value="app" onclick="changeObjType()" > 应用<br/>
+		  </label>
+	</div>	    
+	    
+
+	    <label>
+				频道： 	   
+	    </label>
+   	<div class="form-group">
+<!--   		<select id='obj' class='flexselect' style='width:200px'>
+
+		</select> -->
+		
+		<input id="obj" class="easyui-combobox" type="text" />
+     </div>
+ 	   
+  </div>
+</div>
+<script type="text/javascript" >
+/**
+ * 
+ */
+var varWeekItem ;
+var varType = 1 ;
+var varObj ;
+var varObjId;
+varWeekItem = $('#weekItem').magicSuggest({
+    selectionPosition: 'bottom',
+    renderer: function(obj){
+        return '<div>' +
+                '<div style="font-family: Arial; font-weight: bold">' + obj.name + '</div>' +
+               '</div>';
+    }, 
+   //expandOnFocus: false,
+   displayField:'name',
+   data:[{id:'1',name:'周一',coolness:Math.floor(Math.random() * 10) + 1},
+         {id:'2',name:'周二',coolness:Math.floor(Math.random() * 10) + 1},
+         {id:'3',name:'周三',coolness:Math.floor(Math.random() * 10) + 1},
+         {id:'4',name:'周四',coolness:Math.floor(Math.random() * 10) + 1},
+         {id:'5',name:'周五',coolness:Math.floor(Math.random() * 10) + 1},
+         {id:'6',name:'周六',coolness:Math.floor(Math.random() * 10) + 1},
+         {id:'7',name:'周日',coolness:Math.floor(Math.random() * 10) + 1},
+         ]
+});
+//$('#selectable').magicSuggest({
+//    selectionPosition: 'bottom',
+//    renderer: function(obj){
+//        return '<div>' +
+//                '<div style="font-family: Arial; font-weight: bold">' + obj.name + '</div>' +
+//               '</div>';
+//    }, 
+//   //expandOnFocus: false,
+//   displayField:'name'
+//});
+
+$('#datetimepicker').datetimepicker();
+$('#datetimepicker1').datetimepicker();
+$('.summernote').summernote({placeholder:'请输入',toolbar:[]});
+$('#execute').click(function(){
+	setS();
+});
+
+$('#b1').bind('click',function(){
+	var isHasAccount = 0 ;
+	var isHasPhone = 0 ;
+	var isHasEmail = 0 ;
+	var sql_script = $('#sql_script').summernote('code');
+	sql_script = sql_script.replace(new RegExp(';','g'),'')
+						   .replace(new RegExp('&nbsp','g'),'')
+	  					   .replace(new RegExp('<.*?>',"g"),' ');
+	$("#selectable option").remove();
+	var fields = [];
+	var resultStr = [];
+	sql_script = sql_script.substring(sql_script.indexOf('select') + 6 , sql_script.indexOf('from'));
+	if(sql_script){
+		fields = sql_script.split(',');
+	}
+	console.log(fields);
+	var f = ''
+	var ops = [];	
+	for(var i = 0; i < fields.length;i = i+1){
+		if(fields[i].toLocaleLowerCase().indexOf("as") > 0){
+			f = fields[i].substring( fields[i].toLocaleLowerCase().indexOf("as") + 3 , fields[i].length).replace(/\s+/g,'');
+		}else{
+			f = fields[i].replace(/\s+/g,'');
+		}
+		$("#selectable").append("<option value='"+f+"'>"+f+"</option>"); 
+		f = f.replace('&nbsp','');
+		if('account' == f){
+			isHasAccount = '1';
+		}
+		if('email' == f){
+			isHasEmail = '1';
+		}
+		if('phone' == f){
+			isHasPhone = '1';
+		}
+	}
+	if('0' == isHasAccount){
+		alert('account 字段的必填的');
+	}
+	if('0' == isHasEmail){
+		alert('email 字段的必填的');
+	}
+	if('0' == isHasPhone){
+		alert('phone 字段的必填的');
+	}
+	
+	
+});
+
+
+function changType(type){
+	varType = type ;
+	$('#div_excute_times').hide();
+	if(1 == type){
+		$('#once').addClass("active");
+		$('#minute').removeClass("active");
+		$('#day').removeClass("active");
+		$('#week').removeClass("active");
+		$('#month').removeClass("active");
+		$('#div_cycle').hide();
+		$('#div_month').hide();
+		$('#div_week').hide();
+		$('#div_end_time').hide();
+	}else if(2 == type){
+		$('#once').removeClass("active");
+		$('#minute').addClass("active");
+		$('#day').removeClass("active");
+		$('#week').removeClass("active");
+		$('#month').removeClass("active");
+		$('#event').removeClass("active");
+		$('#div_cycle').show();
+		$('#div_month').hide();
+		$('#div_week').hide();
+		$('#div_end_time').show();
+	}else if(3 == type){
+		$('#once').removeClass("active");
+		$('#minute').removeClass("active");
+		$('#day').addClass("active");
+		$('#week').removeClass("active");
+		$('#month').removeClass("active");
+		$('#event').removeClass("active");
+		$('#div_cycle').show();
+		$('#div_month').hide();
+		$('#div_week').hide();
+		$('#div_end_time').show();
+	}else if(4 == type){
+		$('#once').removeClass("active");
+		$('#minute').removeClass("active");
+		$('#day').removeClass("active");
+		$('#week').addClass("active");
+		$('#month').removeClass("active");
+		$('#event').removeClass("active");
+		$('#div_cycle').show();
+		$('#div_month').hide();
+		$('#div_week').show();
+		$('#div_end_time').show();
+	}else if(5 == type){
+		$('#once').removeClass("active");
+		$('#minute').removeClass("active");
+		$('#day').removeClass("active");
+		$('#week').removeClass("active");
+		$('#month').addClass("active");
+		$('#event').removeClass("active");
+		$('#div_cycle').show();
+		$('#div_month').show();
+		$('#div_week').hide();
+		$('#div_end_time').show();
+	}else if(6 == type){
+		$('#once').removeClass("active");
+		$('#minute').removeClass("active");
+		$('#day').removeClass("active");
+		$('#week').removeClass("active");
+		$('#month').removeClass("active");
+		$('#event').addClass("active");
+		$('#div_end_time').show();
+	}
+	
+}
+function changeObjType(){
+	var obj_type = $('input:radio[name="obj_type"]:checked').val();
+	var type = '';
+	var obj = $("#obj");
+	if("report" == obj_type){
+		type = '1';
+	}else if("analysis" == obj_type){
+		type = '2';
+	}else if("app" == obj_type){
+		type = '3';
+	}
+	   $.ajax( {
+	    url : ctx + "/message/getObjs",
+	    type: "POST",
+	    data : {
+	    	"objTypes":type
+	    },
+	    scriptCharset: 'utf-8',
+	    success : function(result) {
+	     var rlt = JSON.parse(result).rows;
+	     var ops = [];
+	     for ( var i = 0; i < rlt.length; i++) {
+//	    	 obj.append("<option value='"+rlt[i].id+"'>"+rlt[i].resourceName+"</option>"); 
+	    	 ops.push({id:rlt[i].id+'',name:rlt[i].resourceName,coolness:Math.floor(Math.random() * 10) + 1});
+	     }
+	     
+	     if(ops.length > 0){
+			 varObj = $('#obj').magicSuggest({
+					selectionPosition: 'bottom',
+					renderer: function(obj){
+						return '<div>' +
+								'<div style="font-family: Arial; font-weight: bold">' + obj.name + '</div>' +
+							   '</div>';
+					}, 
+				   //expandOnFocus: false,
+				   displayField:'name',
+				    data:ops 
+			});
+ 
+
+			var selectedSplit = null;
+			if(!!jobToModify.objUser){
+			   selectedSplit = jobToModify.objUser.split(',');
+				varObj.setValue(selectedSplit);
+			}
+			
+	     }
+	    }
+	   });
+
+}
+changeObjType('report');
+function changeJumpType(){
+	var jump_type = $('input:radio[name="jump_type"]:checked').val();
+	var type = '';
+	var obj_id = $("#obj_id");
+	if("kpi" == jump_type){
+		type = '1';
+	}else if("analysis" == jump_type){
+		type = '2';
+	}else if("app" == jump_type){
+		type = '3';
+	}
+	   $.ajax( {
+	    url : ctx + "/message/getObjs",
+	    type: "POST",
+	    scriptCharset: 'utf-8',
+	    data : {
+	    	"objTypes":type
+	    },
+	    success : function(result) {
+	     var rlt_obj = JSON.parse(result);
+	     var resultStr = [];
+	     resultStr = rlt_obj.rows;
+	     obj_id.html('');
+	     for ( var i = 0; i < resultStr.length; i++) {
+	    	 obj_id.append("<option value='"+resultStr[i].id+"'>"+resultStr[i].resourceName+"</option>"); 
+	     }
+	     
+	    }
+	   });
+}
+var varRole ;
+
+$.ajax( {
+    url : ctx + "/message/getRoles",
+    type: "POST",
+    success : function(result) {
+     var resultStr = [];
+     console.log(result);
+     resultStr = JSON.parse(result).rows;
+     $('#role').html('');
+     var ops = [];
+     for ( var i = 0; i < resultStr.length; i++) {
+//		$('#role').append("<option value='"+resultStr[i].id+"'>"+resultStr[i].roleName+"</option>"); 
+		 ops.push({id:resultStr[i].id+'',name:resultStr[i].roleName,coolness:Math.floor(Math.random() * 10) + 1});
+
+     }
+     varRole = $('#role').magicSuggest({
+			selectionPosition: 'bottom',
+			renderer: function(obj){
+				return '<div>' +
+						'<div style="font-family: Arial; font-weight: bold">' + obj.name + '</div>' +
+					   '</div>';
+			}, 
+		   //expandOnFocus: false,
+		   displayField:'name',
+		   data:ops
+	});
+     var selected = [];
+     if('' != jobToModify){
+     var selectedSplit = jobToModify.roleUser.split(',');
+      for(var i = 0 ; i < selectedSplit.length;i++){    	 
+		selected.push(selectedSplit[i]);
+     } 
+     varRole.setValue(selected);
+     }
+    }
+   });
+   
+function init(){
+changType(1);
+}
+
+function getJob(){
+	var job = {
+ 		"jobName": "",
+ 		"type": "",
+ 		"triggerTime": '',
+ 		"executeTime": '',
+ 		"cycle": '',
+ 		"dayInMounth":'' ,
+ 		"dayInWeek": '',
+ 		"messageType": '',
+ 		"jumpType": "",
+ 		"objID": '',
+ 		"isNoRule": '',
+ 		"isIncludeReceiver":'' ,
+ 		"message": '',
+ 		"accountUser": '',
+ 		"objUser": '',
+ 		"roleUser": '',
+ 		"sendType": '',
+ 		"fieldsSelected":'' ,
+ 		"sqlScript": '',
+ 		"endTime":''
+
+ 	}
+	if(undefined==varType){
+		varType = 1;
+	}
+	if(!$('#job_name').val){
+		alert("任务名称不能为空");
+		$('#job_name').focus();
+		return ;
+	}else{
+		job.jobName=$('#job_name').val();
+	}
+	
+		job.type = varType ;
+
+	if(!$('#startTime').val()){
+		alert("请选择定时任务的开始时间");
+		$('#startTime').focus();
+		return ;
+	}else{
+		job.triggerTime = $('#startTime').val() ;
+	}
+	
+	if(!$('#endTime').val() && '1' != varType){
+		alert("请选择定时任务的结束时间");
+		$('#endTime').focus();
+		return ;
+	}else if(!!$('#endTime').val() && '1' != varType){
+		job.endTime = $('#endTime').val() ;
+	}
+
+	
+	if( (varType != 1) &&!$('#cycle').val()){
+		alert("请选择执行周期");
+		$('#cycle').focus();
+		return ;
+	}else{
+		job.cycle = $('#cycle').val() ;
+	}
+/* 	if( (varType != 1 ) &&!$('#excute_times').val()){
+		alert("请选择执行次数");
+		$('#excute_times').focus();
+		return ;
+	}else{
+		job.executeTime = $('#excute_times').val() ;
+	} */
+	job.executeTime = 1;
+	var weekItem = varWeekItem.getValue();
+	if( varType == 4 && weekItem.length==0){
+		alert('请选择周选项');
+		$('#weekItem').focus();
+		return ;
+	}else{
+		var str = weekItem[0];
+		for(var i=1 ; i <weekItem.length;i++){
+			str = str +',' + weekItem[i] ;
+		}
+			job.dayInWeek =str; 
+	}
+	var dayMonth = $('#dayMonth').val();
+	if( varType == 5 && ''==dayMonth){
+		alert("请选择月选项");
+		$('#dayMonth').focus();
+		return ;
+	}else{
+		job.dayInMounth = dayMonth ;
+	}
+
+	// 通知方式
+	
+	var message_type = $('input:radio[name="message_type"]:checked').val();
+	
+	if(!message_type){
+		alert('请选择通知方式');
+	}else{
+		job.messageType = message_type;
+	}
+	var jump_type = $('input:radio[name="jump_type"]:checked').val();
+	
+	if((0 != $('input:radio[name="message_type"]:checked').length)){
+		job.messageType = $('input:radio[name="message_type"]:checked').val();
+	}
+
+	if((0 != $('input:radio[name="jump_type"]:checked').length)){
+		job.jumpType = ($('input:radio[name="jump_type"]:checked')).val();
+		
+		if(!!$('#obj_id').val()){
+			job.objID =$('#obj_id').val(); 
+		}
+	}
+	
+	if($("#incluedReceiver").attr("checked")){
+		job.isIncludeReceiver = '1';
+	}else{
+		job.isIncludeReceiver = '0';
+	}
+	
+	// sql
+	if($("#noRule").attr("checked")){//选中  
+		job.isNoRule = '1';
+
+		
+	}else{
+		job.isNoRule = '0';
+		job.sqlScript = $("#sql_script").summernote('code');
+		job.sqlScript = job.sqlScript.replace(new RegExp(';','g'),'')
+		   			 .replace(new RegExp('&nbsp','g'),'')
+			   		 .replace(new RegExp('<.*?>',"g"),' ');
+	}
+
+	if("" != $('#message').summernote('code')){
+		job.message = $('#message').summernote('code').replace(new RegExp(';','g'),'')
+			 .replace(new RegExp('&nbsp','g'),'')
+	   		 .replace(new RegExp('<.*?>',"g"),' '); 
+	}else{
+		alert('请输入消息内容');
+		$('#message').focus();
+		return ;
+	}
+	var less = 0;
+	if("checked" != $("#incluedReceiver").attr("checked")){
+		if(!!varRole.getValue()){
+			var str= varRole.getValue()[0] ;
+			for(var i = 1 ; i < varRole.getValue().length; i++ ){
+				str = str + ',' + varRole.getValue()[i] ;
+			}
+			job.roleUser =str;
+			less = 1 ;
+		}
+		if(0 != $('input:radio[name="obj_type"]:checked').length){		
+			if(!!varObj ){
+				var str= varObj.getValue()[0] ;
+				for(var i = 1 ; i < varObj.getValue().length; i++ ){
+					str = str + ',' + varObj.getValue()[i]  ;
+				}
+				job.objUser = str;
+				less = 1 ;
+			}
+		}
+	}else{
+		less = 1;
+	}
+	job.accountUser = $('#accountUser').val();	
+	if(!!$('input[name="obj_type"]:checked').val()){
+		job.objUserType = $('input[name="obj_type"]:checked').val(); 
+	}
+	
+	if(0 == less){
+		alert('至少选中一个发送对象');
+		return ;
+	}
+    if(!$('input[name="record_selected"]:checked').val()){
+    	alert('请选择发送方式');
+    	return ;
+    }else{
+    	job.sendType = $('input[name="record_selected"]:checked').val(); 
+    }
+    
+    if(1 ==checkJobName()){
+    	myAlert('任务名称已经存在');
+    	return;
+    }
+    
+	return job;
+}
+
+ function submitS(){
+	 
+	 if(!!jobToModify.jobKey){
+		 var job =getJob();
+			$.ajax({
+				 type : "post",  
+				 url : ctx +  "/message/modify",
+				 dataType:'json',
+				 data:{
+					 "jobName":job.jobName ,
+					 "type": job.type,
+					 "triggerTime": job.triggerTime,
+					 "executeTime": job.executeTime,
+					 "cycle": job.cycle,
+					 "dayInMounth":job.dayInMounth ,
+					 "dayInWeek": job.dayInWeek,
+					 "messageType": job.messageType,
+					 "jumpType": job.jumpType,
+					 "objID": job.objID,
+					 "isNoRule": job.isNoRule,
+					 "isIncludeReceiver":job.isIncludeReceiver,
+					 "message": job.message,
+					 "accountUser": job.accountUser,
+					 "objUser":job.objUser,
+					 "roleUser":job.roleUser,
+					 "sendType": job.sendType,
+					 "fieldsSelected":job.fieldsSelected,
+					 "sqlScript": job.sqlScript,
+					 "objUserType":job.objUserType,
+					 "endTime":job.endTime
+				 },
+				 success : function(result) {  
+					 var rs = JSON.parse(result);
+					 if(0 == rs.success){
+						 myAlert('修改成功');
+					 }else{
+						 myAlert('修改失败');
+					 }
+				 },  
+				 error : function(errorMsg) {  
+					 console.log(errorMsg)
+				 }  
+			});
+	 }else{
+	 var job =getJob();
+		$.ajax({
+			 type : "post",  
+			 url : ctx +  "/message/add",
+			 dataType:'json',
+			 data:{
+				 "jobName":job.jobName ,
+				 "type": job.type,
+				 "triggerTime": job.triggerTime,
+				 "executeTime": job.executeTime,
+				 "cycle": job.cycle,
+				 "dayInMounth":job.dayInMounth ,
+				 "dayInWeek": job.dayInWeek,
+				 "messageType": job.messageType,
+				 "jumpType": job.jumpType,
+				 "objID": job.objID,
+				 "isNoRule": job.isNoRule,
+				 "isIncludeReceiver":job.isIncludeReceiver,
+				 "message": job.message,
+				 "accountUser": job.accountUser,
+				 "objUser":job.objUser,
+				 "roleUser":job.roleUser,
+				 "sendType": job.sendType,
+				 "fieldsSelected":job.fieldsSelected,
+				 "sqlScript": job.sqlScript,
+				 "objUserType":job.objUserType,
+				 "endTime":job.endTime
+			 },
+			 success : function(result) { 
+				 
+				 var rs = JSON.parse(result);
+				 if(0 == rs.success){
+					myAlert('添加成功'); 
+				 }else{
+					myAlert('添加失败'); 
+				 }
+			 },  
+			 error : function(errorMsg) {  
+				 
+				 var rs = JSON.parse(result);
+				 if(0 == rs.success){
+					myAlert('添加成功'); 
+				 }else{
+					myAlert('添加失败'); 
+				 }
+			 }  
+		});
+	 }
+}
+ 
+init()
+
+var loadJob = function(jobToModify){
+	if(!!jobToModify){
+		$('#job_name').val(jobToModify.jobKey);
+		
+		changType(jobToModify.type);
+		$('#startTime').val(jobToModify.triggertime);
+		$('#endTime').val(jobToModify.endTime);
+		$('#cycle').val(jobToModify.cycle) ;
+		$('#excute_times').val(jobToModify.executetime) ;
+		$('#dayMonth').val(jobToModify.dayinmounth) ;
+		if(!!jobToModify.dayinweek){
+			$('#weekItem').val(jobToModify.dayinweek.split(','));
+		}
+		$('#accountUser').val(jobToModify.accountUser);
+		$('input:radio[value="'+jobToModify.messageType+'"][name="message_type"]').attr('checked',true);	
+		$('input:radio[value="'+jobToModify.jumpType+'"][name="jump_type"]').attr('checked',true);
+		changeJumpType(jobToModify.objId);
+		$('#obj_id').val(jobToModify.objId);
+		if(!!jobToModify.objUserType){
+			$('input:radio[value="'+jobToModify.objUserType+'"][name="obj_type"]').attr('checked',true);
+		}
+		$('input:radio[value="'+jobToModify.sendType+'"][name="record_selected"]').attr('checked',true);
+		changeObjType();	
+		
+        if('1' == jobToModify.isIncludeReceiver){
+			$("#incluedReceiver").attr("checked",true);
+        }else{
+			$("#incluedReceiver").attr("checked",false);
+        }
+		
+        if('1' == jobToModify.sendType){
+        	$('input:radio[name="record_selected"][value="firstRecord"]').attr('checked',true);
+        }else if('2'==jobToModify.sendType){
+        	$('input:radio[name="record_selected"][value="allRecord"]').attr('checked',true);
+        }
+        /*  varRole.setValue(jobToModify.roleUser);
+		*/// sql
+		if('1'==jobToModify.isNoRole){
+			$("#noRule").attr("checked",true);  
+		}else{
+			$("#noRule").attr("checked",false);  
+		}
+		
+		$("#sql_script").summernote('code',jobToModify.sqlScript);
+		
+		$('#message').summernote('code',jobToModify.text); 
+	
+ 	}
+} 
+ function myAlert(message){
+	 $("#alert_div").html('<div class="alert alert-success" style="text-align:center" role="alert" >' +
+				'<a class="close" data-dismiss="alert" href="javascript:void(0)">×</a>'+ message+
+				'</div>');
+ }
+ 
+ function submit(){
+	 $.ajax({
+		 type : "get",  
+		 url : ctx +  "/message/getSome",
+		 dataType:'json',
+		 data:{
+			 "jobName":$('#job_name').val(),
+			 "page":0,
+			 "pageSize":10000,
+		 },
+		 success : function(result) {  
+
+			if( result.rows.length > 0 && undefined == params["jobKey"] ){
+				myAlert('任务名称已经存在');
+				$('#job_name').focus();
+			}else{
+				submitS();
+			}
+		 },  
+		 error : function(errorMsg) {  
+		 } 
+	 });
+ }
+ 
+ function checkJobName(){
+	 var rtn = 0 ;
+	 $.ajax({
+		 type : "get",  
+		 url : ctx +  "/message/getSome",
+		 dataType:'json',
+		 data:{
+			 "jobName":$('#job_name').val(),
+			 "page":0,
+			 "pageSize":10000,
+		 },
+		 success : function(result) {  
+			if(undefined != result && result.rows.length > 0 && undefined == params["jobKey"]){
+				myAlert('任务名称已经存在');
+				$('#job_name').focus();
+				rtn = 1
+			}else{
+				rtn = 0 ;
+			}
+		 },  
+		 error : function(errorMsg) {  
+		 } 
+	 });
+				return rtn;
+	 
+ }
+ function insertField(){
+	 
+	 $('#message').summernote('insertText', '{' + $('#selectable').val() + '}');
+
+ }
+</script>
+
+</html>
+</body>

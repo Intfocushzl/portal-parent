@@ -1,0 +1,335 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yonghui.portal.mapper.app.JobInformationMapper">
+  <resultMap id="BaseResultMap" type="com.yonghui.portal.model.message.JobInformation">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="fields_selected" jdbcType="VARCHAR" property="fieldsSelected" />
+    <result column="job_key" jdbcType="VARCHAR" property="jobKey" />
+    <result column="is_no_role" jdbcType="CHAR" property="isNoRole" />
+    <result column="is_include_receiver" jdbcType="CHAR" property="isIncludeReceiver" />
+    <result column="message_type" jdbcType="VARCHAR" property="messageType" />
+    <result column="obj_id" jdbcType="VARCHAR" property="objId" />
+    <result column="send_type" jdbcType="CHAR" property="sendType" />
+    <result column="obj_user" jdbcType="CHAR" property="objUser" />
+    <result column="role_user" jdbcType="CHAR" property="roleUser" />
+    <result column="acounter_user" jdbcType="CHAR" property="acounterUser" />
+    <result column="type" jdbcType="CHAR" property="type" />
+    <result column="triggerTime" jdbcType="VARCHAR" property="triggertime" />
+    <result column="executeTime" jdbcType="VARCHAR" property="executetime" />
+    <result column="cycle" jdbcType="VARCHAR" property="cycle" />
+    <result column="dayInMounth" jdbcType="VARCHAR" property="dayinmounth" />
+    <result column="dayInWeek" jdbcType="VARCHAR" property="dayinweek" />
+    <result column="jump_type" jdbcType="VARCHAR" property="jumpType" />
+    <result column="obj_user_type" jdbcType="VARCHAR" property="objUserType" />
+    <result column="end_time" jdbcType="VARCHAR" property="endTime" />
+  </resultMap>
+  <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="com.yonghui.portal.model.message.JobInformationWithBLOBs">
+    <result column="text" jdbcType="LONGVARCHAR" property="text" />
+    <result column="sql_script" jdbcType="LONGVARCHAR" property="sqlScript" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, fields_selected, job_key, is_no_role, is_include_receiver, message_type, obj_id, 
+    send_type, obj_user, role_user, acounter_user, type, triggerTime, executeTime, cycle, 
+    dayInMounth, dayInWeek,jump_type,obj_user_type,end_time
+  </sql>
+  <sql id="Blob_Column_List">
+    text, sql_script
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="ResultMapWithBLOBs">
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from job_information
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from platform.job_information
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.yonghui.portal.model.message.JobInformationWithBLOBs">
+    insert into platform.job_information (id, fields_selected, job_key, 
+      is_no_role, is_include_receiver, message_type, 
+      obj_id, send_type, obj_user, 
+      role_user, acounter_user, type, 
+      triggerTime, executeTime, cycle, 
+      dayInMounth, dayInWeek, text, 
+      sql_script,jump_type,obj_user_type,end_time)
+    values (#{id,jdbcType=INTEGER}, #{fieldsSelected,jdbcType=VARCHAR}, #{jobKey,jdbcType=VARCHAR}, 
+      #{isNoRole,jdbcType=CHAR}, #{isIncludeReceiver,jdbcType=CHAR}, #{messageType,jdbcType=VARCHAR}, 
+      #{objId,jdbcType=VARCHAR}, #{sendType,jdbcType=CHAR}, #{objUser,jdbcType=CHAR}, 
+      #{roleUser,jdbcType=CHAR}, #{acounterUser,jdbcType=CHAR}, #{type,jdbcType=CHAR}, 
+      #{triggertime,jdbcType=VARCHAR}, #{executetime,jdbcType=VARCHAR}, #{cycle,jdbcType=VARCHAR}, 
+      #{dayinmounth,jdbcType=VARCHAR}, #{dayinweek,jdbcType=VARCHAR}, #{text,jdbcType=LONGVARCHAR}, 
+      #{sqlScript,jdbcType=LONGVARCHAR} ,#{jumpType,jdbcType=VARCHAR},#{objUserType,jdbcType=VARCHAR},#{endTime,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.yonghui.portal.model.message.JobInformationWithBLOBs">
+    insert into platform.job_information
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="fieldsSelected != null">
+        fields_selected,
+      </if>
+      <if test="jobKey != null">
+        job_key,
+      </if>
+      <if test="isNoRole != null">
+        is_no_role,
+      </if>
+      <if test="isIncludeReceiver != null">
+        is_include_receiver,
+      </if>
+      <if test="messageType != null">
+        message_type,
+      </if>
+      <if test="objId != null">
+        obj_id,
+      </if>
+      <if test="sendType != null">
+        send_type,
+      </if>
+      <if test="objUser != null">
+        obj_user,
+      </if>
+      <if test="roleUser != null">
+        role_user,
+      </if>
+      <if test="acounterUser != null">
+        acounter_user,
+      </if>
+      <if test="type != null">
+        type,
+      </if>
+      <if test="triggertime != null">
+        triggerTime,
+      </if>
+      <if test="executetime != null">
+        executeTime,
+      </if>
+      <if test="cycle != null">
+        cycle,
+      </if>
+      <if test="dayinmounth != null">
+        dayInMounth,
+      </if>
+      <if test="dayinweek != null">
+        dayInWeek,
+      </if>
+      <if test="text != null">
+        text,
+      </if>
+      <if test="sqlScript != null">
+        sql_script,
+      </if>
+       <if test="jumpType != null">
+        jump_type,
+      </if>   
+       <if test="objUserType != null">
+        obj_user_type,
+      </if>   
+       <if test="endTime != null">
+        end_time,
+      </if>   
+      </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="fieldsSelected != null">
+        #{fieldsSelected,jdbcType=VARCHAR},
+      </if>
+      <if test="jobKey != null">
+        #{jobKey,jdbcType=VARCHAR},
+      </if>
+      <if test="isNoRole != null">
+        #{isNoRole,jdbcType=CHAR},
+      </if>
+      <if test="isIncludeReceiver != null">
+        #{isIncludeReceiver,jdbcType=CHAR},
+      </if>
+      <if test="messageType != null">
+        #{messageType,jdbcType=VARCHAR},
+      </if>
+      <if test="objId != null">
+        #{objId,jdbcType=VARCHAR},
+      </if>
+      <if test="sendType != null">
+        #{sendType,jdbcType=CHAR},
+      </if>
+      <if test="objUser != null">
+        #{objUser,jdbcType=CHAR},
+      </if>
+      <if test="roleUser != null">
+        #{roleUser,jdbcType=CHAR},
+      </if>
+      <if test="acounterUser != null">
+        #{acounterUser,jdbcType=CHAR},
+      </if>
+      <if test="type != null">
+        #{type,jdbcType=CHAR},
+      </if>
+      <if test="triggertime != null">
+        #{triggertime,jdbcType=VARCHAR},
+      </if>
+      <if test="executetime != null">
+        #{executetime,jdbcType=VARCHAR},
+      </if>
+      <if test="cycle != null">
+        #{cycle,jdbcType=VARCHAR},
+      </if>
+      <if test="dayinmounth != null">
+        #{dayinmounth,jdbcType=VARCHAR},
+      </if>
+      <if test="dayinweek != null">
+        #{dayinweek,jdbcType=VARCHAR},
+      </if>
+      <if test="text != null">
+        #{text,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="sqlScript != null">
+        #{sqlScript,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="jumpType != null">
+        #{jumpType,jdbcType=VARCHAR},
+      </if>
+       <if test="objUserType != null">
+          #{objUserType,jdbcType=VARCHAR},
+      </if>   
+       <if test="endTime != null">
+          #{endTime,jdbcType=VARCHAR},
+      </if>   
+            
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.yonghui.portal.model.message.JobInformationWithBLOBs">
+    update platform.job_information
+    <set>
+      <if test="fieldsSelected != null">
+        fields_selected = #{fieldsSelected,jdbcType=VARCHAR},
+      </if>
+      <if test="jobKey != null">
+        job_key = #{jobKey,jdbcType=VARCHAR},
+      </if>
+      <if test="isNoRole != null">
+        is_no_role = #{isNoRole,jdbcType=CHAR},
+      </if>
+      <if test="isIncludeReceiver != null">
+        is_include_receiver = #{isIncludeReceiver,jdbcType=CHAR},
+      </if>
+      <if test="messageType != null">
+        message_type = #{messageType,jdbcType=VARCHAR},
+      </if>
+      <if test="objId != null">
+        obj_id = #{objId,jdbcType=VARCHAR},
+      </if>
+      <if test="sendType != null">
+        send_type = #{sendType,jdbcType=CHAR},
+      </if>
+      <if test="objUser != null">
+        obj_user = #{objUser,jdbcType=CHAR},
+      </if>
+      <if test="roleUser != null">
+        role_user = #{roleUser,jdbcType=CHAR},
+      </if>
+      <if test="acounterUser != null">
+        acounter_user = #{acounterUser,jdbcType=CHAR},
+      </if>
+      <if test="type != null">
+        type = #{type,jdbcType=CHAR},
+      </if>
+      <if test="triggertime != null">
+        triggerTime = #{triggertime,jdbcType=VARCHAR},
+      </if>
+      <if test="executetime != null">
+        executeTime = #{executetime,jdbcType=VARCHAR},
+      </if>
+      <if test="cycle != null">
+        cycle = #{cycle,jdbcType=VARCHAR},
+      </if>
+      <if test="dayinmounth != null">
+        dayInMounth = #{dayinmounth,jdbcType=VARCHAR},
+      </if>
+      <if test="dayinweek != null">
+        dayInWeek = #{dayinweek,jdbcType=VARCHAR},
+      </if>
+      <if test="text != null">
+        text = #{text,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="sqlScript != null">
+        sql_script = #{sqlScript,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="jumpType != null">
+       jump_type = #{jumpType,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="objUserType!= null">
+         obj_user_type= #{bojUserType,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.yonghui.portal.model.message.JobInformationWithBLOBs">
+    update platform.job_information
+    set fields_selected = #{fieldsSelected,jdbcType=VARCHAR},
+      job_key = #{jobKey,jdbcType=VARCHAR},
+      is_no_role = #{isNoRole,jdbcType=CHAR},
+      is_include_receiver = #{isIncludeReceiver,jdbcType=CHAR},
+      message_type = #{messageType,jdbcType=VARCHAR},
+      obj_id = #{objId,jdbcType=VARCHAR},
+      send_type = #{sendType,jdbcType=CHAR},
+      obj_user = #{objUser,jdbcType=CHAR},
+      role_user = #{roleUser,jdbcType=CHAR},
+      acounter_user = #{acounterUser,jdbcType=CHAR},
+      type = #{type,jdbcType=CHAR},
+      triggerTime = #{triggertime,jdbcType=VARCHAR},
+      executeTime = #{executetime,jdbcType=VARCHAR},
+      cycle = #{cycle,jdbcType=VARCHAR},
+      dayInMounth = #{dayinmounth,jdbcType=VARCHAR},
+      dayInWeek = #{dayinweek,jdbcType=VARCHAR},
+      text = #{text,jdbcType=LONGVARCHAR},
+      sql_script = #{sqlScript,jdbcType=LONGVARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.yonghui.portal.model.message.JobInformation">
+    update job_information
+    set fields_selected = #{fieldsSelected,jdbcType=VARCHAR},
+      job_key = #{jobKey,jdbcType=VARCHAR},
+      is_no_role = #{isNoRole,jdbcType=CHAR},
+      is_include_receiver = #{isIncludeReceiver,jdbcType=CHAR},
+      message_type = #{messageType,jdbcType=VARCHAR},
+      obj_id = #{objId,jdbcType=VARCHAR},
+      send_type = #{sendType,jdbcType=CHAR},
+      obj_user = #{objUser,jdbcType=CHAR},
+      role_user = #{roleUser,jdbcType=CHAR},
+      acounter_user = #{acounterUser,jdbcType=CHAR},
+      type = #{type,jdbcType=CHAR},
+      triggerTime = #{triggertime,jdbcType=VARCHAR},
+      executeTime = #{executetime,jdbcType=VARCHAR},
+      cycle = #{cycle,jdbcType=VARCHAR},
+      dayInMounth = #{dayinmounth,jdbcType=VARCHAR},
+      dayInWeek = #{dayinweek,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="selectByJobKey" parameterType="java.lang.String" resultMap="ResultMapWithBLOBs">
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from platform.job_information
+    where job_key = #{key,jdbcType=VARCHAR}
+  </select>
+  <select id="selectJobAll" parameterType="java.util.Map" resultMap="ResultMapWithBLOBs">
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from platform.job_information
+  <where>  1=1
+	  <if test="jobName != null">
+		and job_key like "%"#{jobName,jdbcType=VARCHAR}"%"
+	  </if>
+  </where>
+limit #{page , jdbcType = INTEGER} , #{pageSize , jdbcType=INTEGER} 
+  </select>
+</mapper>

@@ -1,0 +1,218 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<title>定时任务查看</title>
+<script type="text/javascript" src="${rc.contextPath}/statics/libs/jquery.min.js" charset="UTF-8"></script>
+<script type="text/javascript" src="${rc.contextPath}/statics/libs/jquery.form.js" charset="UTF-8"></script>
+<script src="${rc.contextPath}/statics/libs/bootstrap.min.js"></script>
+<script type="text/javascript" src="${rc.contextPath}/statics/libs/bootstrap-datetimepicker.js" charset="UTF-8"></script>
+<script type="text/javascript" src="${rc.contextPath}/statics/libs/bootstrap-datetimepicker.zh-CN.js" charset="UTF-8"></script>
+<link rel="stylesheet" href="${rc.contextPath}/statics/css/bootstrap.min.css">
+<link href="${rc.contextPath}/statics/css/bootstrap-datetimepicker.min.css" rel="stylesheet" media="screen">
+
+<link rel="stylesheet" href="${rc.contextPath}/statics/libs/bootstrap-table/bootstrap-table.min.css">
+<script src="${rc.contextPath}/statics/libs/bootstrap-table/bootstrap-table.min.js"></script>
+<script src="${rc.contextPath}/statics/libs/bootstrap-table/bootstrap-table.js"></script>
+<script src="${rc.contextPath}/statics/libs/bootstrap-table/bootstrap-table-locale-all.js"></script>
+<script src="${rc.contextPath}/statics/libs/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"></script>
+<script src="${rc.contextPath}/statics/libs/bootstrap-table/extensions/export/bootstrap-table-export.min.js"></script>
+
+
+<script src="${rc.contextPath}/statics/libs/jquery.validationEngine-zh_CN.js" type="text/javascript" charset="utf-8"></script>
+<script src="${rc.contextPath}/statics/libs/jquery.validationEngine.min.js" type="text/javascript" charset="utf-8"></script>
+
+<script src="${rc.contextPath}/statics/libs/bootstrap-table/extensions/export/bootstrap-table-export.js"></script>
+<link rel="stylesheet" href="${rc.contextPath}/statics/plugins/summernote/dist/summernote.css">
+ <script type="text/javascript" src="${rc.contextPath}/statics/plugins/summernote/dist/summernote.min.js"></script>
+ <script type="${rc.contextPath}/statics/libs/jquery.validationEngie.min.js" type="text/javascript" charset="utf-8"></script>
+<script>
+	jQuery.validationEngine.defaults.scroll = false;
+	jQuery.validationEngine.defaults.showOneMessage = true;
+</script>
+<script type="text/javascript">
+    	var ctx="${rc.contextPath}";
+</script>
+</head>
+<body>
+
+
+<div id ='alert_div' >
+
+</div>
+				<div class="col-lg-md-12">
+				<br/>
+				<input id = "job_name" />
+								<button class="btn btn-primary btn-sm" type="button"  id="queryButton" data-loading-text="正在执行..." 
+								        onclick="javascript:showTables(this)">
+					<span class="glyphicon glyphicon-search"></span>&nbsp;查询
+				</button>
+				<br/>
+				<a class="btn btn-default" href= "${rc.contextPath}/messageAdd.html" role="button">新建</a>
+					<table class="table table-bordered table-striped" data-height="400" style="font-size: 15px;" id="jobTable"></table>
+				</div>
+<script type="text/javascript">
+
+function showTables(obj){
+	$('#jobTable').bootstrapTable('refreshOptions', {
+		    url: ctx + '/message/getSome',
+		    method: 'get', 
+		    queryParams: {
+		    	"page" : 0,
+		       	"pageSize" :100,
+		       	'jobName':$('#job_name').val()
+		    } ,
+		    onLoadSuccess : function(data) {
+		    }
+		});
+}
+
+$('#jobTable').bootstrapTable({
+	showExport : false,
+	silent : true,
+	pagination : false, 
+	dataType : "json", 
+    sidePagination : 'server', /* url : "/whole/month/queryDate.do", */ 
+    locale : 'zh-CN', idField : "jobKey", 
+	showColumns : true, 
+	cache: false,
+	striped: true,
+	queryParamsType : "", 
+	search : false, 
+	columns : [
+		{
+			title : '任务名称', field : 'jobKey', align : 'center', valign : 'middle'
+			,formatter:function(value,row,index){
+				return '<a href="${rc.contextPath}/messageAdd.html?jobKey='+row.jobKey+'">'+row.jobKey+'</a>';
+			}
+		},
+		{	title : '删除任务', field : 'delete', align : 'center', valign : 'middle'
+			,formatter:function(value,row,index){
+				return '<a href="javascript:void(0)" onclick="javascript:deleteJob('+"'"+row.jobKey+"'"+')">删除</a>';
+			}
+		},
+		{
+			title : '执行规则', field : 'excuteRule', align : 'center', valign : 'middle'
+			,formatter : function(value, row,index) {
+				var executeRule = '' ;
+					switch (row.type) {
+					case '1':
+						executeRule = "任务将会在 " + row.triggertime + '执行一次';
+						break;
+					case '2':
+						executeRule = "任务将会在 "+ row.triggertime + '执行,以后每 ' + row.cycle + '分钟后执行一次,共执行 '+(row.executetime == 0 ? '无数':row.executetime) + '次';
+						break;
+					case '3':
+						executeRule = "任务将会在 "+ row.triggertime + '执行,以后每 ' + row.cycle + '天后执行一次,共执行 ' +(row.executetime == 0 ? '无数':row.executetime) +'次' ;
+						break;
+					case '4':
+						executeRule = "任务将会在 "+ row.triggertime + '执行,以后每周 ' + row.dayinweek + '执行一次，共执行 ' +(row.executetime == 0 ? '无数':row.executetime) + '次';
+						break;
+					case '5':
+						executeRule = "任务将会在 "+ row.triggertime + '执行,以后每月的 ' + row.dayinmounth + '日执行一次，共执行 ' +(row.executetime == 0 ? '无数':row.executetime) + '次' ;
+					break;
+				default:
+					break;
+				}
+					return executeRule;
+			}
+		}, 
+		{
+			title : '发送方式', field : 'sendType', align : 'center', valign : 'middle'
+			,formatter:function(value,row,index){
+				console.log(row.sendType);
+				var type = '';
+				switch (row.sendType) {
+				case '1':
+					type = '短信';
+					break;
+				case '2':
+					type = '推送';
+					break;
+				case '3':
+					type = '邮件';
+					break;
+				default:
+					break;
+				}
+				return type;
+			}
+		}, 
+		{
+			title : '跳转方式', field : 'jumpType', align : 'center', valign : 'middle'
+			,formatter:function(value,row,index){
+				console.log(row.jumpType);
+				var type = '';
+				switch (row.jumpType) {
+				case 'report':
+					type = '报表';
+					break;
+				case 'analysis':
+					type = '分析';
+					break;
+				case 'app':
+					type = '应用';
+					break;
+				default:
+					break;
+				}
+				return type;
+			}
+
+		}, 
+		{
+			title : '发送内容', field : 'text', align : 'center', valign : 'middle'
+		}, 
+		{
+			title : 'SQL', field : 'sqlScript', align : 'center', valign : 'middle'
+		},
+		{
+			title : '发送对象', field : 's', align : 'center', valign : 'middle'
+			,formatter:function(value,row,index){
+				if('1' == row.isIncludeReceiver){
+					return '在 SQL 语句中包含了发送对象';
+				}else{
+					return '' + ( !row.objUser ? '':row.objUser) + (!row.roleUser?'':row.roleUser);
+				}
+			}	
+		}],
+		queryParams : function(params) {
+		},
+		formatLoadingMessage : function() {
+			return "请稍等，正在加载中...";
+		},
+		formatNoMatches : function() { //没有匹配的结果
+			return '无符合条件的记录';
+		},
+		onLoadSuccess : function(msg) { //加载成功时执行  
+		}
+	});
+	
+function deleteJob(jobName){
+	$.ajax({
+		 type : "get",  
+		 url : ctx +  "/message/delete",
+		 dataType:'json',
+		 data:{"jobKey":jobName},
+		 success:function(res){
+			 if(res.success == 0){
+				 myAlert('删除成功');
+			 }else if(res.success == 1){
+				myAlert('删除失败');
+			 }
+		 },
+		 error:function(){
+			myAlert('删除失败');
+		 }
+	});
+}
+
+function myAlert(message){
+	 $("#alert_div").html('<div class="alert alert-success" style="text-align:center" role="alert" >' +
+				'<a class="close" data-dismiss="alert" href="javascript:;">×</a>'+ message+
+				'</div>');
+}
+</script>
+</body>
+</html>
