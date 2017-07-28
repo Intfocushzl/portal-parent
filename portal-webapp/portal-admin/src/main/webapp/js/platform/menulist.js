@@ -93,8 +93,8 @@ $("#dialog-div").dialog({
                         });
                     } else {
                         alert(r.msg);
-                        $('.ui-dialog-buttonpane').find('button:contains("确定")').removeAttr("disabled");
                     }
+                    $('.ui-dialog-buttonpane').find('button:contains("确定")').removeAttr("disabled");
                 },
             });
         },

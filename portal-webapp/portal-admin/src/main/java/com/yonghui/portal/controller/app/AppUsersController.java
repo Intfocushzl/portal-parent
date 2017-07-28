@@ -272,7 +272,7 @@ public class AppUsersController extends AbstractController {
         appMap.put("email", appUsers.getEmail());
         appMap.put("mobile", appUsers.getMobile());
         appMap.put("tel", appUsers.getTel());
-        appMap.put("join_date", appUsers.getJoinDate());
+//        appMap.put("join_date", appUsers.getJoinDate());
         appMap.put("position", appUsers.getPosition());
         map.put("user", appMap);
 
@@ -329,7 +329,7 @@ public class AppUsersController extends AbstractController {
         appMap.put("email", appUsers.getEmail());
         appMap.put("mobile", appUsers.getMobile());
         appMap.put("tel", appUsers.getTel());
-        appMap.put("join_date", appUsers.getJoinDate());
+//        appMap.put("join_date", appUsers.getJoinDate());
         map.put("user", appMap);
 
         try {
