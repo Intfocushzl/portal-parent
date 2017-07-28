@@ -76,13 +76,12 @@ public class AppRouteApiController {
             }
         } catch (Exception e) {
             log.setStatus(1);
-            log.setError(e.toString().substring(0, 2000));
+            log.setError(StringUtils.substring(e.toString(), 0, 2000));
+            return R.error();
+        } finally {
             log.setEndTime(new Date());
             sysoperationLogService.SaveLog(log);
-            return R.error();
         }
-        log.setEndTime(new Date());
-        sysoperationLogService.SaveLog(log);
         return R.success(jsonObject.get("data"));
     }
 }

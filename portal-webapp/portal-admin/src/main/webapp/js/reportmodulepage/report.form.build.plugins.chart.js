@@ -142,13 +142,12 @@ LPB.plugins['chart_line'] = function (active_component, leipiplugins) {
             "title": "no-set",
             "dataUrl": "",
             "legend": [],
+            "seriesName": [],
             "xAxis": [],
-            "yAxis": [
-                {
-                    "type": "value",
-                    "name": ""
-                }
-            ],
+            "yAxis": {
+                "type": "value",
+                "name": ""
+            },
             "series": [
                 {
                     "name": "",
@@ -165,6 +164,15 @@ LPB.plugins['chart_line'] = function (active_component, leipiplugins) {
         $(popover).find("#orgname").val(jsonObj.name);
         if (jsonObj.config.title !== undefined) {
             $(popover).find("#chart_line_config_title").val(jsonObj.config.title);
+        }
+        if (jsonObj.config.legend !== undefined) {
+            $(popover).find("#chart_line_config_legend").val(arrayToString(jsonObj.config.legend));
+        }
+        if (jsonObj.config.seriesName !== undefined) {
+            $(popover).find("#chart_line_config_seriesName").val(arrayToString(jsonObj.config.seriesName));
+        }
+        if (jsonObj.config.yAxis.name !== undefined) {
+            $(popover).find("#chart_line_config_yAxis_name").val(jsonObj.config.yAxis.name);
         }
     }
     // 加载数据源
@@ -183,6 +191,15 @@ LPB.plugins['chart_line'] = function (active_component, leipiplugins) {
             switch (attr_name) {
                 case 'chart_line_config_title':
                     jsonObj.config.title = attr_val;
+                    break;
+                case 'chart_line_config_legend':
+                    jsonObj.config.legend = stringToArray(attr_val);
+                    break;
+                case 'chart_line_config_seriesName':
+                    jsonObj.config.seriesName = stringToArray(attr_val);
+                    break;
+                case 'chart_line_config_yAxis_name':
+                    jsonObj.config.yAxis.name = attr_val;
                     break;
                 case 'orgname':
                     attr_val = getAttrVal(attr_val, "chart_line");

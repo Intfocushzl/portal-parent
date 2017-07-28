@@ -45,27 +45,26 @@ public class AppApiController {
     private RedisBizUtilApi redisBizUtilApi;
 
 
-
     /**
      * APP报表存储过程报表统一入口
      *
      * @param req
      * @param response
      * @param openApiCode 报表编码,字段名唯一，且不允许修改
-     * @param sign                    报表和token生成sign
+     * @param sign        报表和token生成sign
      * @return
      */
     @OpenAuth
     @RequestMapping(value = "report", method = RequestMethod.GET)
     @ResponseBody
     public R portalCustom(HttpServletRequest req, HttpServletResponse response, String openApiCode,
-                          String sign, String shopID , String barcode) {
+                          String sign, String shopID, String barcode) {
         String parameter = null;
         List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
+        //记录日志
+        SysOperationLog log = new SysOperationLog();
         try {
             parameter = HttpContextUtils.getRequestParameter(req);
-            //记录日志
-            SysOperationLog log = new SysOperationLog();
             log.setStartTime(new Date());
             log.setIp(new IPUtils().getIpAddr(req));
             log.setUrl(req.getRequestURL().toString());
@@ -78,17 +77,20 @@ public class AppApiController {
                 reportCode = openApiCode;
             } else {
                 portalOpenapiReport = JSONObject.parseObject(openApiJsonStr, PortalOpenapiReport.class);
-                if(portalOpenapiReport == null || portalOpenapiReport.getReportcode() == null){
+                if (portalOpenapiReport == null || portalOpenapiReport.getReportcode() == null) {
                     reportCode = openApiCode;
-                }else{
+                } else {
                     reportCode = portalOpenapiReport.getReportcode();
                 }
             }
             list = reportUtil.jdbcProListResultListMapByParam(SQLFilter.sqlInject(reportCode), SQLFilter.sqlInject(parameter));
+        } catch (Exception e) {
+            log.setStatus(1);
+            log.setError(StringUtils.substring(e.toString(), 0, 2000));
+            return R.error("执行APP报表存储过程报表异常");
+        } finally {
             log.setEndTime(new Date());
             sysoperationLogService.SaveLog(log);
-        } catch (Exception e) {
-          return  R.error("执行APP报表存储过程报表异常");
         }
         return R.success(list);
     }

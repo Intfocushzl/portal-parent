@@ -13,3 +13,19 @@ function RndNum(n) {
         rnd += Math.floor(Math.random() * 10);
     return rnd;
 }
+
+// 数组转字符串
+function arrayToString(arr) {
+    //var arr = [1,2,3,4,'啊啊','merge'];
+    var str = arr.join(',');
+    //console.log(str); // 1,2,3,4,啊啊,merge
+    return str;
+}
+
+// 字符串转数组
+function stringToArray(str) {
+    //var str = '1,2,3,4,啊啊,merge';
+    var arr = str.split(',');
+    //console.log(arr);     // ["1", "2", "3", "4", "啊啊", "merge"]   数组
+    return arr;
+}

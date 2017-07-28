@@ -8,6 +8,7 @@ import com.yonghui.portal.model.sys.SysOperationLog;
 import com.yonghui.portal.service.sys.SysoperationLogService;
 import com.yonghui.portal.util.*;
 import com.yonghui.portal.util.redis.ReportUtil;
+import org.apache.commons.lang.StringUtils;
 import com.yonghui.portal.xss.SQLFilter;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,10 +60,10 @@ public class AppQrCodeApiController {
         Map<String, Object> map = null;
         List<Object> dateList = new ArrayList<Object>();
         QrCodeUtil util = new QrCodeUtil();
+        SysOperationLog log = new SysOperationLog();
         try {
             //调用自己库查数据
             parameter = HttpContextUtils.getRequestParameter(req);
-            SysOperationLog log = new SysOperationLog();
             log.setIp(new IPUtils().getIpAddr(req));
             log.setStartTime(new Date());
             log.setUrl(req.getRequestURL().toString());
@@ -117,13 +118,14 @@ public class AppQrCodeApiController {
             } else {
                 return R.success(jsonArrayResult);
             }
+        } catch (Exception e) {
+            log.setStatus(1);
+            log.setError(StringUtils.substring(e.toString(), 0, 2000));
+            return R.error("执行APP报表存储过程报表异常");
+        } finally {
             log.setEndTime(new Date());
             log.setRemark("app@@qrCode");
             sysoperationLogService.SaveLog(log);
-        } catch (Exception e) {
-            log.error("执行APP报表存储过程报表异常", e);
-            e.printStackTrace();
-            return R.error("执行APP报表存储过程报表异常");
         }
         return R.success(jsonArrayResult);
     }

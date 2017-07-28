@@ -11,6 +11,7 @@ import com.yonghui.portal.util.IPUtils;
 import com.yonghui.portal.util.R;
 import com.yonghui.portal.util.redis.ReportUtil;
 import com.yonghui.portal.xss.SQLFilter;
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -53,21 +54,24 @@ public class OpenApiController {
         List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
         String result = null;
         JSONObject jsonObject = null;
+        SysOperationLog log = new SysOperationLog();
         try {
             //根据code从redis查报表信息
             PortalOpenapiReport report = reportUtil.getPortalOpenApiReport(openApiCode);
             parameter = HttpContextUtils.getRequestParameter(req);
-            SysOperationLog log = new SysOperationLog();
+
             log.setIp(new IPUtils().getIpAddr(req));
             log.setStartTime(new Date());
             log.setUrl(req.getRequestURL().toString());
             log.setParameter(HttpContextUtils.getParameterForLog(req));
             list = reportUtil.jdbcProListResultListMapByParam(SQLFilter.sqlInject(report.getReportcode()), SQLFilter.sqlInject(parameter));
-            log.setEndTime(new Date());
             log.setRemark("openApi");
-            sysoperationLogService.SaveLog(log);
         } catch (Exception e) {
+            log.setError(StringUtils.substring(e.toString(), 0, 2000));
             return R.error().put("msg", "执行openApi统一报表程序异常");
+        } finally {
+            log.setEndTime(new Date());
+            sysoperationLogService.SaveLog(log);
         }
         return R.success(list);
     }

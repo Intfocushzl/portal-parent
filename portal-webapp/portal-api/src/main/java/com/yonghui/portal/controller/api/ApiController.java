@@ -8,6 +8,7 @@ import com.yonghui.portal.service.sys.SysoperationLogService;
 import com.yonghui.portal.util.*;
 import com.yonghui.portal.util.redis.ReportUtil;
 import com.yonghui.portal.xss.SQLFilter;
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -77,42 +78,32 @@ public class ApiController {
                 list = reportUtil.jdbcProListResultListMapByParam(SQLFilter.sqlInject(yongHuiReportCustomCode), SQLFilter.sqlInject(parameter));
             }
 
-        } catch (Exception e) {
-            log.setStatus(1);
-            log.setError(e.toString().substring(0, 2000));
-            log.setEndTime(new Date());
-            sysoperationLogService.SaveLog(log);
-            return R.error();
-        }
-
-        // 5.返回数据集，必须固定格式
-        if (report.getExecuteType() == ConstantsUtil.ExecuteType.FROMOTHER) {
-            if (!StringUtils.isEmpty(result)) {
-                JSONObject jsonObject = JSONObject.parseObject(result);
-                if (jsonObject.containsKey("data")) {
-                    log.setEndTime(new Date());
-                    sysoperationLogService.SaveLog(log);
-                    return R.success(jsonObject.get("data"));
+            // 5.返回数据集，必须固定格式
+            if (report.getExecuteType() == ConstantsUtil.ExecuteType.FROMOTHER) {
+                if (!StringUtils.isEmpty(result)) {
+                    JSONObject jsonObject = JSONObject.parseObject(result);
+                    if (jsonObject.containsKey("data")) {
+                        return R.success(jsonObject.get("data"));
+                    } else {
+                        log.setRemark("第三方返回结果没有data节点");
+                        return R.success().put("result", result);
+                    }
                 } else {
-                    log.setEndTime(new Date());
-                    log.setRemark("第三方返回结果没有data节点");
-                    sysoperationLogService.SaveLog(log);
-                    return R.success().put("result", result);
+                    log.setRemark("第三方返回结果为空");
+                    return R.error().put("result", result);
                 }
             } else {
-                log.setStatus(1);
-                log.setEndTime(new Date());
-                log.setError("第三方返回结果为空");
-                sysoperationLogService.SaveLog(log);
-                return R.error().put("result", result);
+                // 平台数据库结果
+                return R.success(list);
             }
-        } else {
+        } catch (Exception e) {
+            log.setStatus(1);
+            log.setError(StringUtils.substring(e.toString(), 0, 2000));
+            return R.error();
+        } finally {
             log.setEndTime(new Date());
             sysoperationLogService.SaveLog(log);
-            // 平台数据库结果
-            return R.success(list);
         }
-
     }
 
     /**
@@ -164,7 +155,7 @@ public class ApiController {
 
         } catch (Exception e) {
             log.setStatus(1);
-            log.setError(e.toString().substring(0, 2000));
+            log.setError(StringUtils.substring(e.toString(), 0, 2000));
         } finally {
             log.setEndTime(new Date());
             sysoperationLogService.SaveLog(log);
