@@ -275,13 +275,28 @@ public class HrProfitController {
     }
 
     /**
-     * 推送分红数据到sap
+     * 推送分红数据到sap（按区域或者门店）
      */
     @RequestMapping(value = "push", method = RequestMethod.GET)
     public R push(String shopId, String areaMans) {
         List<Map<String, Object>> list = null;
         try {
             list = hrProfitService.queryEmpProfit(shopId, areaMans);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return R.error("推送分红数据到sap,程序出现异常");
+        }
+        return R.success(list);
+    }
+
+    /**
+     * 重新推送，已经失败的分红数据到sap
+     */
+    @RequestMapping(value = "pushFailedProfit", method = RequestMethod.GET)
+    public R pushFailedProfit() {
+        List<Map<String, Object>> list = null;
+        try {
+            list = hrProfitService.pushFailedProfit();
         } catch (Exception e) {
             e.printStackTrace();
             return R.error("推送分红数据到sap,程序出现异常");
@@ -302,6 +317,36 @@ public class HrProfitController {
             return R.error("撤销分红数据到sap,程序出现异常");
         }
         return R.success(map);
+    }
+
+    /**
+     * 查询个人的分红信息
+     */
+    @RequestMapping(value = "queryProfit", method = RequestMethod.GET)
+    public R cancelProfit(String empNo) {
+        List<Map<String, Object>> list = null;
+        try {
+            list = hrProfitService.queryProfit(empNo);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return R.error("查询个人的分红信息,程序出现异常");
+        }
+        return R.success(list);
+    }
+
+    /**
+     * 查询所有失败的分红信息
+     */
+    @RequestMapping(value = "queryFailPush", method = RequestMethod.GET)
+    public R queryFailPush() {
+        List<Map<String, Object>> list = null;
+        try {
+            list = hrProfitService.queryFailPush();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return R.error("查询所有失败的分红信息,程序出现异常");
+        }
+        return R.success(list);
     }
 
 

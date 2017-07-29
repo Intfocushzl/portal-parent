@@ -65,14 +65,17 @@ public interface HrProfitMapper {
     List<Map<String, Object>> queryDimRule(@Param("groupId") String groupId, @Param("empNum") String empNum);
 
     //查询某个门店所有员工分红信息
-    List<Map<String, Object>> queryEmpProfit(@Param("shopId") String shopId, @Param("areaMans") String areaMans);
+    List<Map<String, Object>> queryEmpProfit(@Param("shopId") String shopId);
 
     //查询某个区域下所有门店的所有员工分红信息
-    List<Map<String, Object>> queryEmpProfit1(@Param("shopId") String shopId, @Param("areaMans") String areaMans);
+    List<Map<String, Object>> queryShopId(@Param("areaMans") String areaMans);
 
     //更新数据库分红人员的推送状态和信息
-    int updateEmpProfit(@Param("jobNumber") String jobNumber , @Param("status") String status , @Param("msg") String msg);
+    int updateEmpProfit(@Param("jobNumber") String jobNumber, @Param("status") String status, @Param("msg") String msg);
 
     //查询某个人用户的分红信息
-    List<Map<String, Object>> queryProfit(@Param("shopId") String shopId , @Param("empNo") String empNo);
+    List<Map<String, Object>> queryProfit(@Param("empNo") String empNo);
+
+    //查询推送失败的分红信息
+    List<Map<String, Object>> queryFailPush();
 }

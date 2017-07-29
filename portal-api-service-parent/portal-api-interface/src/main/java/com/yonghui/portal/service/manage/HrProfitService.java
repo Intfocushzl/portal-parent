@@ -57,4 +57,13 @@ public interface HrProfitService {
 
     //取消某个用户的分红
     Map<String, Object> cancelProfit(String shopId, String empNo);
+
+    //查询某个人用户的分红信息
+    List<Map<String, Object>> queryProfit(String empNo);
+
+    //查询推送失败的分红信息
+    List<Map<String, Object>> queryFailPush();
+
+    //重新推送，已经失败的分红数据到sap
+    List<Map<String, Object>> pushFailedProfit();
 }
