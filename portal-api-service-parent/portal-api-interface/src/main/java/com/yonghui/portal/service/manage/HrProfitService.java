@@ -1,5 +1,6 @@
 package com.yonghui.portal.service.manage;
 
+import com.alibaba.fastjson.JSONObject;
 import com.yonghui.portal.model.global.User;
 import com.yonghui.portal.model.manage.HrProfit;
 import org.apache.ibatis.annotations.Param;
@@ -56,7 +57,7 @@ public interface HrProfitService {
     List<Map<String, Object>> queryEmpProfit(String shopId, String areaMans);
 
     //取消某个用户的分红
-    Map<String, Object> cancelProfit(String shopId, String empNo);
+    JSONObject cancelProfit(String shopId, String empNo);
 
     //查询某个人用户的分红信息
     List<Map<String, Object>> queryProfit(String empNo);

@@ -309,14 +309,14 @@ public class HrProfitController {
      */
     @RequestMapping(value = "cancelProfit", method = RequestMethod.GET)
     public R cancelProfit(String shopId, String empNo) {
-        Map<String, Object> map = null;
+        JSONObject jSONObject = null;
         try {
-            map = hrProfitService.cancelProfit(shopId, empNo);
+            jSONObject = hrProfitService.cancelProfit(shopId, empNo);
         } catch (Exception e) {
             e.printStackTrace();
             return R.error("撤销分红数据到sap,程序出现异常");
         }
-        return R.success(map);
+        return R.success(JSONObject.parse(jSONObject.toJSONString()));
     }
 
     /**

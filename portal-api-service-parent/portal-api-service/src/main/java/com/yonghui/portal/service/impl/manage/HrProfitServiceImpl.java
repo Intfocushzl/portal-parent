@@ -247,18 +247,18 @@ public class HrProfitServiceImpl implements HrProfitService {
     }
 
     //撤销分红数据到sap
-    public Map<String, Object> cancelProfit(String shopId, String empNo) {
+    public JSONObject cancelProfit(String shopId, String empNo) {
         String result = null;
         JSONObject jsonObject = null;
-        Map<String, Object> map = new HashMap<>();
+        JSONObject resNode = new JSONObject();
         //查询某个人的分红信息
         List<Map<String, Object>> list = hrProfitMapper.queryProfit(empNo);
         //封装参数，推送到sap
         JSONObject node = new JSONObject();
         for (Map<String, Object> item : list) {
             node.put("BETRG1", item.get("endProfit"));
-            map.put("status", item.get("push_status"));
-            map.put("msg", item.get("push_message"));
+            resNode.put("push_status", item.get("push_status"));
+            resNode.put("push_message", item.get("push_message"));
         }
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
         String time = sdf.format(new Date());
@@ -284,17 +284,17 @@ public class HrProfitServiceImpl implements HrProfitService {
                 if (job.get("MSGTYP") != null && job.get("MESSAGE") != null) {
                     if (job.get("MSGTYP").equals("E")) {
                         hrProfitMapper.updateEmpProfit(job.getString("PERNR"), "4", job.getString("MESSAGE"));
-                        map.put("status", "4");
-                        map.put("msg", job.get("MESSAGE"));
+                        resNode.put("push_status", "4");
+                        resNode.put("push_message", job.get("MESSAGE"));
                     } else if (job.get("MSGTYP").equals("S")) {
                         hrProfitMapper.updateEmpProfit(job.getString("PERNR"), "3", job.getString("MESSAGE"));
-                        map.put("status", "3");
-                        map.put("msg", job.get("MESSAGE"));
+                        resNode.put("push_status", "3");
+                        resNode.put("push_message", job.get("MESSAGE"));
                     }
                 }
             }
         }
-        return map;
+        return resNode;
     }
 
     //查询某个人用户的分红信息
@@ -352,6 +352,10 @@ public class HrProfitServiceImpl implements HrProfitService {
                         hrProfitMapper.updateEmpProfit(job.getString("PERNR"), "2", job.getString("MESSAGE"));
                         resMap = new HashMap<>();
                         resMap.put("empNo", job.getString("PERNR"));
+                        List<Map<String, Object>> empList = hrProfitMapper.queryProfit(job.getString("PERNR"));
+                        for (Map<String, Object> item : empList) {
+                            resMap.put("name", item.get("empName"));
+                        }
                         resMap.put("status", "2");
                         resMap.put("msg", job.get("MESSAGE"));
                         resList.add(resMap);

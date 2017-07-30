@@ -161,7 +161,7 @@
     </update>
 
     <select id="queryProfit" parameterType="Map" resultType="Map">
-       SELECT a.empNo , a.endProfit , a.push_status , a.push_message
+       SELECT a.empNo , a.endProfit , a.push_status , a.push_message , a.empName
        FROM application.hrbonus_emp_detail_str a WHERE  a.empNo = #{empNo}
        AND  a.lkpMonth = date_format(DATE(DATE_ADD(NOW(), INTERVAL - 1 MONTH)), '%Y%m')
     </select>
