@@ -291,6 +291,7 @@ public class ActionPlanController {
 		String sql = null;
 		String res = null;
 		List<Map<String, Object>> list = null;
+		List<String> returnList = new ArrayList<String>();
 		if (null != userId) {
 			//获取用户权限
 			String roleId = null;
@@ -313,8 +314,9 @@ public class ActionPlanController {
 					res = map.get("areaMans") + "";
 				}
 			}
+			returnList.add(res);
 		}
-		return R.success(res);
+		return R.success(returnList);
 	}
 
 	/**
