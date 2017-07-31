@@ -225,3 +225,4 @@ function open_jsonview() {
         + "/sys/jsonview.html?jsonstr=" + escape($("#jsonstr").val())
     );
 };
+

@@ -247,6 +247,9 @@ LPB.plugins['tables_v3'] = function (active_component, leipiplugins) {
                     $("#a_" + document).html(value.title);
                     $(popover).find("#tables_v3_config_title_" + document).val(value.title);
                 }
+                if (value.table.head !== undefined) {
+                    $(popover).find("#tables_v3_config_table_head_" + document).val(value.table.head);
+                }
                 // 加载数据源
                 forSelectOption("#tables_v3_config_data_url_" + document, value.dataUrl);
             });
@@ -291,8 +294,7 @@ LPB.plugins['tables_v3'] = function (active_component, leipiplugins) {
                 "title": "",
                 "dataUrl": "",
                 "table": {
-                    "head": [],
-                    "data": []
+                    "head": []
                 }
             };
             // 遍历 所有input内容
@@ -306,6 +308,10 @@ LPB.plugins['tables_v3'] = function (active_component, leipiplugins) {
                     case 'tables_v3_config_title_' + document:
                         nameString = nameString + "_" + attr_val;
                         jsonConfigObj.title = attr_val;
+                        break;
+                    case 'tables_v3_config_table_head_' + document:
+                        nameString = nameString + "_" + attr_val;
+                        jsonConfigObj.table.head = attr_val;
                         break;
                 }
                 active_component.popover("hide");
@@ -363,6 +369,8 @@ function addTab() {
     $("#content").append("<div class='tab_document content-label-input' document='" + document + "' id='" + document + "_content'>"
         + "<label class='control-label content-left'>标题</label>"
         + "<input type='text'class='tables_v3_config_title content-left' document='" + document + "' id='tables_v3_config_title_" + document + "' placeholder='标题' onchange='onchangeTabTitle(this)'>"
+        + "<label class='control-label content-left'>字段</label>"
+        + "<textarea class='tables_v3_config_table_head content-left' document='" + document + "' id='tables_v3_config_table_head_" + document + "' placeholder='字段'></textarea>"
         + "<label class='control-label content-left'>数据源</label>"
         + "<select id='tables_v3_config_data_url_" + document + "' class='selectpicker form-control content-left' data-live-search='true' title='数据源'></select>"
         + "</div>");
@@ -372,6 +380,10 @@ function addTab() {
 
     // 显示新增tab div
     $("#" + document + "_content").show();
+
+    // textarea 高度自动扩展
+    // autosize($('textarea'));
+
     return document;
 }
 
@@ -406,3 +418,4 @@ function getAttrVal(attr_val, attr_name) {
     }
     return $("#" + attr_name).attr("title");
 }
+
