@@ -360,8 +360,8 @@ public class ActionPlanController {
 		String encodeParams = null ;
 		String openApiCode = "OPENAPI_000008";
 		//请求接口地址
-//		String url ="http://yhapi.yonghui.cn/yhportal/openApi/portal/report?"; //外网呼叫地址
-		String url ="http://10.67.241.218/yhportal/openApi/portal/report?"; //内网呼叫地址
+//		String url ="http://yhapi.yonghui.cn/yhportal/openApi/portal/report?"; 	//外网
+		String url ="http://10.67.241.218/yhportal/openApi/portal/report?"; //内网
 
 		String str = null;
 		try {

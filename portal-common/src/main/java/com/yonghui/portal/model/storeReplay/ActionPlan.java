@@ -30,7 +30,7 @@ public class ActionPlan extends Base implements Serializable{
 	//行动计划内容
 	private String actionPlan;
 
-	//回复类型  例如：小店回复
+	//回复类型 如：小店回复
 	private String replyer;
 
 	//评价列表
