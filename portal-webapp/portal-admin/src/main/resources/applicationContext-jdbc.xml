@@ -36,6 +36,7 @@
                 <!-- mysql 数据源 -->
                 <entry key="mysqlPortalMaster" value-ref="mysqlPortalMaster"></entry>
                 <entry key="mysqlPortalSlave" value-ref="mysqlPortalSlave"></entry>
+                <entry key="mysqlPortalApp" value-ref="mysqlPortalApp"></entry>
                 <!-- oracle 数据源 -->
                 <!--
                 <entry key="oraclePortalMaster" value-ref="oraclePortalMaster"></entry>
@@ -64,6 +65,12 @@
         <property name="url" value="${jdbc.mysql.slave.url}"/>
         <property name="username" value="${jdbc.mysql.slave.username}"/>
         <property name="password" value="${jdbc.mysql.slave.password}"/>
+    </bean>
+    <bean id="mysqlPortalApp" class="com.alibaba.druid.pool.DruidDataSource" init-method="init" destroy-method="close"
+          parent="mysqlBasicDataSource">
+        <property name="url" value="${jdbc.mysql.app.url}"/>
+        <property name="username" value="${jdbc.mysql.app.username}"/>
+        <property name="password" value="${jdbc.mysql.app.password}"/>
     </bean>
     <!-- oracle -->
     <!--

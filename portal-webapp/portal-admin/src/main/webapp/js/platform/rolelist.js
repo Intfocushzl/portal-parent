@@ -99,7 +99,13 @@ var vm = new Vue({
     },
     methods: {
         query: function () {
-            vm.reload();
+            //vm.reload();
+            $("#jqGrid").jqGrid('setGridParam', {
+                postData: {
+                    name: vm.role.name
+                },
+                page: 1
+            }).trigger("reloadGrid");
         },
         add: function () {
             vm.showList = false;

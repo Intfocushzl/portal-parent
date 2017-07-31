@@ -675,6 +675,10 @@ public class AppMenusController extends AbstractController {
                             appMenu.setReportId(reportId);
                             Integer templateId = object.getInteger("template_id");
                             appMenu.setTemplateId(templateId);
+                            Integer link = object.getInteger("link");
+                            if (link!=null){
+                                appMenu.setLink(link);
+                            }
                             Boolean hasAudio = object.getBoolean("has_audio");
                             appMenu.setHasAudio(hasAudio);
                             String url = object.getString("url");
@@ -766,7 +770,7 @@ public class AppMenusController extends AbstractController {
             child.put("kpi_name", appMenu.getTitle());
             child.put("kpi_group", appMenu.getSubName2());
             child.put("kpi_id", appMenu.getKpiId() == null ? 0 : appMenu.getKpiId());
-            child.put("link", 0);
+            child.put("link", appMenu.getLink() == null ? 0 : appMenu.getLink());
             map.put("kpi", child);
         } else if (type == 2) {
             child.put("publicly", appMenu.getPublicly());
@@ -850,8 +854,8 @@ public class AppMenusController extends AbstractController {
             child.put("publicly", appMenu.getPublicly());
             child.put("kpi_name", appMenu.getTitle());
             child.put("kpi_group", appMenu.getSubName2());
-            child.put("kpi_id", 0);
-            child.put("link", 0);
+            child.put("kpi_id", appMenu.getKpiId());
+            child.put("link", appMenu.getLink());
             map.put("kpi", child);
         } else if (type == 2) {
             child.put("publicly", appMenu.getPublicly());

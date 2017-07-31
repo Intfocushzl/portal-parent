@@ -4,6 +4,8 @@ var module_id;
 var returnJsonObj;
 var selectOptionJsonObjSql;
 var selectOptionJsonObjPro;
+var selectOptionJsonObjReport;
+var selectOptionJsonObjOpenApi;
 
 /**
  * 初始化数据
@@ -30,6 +32,16 @@ $(function () {
         selectOptionJsonObjPro = getJsonObj(r);
     });
 
+    // 报表编码
+    $.get("../portalreport/repList/", function (r) {
+        selectOptionJsonObjReport = getJsonObj(r);
+    });
+
+    // 开放接口
+    $.get("../portalopenapireport/repList/", function (r) {
+        selectOptionJsonObjOpenApi = getJsonObj(r);
+    });
+
 });
 
 /**
@@ -40,7 +52,8 @@ $(function () {
 function forSelectOption(data_url_id, executeCode) {
     $(data_url_id).empty();
     var selectOption;
-    // sql
+    /*
+    // sql语句
     for (var i = 0; i < selectOptionJsonObjSql.sqlList.length; i++) {
         selectOption = "<option value='" + selectOptionJsonObjSql.sqlList[i].sqlcode + "'";
         if (executeCode == selectOptionJsonObjSql.sqlList[i].sqlcode) {
@@ -49,13 +62,32 @@ function forSelectOption(data_url_id, executeCode) {
         selectOption = selectOption + " >" + selectOptionJsonObjSql.sqlList[i].sqlcode + "<==>" + selectOptionJsonObjSql.sqlList[i].title + "</option>";
         $(data_url_id).append(selectOption);
     }
-    // pro
+    // pro存储
     for (var i = 0; i < selectOptionJsonObjPro.proList.length; i++) {
         selectOption = "<option value='" + selectOptionJsonObjPro.proList[i].procode + "'";
         if (executeCode == selectOptionJsonObjPro.proList[i].procode) {
             selectOption = selectOption + " selected = 'selected'";
         }
         selectOption = selectOption + " >" + selectOptionJsonObjPro.proList[i].procode + "<==>" + selectOptionJsonObjPro.proList[i].title + "</option>";
+        $(data_url_id).append(selectOption);
+    }
+    */
+    // 报表信息
+    for (var i = 0; i < selectOptionJsonObjReport.repList.length; i++) {
+        selectOption = "<option value='" + selectOptionJsonObjReport.repList[i].code + "'";
+        if (executeCode == selectOptionJsonObjReport.repList[i].code) {
+            selectOption = selectOption + " selected = 'selected'";
+        }
+        selectOption = selectOption + " >" + selectOptionJsonObjReport.repList[i].code + " | " + selectOptionJsonObjReport.repList[i].title + "</option>";
+        $(data_url_id).append(selectOption);
+    }
+    // 开放接口
+    for (var i = 0; i < selectOptionJsonObjOpenApi.repList.length; i++) {
+        selectOption = "<option value='" + selectOptionJsonObjOpenApi.repList[i].code + "'";
+        if (executeCode == selectOptionJsonObjOpenApi.repList[i].code) {
+            selectOption = selectOption + " selected = 'selected'";
+        }
+        selectOption = selectOption + " >" + selectOptionJsonObjOpenApi.repList[i].code + " | " + selectOptionJsonObjOpenApi.repList[i].title + "</option>";
         $(data_url_id).append(selectOption);
     }
     // refresh刷新和render渲染操作，必不可少
@@ -193,3 +225,4 @@ function open_jsonview() {
         + "/sys/jsonview.html?jsonstr=" + escape($("#jsonstr").val())
     );
 };
+

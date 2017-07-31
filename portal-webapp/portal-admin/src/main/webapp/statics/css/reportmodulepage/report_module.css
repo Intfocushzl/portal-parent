@@ -179,6 +179,10 @@
     width: 300px;
 }
 
+.content-label-input textarea{
+    width: 300px;
+}
+
 .content-left {
     float: left;
 }

@@ -14,7 +14,7 @@ public class Menu extends AuditAuto {
 
     private String url;
 
-    private Integer pid;
+    private Long pid;
 
     private String icon;
 
@@ -71,11 +71,11 @@ public class Menu extends AuditAuto {
         this.url = url == null ? null : url.trim();
     }
 
-    public Integer getPid() {
+    public Long getPid() {
         return pid;
     }
 
-    public void setPid(Integer pid) {
+    public void setPid(Long pid) {
         this.pid = pid;
     }
 
