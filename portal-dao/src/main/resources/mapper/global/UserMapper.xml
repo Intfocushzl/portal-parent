@@ -303,8 +303,7 @@
     </select>
 
     <select id="queryTotal" resultType="int">
-        select count(*) from
-        from platform.user_forfront as u
+        select count(*)  from platform.user_forfront as u
         left join platform.role_forfront as r on r.roleId=u.roleId
         <where>
             (u.`status`=-1 or u.`status`=1 or u.`status`=-5)
