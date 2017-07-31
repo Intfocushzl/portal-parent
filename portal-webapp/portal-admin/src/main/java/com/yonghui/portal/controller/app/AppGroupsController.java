@@ -6,6 +6,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.yonghui.portal.controller.AbstractController;
 import com.yonghui.portal.init.InitProperties;
 import com.yonghui.portal.model.app.AppGroups;
+import com.yonghui.portal.service.app.AppGroupsService;
 import com.yonghui.portal.service.global.UserAdminService;
 import com.yonghui.portal.util.PageUtils;
 import com.yonghui.portal.util.Query;
