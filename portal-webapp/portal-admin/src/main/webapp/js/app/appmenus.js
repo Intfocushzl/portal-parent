@@ -180,6 +180,7 @@ var vm = new Vue({
                 vm.appMenu.publicly = false;
             }
             vm.getInfo(o);
+
         },
         saveOrUpdate: function (event) {
             var aSpan = $("span.active");
@@ -193,14 +194,11 @@ var vm = new Vue({
                     }
                 }
             }
-            console.log(arr);
             if (arr == "undefined") {
                 alert("请选择角色");
                 return;
             }
             vm.appMenu.roleIdList = arr;
-            vm.appMenu.kpiId = $('#reportList').selectpicker('val');
-            ;
             var url = vm.appMenu.id == null ? "../app/menus/save" : "../app/menus/update";
             $.ajax({
                 type: "POST",
@@ -257,12 +255,10 @@ var vm = new Vue({
             });
         },
         getInfo: function (params) {
-            console.log(params);
             $.get("../app/menus/info", params, function (r) {
-                console.log(r.appMenu);
                 vm.appMenu = r.appMenu;
                 vm.getRoleList(params);
-                $('#reportList').selectpicker('val', vm.appMenu.kpiId);
+                vm.getReportList();
             });
         },
         reload: function (event) {
@@ -294,13 +290,15 @@ var vm = new Vue({
             $.get("../app/menus/selectReport", function (r) {
                 var reportList = r.data.list;
                 $("#reportList").empty();
-                $("#reportList").append("<option value='0'>暂不关联</option>");
                 for (var i = 0; i < reportList.length; i++) {
                     $("#reportList").append("<option value='" + reportList[i].kpiId + "'>" + reportList[i].kpiId + "<===>" + reportList[i].title + "</option>");
                 }
                 // refresh刷新和render渲染操作，必不可少  +r.data[i].id+"<===>"
                 $('#reportList').selectpicker('refresh');
                 $('#reportList').selectpicker('render');
+                if (vm.appMenu.id!=null&&vm.appMenu.type==1){
+                    $('#reportList').selectpicker('val', vm.appMenu.link);
+                }
             });
         },
         getParentMenuList: function (menuId) {
@@ -312,7 +310,6 @@ var vm = new Vue({
             };
             $.get(url, obj, function (r) {
                 var list = r.list;
-                console.log(list);
                 $('#list1 li').remove();
                 for (var i = 0; i < list.length; i++) {
                     var parent = list[i];
@@ -332,7 +329,6 @@ var vm = new Vue({
                 type: vm.appMenu.type,
             };
             $.get(url, o, function (r) {
-                console.log(r.list);
                 var list = r.list;
                 $('#list2 li').remove();
                 for (var i = 0; i < list.length; i++) {
@@ -351,7 +347,7 @@ var vm = new Vue({
 $("#dialog-div1").dialog({
     autoOpen: false,
     width: 400,
-    minHeight:480,
+    minHeight: 480,
     modal: true,
     show: {
         effect: "explode",//eblind
@@ -364,15 +360,13 @@ $("#dialog-div1").dialog({
     buttons: {
         "确定": function () {
             saveOrder1();
-            console.log($("input[name=list1SortOrder]").val());
             var strs = $("input[name=list1SortOrder]").val().split("|");
-            console.log(strs);
             $.ajax({
                 type: "GET",
                 url: "../app/menus/doParentSort",
                 data: {
-                    sortStr:$("input[name=list1SortOrder]").val(),
-                    menuType:vm.appMenu.type
+                    sortStr: $("input[name=list1SortOrder]").val(),
+                    menuType: vm.appMenu.type
                 },
                 success: function (r) {
                     // 关闭窗口
@@ -397,7 +391,7 @@ $("#dialog-div1").dialog({
 $("#dialog-div2").dialog({
     autoOpen: false,
     width: 400,
-    minHeight:480,
+    minHeight: 480,
     modal: true,
     show: {
         effect: "explode",//eblind
@@ -410,13 +404,12 @@ $("#dialog-div2").dialog({
     buttons: {
         "确定": function () {
             saveOrder2();
-            console.log($("input[name=list2SortOrder]").val());
             $.ajax({
                 type: "GET",
                 url: "../app/menus/doChildrenSort",
                 data: {
-                    sortStr:$("input[name=list2SortOrder]").val(),
-                    menuType:vm.appMenu.type
+                    sortStr: $("input[name=list2SortOrder]").val(),
+                    menuType: vm.appMenu.type
                 },
                 success: function (r) {
                     // 关闭窗口
