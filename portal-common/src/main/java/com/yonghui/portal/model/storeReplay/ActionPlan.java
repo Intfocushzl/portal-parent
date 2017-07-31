@@ -34,7 +34,7 @@ public class ActionPlan extends Base implements Serializable{
 	private String replyer;
 
 	//评价列表
-	private List<Evaluate> evalutes;
+	private List<Evaluate> evaluates;
 
 	public ActionPlan() {}
 
@@ -57,12 +57,12 @@ public class ActionPlan extends Base implements Serializable{
 		this.replyer = replyer;
 	}
 
-	public List<Evaluate> getEvalutes() {
-		return evalutes;
+	public List<Evaluate> getEvaluates() {
+		return evaluates;
 	}
 
-	public void setEvalutes(List<Evaluate> evalutes) {
-		this.evalutes = evalutes;
+	public void setEvaluates(List<Evaluate> evaluates) {
+		this.evaluates = evaluates;
 	}
 
 	public String getUserId() {
