@@ -11,6 +11,7 @@ public enum DataSourceEnum {
 	// mysql
 	MYSQL_PORTAL_MASTER("mysqlPortalMaster", false),
 	MYSQL_PORTAL_SLAVE("mysqlPortalSlave", true),
+    MYSQL_PORTAL_APP("mysqlPortalApp", false),
 	// sqlServer
 	SQLSERVER_PORTAL_MASTER("sqlserverPortalMaster", false),
 	SQLSERVER_PORTAL_SLAVE("sqlserverPortalSlave", false),

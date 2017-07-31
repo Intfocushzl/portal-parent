@@ -18,11 +18,11 @@
     </resultMap>
 
 	<select id="queryObject" resultType="com.yonghui.portal.model.app.AppGroups">
-		select * from appauthority.sys_groups where id = #{value}
+		select * from yonghuibi.sys_groups where id = #{value}
 	</select>
 
 	<select id="queryList" resultType="com.yonghui.portal.model.app.AppGroups">
-		select * from appauthority.sys_groups
+		select * from yonghuibi.sys_groups
         <where>
             <if test="id != null and id !=''">
                 and id = #{id}
@@ -45,7 +45,7 @@
 	</select>
 	
  	<select id="queryTotal" resultType="int">
-		select count(*) from appauthority.sys_groups
+		select count(*) from yonghuibi.sys_groups
         <where>
             <if test="id != null and id !=''">
                 and id = #{id}
@@ -57,7 +57,7 @@
 	</select>
 
     <insert id="save" parameterType="com.yonghui.portal.model.app.AppGroups" useGeneratedKeys="true" keyProperty="id">
-		insert into appauthority.sys_groups
+		insert into yonghuibi.sys_groups
 		(
 			`group_name`, 
 			`create_user`, 
@@ -80,7 +80,7 @@
 	</insert>
 
     <update id="update" parameterType="com.yonghui.portal.model.app.AppGroups">
-        update appauthority.sys_groups
+        update yonghuibi.sys_groups
         <set>
 			<if test="groupName != null">`group_name` = #{groupName}, </if>
 			<if test="updateUser != null">`update_user` = #{updateUser}, </if>
@@ -94,11 +94,11 @@
     </update>
 	
 	<delete id="delete">
-		delete from appauthority.sys_groups where id = #{value}
+		delete from yonghuibi.sys_groups where id = #{value}
 	</delete>
 	
 	<delete id="deleteBatch">
-		delete from appauthority.sys_groups where id in 
+		delete from yonghuibi.sys_groups where id in
 		<foreach item="id" collection="array" open="(" separator="," close=")">
 			#{id}
 		</foreach>

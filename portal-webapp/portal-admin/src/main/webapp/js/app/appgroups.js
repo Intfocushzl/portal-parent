@@ -5,11 +5,10 @@ $(function () {
         // 列表标题及列表模型
         colModel: [
             {label: 'ID', name: 'id', index: 'id', width: 50, key: true },
-            {label: '群组ID', name: 'groupId', index: 'groupId', width: 50 },
             {label: '群组名', name: 'groupName', index: 'groupName', width: 80 },
+            {label: '商行ID', name: 'groupId', index: 'groupId', width: 50 },
+            {label: '门店ID', name: 'shopId', index: 'shopId', width: 50 },
             {label: '备注', name: 'memo', index: 'memo', width: 80 },
-            {label: '创建时间', name: 'createdAt', index: 'createdAt', width: 80 },
-            {label: '更新时间', name: 'updatedAt', index: 'updatedAt', width: 80 }
         ],
         viewrecords: true,
         height: 385,            // 表格高度

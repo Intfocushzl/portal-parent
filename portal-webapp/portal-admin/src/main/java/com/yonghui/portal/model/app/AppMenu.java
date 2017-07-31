@@ -24,6 +24,8 @@ public class AppMenu implements Serializable {
     private  String title;
     //关联报表ID
     private Integer kpiId;
+    //关联报表ID
+    private Integer Link;
     //报表ID
     private Integer reportId;
     //模板ID
@@ -260,5 +262,13 @@ public class AppMenu implements Serializable {
 
     public void setRoleIdList(List<Integer> roleIdList) {
         this.roleIdList = roleIdList;
+    }
+
+    public Integer getLink() {
+        return Link;
+    }
+
+    public void setLink(Integer link) {
+        Link = link;
     }
 }

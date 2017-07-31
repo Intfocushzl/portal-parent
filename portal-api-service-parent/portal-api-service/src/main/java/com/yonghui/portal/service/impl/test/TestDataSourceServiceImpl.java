@@ -29,10 +29,17 @@ public class TestDataSourceServiceImpl implements TestDataSourceService {
         return "使用默认数据源";
     }
 
+
     @Override
     @DataSource(DataSourceConstants.MYSQL_PORTAL_MASTER)
     public String dataB() {
         return "覆盖类上指定的，使用数据源 MYSQL_PORTAL_MASTER";
+    }
+
+    @Override
+    @DataSource(DataSourceConstants.MYSQL_PORTAL_APP)
+    public String dataApp() {
+        return "覆盖类上指定的，使用数据源 MYSQL_PORTAL_APP";
     }
 
     @Override

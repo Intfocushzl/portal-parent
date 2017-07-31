@@ -25,4 +25,6 @@ public interface TestDataSourceService {
     // 覆盖类上指定的，使用数据源6
     String dataF();
 
+    // app 85库
+    public String dataApp();
 }
