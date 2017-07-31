@@ -4,27 +4,27 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
 <title>消息推送</title>
-<script type="text/javascript" src="/portal-admin/statics/libs/jquery.min.js" charset="UTF-8"></script>
-<script type="text/javascript" src="/portal-admin/statics/libs/jquery.form.js" charset="UTF-8"></script>
-<script src="/portal-admin/statics/libs/bootstrap.min.js"></script>
-<script type="text/javascript" src="/portal-admin/statics/libs/bootstrap-datetimepicker.js" charset="UTF-8"></script>
-<script type="text/javascript" src="/portal-admin/statics/libs/bootstrap-datetimepicker.zh-CN.js" charset="UTF-8"></script>
-<link rel="stylesheet" href="/portal-admin/statics/css/bootstrap.min.css">
-<link href="/portal-admin/statics/css/bootstrap-datetimepicker.min.css" rel="stylesheet" media="screen">
+<script type="text/javascript" src="/admin/statics/libs/jquery.min.js" charset="UTF-8"></script>
+<script type="text/javascript" src="/admin/statics/libs/jquery.form.js" charset="UTF-8"></script>
+<script src="/admin/statics/libs/bootstrap.min.js"></script>
+<script type="text/javascript" src="/admin/statics/libs/bootstrap-datetimepicker.js" charset="UTF-8"></script>
+<script type="text/javascript" src="/admin/statics/libs/bootstrap-datetimepicker.zh-CN.js" charset="UTF-8"></script>
+<link rel="stylesheet" href="/admin/statics/css/bootstrap.min.css">
+<link href="/admin/statics/css/bootstrap-datetimepicker.min.css" rel="stylesheet" media="screen">
 
-<link rel="stylesheet" href="/portal-admin/statics/libs/bootstrap-table/bootstrap-table.min.css">
-<script src="/portal-admin/statics/libs/bootstrap-table/bootstrap-table.min.js"></script>
-<script src="/portal-admin/statics/libs/bootstrap-table/bootstrap-table.js"></script>
-<script src="/portal-admin/statics/libs/bootstrap-table/bootstrap-table-locale-all.js"></script>
-<script src="/portal-admin/statics/libs/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"></script>
-<script src="/portal-admin/statics/libs/bootstrap-table/extensions/export/bootstrap-table-export.min.js"></script>
+<link rel="stylesheet" href="/admin/statics/libs/bootstrap-table/bootstrap-table.min.css">
+<script src="/admin/statics/libs/bootstrap-table/bootstrap-table.min.js"></script>
+<script src="/admin/statics/libs/bootstrap-table/bootstrap-table.js"></script>
+<script src="/admin/statics/libs/bootstrap-table/bootstrap-table-locale-all.js"></script>
+<script src="/admin/statics/libs/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"></script>
+<script src="/admin/statics/libs/bootstrap-table/extensions/export/bootstrap-table-export.min.js"></script>
 
- <script type="text/javascript" src="/portal-admin/statics/plugins/summernote/dist/summernote.min.js"></script>
- <link rel="stylesheet" href="/portal-admin/statics/plugins/summernote/dist/summernote.css">
-    <link rel="stylesheet" href="/portal-admin/statics/css/magicsuggest-1.2.2.css">
-    <script type="text/javascript" src="/portal-admin/statics/libs/magicsuggest-1.2.2.js"></script>
+ <script type="text/javascript" src="/admin/statics/plugins/summernote/dist/summernote.min.js"></script>
+ <link rel="stylesheet" href="/admin/statics/plugins/summernote/dist/summernote.css">
+    <link rel="stylesheet" href="/admin/statics/css/magicsuggest-1.2.2.css">
+    <script type="text/javascript" src="/admin/statics/libs/magicsuggest-1.2.2.js"></script>
 <script type="text/javascript">
-    	var ctx="/portal-admin";
+    	var ctx="/admin";
 </script>
 <script type="text/javascript">
 var params = function() {
@@ -45,7 +45,7 @@ var jobToModify = {};
 if(undefined != params["jobKey"]){
 
 	$.ajax({
-		url:'/portal-admin/message/gotoModify',
+		url:'/admin/message/gotoModify',
 	    dataType:'json',
 	  	data:{
 	  		jobKey:params["jobKey"]
