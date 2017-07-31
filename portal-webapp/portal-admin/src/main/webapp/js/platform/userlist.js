@@ -193,6 +193,9 @@ var vm = new Vue({
         add: function () {
             vm.showList = 2;
             vm.title = "新增";
+            vm.user={
+                roleIdList: [],
+            }
             var o = new Object();
             o.type = (vm.user.type == null ? 1 : vm.user.type);
             $("#type").selectpicker("val", o.type);

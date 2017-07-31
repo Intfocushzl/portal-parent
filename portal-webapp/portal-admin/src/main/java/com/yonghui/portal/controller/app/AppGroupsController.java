@@ -33,6 +33,9 @@ public class AppGroupsController extends AbstractController {
     Logger log = Logger.getLogger(this.getClass());
 
     @Autowired
+    private AppGroupsService appGroupsService;
+
+    @Autowired
     private UserAdminService userAdminService;
 
     /**
@@ -44,72 +47,72 @@ public class AppGroupsController extends AbstractController {
         //查询列表数据
         Query query = new Query(params);
 
-        List<AppGroups> appGroupsList = new ArrayList<>();
-        HttpMethodUtil httpUtil = new HttpMethodUtil();
-        Map<String, Object> map = new HashedMap();
-        map.put("api_token", "api_token");
-        map.put("page", query.getPage() - 1);
-        map.put("page_size", query.getLimit());
-        if (query.get("groupName") != null) {
-            map.put("group_name", query.get("groupName"));
-        }
-        try {
-            String result = httpUtil.getGetResult(InitProperties.APP_BASE_GET_GROUP_URL, map);
-
-            log.info(result);
-            if (!StringUtils.isEmpty(result)) {
-                JSONObject jsonObject = JSONObject.parseObject(result);
-                if (jsonObject.getInteger("code") == 200) {
-
-                    JSONArray array = jsonObject.getJSONArray("data");
-                    if (array == null) {
-                        array = new JSONArray();
-                    }
-                    for (int i = 0; i < array.size(); i++) {
-                        AppGroups appGroups = new AppGroups();
-                        Integer id = array.getJSONObject(i).getInteger("id");
-                        appGroups.setId(id);
-                        Integer group_id = array.getJSONObject(i).getInteger("group_id");
-                        appGroups.setGroupId(group_id);
-                        String group_name = array.getJSONObject(i).getString("group_name");
-                        appGroups.setGroupName(group_name);
-                        String memo = array.getJSONObject(i).getString("memo");
-                        appGroups.setMemo(memo);
-                        String created_at = array.getJSONObject(i).getString("created_at");
-                        appGroups.setCreatedAt(created_at);
-
-                        appGroupsList.add(appGroups);
-                    }
-                    int total_count=jsonObject.getInteger("total_count");
-                    PageUtils pageUtil = new PageUtils(appGroupsList, total_count, query.getLimit(), query.getPage());
-
-                    return R.success().put("page", pageUtil);
-                } else if (jsonObject.getInteger("code") == 401) {
-                    appGroupsList = new ArrayList<>();
-                    PageUtils pageUtil = new PageUtils(appGroupsList, 0, query.getLimit(), query.getPage());
-                    String info = jsonObject.getString("message");
-                    return R.error().put("page", pageUtil).setMsg(info);
-                } else {
-                    return R.error().setMsg("APP用户查询失败");
-                }
-            } else {
-                appGroupsList = new ArrayList<>();
-                PageUtils pageUtil = new PageUtils(appGroupsList, 0, query.getLimit(), query.getPage());
-                return R.error().put("page", pageUtil);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            appGroupsList = new ArrayList<>();
-            PageUtils pageUtil = new PageUtils(appGroupsList, 0, query.getLimit(), query.getPage());
-            return R.error().put("page", pageUtil);
-        }
-
-//        List<AppGroups> appGroupsList = appGroupsService.queryList(query);
-//        int total = appGroupsService.queryTotal(query);
+//        List<AppGroups> appGroupsList = new ArrayList<>();
+//        HttpMethodUtil httpUtil = new HttpMethodUtil();
+//        Map<String, Object> map = new HashedMap();
+//        map.put("api_token", "api_token");
+//        map.put("page", query.getPage() - 1);
+//        map.put("page_size", query.getLimit());
+//        if (query.get("groupName") != null) {
+//            map.put("group_name", query.get("groupName"));
+//        }
+//        try {
+//            String result = httpUtil.getGetResult(InitProperties.APP_BASE_GET_GROUP_URL, map);
 //
-//        PageUtils pageUtil = new PageUtils(appGroupsList, total, query.getLimit(), query.getPage());
+//            log.info(result);
+//            if (!StringUtils.isEmpty(result)) {
+//                JSONObject jsonObject = JSONObject.parseObject(result);
+//                if (jsonObject.getInteger("code") == 200) {
 //
-//        return R.success().put("page", pageUtil);
+//                    JSONArray array = jsonObject.getJSONArray("data");
+//                    if (array == null) {
+//                        array = new JSONArray();
+//                    }
+//                    for (int i = 0; i < array.size(); i++) {
+//                        AppGroups appGroups = new AppGroups();
+//                        Integer id = array.getJSONObject(i).getInteger("id");
+//                        appGroups.setId(id);
+//                        Integer group_id = array.getJSONObject(i).getInteger("group_id");
+//                        appGroups.setGroupId(group_id);
+//                        String group_name = array.getJSONObject(i).getString("group_name");
+//                        appGroups.setGroupName(group_name);
+//                        String memo = array.getJSONObject(i).getString("memo");
+//                        appGroups.setMemo(memo);
+//                        String created_at = array.getJSONObject(i).getString("created_at");
+//                        appGroups.setCreatedAt(created_at);
+//
+//                        appGroupsList.add(appGroups);
+//                    }
+//                    int total_count=jsonObject.getInteger("total_count");
+//                    PageUtils pageUtil = new PageUtils(appGroupsList, total_count, query.getLimit(), query.getPage());
+//
+//                    return R.success().put("page", pageUtil);
+//                } else if (jsonObject.getInteger("code") == 401) {
+//                    appGroupsList = new ArrayList<>();
+//                    PageUtils pageUtil = new PageUtils(appGroupsList, 0, query.getLimit(), query.getPage());
+//                    String info = jsonObject.getString("message");
+//                    return R.error().put("page", pageUtil).setMsg(info);
+//                } else {
+//                    return R.error().setMsg("APP用户查询失败");
+//                }
+//            } else {
+//                appGroupsList = new ArrayList<>();
+//                PageUtils pageUtil = new PageUtils(appGroupsList, 0, query.getLimit(), query.getPage());
+//                return R.error().put("page", pageUtil);
+//            }
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            appGroupsList = new ArrayList<>();
+//            PageUtils pageUtil = new PageUtils(appGroupsList, 0, query.getLimit(), query.getPage());
+//            return R.error().put("page", pageUtil);
+//        }
+
+        List<AppGroups> appGroupsList = appGroupsService.queryList(query);
+        int total = appGroupsService.queryTotal(query);
+
+        PageUtils pageUtil = new PageUtils(appGroupsList, total, query.getLimit(), query.getPage());
+
+        return R.success().put("page", pageUtil);
 
     }
 
@@ -119,45 +122,45 @@ public class AppGroupsController extends AbstractController {
     @RequestMapping("/info/{id}")
     @RequiresPermissions("appgroups:info")
     public R info(@PathVariable("id") Integer id) {
-//        AppGroups appGroups = appGroupsService.queryObject(id);
-//        return R.success().put("appGroups", appGroups);
-        Map<String, Object> map = new HashedMap();
-        HttpMethodUtil httpUtil = new HttpMethodUtil();
-        map.put("api_token", "api_token");
-        map.put("id", id);
-        try {
-            String result = httpUtil.getGetResult(InitProperties.APP_BASE_POST_GROUP_URL + "/" + id, map);
-
-            log.info(result);
-            if (!StringUtils.isEmpty(result)) {
-                JSONObject jsonObject = JSONObject.parseObject(result);
-                if (jsonObject.getInteger("code") == 200) {
-
-                    JSONObject obj = jsonObject.getJSONObject("data");
-                    AppGroups appGroups = new AppGroups();
-                    Integer xid = obj.getInteger("id");
-                    appGroups.setId(xid);
-                    Integer group_id = obj.getInteger("group_id");
-                    appGroups.setGroupId(group_id);
-                    String group_name = obj.getString("group_name");
-                    appGroups.setGroupName(group_name);
-                    String memo = obj.getString("memo");
-                    appGroups.setMemo(memo);
-//                    String created_at = obj.getString("created_at");
-//                    appGroups.setCreatedAt(created_at);
-
-                    return R.success().put("appGroups", appGroups);
-                } else {
-                    String info = jsonObject.getString("message");
-                    return R.error().setMsg(info);
-                }
-            } else {
-                return R.error().setMsg("APP查询失败");
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            return R.error().setMsg("APP查询失败");
-        }
+        AppGroups appGroups = appGroupsService.queryObject(id);
+        return R.success().put("appGroups", appGroups);
+//        Map<String, Object> map = new HashedMap();
+//        HttpMethodUtil httpUtil = new HttpMethodUtil();
+//        map.put("api_token", "api_token");
+//        map.put("id", id);
+//        try {
+//            String result = httpUtil.getGetResult(InitProperties.APP_BASE_POST_GROUP_URL + "/" + id, map);
+//
+//            log.info(result);
+//            if (!StringUtils.isEmpty(result)) {
+//                JSONObject jsonObject = JSONObject.parseObject(result);
+//                if (jsonObject.getInteger("code") == 200) {
+//
+//                    JSONObject obj = jsonObject.getJSONObject("data");
+//                    AppGroups appGroups = new AppGroups();
+//                    Integer xid = obj.getInteger("id");
+//                    appGroups.setId(xid);
+//                    Integer group_id = obj.getInteger("group_id");
+//                    appGroups.setGroupId(group_id);
+//                    String group_name = obj.getString("group_name");
+//                    appGroups.setGroupName(group_name);
+//                    String memo = obj.getString("memo");
+//                    appGroups.setMemo(memo);
+////                    String created_at = obj.getString("created_at");
+////                    appGroups.setCreatedAt(created_at);
+//
+//                    return R.success().put("appGroups", appGroups);
+//                } else {
+//                    String info = jsonObject.getString("message");
+//                    return R.error().setMsg(info);
+//                }
+//            } else {
+//                return R.error().setMsg("APP查询失败");
+//            }
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            return R.error().setMsg("APP查询失败");
+//        }
     }
 
     /**

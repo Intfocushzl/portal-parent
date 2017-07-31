@@ -39,12 +39,12 @@
         <result column="rold" property="rold" jdbcType="VARCHAR"/>
         <result column="areaMans" property="areaMans" jdbcType="TIMESTAMP"/>
         <result column="changeAreaMans" property="changeAreaMans" jdbcType="VARCHAR"/>
-        <result column="creater" property="creater" jdbcType="BIGINT" />
-        <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
-        <result column="modifier" property="modifier" jdbcType="BIGINT" />
-        <result column="modify_time" property="modifyTime" jdbcType="TIMESTAMP" />
-        <result column="disabled" property="disabled" jdbcType="BIGINT" />
-        <result column="version" property="version" jdbcType="BIGINT" />
+        <result column="creater" property="creater" jdbcType="BIGINT"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="modifier" property="modifier" jdbcType="BIGINT"/>
+        <result column="modify_time" property="modifyTime" jdbcType="TIMESTAMP"/>
+        <result column="disabled" property="disabled" jdbcType="BIGINT"/>
+        <result column="version" property="version" jdbcType="BIGINT"/>
     </resultMap>
 
     <sql id="Base_Column_List">
@@ -202,41 +202,87 @@
 
 
     <select id="queryObject" resultMap="BaseResultMap">
-        select
-        u.id, u.account, u.`name`,u.email, u.roleId,u.jobNumber, u.storeNumber,
-		u.createTime,u.status,u.`type`,u.firm,u.largeArea,
-		u.province,u.city,u.changeRoleId,u. changeType, u.changeLargeArea,
-        u.changeProvince, u.changeCity, u.changeFirm,u. changeStatus,u.changeStoreNumber,u.remark,
-        u.changeTime,u.rold,u.areaMans,u.changeAreaMans
-        ,r.name as roleName,r.type as roleType
-        from platform.user_forfront as u join platform.role_forfront as r on r.roleId=u.roleId where u.id = #{value}
+        select u.id
+        , u.account
+        , u.`name`
+        , u.email
+        , if(r.roleId is null, null, u.roleId) as roleId
+        , u.jobNumber
+        , u.storeNumber
+        , u.createTime
+        , u.status
+        , u.`type`
+        , u.firm
+        , u.largeArea
+        , u.province
+        , u.city
+        , u.changeRoleId
+        , u. changeType
+        , u.changeLargeArea
+        , u.changeProvince
+        , u.changeCity
+        , u.changeFirm
+        , u. changeStatus
+        , u.changeStoreNumber
+        , u.remark
+        , u.changeTime
+        , u.rold
+        , u.areaMans
+        , u.changeAreaMans
+        , if(r.roleId is null, null, r.name) as roleName
+        , if(r.roleId is null, null, r.type) as roleType
+        from platform.user_forfront as u
+        left join platform.role_forfront as r on r.roleId=u.roleId where u.id = #{value}
 	</select>
 
     <select id="queryList" resultMap="BaseResultMap">
-        select
-        u.id, u.account, u.`name`,u.email, u.roleId,u.jobNumber, u.storeNumber,
-        u.createTime,u.status,u.`type`,u.firm,u.largeArea,
-        u.province,u.city,u.changeRoleId,u. changeType, u.changeLargeArea,
-        u.changeProvince, u.changeCity, u.changeFirm,u. changeStatus,u.changeStoreNumber,u.remark,
-        u.changeTime,u.rold,u.areaMans,u.changeAreaMans
-        ,r.name as roleName,r.type as roleType
-        from platform.user_forfront as u join platform.role_forfront as r on r.roleId=u.roleId
+        select u.id
+        , u.account
+        , u.`name`
+        , u.email
+        , if(r.roleId is null, null, u.roleId) as roleId
+        , u.jobNumber
+        , u.storeNumber
+        , u.createTime
+        , u.status
+        , u.`type`
+        , u.firm
+        , u.largeArea
+        , u.province
+        , u.city
+        , u.changeRoleId
+        , u. changeType
+        , u.changeLargeArea
+        , u.changeProvince
+        , u.changeCity
+        , u.changeFirm
+        , u. changeStatus
+        , u.changeStoreNumber
+        , u.remark
+        , u.changeTime
+        , u.rold
+        , u.areaMans
+        , u.changeAreaMans
+        , if(r.roleId is null, null, r.name) as roleName
+        , if(r.roleId is null, null, r.type) as roleType
+        from platform.user_forfront as u
+        left join platform.role_forfront as r on r.roleId=u.roleId
         <where>
             (u.`status`=-1 or u.`status`=1 or u.`status`=-5)
             <if test="account != null and account !=''">
-                and  u.account like concat('%',#{account},'%')
+                and u.account like concat('%',#{account},'%')
             </if>
             <if test="jobNumber != null and jobNumber !=''">
-                and  u.jobNumber like concat('%',#{jobNumber},'%')
+                and u.jobNumber like concat('%',#{jobNumber},'%')
             </if>
             <if test="name != null and name !=''">
-                and  u.`name` like concat('%',#{name},'%')
+                and u.`name` like concat('%',#{name},'%')
             </if>
             <if test="remark != null and remark !=''">
-                and  u.`remark` like concat('%',#{remark},'%')
+                and u.`remark` like concat(' %',#{remark},'%')
             </if>
             <if test="keyword != null and keyword !=''">
-                  and (
+                and (
                 u.account like concat('%',#{keyword},'%')
                 or u.`name` like concat('%',#{keyword},'%')
                 or r.name like concat('%',#{keyword},'%')
@@ -245,10 +291,10 @@
         </where>
         <choose>
             <when test="sidx != null and sidx.trim() != ''">
-                order by ${sidx} ${order}
+                order by u.${sidx} ${order}
             </when>
             <otherwise>
-                order by  u.created_at asc
+                order by u.created_at asc
             </otherwise>
         </choose>
         <if test="offset != null and limit != null">
@@ -257,20 +303,22 @@
     </select>
 
     <select id="queryTotal" resultType="int">
-        select count(*) from platform.user_forfront as u
+        select count(*) from
+        from platform.user_forfront as u
+        left join platform.role_forfront as r on r.roleId=u.roleId
         <where>
             (u.`status`=-1 or u.`status`=1 or u.`status`=-5)
             <if test="account != null and account !=''">
-                and  u.account like concat('%',#{account},'%')
+                and u.account like concat('%',#{account},'%')
             </if>
             <if test="jobNumber != null and jobNumber !=''">
-                and  u.jobNumber like concat('%',#{jobNumber},'%')
+                and u.jobNumber like concat('%',#{jobNumber},'%')
             </if>
             <if test="name != null and name !=''">
-                and  u.`name` like concat('%',#{name},'%')
+                and u.`name` like concat('%',#{name},'%')
             </if>
             <if test="remark != null and remark !=''">
-                and  u.`remark` like concat('%',#{remark},'%')
+                and u.`remark` like concat('%',#{remark},'%')
             </if>
             <if test="keyword != null and keyword !=''">
                 and (
@@ -383,14 +431,14 @@
             <if test="changeAreaMans != null">`changeAreaMans` = #{changeAreaMans},</if>
             <if test="rold != null">`rold` = #{rold},</if>
             `updated_at` = NOW(),
-            <if test="modifier != null" >
+            <if test="modifier != null">
                 modifier = #{modifier,jdbcType=BIGINT},
             </if>
-            now(),
-            <if test="disabled != null" >
+            modify_time = now(),
+            <if test="disabled != null">
                 disabled = #{disabled,jdbcType=BIGINT},
             </if>
-            <if test="version != null" >
+            <if test="version != null">
                 version = #{version,jdbcType=BIGINT},
             </if>
         </set>
@@ -435,7 +483,9 @@
             <if test="changeProvince != null and changeProvince != ''">`changeProvince` = #{changeProvince},</if>
             <if test="changeCity != null and changeCity != ''">`changeCity` = #{changeCity},</if>
             <if test="changeFirm != null and changeFirm != ''">`changeFirm` = #{changeFirm},</if>
-            <if test="changeStoreNumber != null and changeStoreNumber != ''">`changeStoreNumber` = #{changeStoreNumber},</if>
+            <if test="changeStoreNumber != null and changeStoreNumber != ''">`changeStoreNumber` =
+                #{changeStoreNumber},
+            </if>
             <if test="remark!= null">`remark` = #{remark},</if>
             <if test="changeAreaMans != null and changeAreaMans != ''">`changeAreaMans` = #{changeAreaMans},</if>
             `changeStatus` = 1,
@@ -445,37 +495,59 @@
     </update>
 
 
-
     <select id="queryChangeGrantList" resultMap="BaseResultMap">
-        select
-        u.id, u.account, u.`name`,u.email, u.roleId,u.jobNumber, u.storeNumber,
-        u.createTime,u.status,u.`type`,u.firm,u.largeArea,
-        u.province,u.city,u.changeRoleId,u. changeType, u.changeLargeArea,
-        u.changeProvince, u.changeCity, u.changeFirm,u. changeStatus,u.changeStoreNumber,u.remark,
-        u.changeTime,u.rold,u.areaMans,u.changeAreaMans
-        ,r.name as roleName,r.type as roleType
-        from platform.user_forfront as u join platform.role_forfront as r on r.roleId=u.roleId
+        select u.id
+        , u.account
+        , u.`name`
+        , u.email
+        , if(r.roleId is null, null, u.roleId) as roleId
+        , u.jobNumber
+        , u.storeNumber
+        , u.createTime
+        , u.status
+        , u.`type`
+        , u.firm
+        , u.largeArea
+        , u.province
+        , u.city
+        , u.changeRoleId
+        , u. changeType
+        , u.changeLargeArea
+        , u.changeProvince
+        , u.changeCity
+        , u.changeFirm
+        , u. changeStatus
+        , u.changeStoreNumber
+        , u.remark
+        , u.changeTime
+        , u.rold
+        , u.areaMans
+        , u.changeAreaMans
+        , if(r.roleId is null, null, r.name) as roleName
+        , if(r.roleId is null, null, r.type) as roleType
+        from platform.user_forfront as u
+        left join platform.role_forfront as r on r.roleId=u.roleId
         <where>
             (u.`status`=-1 or u.`status`=1 or u.`status`=-5)
             <choose>
                 <when test="changeStatus != null and changeStatus!= ''">
-                    and  u.changeStatus= #{changeStatus}
+                    and u.changeStatus= #{changeStatus}
                 </when>
                 <otherwise>
-                    and  u.changeStatus= 1
+                    and u.changeStatus= 1
                 </otherwise>
             </choose>
             <if test="account != null and account !=''">
-                and  u.account like concat('%',#{account},'%')
+                and u.account like concat('%',#{account},'%')
             </if>
             <if test="jobNumber != null and jobNumber !=''">
-                and  u.jobNumber like concat('%',#{jobNumber},'%')
+                and u.jobNumber like concat('%',#{jobNumber},'%')
             </if>
             <if test="name != null and name !=''">
-                and  u.`name` like concat('%',#{name},'%')
+                and u.`name` like concat('%',#{name},'%')
             </if>
             <if test="remark != null and remark !=''">
-                and  u.`remark` like concat('%',#{remark},'%')
+                and u.`remark` like concat('%',#{remark},'%')
             </if>
         </where>
         <choose>
@@ -492,28 +564,28 @@
     </select>
 
     <select id="queryChangeGrantTotal" resultType="int">
-        select count(*) from platform.user_forfront as u
+        select count(*)
         <where>
             (u.`status`=-1 or u.`status`=1 or u.`status`=-5)
             <choose>
                 <when test="changeStatus != null and changeStatus!= ''">
-                    and  u.changeStatus= #{changeStatus}
+                    and u.changeStatus= #{changeStatus}
                 </when>
                 <otherwise>
-                    and  u.changeStatus= 1
+                    and u.changeStatus= 1
                 </otherwise>
             </choose>
             <if test="account != null and account !=''">
-                and  u.account like concat('%',#{account},'%')
+                and u.account like concat('%',#{account},'%')
             </if>
             <if test="jobNumber != null and jobNumber !=''">
-                and  u.jobNumber like concat('%',#{jobNumber},'%')
+                and u.jobNumber like concat('%',#{jobNumber},'%')
             </if>
             <if test="name != null and name !=''">
-                and  u.`name` like concat('%',#{name},'%')
+                and u.`name` like concat('%',#{name},'%')
             </if>
             <if test="remark != null and remark !=''">
-                and  u.`remark` like concat('%',#{remark},'%')
+                and u.`remark` like concat('%',#{remark},'%')
             </if>
         </where>
     </select>
@@ -526,16 +598,39 @@
 
 
     <select id="queryObjectAll" resultMap="BaseResultMap">
-        select
-        u.id, u.account, u.`name`,u.email, u.roleId,u.jobNumber, u.storeNumber,u.pass,
-        u.createTime,u.status,u.`type`,u.firm,u.largeArea,
-        u.province,u.city,u.changeRoleId,u. changeType, u.changeLargeArea,
-        u.changeProvince, u.changeCity, u.changeFirm,u. changeStatus,u.changeStoreNumber,u.remark,
-        u.changeTime,u.rold,u.areaMans,u.changeAreaMans
-        ,r.name as roleName,r.type as roleType
-        from platform.user_forfront as u join platform.role_forfront as r on r.roleId=u.roleId where u.id = #{value}
+         select u.id
+        , u.account
+        , u.`name`
+        , u.email
+        , if(r.roleId is null, null, u.roleId) as roleId
+        , u.jobNumber
+        , u.pass
+        , u.storeNumber
+        , u.createTime
+        , u.status
+        , u.`type`
+        , u.firm
+        , u.largeArea
+        , u.province
+        , u.city
+        , u.changeRoleId
+        , u. changeType
+        , u.changeLargeArea
+        , u.changeProvince
+        , u.changeCity
+        , u.changeFirm
+        , u. changeStatus
+        , u.changeStoreNumber
+        , u.remark
+        , u.changeTime
+        , u.rold
+        , u.areaMans
+        , u.changeAreaMans
+        , if(r.roleId is null, null, r.name) as roleName
+        , if(r.roleId is null, null, r.type) as roleType
+        from platform.user_forfront as u
+        left join platform.role_forfront as r on r.roleId=u.roleId where u.id = #{value}
     </select>
-
 
 
     <select id="queryNewUserList" resultMap="BaseResultMap">
@@ -550,16 +645,16 @@
         <where>
             u.`status`= 0
             <if test="account != null and account !=''">
-                and  u.account like concat('%',#{account},'%')
+                and u.account like concat('%',#{account},'%')
             </if>
             <if test="jobNumber != null and jobNumber !=''">
-                and  u.jobNumber like concat('%',#{jobNumber},'%')
+                and u.jobNumber like concat('%',#{jobNumber},'%')
             </if>
             <if test="name != null and name !=''">
-                and  u.`name` like concat('%',#{name},'%')
+                and u.`name` like concat('%',#{name},'%')
             </if>
             <if test="remark != null and remark !=''">
-                and  u.`remark` like concat('%',#{remark},'%')
+                and u.`remark` like concat('%',#{remark},'%')
             </if>
         </where>
         <choose>
@@ -580,16 +675,16 @@
         <where>
             u.`status`= 0
             <if test="account != null and account !=''">
-                and  u.account like concat('%',#{account},'%')
+                and u.account like concat('%',#{account},'%')
             </if>
             <if test="jobNumber != null and jobNumber !=''">
-                and  u.jobNumber like concat('%',#{jobNumber},'%')
+                and u.jobNumber like concat('%',#{jobNumber},'%')
             </if>
             <if test="name != null and name !=''">
-                and  u.`name` like concat('%',#{name},'%')
+                and u.`name` like concat('%',#{name},'%')
             </if>
             <if test="remark != null and remark !=''">
-                and  u.`remark` like concat('%',#{remark},'%')
+                and u.`remark` like concat('%',#{remark},'%')
             </if>
         </where>
     </select>

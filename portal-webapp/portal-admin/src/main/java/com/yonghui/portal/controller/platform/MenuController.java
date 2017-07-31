@@ -60,9 +60,9 @@ public class MenuController extends AbstractController {
 
         //添加顶级菜单
         Menu root = new Menu();
-        root.setId(0l);
+        root.setId(0L);
         root.setName("一级菜单");
-        root.setPid(-1);
+        root.setPid(-1L);
         root.setOpen(true);
         menuList.add(root);
 

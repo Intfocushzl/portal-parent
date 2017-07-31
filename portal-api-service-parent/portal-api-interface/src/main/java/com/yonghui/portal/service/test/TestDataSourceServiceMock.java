@@ -45,4 +45,10 @@ public class TestDataSourceServiceMock implements TestDataSourceService {
         log.info("DataSourceServiceMock => dataA");
         return null;
     }
+
+    @Override
+    public String dataApp() {
+        log.info("DataSourceServiceMock => app 85");
+        return null;
+    }
 }

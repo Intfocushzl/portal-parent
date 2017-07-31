@@ -12,6 +12,7 @@ public class DataSourceConstants {
     // mysql
     public final static String MYSQL_PORTAL_MASTER = "mysqlPortalMaster";
     public static final String MYSQL_PORTAL_SLAVE = "mysqlPortalSlave";
+    public static final String MYSQL_PORTAL_APP = "mysqlPortalApp";
 
     // sqlserver
     public static final String SQLSERVER_PORTAL_MASTER = "sqlserverPortalMaster";

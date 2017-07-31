@@ -2,27 +2,24 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://www.mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.yonghui.portal.mapper.global.MenuMapper">
     <resultMap id="BaseResultMap" type="com.yonghui.portal.model.global.Menu">
-        <id column="id" jdbcType="INTEGER" property="id" />
-        <result column="name" jdbcType="VARCHAR" property="name" />
-        <result column="url" jdbcType="VARCHAR" property="url" />
-        <result column="pid" jdbcType="INTEGER" property="pid" />
-        <result column="position" jdbcType="INTEGER" property="position" />
-        <result column="icon" jdbcType="VARCHAR" property="icon" />
-        <result column="createTime" jdbcType="TIMESTAMP" property="createtime" />
-        <result column="status" jdbcType="INTEGER" property="status" />
-        <result column="created_at" jdbcType="TIMESTAMP" property="createdAt" />
-        <result column="updated_at" jdbcType="TIMESTAMP" property="updatedAt" />
-        <result column="sort" jdbcType="INTEGER" property="sort" />
-        <result column="remark" jdbcType="VARCHAR" property="remark" />
-        <result column="creater" jdbcType="BIGINT" property="creater" />
-        <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
-        <result column="modifier" jdbcType="BIGINT" property="modifier" />
-        <result column="modify_time" jdbcType="TIMESTAMP" property="modifyTime" />
-        <result column="disabled" jdbcType="BIGINT" property="disabled" />
-        <result column="version" jdbcType="BIGINT" property="version" />
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="name" jdbcType="VARCHAR" property="name"/>
+        <result column="url" jdbcType="VARCHAR" property="url"/>
+        <result column="pid" jdbcType="INTEGER" property="pid"/>
+        <result column="icon" jdbcType="VARCHAR" property="icon"/>
+        <result column="status" jdbcType="INTEGER" property="status"/>
+        <result column="created_at" jdbcType="TIMESTAMP" property="createdAt"/>
+        <result column="updated_at" jdbcType="TIMESTAMP" property="updatedAt"/>
+        <result column="sort" jdbcType="INTEGER" property="sort"/>
+        <result column="remark" jdbcType="VARCHAR" property="remark"/>
+        <result column="creater" jdbcType="BIGINT" property="creater"/>
+        <result column="modifier" jdbcType="BIGINT" property="modifier"/>
+        <result column="modify_time" jdbcType="TIMESTAMP" property="modifyTime"/>
+        <result column="disabled" jdbcType="BIGINT" property="disabled"/>
+        <result column="version" jdbcType="BIGINT" property="version"/>
     </resultMap>
     <sql id="Base_Column_List">
-        id, name, url, pid, position, icon, createTime, status, created_at, updated_at, sort,
+        id, name, url, pid, icon, status, created_at, updated_at, sort,
         remark, creater, create_time, modifier, modify_time, disabled, version
     </sql>
     <!--区域公共部分 begin-->
@@ -145,7 +142,7 @@
         select DISTINCT AreaName as district,AreaID from platform.`d_bravo_shop`
     </select>
 
-    <select id="getNewAreaMansListByUser"  resultType="Map">
+    <select id="getNewAreaMansListByUser" resultType="Map">
         select DISTINCT areaMans from platform.`d_bravo_shop`
         <where>
             Congou=1
@@ -159,7 +156,7 @@
         select DISTINCT areaMans from platform.`d_bravo_shop` WHERE Congou=1;
     </select>
 
-    <select id="getNewAreaMansListByLargeArea" parameterType="Map"  resultType="Map">
+    <select id="getNewAreaMansListByLargeArea" parameterType="Map" resultType="Map">
         select DISTINCT areaMans from platform.`d_bravo_shop`
         <where>
             Congou=1
@@ -170,12 +167,12 @@
     </select>
 
 
-    <select id="getFifthRotation"  resultType="Map">
+    <select id="getFifthRotation" resultType="Map">
         select groupId as id,gName as text from platform.d_grouplist_sm group by groupId
     </select>
 
     <select id="getBravoShopList" parameterType="Map" resultType="Map">
-        select  sap_shopId as id, SName as text
+        select sap_shopId as id, SName as text
         from platform.d_bravo_shop
         <where>
             Congou=1
@@ -192,7 +189,7 @@
                 and city = #{city}
             </if>
         </where>
-       order by AreaName,AreaMans;
+        order by AreaName,AreaMans;
     </select>
     <!--以上确认有用到-->
     <!--区域公共部分 end-->
@@ -210,12 +207,12 @@
         order by sort asc
     </select>
 
-    <select id="listRoleMenuByRoleId"  resultMap="BaseResultMap">
+    <select id="listRoleMenuByRoleId" resultMap="BaseResultMap">
         call platform.query_role_menu(#{value});
         <!--select *,1 as checked from platform.menu_forfront-->
         <!--<if test="null != value ">-->
-            <!--where id in-->
-            <!--(select menuId from platform.r_role_menu_forfront where roleId = #{value})-->
+        <!--where id in-->
+        <!--(select menuId from platform.r_role_menu_forfront where roleId = #{value})-->
         <!--</if>-->
         <!--order by sort asc-->
     </select>
@@ -225,7 +222,7 @@
     </select>
 
     <select id="getUserRoleId" parameterType="Integer" resultType="com.yonghui.portal.model.global.RoleMenu">
-        select * from  platform.r_role_menu_forfront where roleid=#{roleid}
+        select * from platform.r_role_menu_forfront where roleid=#{roleid}
     </select>
 
     <!--用户角色菜单 end-->
@@ -287,8 +284,8 @@
 
     <insert id="save" parameterType="com.yonghui.portal.model.global.Menu" useGeneratedKeys="true" keyProperty="id">
         insert into platform.menu_forfront (id, name, url,
-        pid, position, icon,
-        createTime, status, created_at,
+        pid, icon,
+        status, created_at,
         updated_at, sort, remark,
         creater,
         create_time,
@@ -297,8 +294,7 @@
         disabled, version
         )
         values (#{id,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{url,jdbcType=VARCHAR},
-        #{pid,jdbcType=INTEGER}, #{position,jdbcType=INTEGER}, #{icon,jdbcType=VARCHAR},
-        #{createtime,jdbcType=TIMESTAMP},
+        #{pid,jdbcType=INTEGER}, #{icon,jdbcType=VARCHAR},
         <choose>
             <when test="status != null and status.trim() != ''">
                 #{status},
@@ -329,14 +325,8 @@
             <if test="pid != null">
                 pid = #{pid,jdbcType=INTEGER},
             </if>
-            <if test="position != null">
-                position = #{position,jdbcType=INTEGER},
-            </if>
             <if test="icon != null">
                 icon = #{icon,jdbcType=VARCHAR},
-            </if>
-            <if test="createtime != null">
-                createTime = #{createtime,jdbcType=TIMESTAMP},
             </if>
             <if test="status != null">
                 status = #{status,jdbcType=INTEGER},
@@ -354,9 +344,9 @@
                 remark = #{remark,jdbcType=VARCHAR},
             </if>
             <if test="modifier != null">
-                modifier = #{modifier,jdbcType=BIGINT},
+                modifier = #{modifier,jdbcType=VARCHAR},
             </if>
-            now(),
+            modify_time = now(),
             <if test="disabled != null">
                 disabled = #{disabled,jdbcType=BIGINT},
             </if>
@@ -392,7 +382,6 @@
         order by m.sort asc
     </select>
     <!--用户角色菜单 增删改查 end-->
-
 
 
 </mapper>
