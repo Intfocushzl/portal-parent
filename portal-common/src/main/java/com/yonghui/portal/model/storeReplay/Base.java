@@ -7,33 +7,42 @@ import java.io.Serializable;
  *	 huangzenglei@intfocus.com
  */
 public class Base implements Serializable{
-	
+
 	//主键
-	private Integer id; 
-	
+	private Integer id;
+
 	//最后一次更新时间
-	private String updateAt;
-	
+	private String updatedAt;
+
 	//记录创建时间
-	private String createAt;
+	private String createdAt;
 
 	//备注
 	private String remark;
 
 	public Base() {}
 
-	public Base(Integer id, String updateAt, String createAt, String remark) {
+	public Base(Integer id, String updatedAt, String createdAt, String remark) {
 		this.id = id;
-		this.updateAt = updateAt;
-		this.createAt = createAt;
+		this.updatedAt = updatedAt;
+		this.createdAt = createdAt;
 		this.remark = remark;
 	}
-	public String getCreateAt() {
-		return createAt;
+
+	public String getCreatedAt() {
+		return createdAt;
 	}
 
-	public void setCreateAt(String createAt) {
-		this.createAt = createAt == null ? null : createAt.trim();
+	public void setCreatedAt(String createdAt) {
+		this.createdAt = createdAt;
+	}
+
+	public String getUpdatedAt() {
+		return updatedAt;
+	}
+
+	public void setUpdatedAt(String updatedAt) {
+		this.updatedAt = updatedAt;
 	}
 
 	public Integer getId() {
@@ -42,14 +51,6 @@ public class Base implements Serializable{
 
 	public void setId(Integer id) {
 		this.id = id;
-	}
-
-	public String getUpdateAt() {
-		return updateAt;
-	}
-
-	public void setUpdateAt(String updateAt) {
-		this.updateAt = updateAt == null ? null : updateAt.trim();
 	}
 
 	public String getRemark() {

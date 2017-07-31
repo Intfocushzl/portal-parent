@@ -131,8 +131,8 @@ public class ActionPlanController {
 			}
 			System.out.println(sql);
 			logger.info("请求URL： " + req.getRequestURL()+"?" + req.getQueryString() + "  用户权限：" + roleId);
-			//通过 role_id 获取行动方案
 
+			//通过 role_id 获取行动方案
 			if (44 == roleId) { //小店长 role_id = 44
 				sql = createSql.createSelectActionPlan(null) + " where user_id = " + userId;
 				if (null != createdAt) {
@@ -150,7 +150,9 @@ public class ActionPlanController {
 					List<Evaluate> evaluates = storeRePlayService.queryEvaluate(sql, getPortalDataSource());
 					action.setEvaluates(evaluates);
 				}
-				listActionPlans.add(actionPlans);
+				if (actionPlans.size() > 0) {
+					listActionPlans.add(actionPlans);
+				}
 			} else if ( 7 == roleId) {   //战略团队: role_id = 7  只看 区长：role_id = 111
 				sql = createSql.createSelectActionPlan(null) + "  where user_role_id = 111";
 
@@ -160,9 +162,11 @@ public class ActionPlanController {
 				for (ActionPlan action : actionPlans) {
 					action.setReplyer("区总回复");
 				}
-				listActionPlans.add(actionPlans);;
-			} else if (43 == roleId || 111 == roleId) {
-				//区总团队：品类教练 role_id = 43, 店长 role_id = 43,  区长 role_id = 111
+				if (actionPlans.size() > 0) {
+					listActionPlans.add(actionPlans);
+				}
+//				listActionPlans.add(actionPlans);;
+			} else if (43 == roleId || 111 == roleId) { //区总团队：品类教练 role_id = 43, 店长 role_id = 43,  区长 role_id = 111
 
 				//小店回复
 				sql = createSql.createSelectActionPlan(null) + " where user_role_id = 44";
@@ -181,8 +185,10 @@ public class ActionPlanController {
 					List<Evaluate> evaluates = storeRePlayService.queryEvaluate(sql, getPortalDataSource());
 					action.setEvaluates(evaluates);
 				}
-				listActionPlans.add(actionPlans);
-//				map.put("小店回复",actionPlans);
+				if (actionPlans.size() > 0) {
+					listActionPlans.add(actionPlans);
+				}
+//				listActionPlans.add(actionPlans);
 
 				//品类教练回复
 				sql = createSql.createSelectActionPlan(null) + " where user_role_id in (43, 111)";
@@ -203,8 +209,9 @@ public class ActionPlanController {
 						action.setEvaluates(evaluates);
 					}
 				}
-				listActionPlans.add(actionPlans);;
-//				map.put("品类教练回复",actionPlans);
+				if (actionPlans.size() > 0) {
+					listActionPlans.add(actionPlans);
+				}
 
 				//个人回复
 				sql = createSql.createSelectActionPlan(null) + " where user_id = " + userId;
@@ -220,10 +227,9 @@ public class ActionPlanController {
 						action.setEvaluates(evaluates);
 					}
 				}
-				listActionPlans.add(actionPlans);
-//				map.put("个人回复",actionPlans);
-
-//				listActionPlans.add(map);
+				if (actionPlans.size() > 0) {
+					listActionPlans.add(actionPlans);
+				}
 			}
 		}
 		return R.success(listActionPlans);

@@ -314,9 +314,9 @@ public class StoreReplayServiceImpl implements StoreRePlayService{
                         } else if (null != rs.getObject(i) && "remark".equalsIgnoreCase( md.getColumnName(i).replace("_",""))) {
                             actionPlan.setRemark((String)rs.getObject(i));
                         } else if (null != rs.getObject(i) && "created_at".equals(md.getColumnName(i))) {
-                            actionPlan.setCreateAt(format.format(rs.getObject(i)));
+                            actionPlan.setCreatedAt(format.format(rs.getObject(i)));
                         } else if (null != rs.getObject(i) && "updated_at".equals(md.getColumnName(i))) {
-                            actionPlan.setUpdateAt(format.format(rs.getObject(i)));
+                            actionPlan.setUpdatedAt(format.format(rs.getObject(i)));
                         } else if (null != rs.getObject(i) && "id".equals(md.getColumnName(i))) {
                             actionPlan.setId((Integer)rs.getObject(i));
                         }
@@ -374,9 +374,9 @@ public class StoreReplayServiceImpl implements StoreRePlayService{
                     } else if (null != rs.getObject(i) && "remark".equalsIgnoreCase( md.getColumnName(i).replace("_",""))) {
                         evaluate.setRemark((String)rs.getObject(i));
                     } else if (null != rs.getObject(i) && "created_at".equals(md.getColumnName(i))) {
-                        evaluate.setCreateAt(format.format(rs.getObject(i)));
+                        evaluate.setCreatedAt(format.format(rs.getObject(i)));
                     } else if (null != rs.getObject(i) && "updated_at".equals(md.getColumnName(i))) {
-                        evaluate.setUpdateAt(format.format(rs.getObject(i)));
+                        evaluate.setUpdatedAt(format.format(rs.getObject(i)));
                     }
                 }
                 list.add(evaluate);
