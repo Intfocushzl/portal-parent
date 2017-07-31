@@ -224,20 +224,102 @@ public class HrProfitServiceImpl implements HrProfitService {
         return hrProfitMapper.queryDimRule(groupId, empNum);
     }
 
+    //推送分红数据到sap（按区域或者门店）
     public List<Map<String, Object>> queryEmpProfit(String shopId, String areaMans) {
+        //按照区域或者门店查询出分红数据
+        if (shopId != null) {
+            List<Map<String, Object>> list = hrProfitMapper.queryEmpProfit(shopId);
+            return push(list);
+        }
+        //如果是推区域 分别查询出门店了推
+        if (areaMans != null) {
+            List<Map<String, Object>> profitList = null;
+            List<Map<String, Object>> resultList = null;
+            List<Map<String, Object>> shopIdList = hrProfitMapper.queryShopId(areaMans);
+            for (Map<String, Object> item : shopIdList) {
+                profitList = new ArrayList<>();
+                profitList = hrProfitMapper.queryEmpProfit(item.get("ShopID").toString());
+                resultList = push(profitList);
+            }
+            return resultList;
+        }
+        return null;
+    }
+
+    //撤销分红数据到sap
+    public JSONObject cancelProfit(String shopId, String empNo) {
+        String result = null;
+        JSONObject jsonObject = null;
+        JSONObject resNode = new JSONObject();
+        //查询某个人的分红信息
+        List<Map<String, Object>> list = hrProfitMapper.queryProfit(empNo);
+        //封装参数，推送到sap
+        JSONObject node = new JSONObject();
+        for (Map<String, Object> item : list) {
+            node.put("BETRG1", item.get("endProfit"));
+            resNode.put("push_status", item.get("push_status"));
+            resNode.put("push_message", item.get("push_message"));
+        }
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+        String time = sdf.format(new Date());
+        JSONArray jsonAry1 = new JSONArray();
+        node.put("PERNR", empNo);
+        node.put("BEGDA", time);
+        node.put("LGART", "3031");
+        node.put("BETRG2", "");
+        node.put("ZUORD", "ni");
+        node.put("FLAG", "D");
+        jsonAry1.add(node);
+        JSONObject node1 = new JSONObject();
+        node1.put("ITEM", jsonAry1);
+        System.out.println("调用sap参数=======" + node1.toJSONString());
+        result = util.getPostJsonResult(URL, node1.toJSONString());
+        System.out.print("调用sap返回结果=========" + result);
+        //根据返回信息，更新数据库状态
+        if (!StringUtils.isEmpty(result)) {
+            jsonObject = JSONObject.parseObject(result);
+            JSONArray jsonArray = (JSONArray) jsonObject.get("ITEM");
+            for (int i = 0; i < jsonArray.size(); i++) {
+                JSONObject job = jsonArray.getJSONObject(i);
+                if (job.get("MSGTYP") != null && job.get("MESSAGE") != null) {
+                    if (job.get("MSGTYP").equals("E")) {
+                        hrProfitMapper.updateEmpProfit(job.getString("PERNR"), "4", job.getString("MESSAGE"));
+                        resNode.put("push_status", "4");
+                        resNode.put("push_message", job.get("MESSAGE"));
+                    } else if (job.get("MSGTYP").equals("S")) {
+                        hrProfitMapper.updateEmpProfit(job.getString("PERNR"), "3", job.getString("MESSAGE"));
+                        resNode.put("push_status", "3");
+                        resNode.put("push_message", job.get("MESSAGE"));
+                    }
+                }
+            }
+        }
+        return resNode;
+    }
+
+    //查询某个人用户的分红信息
+    public List<Map<String, Object>> queryProfit(String empNo) {
+        return hrProfitMapper.queryProfit(empNo);
+    }
+
+    //查询推送失败的分红信息
+    public List<Map<String, Object>> queryFailPush() {
+        return hrProfitMapper.queryFailPush();
+    }
+
+    //重新推送，已经失败的分红数据到sap
+    public List<Map<String, Object>> pushFailedProfit() {
+        List<Map<String, Object>> list = hrProfitMapper.queryFailPush();
+        return push(list);
+    }
+
+    //推送分红到sap，公用方法
+    public List<Map<String, Object>> push(List<Map<String, Object>> list) {
         List<Map<String, Object>> resList = new ArrayList<>();
         Map<String, Object> resMap = null;
-        List<Map<String, Object>> list = new ArrayList<>();
         String result = null;
         JSONObject jsonObject = null;
         boolean flag = true;
-        //按照区域或者门店查询出分红数据
-        if (shopId != null) {
-            list = hrProfitMapper.queryEmpProfit(shopId, areaMans);
-        }
-        if (areaMans != null) {
-            list = hrProfitMapper.queryEmpProfit1(shopId, areaMans);
-        }
         //推送到sap
         JSONObject node1 = new JSONObject();
         JSONArray jsonAry1 = new JSONArray();
@@ -269,7 +351,11 @@ public class HrProfitServiceImpl implements HrProfitService {
                         flag = false;
                         hrProfitMapper.updateEmpProfit(job.getString("PERNR"), "2", job.getString("MESSAGE"));
                         resMap = new HashMap<>();
-                        resMap.put("empNo",job.getString("PERNR"));
+                        resMap.put("empNo", job.getString("PERNR"));
+                        List<Map<String, Object>> empList = hrProfitMapper.queryProfit(job.getString("PERNR"));
+                        for (Map<String, Object> item : empList) {
+                            resMap.put("name", item.get("empName"));
+                        }
                         resMap.put("status", "2");
                         resMap.put("msg", job.get("MESSAGE"));
                         resList.add(resMap);
@@ -280,55 +366,5 @@ public class HrProfitServiceImpl implements HrProfitService {
             }
         }
         return resList;
-    }
-
-    public Map<String, Object> cancelProfit(String shopId, String empNo) {
-        String result = null;
-        JSONObject jsonObject = null;
-        Map<String, Object> map = new HashMap<>();
-        //查询某个人的分红信息
-        List<Map<String, Object>> list = hrProfitMapper.queryProfit(shopId, empNo);
-        //封装参数，推送到sap
-        JSONObject node = new JSONObject();
-        for (Map<String, Object> item : list) {
-            node.put("BETRG1", item.get("endProfit"));
-            map.put("status", item.get("push_status"));
-            map.put("msg", item.get("push_message"));
-        }
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
-        String time = sdf.format(new Date());
-        JSONArray jsonAry1 = new JSONArray();
-        node.put("PERNR", empNo);
-        node.put("BEGDA", time);
-        node.put("LGART", "3031");
-        node.put("BETRG2", "");
-        node.put("ZUORD", "ni");
-        node.put("FLAG", "D");
-        jsonAry1.add(node);
-        JSONObject node1 = new JSONObject();
-        node1.put("ITEM", jsonAry1);
-        System.out.println("调用sap参数=======" + node1.toJSONString());
-        result = util.getPostJsonResult(URL, node1.toJSONString());
-        System.out.print("调用sap返回结果=========" + result);
-        //根据返回信息，更新数据库状态
-        if (!StringUtils.isEmpty(result)) {
-            jsonObject = JSONObject.parseObject(result);
-            JSONArray jsonArray = (JSONArray) jsonObject.get("ITEM");
-            for (int i = 0; i < jsonArray.size(); i++) {
-                JSONObject job = jsonArray.getJSONObject(i);
-                if (job.get("MSGTYP") != null && job.get("MESSAGE") != null) {
-                    if (job.get("MSGTYP").equals("E")) {
-                        hrProfitMapper.updateEmpProfit(job.getString("PERNR"), "4", job.getString("MESSAGE"));
-                        map.put("status", "4");
-                        map.put("msg", job.get("MESSAGE"));
-                    } else if (job.get("MSGTYP").equals("S")) {
-                        hrProfitMapper.updateEmpProfit(job.getString("PERNR"), "3", job.getString("MESSAGE"));
-                        map.put("status", "3");
-                        map.put("msg", job.get("MESSAGE"));
-                    }
-                }
-            }
-        }
-        return map;
     }
 }

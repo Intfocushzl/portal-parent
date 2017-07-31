@@ -146,16 +146,12 @@
         WHERE a.shopId IN (
             #{shopId}
         )
-	 AND a.lkpMonth = date_format(DATE(DATE_ADD(NOW(), INTERVAL - 1 MONTH)), '%Y%m');
+	 AND a.lkpMonth = date_format(DATE(DATE_ADD(NOW(), INTERVAL - 1 MONTH)), '%Y%m')
     </select>
 
-    <select id="queryEmpProfit1" resultType="Map" parameterType="Map">
-        SELECT * FROM application.hrbonus_emp_detail_str a
-        WHERE a.shopId IN (
+    <select id="queryShopId" resultType="Map" parameterType="Map">
             SELECT DISTINCT b.ShopID FROM dim.dim_bravo_shop b
             WHERE b.AreaMans LIKE concat('%',#{areaMans},'%')
-        )
-        AND a.lkpMonth = date_format(DATE(DATE_ADD(NOW(), INTERVAL - 1 MONTH)), '%Y%m');
     </select>
 
     <update id="updateEmpProfit" parameterType="Map">
@@ -165,6 +161,13 @@
     </update>
 
     <select id="queryProfit" parameterType="Map" resultType="Map">
-   SELECT a.endProfit , a.push_status , a.push_message FROM application.hrbonus_emp_detail_str a WHERE a.shopId = #{shopId} AND a.empNo = #{empNo}
+       SELECT a.empNo , a.endProfit , a.push_status , a.push_message , a.empName
+       FROM application.hrbonus_emp_detail_str a WHERE  a.empNo = #{empNo}
+       AND  a.lkpMonth = date_format(DATE(DATE_ADD(NOW(), INTERVAL - 1 MONTH)), '%Y%m')
+    </select>
+
+    <select id="queryFailPush" parameterType="Map" resultType="Map">
+      SELECT * FROM application.hrbonus_emp_detail_str a where
+      a.push_status in(2,3,4) AND a.lkpMonth = date_format(DATE(DATE_ADD(NOW(), INTERVAL - 1 MONTH)), '%Y%m')
     </select>
 </mapper>

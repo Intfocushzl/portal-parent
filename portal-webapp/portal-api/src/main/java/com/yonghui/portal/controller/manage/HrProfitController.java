@@ -275,7 +275,7 @@ public class HrProfitController {
     }
 
     /**
-     * 推送分红数据到sap
+     * 推送分红数据到sap（按区域或者门店）
      */
     @RequestMapping(value = "push", method = RequestMethod.GET)
     public R push(String shopId, String areaMans) {
@@ -290,18 +290,63 @@ public class HrProfitController {
     }
 
     /**
+     * 重新推送，已经失败的分红数据到sap
+     */
+    @RequestMapping(value = "pushFailedProfit", method = RequestMethod.GET)
+    public R pushFailedProfit() {
+        List<Map<String, Object>> list = null;
+        try {
+            list = hrProfitService.pushFailedProfit();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return R.error("推送分红数据到sap,程序出现异常");
+        }
+        return R.success(list);
+    }
+
+    /**
      * 撤销分红数据到sap
      */
     @RequestMapping(value = "cancelProfit", method = RequestMethod.GET)
     public R cancelProfit(String shopId, String empNo) {
-        Map<String, Object> map = null;
+        JSONObject jSONObject = null;
         try {
-            map = hrProfitService.cancelProfit(shopId, empNo);
+            jSONObject = hrProfitService.cancelProfit(shopId, empNo);
         } catch (Exception e) {
             e.printStackTrace();
             return R.error("撤销分红数据到sap,程序出现异常");
         }
-        return R.success(map);
+        return R.success(JSONObject.parse(jSONObject.toJSONString()));
+    }
+
+    /**
+     * 查询个人的分红信息
+     */
+    @RequestMapping(value = "queryProfit", method = RequestMethod.GET)
+    public R cancelProfit(String empNo) {
+        List<Map<String, Object>> list = null;
+        try {
+            list = hrProfitService.queryProfit(empNo);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return R.error("查询个人的分红信息,程序出现异常");
+        }
+        return R.success(list);
+    }
+
+    /**
+     * 查询所有失败的分红信息
+     */
+    @RequestMapping(value = "queryFailPush", method = RequestMethod.GET)
+    public R queryFailPush() {
+        List<Map<String, Object>> list = null;
+        try {
+            list = hrProfitService.queryFailPush();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return R.error("查询所有失败的分红信息,程序出现异常");
+        }
+        return R.success(list);
     }
 
 
