@@ -215,4 +215,9 @@
     <bean id="HrProfitService" class="com.yonghui.portal.service.impl.manage.HrProfitServiceImpl"/>
     <dubbo:service interface="com.yonghui.portal.service.manage.HrProfitService" ref="HrProfitService"
                    timeout="300000"/>
+
+    <!-- 门店日复盘  -->
+    <bean id="storeRePlayService" class="com.yonghui.portal.service.impl.storeReplay.StoreReplayServiceImpl"/>
+    <dubbo:service interface="com.yonghui.portal.service.storeReplay.StoreRePlayService" ref="storeRePlayService"
+                   timeout="300000"/>
 </beans>
