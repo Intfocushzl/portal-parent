@@ -85,7 +85,7 @@ public class ActionPlanController {
 	 * 提交评价
 	 */
 	@IgnoreAuth
-	@RequestMapping(value = "addEvaluation", method = RequestMethod.GET)
+	@RequestMapping(value = "addEvaluation", method = RequestMethod.POST)
 	@ResponseBody
 	public R addActionPlan(HttpServletRequest req, HttpServletResponse response, Evaluate evaluate) {
 		String sql = null;
@@ -129,7 +129,8 @@ public class ActionPlanController {
 			for (Map<String, Object> mapColumn : list) {
 				roleId = mapColumn.get("role_id") == null ? 0 : (Integer) mapColumn.get("role_id");
 			}
-
+			System.out.println(sql);
+			logger.info("请求URL： " + req.getRequestURL()+"?" + req.getQueryString() + "  用户权限：" + roleId);
 			//通过 role_id 获取行动方案
 
 			if (44 == roleId) { //小店长 role_id = 44
@@ -137,6 +138,9 @@ public class ActionPlanController {
 				if (null != createdAt) {
 					sql += " and DATE_FORMAT(created_at, '%Y-%m-%d') = '" + createdAt.replace("/","-") + "'";
 				}
+
+				System.out.println(sql);
+
 				actionPlans = storeRePlayService.queryActionPlan(sql, getPortalDataSource());
 				//通过行动方案 ID 获取评价列表
 				for (ActionPlan action : actionPlans) {
@@ -144,11 +148,14 @@ public class ActionPlanController {
 					String  actionId = Integer.toString(action.getId());
 					sql = createSql.createSelectEvaluateInfo(actionId);
 					List<Evaluate> evaluates = storeRePlayService.queryEvaluate(sql, getPortalDataSource());
-					action.setEvalutes(evaluates);
+					action.setEvaluates(evaluates);
 				}
 				listActionPlans.add(actionPlans);
 			} else if ( 7 == roleId) {   //战略团队: role_id = 7  只看 区长：role_id = 111
 				sql = createSql.createSelectActionPlan(null) + "  where user_role_id = 111";
+
+				System.out.println(sql);
+
 				actionPlans = storeRePlayService.queryActionPlan(sql, getPortalDataSource());
 				for (ActionPlan action : actionPlans) {
 					action.setReplyer("区总回复");
@@ -162,6 +169,9 @@ public class ActionPlanController {
 				if (null != createdAt) {
 					sql += " and DATE_FORMAT(created_at, '%Y-%m-%d') = '" + createdAt.replace("/","-") + "'";
 				}
+
+				System.out.println(sql);
+
 				actionPlans = storeRePlayService.queryActionPlan(sql, getPortalDataSource());
 				//通过行动方案 ID 获取评价列表
 				for (ActionPlan action : actionPlans) {
@@ -169,7 +179,7 @@ public class ActionPlanController {
 					String  actionId = Integer.toString(action.getId());
 					sql = createSql.createSelectEvaluateInfo(actionId);
 					List<Evaluate> evaluates = storeRePlayService.queryEvaluate(sql, getPortalDataSource());
-					action.setEvalutes(evaluates);
+					action.setEvaluates(evaluates);
 				}
 				listActionPlans.add(actionPlans);
 //				map.put("小店回复",actionPlans);
@@ -179,6 +189,9 @@ public class ActionPlanController {
 				if (null != createdAt) {
 					sql += " and DATE_FORMAT(created_at, '%Y-%m-%d') = '" + createdAt.replace("/","-") + "'";
 				}
+
+				System.out.println(sql);
+
 				actionPlans = storeRePlayService.queryActionPlan(sql, getPortalDataSource());
 				//通过行动方案 ID 获取评价列表
 				for (ActionPlan action : actionPlans) {
@@ -187,7 +200,7 @@ public class ActionPlanController {
 					if (!"111".equals(action.getUserRoleId())) {  //区长的行动方案没有评价
 						sql = createSql.createSelectEvaluateInfo(actionId);
 						List<Evaluate> evaluates = storeRePlayService.queryEvaluate(sql, getPortalDataSource());
-						action.setEvalutes(evaluates);
+						action.setEvaluates(evaluates);
 					}
 				}
 				listActionPlans.add(actionPlans);;
@@ -195,6 +208,7 @@ public class ActionPlanController {
 
 				//个人回复
 				sql = createSql.createSelectActionPlan(null) + " where user_id = " + userId;
+				System.out.println(sql);
 				actionPlans = storeRePlayService.queryActionPlan(sql, getPortalDataSource());
 				//通过行动方案 ID 获取评价列表
 				for (ActionPlan action : actionPlans) {
@@ -203,7 +217,7 @@ public class ActionPlanController {
 					if (!"111".equals(action.getUserRoleId())) {  //区长的行动方案没有评价
 						sql = createSql.createSelectEvaluateInfo(actionId);
 						List<Evaluate> evaluates = storeRePlayService.queryEvaluate(sql, getPortalDataSource());
-						action.setEvalutes(evaluates);
+						action.setEvaluates(evaluates);
 					}
 				}
 				listActionPlans.add(actionPlans);
@@ -310,13 +324,14 @@ public class ActionPlanController {
 			//获取用户权限
 			String roleId = null;
 			String sql = null;
-			sql = new CreateSql().createSelectUserInfoById(userId);
 			try{
+				sql = new CreateSql().createSelectUserInfoById(userId);
 				List<Map<String, Object>> list = storeRePlayService.queryUserInfo(sql, getPortalDataSource());
 				for (Map<String, Object> map : list) {
 					roleId = map.get("role_id") == null ? null : Integer.toString((Integer) map.get("role_id"));
 				}
-				if (null == areaName || "".equals(areaName) && Integer.parseInt(dimensionCode) < 8) {
+				logger.info("请求URL： " + req.getRequestURL()+"?" + req.getQueryString() + "  用户权限：" + roleId);
+				if (null == areaName || "".equals(areaName) && Integer.parseInt(dimensionCode) < 8 && !"7".equals(roleId)) {
 					//获取 维度为 1 - 7  表示战略除外的角色登录，这时只能看到自己的大区，前台未知角色大区，故后台给出
 					sql = new CreateSql().createSelectAreaStireShopInfo(userId);
 					list = storeRePlayService.queryAreaStoreShop(sql, getPortalDataSource());
@@ -324,7 +339,9 @@ public class ActionPlanController {
 						areaName = map.get("areaMans") + "";
 					}
 				}
-				returnMap = getReturnMap(dimensionCode, areaName, shopCode, groupCode, skuCode);
+				if (null != areaName) {
+					returnMap = getReturnMap(dimensionCode, areaName, shopCode, groupCode, skuCode);
+				}
 			} catch (Exception e){
 				logger.error("实时数据获取失败！",e);
 				return R.error("实时数据获取失败！");
@@ -342,7 +359,10 @@ public class ActionPlanController {
 		String params = null;
 		String encodeParams = null ;
 		String openApiCode = "OPENAPI_000008";
-		String url ="http://yhapi.yonghui.cn/yhportal/openApi/portal/report?";//请求接口地址
+		//请求接口地址
+//		String url ="http://yhapi.yonghui.cn/yhportal/openApi/portal/report?"; 	//外网
+		String url ="http://10.67.241.218/yhportal/openApi/portal/report?"; //内网
+
 		String str = null;
 		try {
 			switch (dimensionCode) {
@@ -420,20 +440,38 @@ public class ActionPlanController {
 			}
 			str = HttpUtil.getData(url ,encodeParams,params );
 			str = str.replaceAll("AmountTBRate","sales_year_on_year_percentage")
-					.replaceAll("AreaMans","dimension")
 					.replaceAll("AmountTB","sales_year_on_year")
 					.replaceAll("SortID","ranking")
 					.replaceAll("Amount","sales_amount")
 					.replaceAll("ShopID","shopCode")
 					.replaceAll("ColorFlag","remark")
-					.replaceAll("GroupName","groupName")
 					.replaceAll("GroupID","groupCode")
-					.replaceAll("GoodsName","skuName")
 					.replaceAll("GoodsID","skuCode")
-					.replaceAll("ShopName","shopName")
 					.replaceAll("UpdateTime","timestamp");
+
+//					.replaceAll("GoodsName","skuName")
+//					.replaceAll("GroupName","groupName")
+//					.replaceAll("ShopName","shopName")
+//					.replaceAll("AreaMans","dimension");
+			if ("8".equals(dimensionCode) || "11".equals(dimensionCode) || "16".equals(dimensionCode)) {
+				str = str.replaceAll("AreaMans","dimension");
+
+			} else if ("1".equals(dimensionCode) || "4".equals(dimensionCode) || "7".equals(dimensionCode)
+					|| "9".equals(dimensionCode) || "13".equals(dimensionCode)) {
+				str = str.replaceAll("ShopName","dimension");
+
+			} else if ("2".equals(dimensionCode) || "3".equals(dimensionCode) || "5".equals(dimensionCode)
+					|| "10".equals(dimensionCode) || "12".equals(dimensionCode) || "14".equals(dimensionCode)) {
+				str = str.replaceAll("GroupName","dimension");
+
+			} else if ("6".equals(dimensionCode) || "15".equals(dimensionCode)) {
+				str = str.replaceAll("GoodsName","dimension");
+
+			}
+
 		} catch (Exception e) {
 			e.printStackTrace();
+			logger.error("");
 		}
 		return JSONObject.parseObject(str,HashMap.class);
 	}
