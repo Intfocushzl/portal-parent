@@ -87,7 +87,8 @@ LPB.plugins['info'] = function (active_component, leipiplugins) {
         "type": "info",
         "name": "",
         "config": {
-            "text": ""
+            "text": "",
+            "dataUrl": ""
         }
     };
     if (getStringValue(jsonStr) != "") {
@@ -98,12 +99,16 @@ LPB.plugins['info'] = function (active_component, leipiplugins) {
             $(popover).find("#info_config_text").val(jsonObj.config.text);
         }
     }
+    // 加载数据源
+    forSelectOption("#info_config_data_url", jsonObj.config.dataUrl);
+
     // 右弹form  取消控件
     $(popover).delegate(".btn-danger", "click", function (e) {
         active_component.popover("hide");
     });
     // 右弹form  确定控件
     $(popover).delegate(".btn-info", "click", function (e) {
+        jsonObj.config.dataUrl = $("#info_config_data_url").val();
         var inputs = $(popover).find("input");
         $.each(inputs, function (i, e) {
             var attr_name = $(e).attr("id");//属性名称
