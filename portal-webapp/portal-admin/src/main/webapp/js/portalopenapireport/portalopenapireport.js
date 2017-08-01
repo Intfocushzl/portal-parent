@@ -134,8 +134,9 @@ var vm = new Vue({
         getRepList: function () {
             $("#repList").empty();
             $.get("../portalreport/repList/", function (r) {
+                $("#repList").append("<option value=''>-- 空 --</option>");
                 for (var i = 0; i < r.repList.length; i++) {
-                    $("#repList").append("<option value='" + r.repList[i].code + "'>" + r.repList[i].code + "<===>" + r.repList[i].title + "</option>");
+                    $("#repList").append("<option value='" + r.repList[i].code + "'>" + r.repList[i].code + " | " + r.repList[i].title + "</option>");
                 }
             });
         },
