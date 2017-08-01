@@ -6,6 +6,7 @@ import com.jolbox.bonecp.ConnectionHandle;
 import com.yonghui.portal.model.report.PortalDataSource;
 import com.yonghui.portal.service.data.ApiDataBaseSqlService;
 import com.yonghui.portal.util.ConstantsUtil;
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
 
@@ -46,12 +47,20 @@ public class ApiDataBaseSqlServiceImpl implements ApiDataBaseSqlService {
     private static ApiDataBaseSqlServiceImpl apiDataBaseSqlService = null;
 
     /**
-     * Mysql连接池
+     * Mysql连接池 平台
      */
     private static final Object objectMysql = new Object();
     private static final Object objectConnMysql = new Object();
     private static BoneCPConfig configMysql;
     private static BoneCP connectionPoolMysql;
+
+    /**
+     * Mysql连接池 APP
+     */
+    private static final Object objectMysqlApp = new Object();
+    private static final Object objectConnMysqlApp = new Object();
+    private static BoneCPConfig configMysqlApp;
+    private static BoneCP connectionPoolMysqlApp;
 
     /**
      * Hana连接池
@@ -101,9 +110,9 @@ public class ApiDataBaseSqlServiceImpl implements ApiDataBaseSqlService {
                     configMysql.setTransactionRecoveryEnabled(false);
                     //设置数据库连接池
                     connectionPoolMysql = new BoneCP(configMysql);
-                    logger.info("创建数据库连接池" + configMysql.getJdbcUrl());
+                    logger.info("创建平台数据库连接池" + configMysql.getJdbcUrl());
                 } catch (SQLException e) {
-                    logger.error("创建数据库连接池失败" + e.getMessage(), e);
+                    logger.error("创建平台数据库连接池失败" + e.getMessage(), e);
                 }
             }
             return connectionPoolMysql;
@@ -120,9 +129,77 @@ public class ApiDataBaseSqlServiceImpl implements ApiDataBaseSqlService {
             ConnectionHandle connectionHandle = null;
             try {
                 connectionHandle = (ConnectionHandle) getMySqlInstance(portalDataSource).getConnection();
-                logger.info("数据库连接地址：" + connectionHandle.getUrl());
+                logger.info("平台数据库连接地址：" + connectionHandle.getUrl());
             } catch (Exception e) {
-                logger.error("数据库连接失败" + e.getMessage());
+                logger.error("平台数据库连接失败" + e.getMessage());
+            }
+            //返回所建立的数据库连接
+            return connectionHandle;
+        }
+    }
+
+    /**
+     * MySql APP
+     * <p>
+     * 静态工厂方法 创建数据库连接池
+     *
+     * @param portalDataSource
+     * @return
+     */
+    public static BoneCP getMySqlInstanceApp(PortalDataSource portalDataSource) {
+        synchronized (objectMysqlApp) {
+            if (connectionPoolMysqlApp == null) {
+                // 数据库连接池不存在,新建连接池
+                try {
+                    configMysqlApp = new BoneCPConfig();
+                    try {
+                        Class.forName(portalDataSource.getJdbcDriver());// 加载Mysql数据驱动
+                    } catch (ClassNotFoundException e) {
+                        logger.error(e.getMessage(), e);
+                    }
+                    //数据库的JDBC URL
+                    configMysqlApp.setJdbcUrl(portalDataSource.getUrl());
+                    //数据库用户名
+                    configMysqlApp.setUsername(portalDataSource.getUser());
+                    //数据库用户密码
+                    configMysqlApp.setPassword(portalDataSource.getPassword());
+                    //数据库连接池的最小连接数
+                    configMysqlApp.setMinConnectionsPerPartition(portalDataSource.getMinConnectionsPerPartition());
+                    //数据库连接池的最大连接数
+                    configMysqlApp.setMaxConnectionsPerPartition(portalDataSource.getMaxConnectionsPerPartition());
+                    //设置分区  分区数为3 ，默认值2，最小1，推荐3-4，视应用而定
+                    configMysqlApp.setPartitionCount(4);
+                    //当连接池中的连接耗尽的时候 BoneCP一次同时获取的连接数  每次去拿数据库连接的时候一次性要拿几个,默认值：2
+                    configMysqlApp.setAcquireIncrement(5);
+                    configMysqlApp.setStatementsCacheSize(0);
+                    configMysqlApp.setCloseConnectionWatch(false);
+                    configMysqlApp.setLogStatementsEnabled(true);
+                    configMysqlApp.setLazyInit(false);
+                    configMysqlApp.setTransactionRecoveryEnabled(false);
+                    //设置数据库连接池
+                    connectionPoolMysqlApp = new BoneCP(configMysqlApp);
+                    logger.info("创建APP数据库连接池" + configMysqlApp.getJdbcUrl());
+                } catch (SQLException e) {
+                    logger.error("创建APP数据库连接池失败" + e.getMessage(), e);
+                }
+            }
+            return connectionPoolMysqlApp;
+        }
+    }
+
+    /**
+     * 通过BoneCP连接池获取 MySql APP 数据库连接
+     *
+     * @return
+     */
+    private static ConnectionHandle getMySqlConnectionHandleApp(PortalDataSource portalDataSource) {
+        synchronized (objectConnMysqlApp) {
+            ConnectionHandle connectionHandle = null;
+            try {
+                connectionHandle = (ConnectionHandle) getMySqlInstanceApp(portalDataSource).getConnection();
+                logger.info("APP数据库连接地址：" + connectionHandle.getUrl());
+            } catch (Exception e) {
+                logger.error("APP数据库连接失败" + e.getMessage());
             }
             //返回所建立的数据库连接
             return connectionHandle;
@@ -226,7 +303,11 @@ public class ApiDataBaseSqlServiceImpl implements ApiDataBaseSqlService {
         } else if (ConstantsUtil.DataSourceCode.DATA_000003.equals(portalDataSource.getCode())) {
             //主hana连接池
             return getHanaConnectionHandle(portalDataSource);
-        }else if(ConstantsUtil.DataSourceCode.DATA_000004.equals(portalDataSource.getCode())){
+        } else if (ConstantsUtil.DataSourceCode.DATA_000004.equals(portalDataSource.getCode())) {
+            //帆软
+            return getConnectionNew(portalDataSource);
+        } else if (ConstantsUtil.DataSourceCode.DATA_000005.equals(portalDataSource.getCode())) {
+            //APP-85库
             return getConnectionNew(portalDataSource);
         }
         return null;
@@ -314,6 +395,55 @@ public class ApiDataBaseSqlServiceImpl implements ApiDataBaseSqlService {
         }
         return reMapList;
     }
+
+
+    /**
+     * 插入表数据
+     */
+    @Override
+    public void insertTable(String sql, PortalDataSource portalDataSource) {
+        if (StringUtils.isBlank(sql)) {
+            return;
+        }
+        Connection conn = null;
+        PreparedStatement ps = null;
+        Statement st = null;
+        ResultSet rs;
+
+        // 获取连接，即连接到数据库
+        conn = getConnection(portalDataSource);
+        try {
+            st = conn.createStatement();
+            st.executeUpdate(sql);
+        } catch (SQLException e) {
+            logger.error("执行插入数据失败" + e.getMessage(), e);
+        } finally {
+            close(conn, st);
+        }
+    }
+
+    /**
+     * 更新表数据
+     *
+     * @auth zzh
+     */
+    @Override
+    public void updateTable(String sql, PortalDataSource portalDataSource) {
+        Connection conn = null;
+        PreparedStatement ps = null;
+        // 获取连接，即连接到数据库
+        conn = getConnection(portalDataSource);
+        try {
+            ps = conn.prepareStatement(sql);
+            ps.executeUpdate(sql);
+            conn.commit();
+        } catch (SQLException e) {
+            logger.error("执行更新数据失败" + e.getMessage(), e);
+        } finally {
+            close(conn, ps);
+        }
+    }
+
 
     /**
      * 关闭数据库连接

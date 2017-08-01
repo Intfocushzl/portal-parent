@@ -31,4 +31,20 @@ public interface ApiDataBaseSqlService {
      */
     public List<Map<String, Object>> queryExecuteSql(String sql, PortalDataSource portalDataSource);
 
+    /**
+     * 插入数据
+     *
+     * @param sql
+     * @param portalDataSource
+     */
+    public void insertTable(String sql, PortalDataSource portalDataSource);
+
+    /**
+     * 插入数据
+     *
+     * @param sql
+     * @param portalDataSource
+     */
+    public void updateTable(String sql, PortalDataSource portalDataSource);
+
 }

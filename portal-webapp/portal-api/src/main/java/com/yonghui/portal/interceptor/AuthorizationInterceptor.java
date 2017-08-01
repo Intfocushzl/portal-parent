@@ -58,6 +58,7 @@ public class AuthorizationInterceptor extends HandlerInterceptorAdapter {
             return true;
         }
         //如果有@OpenAuth注解，则校验sign
+        //GET方式请求openApiCode=OPENAPI_000001，POST方式请求在开放接口中配置新的openApiCode（参数顺序必须固定）
         if (openAuthAnnotation != null) {
             String openApiCode = request.getParameter("openApiCode");
             String sign = request.getParameter("sign");

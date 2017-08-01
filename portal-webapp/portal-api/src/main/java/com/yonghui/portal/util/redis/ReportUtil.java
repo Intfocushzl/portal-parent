@@ -137,7 +137,7 @@ public class ReportUtil {
      * @param dataSourceCode
      * @return
      */
-    private PortalDataSource getPortalDataSource(String dataSourceCode) {
+    public PortalDataSource getPortalDataSource(String dataSourceCode) {
         if (StringUtils.isEmpty(dataSourceCode)) {
             throw new RRException("执行语句未指定数据源");
         }
