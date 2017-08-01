@@ -1,4 +1,4 @@
-package com.yonghui.portal.model.storeReplay;
+package com.yonghui.portal.util.storeReplay;
 
 import org.apache.log4j.Logger;
 
@@ -32,6 +32,7 @@ public class CreateSql<T> {
         }
         sql += "(" + column.substring(0, column.length() - 1) + ") values ("
                 + c_values.substring(0, c_values.length() - 1) + ");";
+        logger.info("创建 Insert " + tableName +" SQL语句： " + sql);
         return sql;
     }
 
@@ -52,6 +53,7 @@ public class CreateSql<T> {
                 "left join `sys_user_roles` `t4` on `t1`.`id` = `t4`.`user_id` " +
                 "left join `sys_roles` `t5` on `t4`.`role_id` = `t5`.`id`" +
                 " where `t1`.`user_num` = " + userId;
+        logger.info("创建查询用户信息 SQL 语句： " + sql);
         return sql;
     };
 
@@ -72,6 +74,7 @@ public class CreateSql<T> {
                     "     created_at," +
                     "     updated_at" +
                     "  from store_replay.action_plan " ;
+        logger.info("创建查询行动方案 SQL 语句： " + sql);
         return sql;
     }
 
@@ -85,7 +88,9 @@ public class CreateSql<T> {
                 "	, updated_at" +
                 " FROM evaluate" +
                 " WHERE action_plan_id = " + actionId;
+        logger.info("创建查询评价列表 SQL 语句： " + sql);
         return sql;
+
     }
 
     /**
@@ -96,7 +101,7 @@ public class CreateSql<T> {
         sql = " select * from (select employeename as user_name" +
                 ",employeeNo as user_num" +
                 ",b.AreaName" +
-                ",substring(replace(b.areaMans,'（','('),1 ,locate('(' , replace(b.areaMans,'（','(')) -1) as areaMans " +
+                ",b.areaMans as areaMans " +
                 ",a.shopid as dept_ids" +
                 ",b.sname" +
                 ",groupid  as class_ids" +
@@ -106,6 +111,7 @@ public class CreateSql<T> {
                 "on a.shopID = b.SAP_ShopID " +
                 "where a.lkpdate = DATE_FORMAT(DATE_ADD(now(),INTERVAL -1 day),'%Y%m')" +
                 "  and groupid is not null and a.employeeNo = " + userId + ") as a";
+        logger.info("创建门店列表 SQL 语句： " + sql);
         return sql;
     }
 

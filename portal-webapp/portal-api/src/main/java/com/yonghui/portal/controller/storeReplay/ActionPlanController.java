@@ -12,9 +12,9 @@ import com.alibaba.dubbo.config.annotation.Reference;
 import com.alibaba.fastjson.JSONObject;
 import com.yonghui.portal.annotation.IgnoreAuth;
 import com.yonghui.portal.model.storeReplay.ActionPlan;
-import com.yonghui.portal.model.storeReplay.CreateSql;
 import com.yonghui.portal.model.storeReplay.Evaluate;
 import com.yonghui.portal.util.HttpUtil;
+import com.yonghui.portal.util.storeReplay.CreateSql;
 import org.apache.log4j.Logger;
 import org.springframework.web.bind.annotation.*;
 
@@ -55,14 +55,16 @@ public class ActionPlanController {
 	 * 提交 现在分析与行动方案
 	 */
 	@IgnoreAuth
-	@RequestMapping(value = "addActionPlan", method = RequestMethod.GET)
+	@RequestMapping(value = "addActionPlan", method = RequestMethod.POST)
 	@ResponseBody
 	public R addActionPlan(HttpServletRequest req, HttpServletResponse response, ActionPlan actionPlan) {
 		String sql = null;
 		List<Map<String, Object>> list = null;
+		logger.info("请求URL： " + req.getRequestURL() + "?" + req.getQueryString());
 		if (null != actionPlan) {
+			CreateSql createSql = new CreateSql();
 			//查询用户信息
-			sql = new CreateSql().createSelectUserInfoById(actionPlan.getUserId());
+			sql = createSql.createSelectUserInfoById(actionPlan.getUserId());
 			list = storeRePlayService.queryUserInfo(sql, getPortalDataSource());
 			//将用户信息放入 行动计划 中
 			Map<String, Object> map = list.get(0);
@@ -72,9 +74,10 @@ public class ActionPlanController {
 
 			try {
 				//保存 现在分析 和 行动方案
-				sql = new CreateSql().createInsert(actionPlan, "insert", "action_plan");
+				sql = createSql.createInsert(actionPlan, "insert", "action_plan");
 				storeRePlayService.excuteUpdate(sql, getPortalDataSource());
 			} catch (Exception e){
+				logger.error("ActionPlan添加失败： ",e);
 				return R.error("提交失败！");
 			}
 		}
@@ -89,20 +92,22 @@ public class ActionPlanController {
 	@ResponseBody
 	public R addActionPlan(HttpServletRequest req, HttpServletResponse response, Evaluate evaluate) {
 		String sql = null;
+		logger.info("请求URL： " + req.getRequestURL()+"?" + req.getQueryString());
 		if (null != evaluate) {
-			//查询评价人信息
-			sql = new CreateSql().createSelectUserInfoById(evaluate.getReplyUserId());
-			List<Map<String, Object>> list = storeRePlayService.queryUserInfo(sql, getPortalDataSource());
-			//将评价人信息放入 评价 中
-			Map<String, Object> map = list.get(0);
-			evaluate.setUserName(map.get("user_name") == null ? null : (String) map.get("user_name"));
-			evaluate.setUserRoleId(Integer.toString(map.get("role_id") == null ? 0 : (Integer) map.get("role_id")));
-
+			CreateSql createSql = new CreateSql();
 			try {
+				//查询评价人信息
+				sql = createSql.createSelectUserInfoById(evaluate.getReplyUserId());
+				List<Map<String, Object>> list = storeRePlayService.queryUserInfo(sql, getPortalDataSource());
+				//将评价人信息放入 评价 中
+				Map<String, Object> map = list.get(0);
+				evaluate.setUserName(map.get("user_name") == null ? null : (String) map.get("user_name"));
+				evaluate.setUserRoleId(Integer.toString(map.get("role_id") == null ? 0 : (Integer) map.get("role_id")));
 				//保存 评价信息
-				sql = new CreateSql().createInsert(evaluate, "insert", "evaluate");
+				sql = createSql.createInsert(evaluate, "insert", "evaluate");
 				storeRePlayService.excuteUpdate(sql, getPortalDataSource());
 			} catch (Exception e){
+				logger.error("评价提交失败：",e);
 				return R.error("评论提交失败！");
 			}
 		}
@@ -118,119 +123,126 @@ public class ActionPlanController {
 	public R listActionPlan(HttpServletRequest req, HttpServletResponse response, String userId, String createdAt){
 		String sql = null;
 		Integer roleId = null;
+		String areaName = null;
 		List<ActionPlan> actionPlans = null;
 		Map<String, Object> map = new HashMap<String, Object>();
+
 		List<Object> listActionPlans = new ArrayList<Object>();
-		CreateSql createSql = new CreateSql();
+		logger.info("请求URL： " + req.getRequestURL()+"?" + req.getQueryString());
 		if (null != userId) {
-			//获取当前用户 role_id
-			sql = createSql.createSelectUserInfoById(userId);
-			List<Map<String, Object>> list = storeRePlayService.queryUserInfo(sql, getPortalDataSource());
-			for (Map<String, Object> mapColumn : list) {
-				roleId = mapColumn.get("role_id") == null ? 0 : (Integer) mapColumn.get("role_id");
-			}
-			System.out.println(sql);
-			logger.info("请求URL： " + req.getRequestURL()+"?" + req.getQueryString() + "  用户权限：" + roleId);
-
-			//通过 role_id 获取行动方案
-			if (44 == roleId) { //小店长 role_id = 44
-				sql = createSql.createSelectActionPlan(null) + " where user_id = " + userId;
-				if (null != createdAt) {
-					sql += " and DATE_FORMAT(created_at, '%Y-%m-%d') = '" + createdAt.replace("/","-") + "'";
+			try{
+				CreateSql createSql = new CreateSql();
+				//获取当前用户 role_id
+				sql = createSql.createSelectUserInfoById(userId);
+				List<Map<String, Object>> list = storeRePlayService.queryUserInfo(sql, getPortalDataSource());
+				for (Map<String, Object> mapColumn : list) {
+					roleId = mapColumn.get("role_id") == null ? 0 : (Integer) mapColumn.get("role_id");
+				}
+				logger.info("获取当前用户 role_id SQL：" + sql);
+				//获取 用户 大区-门店-商行
+				sql = createSql.createSelectAreaStireShopInfo(userId);
+				list = storeRePlayService.queryAreaStoreShop(sql, getPortalDataSource());
+				for (Map<String, Object> areaMap : list) {
+					//根据权限返回信息
+					areaName = areaMap.get("areaMans") + "";
 				}
 
-				System.out.println(sql);
-
-				actionPlans = storeRePlayService.queryActionPlan(sql, getPortalDataSource());
-				//通过行动方案 ID 获取评价列表
-				for (ActionPlan action : actionPlans) {
-					action.setReplyer("小店回复");
-					String  actionId = Integer.toString(action.getId());
-					sql = createSql.createSelectEvaluateInfo(actionId);
-					List<Evaluate> evaluates = storeRePlayService.queryEvaluate(sql, getPortalDataSource());
-					action.setEvaluates(evaluates);
-				}
-				if (actionPlans.size() > 0) {
-					listActionPlans.add(actionPlans);
-				}
-			} else if ( 7 == roleId) {   //战略团队: role_id = 7  只看 区长：role_id = 111
-				sql = createSql.createSelectActionPlan(null) + "  where user_role_id = 111";
-
-				System.out.println(sql);
-
-				actionPlans = storeRePlayService.queryActionPlan(sql, getPortalDataSource());
-				for (ActionPlan action : actionPlans) {
-					action.setReplyer("区总回复");
-				}
-				if (actionPlans.size() > 0) {
-					listActionPlans.add(actionPlans);
-				}
-//				listActionPlans.add(actionPlans);;
-			} else if (43 == roleId || 111 == roleId) { //区总团队：品类教练 role_id = 43, 店长 role_id = 43,  区长 role_id = 111
-
-				//小店回复
-				sql = createSql.createSelectActionPlan(null) + " where user_role_id = 44";
-				if (null != createdAt) {
-					sql += " and DATE_FORMAT(created_at, '%Y-%m-%d') = '" + createdAt.replace("/","-") + "'";
-				}
-
-				System.out.println(sql);
-
-				actionPlans = storeRePlayService.queryActionPlan(sql, getPortalDataSource());
-				//通过行动方案 ID 获取评价列表
-				for (ActionPlan action : actionPlans) {
-					action.setReplyer("小店回复");
-					String  actionId = Integer.toString(action.getId());
-					sql = createSql.createSelectEvaluateInfo(actionId);
-					List<Evaluate> evaluates = storeRePlayService.queryEvaluate(sql, getPortalDataSource());
-					action.setEvaluates(evaluates);
-				}
-				if (actionPlans.size() > 0) {
-					listActionPlans.add(actionPlans);
-				}
-//				listActionPlans.add(actionPlans);
-
-				//品类教练回复
-				sql = createSql.createSelectActionPlan(null) + " where user_role_id in (43, 111)";
-				if (null != createdAt) {
-					sql += " and DATE_FORMAT(created_at, '%Y-%m-%d') = '" + createdAt.replace("/","-") + "'";
-				}
-
-				System.out.println(sql);
-
-				actionPlans = storeRePlayService.queryActionPlan(sql, getPortalDataSource());
-				//通过行动方案 ID 获取评价列表
-				for (ActionPlan action : actionPlans) {
-					action.setReplyer("品类教练回复");
-					String  actionId = Integer.toString(action.getId());
-					if (!"111".equals(action.getUserRoleId())) {  //区长的行动方案没有评价
+				//通过 role_id 获取行动方案
+				if (44 == roleId) { //小店长 role_id = 44
+					sql = createSql.createSelectActionPlan(null) + " where user_id = " + userId + " and locate('"+ areaName +"',store_name) > 0 ";
+					if (null != createdAt) {
+						sql += " and DATE_FORMAT(created_at, '%Y-%m-%d') = '" + createdAt.replace("/","-") + "'";
+					}
+					logger.info("小店回复 SQL：" + sql);
+					actionPlans = storeRePlayService.queryActionPlan(sql, getPortalDataSource());
+					//通过行动方案 ID 获取评价列表
+					for (ActionPlan action : actionPlans) {
+						action.setReplyer("小店回复");
+						String  actionId = Integer.toString(action.getId());
 						sql = createSql.createSelectEvaluateInfo(actionId);
 						List<Evaluate> evaluates = storeRePlayService.queryEvaluate(sql, getPortalDataSource());
 						action.setEvaluates(evaluates);
 					}
-				}
-				if (actionPlans.size() > 0) {
-					listActionPlans.add(actionPlans);
-				}
-
-				//个人回复
-				sql = createSql.createSelectActionPlan(null) + " where user_id = " + userId;
-				System.out.println(sql);
-				actionPlans = storeRePlayService.queryActionPlan(sql, getPortalDataSource());
-				//通过行动方案 ID 获取评价列表
-				for (ActionPlan action : actionPlans) {
-					action.setReplyer("个人回复");
-					String actionId = Integer.toString(action.getId());
-					if (!"111".equals(action.getUserRoleId())) {  //区长的行动方案没有评价
+					if (actionPlans.size() > 0) {
+						listActionPlans.add(actionPlans);
+					}
+				} else if ( 7 == roleId) {   //战略团队: role_id = 7  只看 区长：role_id = 111
+					sql = createSql.createSelectActionPlan(null) + "  where user_role_id = 111 ";
+					if (null != createdAt) {
+						sql += " and DATE_FORMAT(created_at, '%Y-%m-%d') = '" + createdAt.replace("/","-") + "'";
+					}
+					logger.info("区总回复 SQL：" + sql);
+					actionPlans = storeRePlayService.queryActionPlan(sql, getPortalDataSource());
+					for (ActionPlan action : actionPlans) {
+						action.setReplyer("区总回复");
+					}
+					if (actionPlans.size() > 0) {
+						listActionPlans.add(actionPlans);
+					}
+				} else if (43 == roleId || 111 == roleId) { //区总团队：品类教练 role_id = 43, 店长 role_id = 43,  区长 role_id = 111
+					//小店回复
+					sql = createSql.createSelectActionPlan(null) + " where user_role_id = 44 and locate('" + areaName + "',store_name) > 0 ";
+					if (null != createdAt) {
+						sql += " and DATE_FORMAT(created_at, '%Y-%m-%d') = '" + createdAt.replace("/","-") + "'";
+					}
+					logger.info("小店回复 SQL：" + sql);
+					actionPlans = storeRePlayService.queryActionPlan(sql, getPortalDataSource());
+					//通过行动方案 ID 获取评价列表
+					for (ActionPlan action : actionPlans) {
+						action.setReplyer("小店回复");
+						String  actionId = Integer.toString(action.getId());
 						sql = createSql.createSelectEvaluateInfo(actionId);
 						List<Evaluate> evaluates = storeRePlayService.queryEvaluate(sql, getPortalDataSource());
 						action.setEvaluates(evaluates);
 					}
+					if (actionPlans.size() > 0) {
+						listActionPlans.add(actionPlans);
+					}
+
+					//品类教练回复
+					sql = createSql.createSelectActionPlan(null) + " where user_role_id in (43, 111) and locate('" + areaName + "',store_name) > 0 ";
+					if (null != createdAt) {
+						sql += " and DATE_FORMAT(created_at, '%Y-%m-%d') = '" + createdAt.replace("/","-") + "'";
+					}
+					logger.info("品类教练回复 SQL：" + sql);
+					actionPlans = storeRePlayService.queryActionPlan(sql, getPortalDataSource());
+					//通过行动方案 ID 获取评价列表
+					for (ActionPlan action : actionPlans) {
+						action.setReplyer("品类教练回复");
+						String  actionId = Integer.toString(action.getId());
+						if (!"111".equals(action.getUserRoleId())) {  //区长的行动方案没有评价
+							sql = createSql.createSelectEvaluateInfo(actionId);
+							List<Evaluate> evaluates = storeRePlayService.queryEvaluate(sql, getPortalDataSource());
+							action.setEvaluates(evaluates);
+						}
+					}
+					if (actionPlans.size() > 0) {
+						listActionPlans.add(actionPlans);
+					}
+
+					//个人回复
+					sql = createSql.createSelectActionPlan(null) + " where user_id = " + userId;
+					logger.info("个人回复 SQL：" + sql);
+					actionPlans = storeRePlayService.queryActionPlan(sql, getPortalDataSource());
+					//通过行动方案 ID 获取评价列表
+					for (ActionPlan action : actionPlans) {
+						action.setReplyer("个人回复");
+						String actionId = Integer.toString(action.getId());
+						if (!"111".equals(action.getUserRoleId())) {  //区长的行动方案没有评价
+							sql = createSql.createSelectEvaluateInfo(actionId);
+							List<Evaluate> evaluates = storeRePlayService.queryEvaluate(sql, getPortalDataSource());
+							action.setEvaluates(evaluates);
+						}
+					}
+					if (actionPlans.size() > 0) {
+						listActionPlans.add(actionPlans);
+					}
 				}
-				if (actionPlans.size() > 0) {
-					listActionPlans.add(actionPlans);
-				}
+			} catch (Exception e) {
+				logger.error("查询 ActionPlan 以及评价失败：",e);
+				return  R.error();
 			}
+
 		}
 		return R.success(listActionPlans);
 	}
@@ -244,7 +256,7 @@ public class ActionPlanController {
 	public R listEvaluation(HttpServletRequest req, HttpServletResponse response, String userId, String actionId){
 		String sql = null;
 		List<Evaluate> evaluates = null;
-
+		logger.info("请求URL： " + req.getRequestURL()+"?" + req.getQueryString());
 		sql = new CreateSql().createSelectEvaluateInfo(actionId);
 		evaluates = storeRePlayService.queryEvaluate(sql,getPortalDataSource());
 		if (evaluates.size() == 0) {
@@ -261,11 +273,12 @@ public class ActionPlanController {
 	@ResponseBody
 	public R userInfo(HttpServletRequest req, HttpServletResponse response, String userId){
 		String sql = null;
-		CreateSql createSql = new CreateSql();
 		Map<String, Object> userMap = new HashMap<String, Object>();
+		logger.info("请求URL： " + req.getRequestURL()+"?" + req.getQueryString());
 		if (null != userId) {
-			sql = createSql.createSelectUserInfoById(userId);
+			CreateSql createSql = new CreateSql();
 			try{
+				sql = createSql.createSelectUserInfoById(userId);
 				List<Map<String, Object>> list = storeRePlayService.queryUserInfo(sql, getPortalDataSource());
 				for (Map<String, Object> mapColumn : list) {
 					userMap.put("userId",mapColumn.get("user_num"));
@@ -275,8 +288,11 @@ public class ActionPlanController {
 					userMap.put("userName",mapColumn.get("user_name"));
 				}
 			} catch (Exception e){
+				logger.error("查询用户信息失败：",e);
 				return R.error("用户信息查询失败！");
 			}
+		} else {
+			return R.error("无效的用户编号");
 		}
 		return R.success(userMap);
 	}
@@ -290,19 +306,21 @@ public class ActionPlanController {
 	public R listStore(HttpServletRequest req, HttpServletResponse response, String userId){
 		String sql = null;
 		String res = null;
+		String roleId = null;
 		List<Map<String, Object>> list = null;
 		List<String> returnList = new ArrayList<String>();
+		logger.info("请求URL： " + req.getRequestURL()+"?" + req.getQueryString());
 		if (null != userId) {
+			CreateSql createSql = new CreateSql();
 			//获取用户权限
-			String roleId = null;
-			sql = new CreateSql().createSelectUserInfoById(userId);
+			sql = createSql.createSelectUserInfoById(userId);
 			list = storeRePlayService.queryUserInfo(sql, getPortalDataSource());
 			for (Map<String, Object> map : list) {
 				roleId = map.get("role_id") == null ? null : Integer.toString((Integer) map.get("role_id"));
 			}
 
 			//获取 用户 大区-门店-商行
-			sql = new CreateSql().createSelectAreaStireShopInfo(userId);
+			sql = createSql.createSelectAreaStireShopInfo(userId);
 			list = storeRePlayService.queryAreaStoreShop(sql, getPortalDataSource());
 			for (Map<String, Object> map : list) {
 				//根据权限返回信息
@@ -313,6 +331,9 @@ public class ActionPlanController {
 				} else if ("111".equals(roleId)) { //战略团队
 					res = map.get("areaMans") + "";
 				}
+			}
+			if (null == res || "".equals(res)) {
+				return R.error("获取用户门店信息失败！ 用户编号为: " + userId);
 			}
 			returnList.add(res);
 		}
@@ -328,6 +349,7 @@ public class ActionPlanController {
 	public R  reportApi(HttpServletRequest req, HttpServletResponse response, String dimensionCode, String areaName,
 						String shopCode, String groupCode, String skuCode, String userId){
 		HashMap<String,Object> returnMap = null;
+		logger.info("请求URL： " + req.getRequestURL()+"?" + req.getQueryString());
 		if (null != userId) {
 			//获取用户权限
 			String roleId = null;
@@ -339,17 +361,18 @@ public class ActionPlanController {
 					roleId = map.get("role_id") == null ? null : Integer.toString((Integer) map.get("role_id"));
 				}
 				logger.info("请求URL： " + req.getRequestURL()+"?" + req.getQueryString() + "  用户权限：" + roleId);
-				if (null == areaName || "".equals(areaName) && Integer.parseInt(dimensionCode) < 8 && !"7".equals(roleId)) {
-					//获取 维度为 1 - 7  表示战略除外的角色登录，这时只能看到自己的大区，前台未知角色大区，故后台给出
-					sql = new CreateSql().createSelectAreaStireShopInfo(userId);
-					list = storeRePlayService.queryAreaStoreShop(sql, getPortalDataSource());
-					for (Map<String, Object> map : list) {
-						areaName = map.get("areaMans") + "";
+				if (null == areaName || "".equals(areaName)) {
+					if (Integer.parseInt(dimensionCode) < 8 && !"7".equals(roleId)) {
+						//获取 维度为 1 - 7  表示战略除外的角色登录，这时只能看到自己的大区，前台未知角色大区，故后台给出
+						sql = new CreateSql().createSelectAreaStireShopInfo(userId);
+						list = storeRePlayService.queryAreaStoreShop(sql, getPortalDataSource());
+						for (Map<String, Object> map : list) {
+							areaName = map.get("areaMans") + "";
+						}
 					}
+
 				}
-				if (null != areaName) {
-					returnMap = getReturnMap(dimensionCode, areaName, shopCode, groupCode, skuCode);
-				}
+				returnMap = getReturnMap(dimensionCode, areaName, shopCode, groupCode, skuCode);
 			} catch (Exception e){
 				logger.error("实时数据获取失败！",e);
 				return R.error("实时数据获取失败！");
@@ -463,23 +486,19 @@ public class ActionPlanController {
 //					.replaceAll("AreaMans","dimension");
 			if ("8".equals(dimensionCode) || "11".equals(dimensionCode) || "16".equals(dimensionCode)) {
 				str = str.replaceAll("AreaMans","dimension");
-
 			} else if ("1".equals(dimensionCode) || "4".equals(dimensionCode) || "7".equals(dimensionCode)
 					|| "9".equals(dimensionCode) || "13".equals(dimensionCode)) {
 				str = str.replaceAll("ShopName","dimension");
-
 			} else if ("2".equals(dimensionCode) || "3".equals(dimensionCode) || "5".equals(dimensionCode)
 					|| "10".equals(dimensionCode) || "12".equals(dimensionCode) || "14".equals(dimensionCode)) {
 				str = str.replaceAll("GroupName","dimension");
-
 			} else if ("6".equals(dimensionCode) || "15".equals(dimensionCode)) {
 				str = str.replaceAll("GoodsName","dimension");
-
 			}
 
 		} catch (Exception e) {
 			e.printStackTrace();
-			logger.error("");
+			logger.error("呼叫数据接口失败！",e);
 		}
 		return JSONObject.parseObject(str,HashMap.class);
 	}
