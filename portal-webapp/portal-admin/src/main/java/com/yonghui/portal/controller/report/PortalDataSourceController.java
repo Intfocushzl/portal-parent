@@ -1,11 +1,10 @@
 package com.yonghui.portal.controller.report;
 
 import com.alibaba.fastjson.JSONObject;
+import com.yonghui.portal.annotation.SysLog;
 import com.yonghui.portal.controller.AbstractController;
 import com.yonghui.portal.model.report.PortalDataSource;
-import com.yonghui.portal.model.sys.SysLog;
 import com.yonghui.portal.service.report.PortalDataSourceService;
-import com.yonghui.portal.util.ComputerUtils;
 import com.yonghui.portal.util.PageUtils;
 import com.yonghui.portal.util.Query;
 import com.yonghui.portal.util.R;
@@ -88,22 +87,10 @@ public class PortalDataSourceController extends AbstractController {
     /**
      * 删除
      */
+    @SysLog("删除数据源")
     @RequestMapping("/delete")
     @RequiresPermissions("portaldatasource:delete")
     public R delete(@RequestBody String[] codes){
-
-        StringBuffer str = new StringBuffer();
-        for (int i = 0; i < codes.length; i++) {
-            PortalDataSource portalDataSource = portalDataSourceService.queryObjectByCode(codes[i]);
-            str.append("procode:"+portalDataSource.getCode()+"==title:"+portalDataSource.getTitle()+"===");
-        }
-
-        SysLog log = new SysLog();
-        log.setIp(ComputerUtils.getIp());
-        log.setUsername(ShiroUtils.getUserEntity().getUsername());
-        log.setOperation(str.toString());
-
-        portalDataSourceService.savelog(log);
 
         portalDataSourceService.deleteBatchByCodes(codes);
         for (String c:codes) {

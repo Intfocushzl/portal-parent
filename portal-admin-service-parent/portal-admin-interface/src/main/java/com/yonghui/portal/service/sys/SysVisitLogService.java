@@ -12,6 +12,10 @@ import java.util.Map;
  */
 public interface SysVisitLogService {
 
+    int reportTotal(Map<String,Object> map);
+
+    List<Map<String,Object>> reportcount(Map<String,Object> map);
+
     SysOperationLog queryObject(Integer id);
 
     List<SysOperationLog> queryList(Map<String, Object> map);

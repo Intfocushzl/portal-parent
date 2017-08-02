@@ -1,5 +1,6 @@
 package com.yonghui.portal.controller.cindex;
 
+import com.yonghui.portal.annotation.SysLog;
 import com.yonghui.portal.controller.AbstractController;
 import com.yonghui.portal.model.cindex.CIndexAperture;
 import com.yonghui.portal.service.cindex.CIndexApertureService;
@@ -86,6 +87,7 @@ public class CIndexApertureController extends AbstractController {
     /**
      * 修改
      */
+    @SysLog("删除属性定义")
     @RequestMapping("/delete")
     @RequiresPermissions("cindexaperture:delete")
     public R delete(@RequestBody Integer[] ids) {

@@ -2,7 +2,6 @@ package com.yonghui.portal.service.global;
 
 import com.yonghui.portal.model.global.Menu;
 import com.yonghui.portal.model.global.Role;
-import com.yonghui.portal.model.sys.SysLog;
 
 import java.util.List;
 import java.util.Map;
@@ -13,8 +12,6 @@ import java.util.Map;
  * Description :
  */
 public interface RoleService {
-
-    void savelog(SysLog sysLog);
 
     Role queryObject(Integer id);
 

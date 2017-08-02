@@ -1,22 +1,18 @@
 package com.yonghui.portal.controller.businessman;
 
-import java.util.List;
-import java.util.Map;
-
+import com.yonghui.portal.annotation.SysLog;
 import com.yonghui.portal.controller.AbstractController;
 import com.yonghui.portal.model.businessman.BusinessmanActicleGrade;
 import com.yonghui.portal.service.businessman.BusinessmanActicleGradeService;
-import org.apache.shiro.authz.annotation.RequiresPermissions;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-
 import com.yonghui.portal.util.PageUtils;
 import com.yonghui.portal.util.Query;
 import com.yonghui.portal.util.R;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * 文章评分
@@ -81,6 +77,7 @@ public class BusinessmanActicleGradeController extends AbstractController {
     /**
      * 删除
      */
+    @SysLog("文章评分删除")
     @RequestMapping("/delete")
     @RequiresPermissions("businessmanacticle:grade:delete")
     public R delete(@RequestBody Long[] ids){

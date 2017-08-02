@@ -26,6 +26,22 @@ public class SysOperationLogController extends AbstractController {
     @Autowired
     private SysVisitLogService sysVisitLogService;
 
+    @RequestMapping("/reprtcount")
+    @RequiresPermissions("sysoperationlog:reportcount")
+    public R reportcount(@RequestParam Map<String,Object> params){
+
+        //查询列表数据
+        Query query = new Query(params);
+
+        List<Map<String,Object>> sysOperationLogList = sysVisitLogService.reportcount(query);
+        int total = sysVisitLogService.reportTotal(query);
+
+        PageUtils pageUtil = new PageUtils(sysOperationLogList, total, query.getLimit(), query.getPage());
+
+        return R.success().put("page", pageUtil);
+    }
+
+
     /**
      * 近30天访问日志图表
      */
