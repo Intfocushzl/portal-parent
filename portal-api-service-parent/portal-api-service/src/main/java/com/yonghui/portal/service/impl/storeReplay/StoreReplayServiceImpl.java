@@ -91,7 +91,7 @@ public class StoreReplayServiceImpl implements StoreRePlayService {
             //根据权限返回信息
             areaName = areaMap.get("areaMans") + "";
         }
-        //通过 role_id 获取行动方案
+        //通过 role_id 获取行动方
         if (44 == roleId) { //小店长 role_id = 44
             sql = createSql.createSelectActionPlan(null) + " where user_id = " + userId + " and locate('" + areaName + "',store_name) > 0 ";
             if (null != createdAt) {
@@ -163,6 +163,9 @@ public class StoreReplayServiceImpl implements StoreRePlayService {
             listActionPlans.add(listAction);
             //个人回复
             sql = createSql.createSelectActionPlan(null) + " where user_id = " + userId;
+            if (null != createdAt) {
+                sql += " and DATE_FORMAT(created_at, '%Y-%m-%d') = '" + createdAt.replace("/", "-") + "'";
+            }
             log.info("个人回复 SQL：" + sql);
             //行动方案
             listAction = getBaseList(sql, portalDataSource);
