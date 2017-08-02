@@ -1,5 +1,6 @@
 package com.yonghui.portal.controller.businessman;
 
+import com.yonghui.portal.annotation.SysLog;
 import com.yonghui.portal.controller.AbstractController;
 import com.yonghui.portal.model.businessman.BusinessmanActicle;
 import com.yonghui.portal.model.businessman.BusinessmanActicleRecommend;
@@ -96,6 +97,7 @@ public class BusinessmanActicleController extends AbstractController {
     /**
      * 修改
      */
+    @SysLog("删除文章")
     @RequestMapping("/delete")
     @RequiresPermissions("businessmanacticle:delete")
     public R delete(@RequestBody Long[] ids) {

@@ -20,13 +20,7 @@ import java.util.Map;
 public class MenuServiceImpl implements MenuService {
     @Autowired
     private MenuMapper menuMapper;
-    @Autowired
-    private SysLogMapper sysLogMapper;
 
-    @Override
-    public void savelog(SysLog sysLog) {
-        sysLogMapper.save(sysLog);
-    }
     @Override
     public RoleMenu getUserRoleId(Integer roleId) throws Exception {
         return menuMapper.getUserRoleId(roleId);

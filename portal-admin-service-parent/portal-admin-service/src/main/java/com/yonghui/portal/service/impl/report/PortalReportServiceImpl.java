@@ -15,13 +15,6 @@ import java.util.Map;
 public class PortalReportServiceImpl implements PortalReportService {
 	@Autowired
 	private PortalReportMapper portalReportMapper;
-	@Autowired
-	private SysLogMapper sysLogMapper;
-
-	@Override
-	public void savelog(SysLog sysLog) {
-		sysLogMapper.save(sysLog);
-	}
 	@Override
 	public PortalReport queryObject(Integer id){
 		return portalReportMapper.queryObject(id);

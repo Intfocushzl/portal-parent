@@ -24,13 +24,7 @@ public class RoleServiceImpl implements RoleService {
 
     @Autowired
     private MenuMapper menuMapper;
-    @Autowired
-    private SysLogMapper sysLogMapper;
 
-    @Override
-    public void savelog(SysLog sysLog) {
-        sysLogMapper.save(sysLog);
-    }
     @Override
     public Role queryObject(Integer id) {
         return roleMapper.queryObject(id);

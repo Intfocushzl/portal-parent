@@ -15,14 +15,7 @@ import java.util.Map;
 public class PortalExecuteSqlServiceImpl implements PortalExecuteSqlService {
 	@Autowired
 	private PortalExecuteSqlMapper portalExecuteSqlMapper;
-	@Autowired
-	private SysLogMapper sysLogMapper;
 
-	@Override
-	public void savelog(SysLog sysLog) {
-		sysLogMapper.save(sysLog);
-	}
-	
 	@Override
 	public PortalExecuteSql queryObject(Integer id){
 		return portalExecuteSqlMapper.queryObject(id);

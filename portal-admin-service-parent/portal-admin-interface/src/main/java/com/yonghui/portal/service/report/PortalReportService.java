@@ -2,7 +2,6 @@ package com.yonghui.portal.service.report;
 
 
 import com.yonghui.portal.model.report.PortalReport;
-import com.yonghui.portal.model.sys.SysLog;
 
 import java.util.List;
 import java.util.Map;
@@ -15,7 +14,6 @@ import java.util.Map;
  * @date 2017-05-18 13:05:16
  */
 public interface PortalReportService {
-	void savelog(SysLog sysLog);
 
 	PortalReport queryObject(Integer id);
 

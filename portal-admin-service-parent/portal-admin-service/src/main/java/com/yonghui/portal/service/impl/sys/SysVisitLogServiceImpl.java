@@ -13,7 +13,17 @@ import java.util.Map;
 public class SysVisitLogServiceImpl implements SysVisitLogService {
 	@Autowired
 	private SysOperationLogMapper sysOperationLogMapper;
-	
+
+	@Override
+	public int reportTotal(Map<String, Object> map) {
+		return sysOperationLogMapper.reportTotal(map);
+	}
+
+	@Override
+	public List<Map<String, Object>> reportcount(Map<String, Object> map) {
+		return sysOperationLogMapper.reportcount(map);
+	}
+
 	@Override
 	public SysOperationLog queryObject(Integer id){
 		return sysOperationLogMapper.queryObject(id);

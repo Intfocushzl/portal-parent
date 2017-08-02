@@ -15,13 +15,6 @@ import java.util.Map;
 public class BravoShopServiceImpl implements BravoShopService {
 	@Autowired
 	private BravoShopMapper bravoShopMapper;
-	@Autowired
-	private SysLogMapper sysLogMapper;
-
-	@Override
-	public void savelog(SysLog sysLog) {
-		sysLogMapper.save(sysLog);
-	}
 	@Override
 	public BravoShop queryObject(String shopid){
 		return bravoShopMapper.queryObject(shopid);

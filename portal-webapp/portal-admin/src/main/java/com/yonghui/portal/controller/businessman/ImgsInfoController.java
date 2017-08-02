@@ -1,5 +1,6 @@
 package com.yonghui.portal.controller.businessman;
 
+import com.yonghui.portal.annotation.SysLog;
 import com.yonghui.portal.controller.AbstractController;
 import com.yonghui.portal.model.businessman.ImgsInfo;
 import com.yonghui.portal.service.businessman.ImgsInfoService;
@@ -79,6 +80,7 @@ public class ImgsInfoController extends AbstractController {
     /**
      * 修改
      */
+    @SysLog("删除图片")
     @RequestMapping("/delete")
     @RequiresPermissions("imgsinfo:delete")
     public R delete(@RequestBody Long[] ids){

@@ -2,12 +2,11 @@ package com.yonghui.portal.controller.platform;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.yonghui.portal.annotation.SysLog;
 import com.yonghui.portal.controller.AbstractController;
 import com.yonghui.portal.init.InitProperties;
 import com.yonghui.portal.model.global.Menu;
 import com.yonghui.portal.model.global.Role;
-import com.yonghui.portal.model.report.PortalProcedure;
-import com.yonghui.portal.model.sys.SysLog;
 import com.yonghui.portal.service.global.RoleService;
 import com.yonghui.portal.service.global.UserMenuService;
 import com.yonghui.portal.util.*;
@@ -179,22 +178,10 @@ public class RoleController extends AbstractController {
     /**
      * 删除
      */
+    @SysLog("删除角色")
     @RequestMapping("/delete")
     @RequiresPermissions("role:delete")
     public R delete(@RequestBody Integer[] ids) {
-
-        StringBuffer str = new StringBuffer();
-        for (int i = 0; i < ids.length; i++) {
-            Role role = roleService.queryObject(ids[i]);
-            str.append("roleid:"+role.getId()+"==name:"+role.getName()+"===");
-        }
-
-        SysLog log = new SysLog();
-        log.setIp(ComputerUtils.getIp());
-        log.setUsername(ShiroUtils.getUserEntity().getUsername());
-        log.setOperation(str.toString());
-
-        roleService.savelog(log);
 
         roleService.deleteBatch(ids);
         for (Integer id : ids) {

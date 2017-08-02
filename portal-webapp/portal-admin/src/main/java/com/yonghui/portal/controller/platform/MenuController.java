@@ -1,11 +1,14 @@
 package com.yonghui.portal.controller.platform;
 
 import com.alibaba.fastjson.JSON;
+import com.yonghui.portal.annotation.SysLog;
 import com.yonghui.portal.controller.AbstractController;
 import com.yonghui.portal.model.global.Menu;
-import com.yonghui.portal.model.sys.SysLog;
 import com.yonghui.portal.service.global.MenuService;
-import com.yonghui.portal.util.*;
+import com.yonghui.portal.util.PageUtils;
+import com.yonghui.portal.util.Query;
+import com.yonghui.portal.util.R;
+import com.yonghui.portal.util.StringUtils;
 import com.yonghui.portal.utils.ShiroUtils;
 import org.apache.commons.collections.map.HashedMap;
 import org.apache.log4j.Logger;
@@ -123,22 +126,11 @@ public class MenuController extends AbstractController {
     /**
      * 修改
      */
+    @SysLog("删除菜单")
     @RequestMapping("/delete")
     @RequiresPermissions("menu:delete")
     public R delete(@RequestBody Integer[] ids) {
 
-        StringBuffer str = new StringBuffer();
-        for (int i = 0; i < ids.length; i++) {
-            Menu menu = menuService.queryObject(ids[i]);
-            str.append("id:"+menu.getId()+"==title:"+menu.getName()+"===");
-        }
-
-        SysLog log = new SysLog();
-        log.setIp(ComputerUtils.getIp());
-        log.setUsername(ShiroUtils.getUserEntity().getUsername());
-        log.setOperation(str.toString());
-
-        menuService.savelog(log);
         menuService.deleteBatch(ids);
         return R.success();
     }

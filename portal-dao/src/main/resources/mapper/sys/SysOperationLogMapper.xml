@@ -18,6 +18,76 @@
         <result property="remark" column="remark"/>
     </resultMap>
 
+    <select id="reportTotal" resultType="int">
+        SELECT count(*)
+        FROM
+            (
+                SELECT
+                    a.jobNumber,
+                    SUBSTR(a.parameter, 25, 10) AS code,
+                a.parameter,a.startTime,
+                    count(a.jobNumber) AS cnt
+                FROM
+                    platform.sys_operation_log a
+                GROUP BY
+                    a.jobNumber,
+                    SUBSTR(a.parameter, 25, 10)
+            ) d
+        LEFT JOIN platform.user_forfront f ON f.jobNumber = d.jobNumber
+        left JOIN platform.portal_report rep on rep.`code`=d.code
+        <where>
+            <if test="jobNumber != null and jobNumber != ''">
+                and d.jobNumber = #{jobNumber}
+            </if>
+            <if test="code != null and code != ''">
+                and d.parameter REGEXP #{code}
+            </if>
+            <if test="startTime != null and startTime !='' and endTime != null and endTime != ''">
+                and d.startTime BETWEEN #{startTime} AND #{endTime}
+            </if>
+        </where>
+    </select>
+
+    <select id="reportcount" resultType="Map" parameterType="Map">
+          SELECT d.jobNumber,f. NAME,d. code,rep.title,d.cnt,d.startTime
+          FROM (
+            SELECT
+                a.jobNumber,
+                SUBSTR(a.parameter, 25, 10) AS code,
+            a.parameter,a.startTime,
+                count(a.jobNumber) AS cnt
+            FROM
+                platform.sys_operation_log a
+            GROUP BY
+                a.jobNumber,
+                SUBSTR(a.parameter, 25, 10)
+        ) d
+        LEFT JOIN platform.user_forfront f ON f.jobNumber = d.jobNumber
+        left JOIN platform.portal_report rep on rep.`code`=d.code
+        <where>
+            <if test="jobNumber != null and jobNumber != ''">
+                and d.jobNumber = #{jobNumber}
+            </if>
+            <if test="code != null and code != ''">
+                and d.parameter REGEXP #{code}
+            </if>
+            <if test="startTime != null and startTime !='' and endTime != null and endTime != ''">
+                and d.startTime BETWEEN #{startTime} AND #{endTime}
+            </if>
+        </where>
+        <choose>
+            <when test="sidx != null and sidx.trim() != ''">
+                order by ${sidx} ${order}
+            </when>
+            <otherwise>
+                order by startTime desc
+            </otherwise>
+        </choose>
+        <if test="offset != null and limit != null">
+            limit #{offset}, #{limit}
+        </if>
+    </select>
+
     <select id="queryVisit" resultType="Map" parameterType="Map">
         SELECT
             DATE_FORMAT(t.startTime,'%Y-%m-%d') AS _date,
@@ -73,8 +143,9 @@
             </if>
             <if test="keyword != null and keyword !=''">
                 and (
-                id like concat('%',#{keyword},'%')
-                or remark like concat('%',#{keyword},'%')
+                jobNumber like concat('%',#{keyword},'%')
+                or reportcode like concat('%',#{keyword},'%')
+                or ip like concat('%',#{keyword},'%')
                 )
             </if>
         </where>
@@ -83,7 +154,7 @@
                 order by ${sidx} ${order}
             </when>
             <otherwise>
-                order by id desc
+                order by startTime desc
             </otherwise>
         </choose>
         <if test="offset != null and limit != null">

@@ -369,8 +369,8 @@ function addTab() {
     $("#content").append("<div class='tab_document content-label-input' document='" + document + "' id='" + document + "_content'>"
         + "<label class='control-label content-left'>标题</label>"
         + "<input type='text'class='tables_v3_config_title content-left' document='" + document + "' id='tables_v3_config_title_" + document + "' placeholder='标题' onchange='onchangeTabTitle(this)'>"
-        + "<label class='control-label content-left'>字段</label>"
-        + "<textarea class='tables_v3_config_table_head content-left' document='" + document + "' id='tables_v3_config_table_head_" + document + "' placeholder='字段'></textarea>"
+        + "<label class='control-label content-left'>表头</label>"
+        + "<textarea class='tables_v3_config_table_head content-left' document='" + document + "' id='tables_v3_config_table_head_" + document + "' placeholder='表头'></textarea>"
         + "<label class='control-label content-left'>数据源</label>"
         + "<select id='tables_v3_config_data_url_" + document + "' class='selectpicker form-control content-left' data-live-search='true' title='数据源'></select>"
         + "</div>");

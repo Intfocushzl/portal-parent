@@ -11,6 +11,7 @@ import com.yonghui.portal.util.IPUtils;
 import com.yonghui.portal.util.R;
 import com.yonghui.portal.util.redis.ReportUtil;
 import com.yonghui.portal.xss.SQLFilter;
+import io.swagger.annotations.*;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +31,7 @@ import java.util.Map;
  * 对外部系统提供统一的数据接口（portal_openapi_report管理）
  * liuwei 2017.06.07
  */
+@Api(value = "数据化运营平台开放统一接口", description = "开放统一接口")
 @RestController
 @RequestMapping("/openApi/portal")
 public class OpenApiController {
@@ -49,6 +51,17 @@ public class OpenApiController {
     @OpenAuth
     @RequestMapping(value = "report", method = RequestMethod.GET)
     @ResponseBody
+    @ApiOperation(value = "开放统一接口", httpMethod = "GET", notes = "其他参数参考接口文档", produces = "application/json")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "openApiCode", value = "接口编码", paramType = "path", dataType = "string"),
+            @ApiImplicitParam(name = "sign", value = "签名信息", paramType = "header", dataType = "string")
+    })
+    @ApiResponses(value = {
+            @ApiResponse(code = 0, message = "请求成功"),
+            @ApiResponse(code = 1, message = "请求失败"),
+            @ApiResponse(code = -98, message = "验签失败"),
+            @ApiResponse(code = -99, message = "未登录")
+    })
     public R portalCustom(HttpServletRequest req, HttpServletResponse response, String openApiCode) {
         String parameter = null;
         List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();

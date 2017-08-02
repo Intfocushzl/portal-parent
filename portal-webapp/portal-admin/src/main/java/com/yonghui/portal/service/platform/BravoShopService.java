@@ -1,7 +1,6 @@
 package com.yonghui.portal.service.platform;
 
 import com.yonghui.portal.model.platform.BravoShop;
-import com.yonghui.portal.model.sys.SysLog;
 
 import java.util.List;
 import java.util.Map;
@@ -14,7 +13,6 @@ import java.util.Map;
  * @date 2017-05-26 17:02:43
  */
 public interface BravoShopService {
-	void savelog(SysLog sysLog);
 
 	BravoShop queryObject(String shopid);
 	

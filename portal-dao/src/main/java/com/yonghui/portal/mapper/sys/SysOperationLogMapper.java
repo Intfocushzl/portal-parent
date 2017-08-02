@@ -12,6 +12,10 @@ import java.util.Map;
  */
 public interface SysOperationLogMapper extends BaseMapper<SysOperationLog> {
 
+    int reportTotal(Map<String,Object> map);
+
+    List<Map<String,Object>> reportcount(Map<String,Object> map);
+
     //保存用户操作日志
     Integer saveLog(SysOperationLog log);
 

@@ -1,7 +1,6 @@
 package com.yonghui.portal.service.report;
 
 import com.yonghui.portal.model.report.PortalProcedure;
-import com.yonghui.portal.model.sys.SysLog;
 
 import java.util.List;
 import java.util.Map;
@@ -15,8 +14,6 @@ import java.util.Map;
  */
 public interface PortalProcedureService {
 
-	void savelog(SysLog sysLog);
-	
 	PortalProcedure queryObject(Integer id);
 
 	PortalProcedure queryObjectByProcode(String procode);
