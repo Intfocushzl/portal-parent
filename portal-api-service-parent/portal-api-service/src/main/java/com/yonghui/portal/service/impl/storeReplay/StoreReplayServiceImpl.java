@@ -10,6 +10,8 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -33,14 +35,7 @@ public class StoreReplayServiceImpl implements StoreRePlayService {
     @Override
     public void excuteUpdateActionPlan(ActionPlan actionPlan, PortalDataSource portalDataSource) {
         CreateSql createSql = new CreateSql();
-        //查询用户信息
-        String sql = createSql.createSelectUserInfoById(actionPlan.getUserId());
-        List<Map<String, Object>> list = apiDataBaseSqlService.queryExecuteSql(sql, portalDataSource);
-        //将用户信息放入 行动计划 中
-        Map<String, Object> map = list.get(0);
-        actionPlan.setUserName(map.get("user_name") == null ? null : (String) map.get("user_name"));
-        actionPlan.setUserRoleId(Integer.toString(map.get("role_id") == null ? 0 : (Integer) map.get("role_id")));
-        actionPlan.setUserId(map.get("user_num") == null ? null : (String) map.get("user_num"));
+        String sql = null;
         //保存 现在分析 和 行动方案
         sql = createSql.createInsert(actionPlan, "insert", "action_plan");
         log.info("执行的sql:" + sql);
@@ -49,22 +44,13 @@ public class StoreReplayServiceImpl implements StoreRePlayService {
 
     /**
      * 添加评论 excuteUpdateEvaluate
-     *
      * @param evaluate
      * @param portalDataSource
      */
     @Override
     public void excuteUpdateEvaluate(Evaluate evaluate, PortalDataSource portalDataSource) {
         CreateSql createSql = new CreateSql();
-
-        //查询评价人信息
-        String sql = createSql.createSelectUserInfoById(evaluate.getReplyUserId());
-        log.info("执行的sql:" + sql);
-        List<Map<String, Object>> list = apiDataBaseSqlService.queryExecuteSql(sql, portalDataSource);
-        //将评价人信息放入 评价 中
-        Map<String, Object> map = list.get(0);
-        evaluate.setUserName(map.get("user_name") == null ? null : (String) map.get("user_name"));
-        evaluate.setUserRoleId(Integer.toString(map.get("role_id") == null ? 0 : (Integer) map.get("role_id")));
+        String sql = null;
         //保存 评价信息
         sql = createSql.createInsert(evaluate, "insert", "evaluate");
         log.info("执行的sql:" + sql);
@@ -80,6 +66,120 @@ public class StoreReplayServiceImpl implements StoreRePlayService {
     @Override
     public List<Map<String, Object>> getBaseList(String sql,PortalDataSource portalDataSource){
         return apiDataBaseSqlService.queryExecuteSql(sql, portalDataSource);
+    }
+
+    @Override
+    public List<Map<String, Object>> getActionPlanList(String userId, String createdAt,PortalDataSource portalDataSource) {
+        Integer roleId = null;
+        String areaName = null;
+        List<Map<String, Object>> list = null;
+        List<Map<String, Object>> listAction = null;
+        String sql = "";
+        List listActionPlans = new ArrayList<List<Map<String, Object>>>();
+        CreateSql createSql = new CreateSql();
+        //获取当前用户 role_id
+        sql = createSql.createSelectUserInfoById(userId);
+        list = getBaseList(sql, portalDataSource);
+        for (Map<String, Object> mapColumn : list) {
+            roleId = mapColumn.get("role_id") == null ? 0 : (Integer) mapColumn.get("role_id");
+        }
+        log.info("获取当前用户 role_id SQL：" + sql);
+        //获取 用户 大区-门店-商行
+        sql = createSql.createSelectAreaStireShopInfo(userId);
+        list = getBaseList(sql, portalDataSource);
+        for (Map<String, Object> areaMap : list) {
+            //根据权限返回信息
+            areaName = areaMap.get("areaMans") + "";
+        }
+        //通过 role_id 获取行动方案
+        if (44 == roleId) { //小店长 role_id = 44
+            sql = createSql.createSelectActionPlan(null) + " where user_id = " + userId + " and locate('" + areaName + "',store_name) > 0 ";
+            if (null != createdAt) {
+                sql += " and DATE_FORMAT(created_at, '%Y-%m-%d') = '" + createdAt.replace("/", "-") + "'";
+            }
+            log.info("小店回复 SQL：" + sql);
+            //行动方案
+            listAction = getBaseList(sql, portalDataSource);
+            //通过行动方案 ID 获取评价列表
+            for (Map<String, Object> mapObj : listAction) {
+                mapObj.put("replyer", "小店回复");
+                String actionId = mapObj.get("id").toString();
+                sql = createSql.createSelectEvaluateInfo(actionId);
+                //评论
+                list = getBaseList(sql, portalDataSource);
+                mapObj.put("evaluates", list);
+            }
+            listActionPlans.add(listAction);
+        } else if (7 == roleId) {   //战略团队: role_id = 7  只看 区长：role_id = 111
+            sql = createSql.createSelectActionPlan(null) + "  where user_role_id = 111 ";
+            if (null != createdAt) {
+                sql += " and DATE_FORMAT(created_at, '%Y-%m-%d') = '" + createdAt.replace("/", "-") + "'";
+            }
+            log.info("区总回复 SQL：" + sql);
+            //行动方案
+            listAction = getBaseList(sql, portalDataSource);
+            for (Map<String, Object> mapObj : listAction) {
+                mapObj.put("replyer", "区总回复");
+            }
+            listActionPlans.add(listAction);
+        } else if (43 == roleId || 111 == roleId) { //区总团队：品类教练 role_id = 43, 店长 role_id = 43,  区长 role_id = 111
+            //小店回复
+            sql = createSql.createSelectActionPlan(null) + " where user_role_id = 44 and locate('" + areaName + "',store_name) > 0 ";
+            if (null != createdAt) {
+                sql += " and DATE_FORMAT(created_at, '%Y-%m-%d') = '" + createdAt.replace("/", "-") + "'";
+            }
+            log.info("小店回复 SQL：" + sql);
+            //行动方案
+            listAction = getBaseList(sql, portalDataSource);
+            //通过行动方案 ID 获取评价列表
+            for (Map<String, Object> mapObj : listAction) {
+                mapObj.put("replyer", "小店回复");
+                String actionId = mapObj.get("id").toString();
+                sql = createSql.createSelectEvaluateInfo(actionId);
+                //评论
+                list = getBaseList(sql, portalDataSource);
+                mapObj.put("evaluates", list);
+            }
+            listActionPlans.add(listAction);
+            //品类教练回复
+            sql = createSql.createSelectActionPlan(null) + " where user_role_id in (43, 111) and locate('" + areaName + "',store_name) > 0 ";
+            if (null != createdAt) {
+                sql += " and DATE_FORMAT(created_at, '%Y-%m-%d') = '" + createdAt.replace("/", "-") + "'";
+            }
+            log.info("品类教练回复 SQL：" + sql);
+            //行动方案
+            listAction = getBaseList(sql, portalDataSource);
+            //通过行动方案 ID 获取评价列表
+            for (Map<String, Object> mapObj : listAction) {
+                mapObj.put("replyer", "品类教练回复");
+                String actionId = mapObj.get("id").toString();
+                if (!"111".equals(mapObj.get("userRoleId"))) {  //区长的行动方案没有评价
+                    sql = createSql.createSelectEvaluateInfo(actionId);
+                    //评论
+                    list = getBaseList(sql, portalDataSource);
+                    mapObj.put("evaluates", list);
+                }
+            }
+            listActionPlans.add(listAction);
+            //个人回复
+            sql = createSql.createSelectActionPlan(null) + " where user_id = " + userId;
+            log.info("个人回复 SQL：" + sql);
+            //行动方案
+            listAction = getBaseList(sql, portalDataSource);
+            //通过行动方案 ID 获取评价列表
+            for (Map<String, Object> mapObj : listAction) {
+                mapObj.put("replyer", "个人回复");
+                String actionId = mapObj.get("id").toString();
+                if (!"111".equals(mapObj.get("userRoleId"))) {  //区长的行动方案没有评价
+                    sql = createSql.createSelectEvaluateInfo(actionId);
+                    //评论
+                    list = getBaseList(sql, portalDataSource);
+                    mapObj.put("evaluates", list);
+                }
+            }
+            listActionPlans.add(listAction);
+        }
+        return listActionPlans;
     }
 
 }

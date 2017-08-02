@@ -40,7 +40,7 @@ public class CreateSql<T> {
      *通过 UserNum  生成查询用户信息SQL
      */
     public String createSelectUserInfoById(String userId){
-       String sql = "select `t1`.`id` AS `user_id`" +
+       String sql = "select * from (select `t1`.`id` AS `user_id`" +
                 "        ,`t1`.`user_num` AS `user_num`" +
                 "				,`t1`.`user_name` AS `user_name`" +
                 "				,`t3`.`id` AS `group_id`" +
@@ -52,7 +52,7 @@ public class CreateSql<T> {
                 "left join `sys_groups` `t3` on `t2`.`group_id` = `t3`.`id` " +
                 "left join `sys_user_roles` `t4` on `t1`.`id` = `t4`.`user_id` " +
                 "left join `sys_roles` `t5` on `t4`.`role_id` = `t5`.`id`" +
-                " where `t1`.`user_num` = " + userId;
+                " where `t1`.`user_num` = '" + userId + "') AS pp";
         logger.info("创建查询用户信息 SQL 语句： " + sql);
         return sql;
     };
