@@ -8,6 +8,7 @@ import com.yonghui.portal.service.sys.SysoperationLogService;
 import com.yonghui.portal.util.*;
 import com.yonghui.portal.util.redis.ReportUtil;
 import com.yonghui.portal.xss.SQLFilter;
+import io.swagger.annotations.*;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
@@ -30,6 +31,7 @@ import static com.yonghui.portal.interceptor.AuthorizationInterceptor.LOGIN_USER
  * 报表表统一入口
  * 张海 2017.05.11
  */
+@Api(value = "数据化运营平台统一入口", description = "报表表统一入口")
 @RestController
 @RequestMapping("/api/portal")
 public class ApiController {
@@ -46,10 +48,21 @@ public class ApiController {
      * @param req
      * @param response
      * @param yongHuiReportCustomCode 报表编码,字段名唯一，且不允许修改
-     * @return
+     * @return,
      */
     @RequestMapping(value = "custom")
     @ResponseBody
+    @ApiOperation(value = "报表查询一入口", httpMethod = "GET", notes = "报表编码yongHuiReportCustomCode不能为空，其他参数参考接口文档", produces = "application/json")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "yongHuiReportCustomCode", value = "报表编码", paramType = "path", dataType = "string"),
+            @ApiImplicitParam(name = "token", value = "令牌", paramType = "header", dataType = "string")
+    })
+    @ApiResponses(value = {
+            @ApiResponse(code = 0, message = "请求成功"),
+            @ApiResponse(code = 1, message = "请求失败"),
+            @ApiResponse(code = -98, message = "验签失败"),
+            @ApiResponse(code = -99, message = "未登录")
+    })
     public R portalCustom(HttpServletRequest req, HttpServletResponse response, String yongHuiReportCustomCode) {
         String parameter = null;
         List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
@@ -114,7 +127,19 @@ public class ApiController {
      * @param response
      * @param yongHuiReportCustomCode
      */
+    @ApiOperation(value = "报表Excel导出统一入口", httpMethod = "GET", notes = "报表编码yongHuiReportCustomCode不能为空，其他参数参考接口文档")
     @RequestMapping(value = "exportExcel")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "yongHuiReportCustomCode", value = "报表编码", paramType = "path", dataType = "string"),
+            @ApiImplicitParam(name = "name", value = "导出文件名称", paramType = "path", dataType = "string"),
+            @ApiImplicitParam(name = "token", value = "令牌", paramType = "header", dataType = "string")
+    })
+    @ApiResponses(value = {
+            @ApiResponse(code = 0, message = "请求成功"),
+            @ApiResponse(code = 1, message = "请求失败"),
+            @ApiResponse(code = -98, message = "验签失败"),
+            @ApiResponse(code = -99, message = "未登录")
+    })
     public void exportExcel(HttpServletRequest req, HttpServletResponse response, String yongHuiReportCustomCode, String name) {
         name = StringUtils.isEmpty(name) ? "数据化运营平台" : name;
         String parameter = null;
@@ -170,6 +195,17 @@ public class ApiController {
      * @param yongHuiReportCustomCode
      */
     @RequestMapping(value = "headers")
+    @ApiOperation(value = "获取报表标题信息", httpMethod = "GET", notes = "报表编码yongHuiReportCustomCode不能为空，其他参数参考接口文档", produces = "application/json")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "yongHuiReportCustomCode", value = "报表编码", paramType = "path", dataType = "string"),
+            @ApiImplicitParam(name = "token", value = "令牌", paramType = "header", dataType = "string")
+    })
+    @ApiResponses(value = {
+            @ApiResponse(code = 0, message = "请求成功"),
+            @ApiResponse(code = 1, message = "请求失败"),
+            @ApiResponse(code = -98, message = "验签失败"),
+            @ApiResponse(code = -99, message = "未登录")
+    })
     public R headers(HttpServletRequest req, HttpServletResponse response, String yongHuiReportCustomCode) {
         PortalReport report = reportUtil.getPortalReport(yongHuiReportCustomCode);
 

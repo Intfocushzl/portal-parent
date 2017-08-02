@@ -42,6 +42,9 @@
     <!-- dubbo配置文件和spring配置文件必须放到一起 -->
     <import resource="classpath:applicationContext-dubbo-consumer.xml"/>
 
+    <!-- 使用 Swagger Restful API文档时，添加此注解 -->
+    <mvc:default-servlet-handler/>
+
     <!-- restful管理项目API工具 -->
     <bean id="swagger2Config"
           class="springfox.documentation.swagger2.configuration.Swagger2DocumentationConfiguration"/>
@@ -115,6 +118,7 @@
             <!-- 非拦截路径 -->
             <mvc:exclude-mapping path="/login"/>
             <mvc:exclude-mapping path="/swagger**"/>
+            <mvc:exclude-mapping path="/v2/api-docs**"/>
             <!-- 拦截器对象 -->
             <bean id="manageInterceptor" class="com.yonghui.portal.interceptor.AuthorizationInterceptor"/>
         </mvc:interceptor>
@@ -123,8 +127,14 @@
     <bean id="multipartResolver"
           class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
         <!-- 设置上传文件的最大尺寸为1MB -->
-        <property name="defaultEncoding" value="utf-8" />
-        <property name="maxUploadSize" value="504857600" />
-        <property name="maxInMemorySize" value="140960" />
+        <property name="defaultEncoding" value="utf-8"/>
+        <property name="maxUploadSize" value="504857600"/>
+        <property name="maxInMemorySize" value="140960"/>
     </bean>
+
+    <!-- 所有swagger目录的访问，直接访问location指定的目录 -->
+    <mvc:resources mapping="/swagger/**" location="/WEB-INF/swagger/"/>
+    <mvc:resources location="classpath:/META-INF/resources/" mapping="swagger-ui.html"/>
+    <mvc:resources location="classpath:/META-INF/resources/webjars/" mapping="/webjars/**"/>
+
 </beans>

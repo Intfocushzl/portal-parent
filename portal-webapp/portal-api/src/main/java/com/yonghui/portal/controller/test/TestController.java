@@ -6,6 +6,7 @@ import com.yonghui.portal.service.test.TestDataSourceService;
 import com.yonghui.portal.util.R;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Component;
 import org.springframework.ui.ModelMap;
@@ -37,7 +38,8 @@ public class TestController {
      * @IgnoreAuth 忽略Token验证测试
      */
     @IgnoreAuth
-    @ApiOperation(value = "datab")
+    @ApiOperation(value = "数据源b测试", httpMethod = "GET", notes = "添加了自定义属性aaa")
+    @ApiParam(required = true, name = "test", value = "教程入参")
     @RequestMapping(value = "/datab")
     public R datab(ModelMap modelMap) {
         testDataSourceService.dataB();

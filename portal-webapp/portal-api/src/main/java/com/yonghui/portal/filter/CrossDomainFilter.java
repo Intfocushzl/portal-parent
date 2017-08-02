@@ -6,6 +6,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
+ * 跨域问题处理
  * Created by xrr on 2017/5/11.
  */
 public class CrossDomainFilter implements Filter {
