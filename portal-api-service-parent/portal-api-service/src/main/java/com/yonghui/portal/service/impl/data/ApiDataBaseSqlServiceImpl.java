@@ -6,7 +6,6 @@ import com.jolbox.bonecp.ConnectionHandle;
 import com.yonghui.portal.model.report.PortalDataSource;
 import com.yonghui.portal.service.data.ApiDataBaseSqlService;
 import com.yonghui.portal.util.ConstantsUtil;
-import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
 
@@ -316,7 +315,7 @@ public class ApiDataBaseSqlServiceImpl implements ApiDataBaseSqlService {
     /**
      * 通过存储过程查询，将JDBC ResultSet结果集转成List
      *
-     * @param sql
+     * @param sql              存储sql语句
      * @param portalDataSource 数据源
      * @return
      */
@@ -360,7 +359,7 @@ public class ApiDataBaseSqlServiceImpl implements ApiDataBaseSqlService {
     /**
      * 通过自定义sql语句查询，将JDBC ResultSet结果集转成List
      *
-     * @param sql
+     * @param sql              sql语句
      * @param portalDataSource 数据源
      * @return
      */
@@ -398,21 +397,18 @@ public class ApiDataBaseSqlServiceImpl implements ApiDataBaseSqlService {
 
 
     /**
-     * 插入表数据
+     * 插入数据
+     *
+     * @param sql              sql语句
+     * @param portalDataSource 数据源
      */
     @Override
     public void insertTable(String sql, PortalDataSource portalDataSource) {
-        if (StringUtils.isBlank(sql)) {
-            return;
-        }
         Connection conn = null;
-        PreparedStatement ps = null;
         Statement st = null;
-        ResultSet rs;
-
-        // 获取连接，即连接到数据库
-        conn = getConnection(portalDataSource);
         try {
+            // 获取连接，即连接到数据库
+            conn = getConnection(portalDataSource);
             st = conn.createStatement();
             st.executeUpdate(sql);
         } catch (SQLException e) {
@@ -425,25 +421,24 @@ public class ApiDataBaseSqlServiceImpl implements ApiDataBaseSqlService {
     /**
      * 更新表数据
      *
-     * @auth zzh
+     * @param sql              sql语句
+     * @param portalDataSource 数据源
      */
     @Override
     public void updateTable(String sql, PortalDataSource portalDataSource) {
         Connection conn = null;
         PreparedStatement ps = null;
-        // 获取连接，即连接到数据库
-        conn = getConnection(portalDataSource);
         try {
+            // 获取连接，即连接到数据库
+            conn = getConnection(portalDataSource);
             ps = conn.prepareStatement(sql);
             ps.executeUpdate(sql);
-            conn.commit();
         } catch (SQLException e) {
             logger.error("执行更新数据失败" + e.getMessage(), e);
         } finally {
             close(conn, ps);
         }
     }
-
 
     /**
      * 关闭数据库连接
