@@ -383,7 +383,7 @@ public class ApiDataBaseSqlServiceImpl implements ApiDataBaseSqlService {
             while (rs.next()) {
                 rowData = new HashMap<String, Object>();
                 for (int i = 1; i <= columnCount; i++) {
-                    rowData.put(md.getColumnName(i), rs.getObject(i));
+                    rowData.put(md.getColumnName(i).toString(), rs.getObject(i));
                 }
                 reMapList.add(rowData);
             }

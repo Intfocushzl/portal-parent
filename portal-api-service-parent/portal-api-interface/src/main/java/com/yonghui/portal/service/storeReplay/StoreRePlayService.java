@@ -33,4 +33,14 @@ public interface StoreRePlayService {
      */
     public List<Map<String, Object>> getBaseList(String sql, PortalDataSource portalDataSource);
 
+    /**
+     * 查询行动方案及其评价列表
+     * @param userId
+     * @param createdAt
+     * @param portalDataSource
+     * @return
+     */
+    public List<Map<String, Object>> getActionPlanList(String userId, String createdAt,PortalDataSource portalDataSource);
+
+
 }

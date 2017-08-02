@@ -66,7 +66,7 @@ public class ActionPlanController {
     @OpenAuth
     @RequestMapping(value = "addEvaluation", method = RequestMethod.POST)
     @ResponseBody
-    public R addActionPlan(HttpServletRequest req, HttpServletResponse response, Evaluate evaluate, String dataSourceCode) {
+    public R addEvaluation(HttpServletRequest req, HttpServletResponse response, Evaluate evaluate, String dataSourceCode) {
         try {
             if (null != evaluate) {
                 PortalDataSource portalDataSource = reportUtil.getPortalDataSource(dataSourceCode);
@@ -88,132 +88,15 @@ public class ActionPlanController {
     @RequestMapping(value = "listActionPlan", method = RequestMethod.GET)
     @ResponseBody
     public R listActionPlan(HttpServletRequest req, HttpServletResponse response, String userId, String createdAt, String dataSourceCode) {
-        Integer roleId = null;
-        String areaName = null;
-        Map<String, Object> map = new HashMap<String, Object>();
-        List<Map<String, Object>> list = null;
-        List<Map<String, Object>> listAction = null;
         List listActionPlans = new ArrayList<List<Map<String, Object>>>();
-        String sql = "";
-        logger.info("请求URL： " + req.getRequestURL() + "?" + req.getQueryString());
         if (null != userId) {
             try {
-                CreateSql createSql = new CreateSql();
                 PortalDataSource portalDataSource = reportUtil.getPortalDataSource(dataSourceCode);
-                //获取当前用户 role_id
-                sql = createSql.createSelectUserInfoById(userId);
-                list = storeRePlayService.getBaseList(sql, portalDataSource);
-                for (Map<String, Object> mapColumn : list) {
-                    roleId = mapColumn.get("role_id") == null ? 0 : (Integer) mapColumn.get("role_id");
-                }
-                logger.info("获取当前用户 role_id SQL：" + sql);
-                //获取 用户 大区-门店-商行
-                sql = createSql.createSelectAreaStireShopInfo(userId);
-                list = storeRePlayService.getBaseList(sql, portalDataSource);
-                for (Map<String, Object> areaMap : list) {
-                    //根据权限返回信息
-                    areaName = areaMap.get("areaMans") + "";
-                }
-
-                //通过 role_id 获取行动方案
-                if (44 == roleId) { //小店长 role_id = 44
-                    sql = createSql.createSelectActionPlan(null) + " where user_id = " + userId + " and locate('" + areaName + "',store_name) > 0 ";
-                    if (null != createdAt) {
-                        sql += " and DATE_FORMAT(created_at, '%Y-%m-%d') = '" + createdAt.replace("/", "-") + "'";
-                    }
-                    logger.info("小店回复 SQL：" + sql);
-                    //行动方案
-                    listAction = storeRePlayService.getBaseList(sql, portalDataSource);
-
-                    //通过行动方案 ID 获取评价列表
-                    for (Map<String, Object> mapObj : listAction) {
-                        mapObj.put("replyer", "小店回复");
-                        String actionId = mapObj.get("id").toString();
-                        sql = createSql.createSelectEvaluateInfo(actionId);
-                        //评论
-                        list = storeRePlayService.getBaseList(sql, portalDataSource);
-                        mapObj.put("evaluates", list);
-                    }
-
-                    listActionPlans.add(listAction);
-
-                } else if (7 == roleId) {   //战略团队: role_id = 7  只看 区长：role_id = 111
-                    sql = createSql.createSelectActionPlan(null) + "  where user_role_id = 111 ";
-                    if (null != createdAt) {
-                        sql += " and DATE_FORMAT(created_at, '%Y-%m-%d') = '" + createdAt.replace("/", "-") + "'";
-                    }
-                    logger.info("区总回复 SQL：" + sql);
-                    //行动方案
-                    listAction = storeRePlayService.getBaseList(sql, portalDataSource);
-                    for (Map<String, Object> mapObj : listAction) {
-                        mapObj.put("replyer", "区总回复");
-                    }
-                    listActionPlans.add(listAction);
-                } else if (43 == roleId || 111 == roleId) { //区总团队：品类教练 role_id = 43, 店长 role_id = 43,  区长 role_id = 111
-                    //小店回复
-                    sql = createSql.createSelectActionPlan(null) + " where user_role_id = 44 and locate('" + areaName + "',store_name) > 0 ";
-                    if (null != createdAt) {
-                        sql += " and DATE_FORMAT(created_at, '%Y-%m-%d') = '" + createdAt.replace("/", "-") + "'";
-                    }
-                    logger.info("小店回复 SQL：" + sql);
-                    //行动方案
-                    listAction = storeRePlayService.getBaseList(sql, portalDataSource);
-                    //通过行动方案 ID 获取评价列表
-                    for (Map<String, Object> mapObj : listAction) {
-                        mapObj.put("replyer", "小店回复");
-                        String actionId = mapObj.get("id").toString();
-                        sql = createSql.createSelectEvaluateInfo(actionId);
-                        //评论
-                        list = storeRePlayService.getBaseList(sql, portalDataSource);
-                        mapObj.put("evaluates", list);
-                    }
-
-                    listActionPlans.add(listAction);
-
-                    //品类教练回复
-                    sql = createSql.createSelectActionPlan(null) + " where user_role_id in (43, 111) and locate('" + areaName + "',store_name) > 0 ";
-                    if (null != createdAt) {
-                        sql += " and DATE_FORMAT(created_at, '%Y-%m-%d') = '" + createdAt.replace("/", "-") + "'";
-                    }
-                    logger.info("品类教练回复 SQL：" + sql);
-                    //行动方案
-                    listAction = storeRePlayService.getBaseList(sql, portalDataSource);
-                    //通过行动方案 ID 获取评价列表
-                    for (Map<String, Object> mapObj : listAction) {
-                        mapObj.put("replyer", "品类教练回复");
-                        String actionId = mapObj.get("id").toString();
-                        if (!"111".equals(mapObj.get("userRoleId"))) {  //区长的行动方案没有评价
-                            sql = createSql.createSelectEvaluateInfo(actionId);
-                            //评论
-                            list = storeRePlayService.getBaseList(sql, portalDataSource);
-                            mapObj.put("evaluates", list);
-                        }
-                    }
-                    listActionPlans.add(listAction);
-
-                    //个人回复
-                    sql = createSql.createSelectActionPlan(null) + " where user_id = " + userId;
-                    logger.info("个人回复 SQL：" + sql);
-                    //行动方案
-                    listAction = storeRePlayService.getBaseList(sql, portalDataSource);
-                    //通过行动方案 ID 获取评价列表
-                    for (Map<String, Object> mapObj : listAction) {
-                        mapObj.put("replyer", "个人回复");
-                        String actionId = mapObj.get("id").toString();
-                        if (!"111".equals(mapObj.get("userRoleId"))) {  //区长的行动方案没有评价
-                            sql = createSql.createSelectEvaluateInfo(actionId);
-                            //评论
-                            list = storeRePlayService.getBaseList(sql, portalDataSource);
-                            mapObj.put("evaluates", list);
-                        }
-                    }
-                    listActionPlans.add(listAction);
-                }
+                listActionPlans = storeRePlayService.getActionPlanList(userId,createdAt,portalDataSource);
             } catch (Exception e) {
                 logger.error("查询 ActionPlan 以及评价失败：", e);
-                return R.error();
+                return R.error("查询 ActionPlan 以及评价失败");
             }
-
         }
         return R.success(listActionPlans);
     }
@@ -221,6 +104,7 @@ public class ActionPlanController {
     /**
      * 查询评价列表
      * dataSourceCode DATA_000005 参数必填
+     * 通过 actionId 行动方案ID
      */
     @OpenAuth
     @RequestMapping(value = "listEvaluation", method = RequestMethod.GET)
@@ -228,7 +112,6 @@ public class ActionPlanController {
     public R listEvaluation(HttpServletRequest req, HttpServletResponse response, String userId, String actionId, String dataSourceCode) {
         String sql = null;
         List<Map<String, Object>> list = null;
-        logger.info("请求URL： " + req.getRequestURL() + "?" + req.getQueryString());
         sql = new CreateSql().createSelectEvaluateInfo(actionId);
         PortalDataSource portalDataSource = reportUtil.getPortalDataSource(dataSourceCode);
         list = storeRePlayService.getBaseList(sql, portalDataSource);
@@ -248,7 +131,6 @@ public class ActionPlanController {
     public R userInfo(HttpServletRequest req, HttpServletResponse response, String userId, String dataSourceCode) {
         String sql = null;
         Map<String, Object> userMap = new HashMap<String, Object>();
-        logger.info("请求URL： " + req.getRequestURL() + "?" + req.getQueryString());
         List<Map<String, Object>> list = null;
         if (null != userId) {
             CreateSql createSql = new CreateSql();
@@ -286,8 +168,6 @@ public class ActionPlanController {
         String roleId = null;
         List<Map<String, Object>> list = null;
         List<String> returnList = new ArrayList<String>();
-        logger.info("请求URL： " + req.getRequestURL() + "?" + req.getQueryString());
-
         PortalDataSource portalDataSource = reportUtil.getPortalDataSource(dataSourceCode);
         if (null != userId) {
             CreateSql createSql = new CreateSql();
