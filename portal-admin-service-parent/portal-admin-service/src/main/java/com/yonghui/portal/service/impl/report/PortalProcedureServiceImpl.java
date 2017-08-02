@@ -19,13 +19,6 @@ public class PortalProcedureServiceImpl implements PortalProcedureService {
 
 	@Autowired
 	private PortalProcedureMapper portalProcedureMapper;
-	@Autowired
-	private SysLogMapper sysLogMapper;
-
-	@Override
-	public void savelog(SysLog sysLog) {
-		sysLogMapper.save(sysLog);
-	}
 
 	@Override
 	public PortalProcedure queryObject(Integer id){

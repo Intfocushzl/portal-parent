@@ -1,5 +1,6 @@
 package com.yonghui.portal.controller.cindex;
 
+import com.yonghui.portal.annotation.SysLog;
 import com.yonghui.portal.controller.AbstractController;
 import com.yonghui.portal.model.cindex.CIndexRefer;
 import com.yonghui.portal.service.cindex.CIndexReferService;
@@ -86,6 +87,7 @@ public class CIndexReferController extends AbstractController {
     /**
      * 修改
      */
+    @SysLog("删除指标定义")
     @RequestMapping("/delete")
     @RequiresPermissions("cindexrefer:delete")
     public R delete(@RequestBody Integer[] ids) {

@@ -1,10 +1,9 @@
 package com.yonghui.portal.controller.common;
 
+import com.yonghui.portal.annotation.SysLog;
 import com.yonghui.portal.controller.AbstractController;
 import com.yonghui.portal.model.common.DBravoShopAddress;
-import com.yonghui.portal.model.sys.SysLog;
 import com.yonghui.portal.service.common.DBravoShopAddressService;
-import com.yonghui.portal.util.ComputerUtils;
 import com.yonghui.portal.util.PageUtils;
 import com.yonghui.portal.util.Query;
 import com.yonghui.portal.util.R;
@@ -81,22 +80,10 @@ public class DBravoShopAddressController extends AbstractController {
     /**
      * 删除
      */
+    @SysLog("删除门店")
     @RequestMapping("/delete")
     @RequiresPermissions("dbravoshopaddress:delete")
     public R delete(@RequestBody Long[] ids) {
-
-        StringBuffer str = new StringBuffer();
-        for (int i = 0; i < ids.length; i++) {
-            DBravoShopAddress dBravoShopAddress = dBravoShopAddressService.queryObject(ids[i]);
-            str.append("shopid:"+dBravoShopAddress.getShopid()+"==address:"+dBravoShopAddress.getAddress()+"===");
-        }
-
-        SysLog log = new SysLog();
-        log.setIp(ComputerUtils.getIp());
-        log.setUsername(ShiroUtils.getUserEntity().getUsername());
-        log.setOperation(str.toString());
-
-        dBravoShopAddressService.savelog(log);
 
         dBravoShopAddressService.deleteBatch(ids);
         return R.success();

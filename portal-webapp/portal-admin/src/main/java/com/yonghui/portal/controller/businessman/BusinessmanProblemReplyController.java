@@ -1,5 +1,6 @@
 package com.yonghui.portal.controller.businessman;
 
+import com.yonghui.portal.annotation.SysLog;
 import com.yonghui.portal.controller.AbstractController;
 import com.yonghui.portal.model.businessman.BusinessmanProblemReply;
 import com.yonghui.portal.service.businessman.BusinessmanProblemReplyService;
@@ -79,6 +80,7 @@ public class BusinessmanProblemReplyController extends AbstractController {
     /**
      * 修改
      */
+    @SysLog("删除用户问题回复信息")
     @RequestMapping("/delete")
     @RequiresPermissions("businessmanproblemreply:delete")
     public R delete(@RequestBody Long[] ids){

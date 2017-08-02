@@ -16,13 +16,7 @@ import java.util.Map;
 public class DBravoShopAddressServiceImpl implements DBravoShopAddressService {
     @Autowired
     private DBravoShopAddressMapper dBravoShopAddressMapper;
-    @Autowired
-    private SysLogMapper sysLogMapper;
 
-    @Override
-    public void savelog(SysLog sysLog) {
-        sysLogMapper.save(sysLog);
-    }
     @Override
     public DBravoShopAddress queryObject(Long id) {
         return dBravoShopAddressMapper.queryObject(id);

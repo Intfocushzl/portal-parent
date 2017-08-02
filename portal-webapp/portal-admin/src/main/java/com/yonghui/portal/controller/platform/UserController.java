@@ -2,12 +2,15 @@ package com.yonghui.portal.controller.platform;
 
 import com.alibaba.dubbo.common.json.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.yonghui.portal.annotation.SysLog;
 import com.yonghui.portal.controller.AbstractController;
 import com.yonghui.portal.init.InitProperties;
 import com.yonghui.portal.model.global.User;
-import com.yonghui.portal.model.sys.SysLog;
 import com.yonghui.portal.service.global.UserAdminService;
-import com.yonghui.portal.util.*;
+import com.yonghui.portal.util.PageUtils;
+import com.yonghui.portal.util.Query;
+import com.yonghui.portal.util.R;
+import com.yonghui.portal.util.StringUtils;
 import com.yonghui.portal.util.report.columns.HttpMethodUtil;
 import com.yonghui.portal.utils.ShiroUtils;
 import org.apache.commons.collections.map.HashedMap;
@@ -95,26 +98,14 @@ public class UserController extends AbstractController {
     }
 
     /**
-     * 修改
+     * 删除
      */
+    @SysLog("删除用户")
     @RequestMapping("/delete")
     @RequiresPermissions("user:delete")
     public R delete(HttpServletResponse response, @RequestBody Integer[] ids) {
         response.addHeader("Access-Control-Allow-Origin", "*");
         response.setContentType("text/html;charset=UTF-8");
-
-        StringBuffer str = new StringBuffer();
-        for (int i = 0; i < ids.length; i++) {
-            User user = userAdminService.queryObject(ids[i]);
-            str.append("account:"+user.getAccount()+"==title:"+user.getName()+"===");
-        }
-
-        SysLog log = new SysLog();
-        log.setIp(ComputerUtils.getIp());
-        log.setUsername(ShiroUtils.getUserEntity().getUsername());
-        log.setOperation(str.toString());
-
-        userAdminService.savelog(log);
 
         userAdminService.deleteBatch(ids);
         return R.success();

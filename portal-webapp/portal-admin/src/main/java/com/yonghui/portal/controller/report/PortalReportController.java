@@ -1,12 +1,14 @@
 package com.yonghui.portal.controller.report;
 
 import com.alibaba.fastjson.JSONObject;
+import com.yonghui.portal.annotation.SysLog;
 import com.yonghui.portal.controller.AbstractController;
-import com.yonghui.portal.model.report.PortalProcedure;
 import com.yonghui.portal.model.report.PortalReport;
-import com.yonghui.portal.model.sys.SysLog;
 import com.yonghui.portal.service.report.PortalReportService;
-import com.yonghui.portal.util.*;
+import com.yonghui.portal.util.GzipUtils;
+import com.yonghui.portal.util.PageUtils;
+import com.yonghui.portal.util.Query;
+import com.yonghui.portal.util.R;
 import com.yonghui.portal.utils.ShiroUtils;
 import com.yonghui.portal.utils.redis.RedisBizUtilAdmin;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -107,22 +109,11 @@ public class PortalReportController extends AbstractController {
     /**
      * 删除
      */
+    @SysLog("删除报表配置")
     @RequestMapping("/delete")
     @RequiresPermissions("portalreport:delete")
     public R delete(@RequestBody String[] codes) {
 
-        StringBuffer str = new StringBuffer();
-        for (int i = 0; i < codes.length; i++) {
-            PortalReport portalReport = portalReportService.queryObjectByCode(codes[i]);
-            str.append("procode:"+portalReport.getCode()+"==title:"+portalReport.getTitle()+"===");
-        }
-
-        SysLog log = new SysLog();
-        log.setIp(ComputerUtils.getIp());
-        log.setUsername(ShiroUtils.getUserEntity().getUsername());
-        log.setOperation(str.toString());
-
-        portalReportService.savelog(log);
         portalReportService.deleteBatchByCodes(codes);
         for (String c : codes) {
             redisBizUtilAdmin.removePortalReport(c);

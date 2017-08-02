@@ -1,11 +1,9 @@
 package com.yonghui.portal.controller.platform;
 
+import com.yonghui.portal.annotation.SysLog;
 import com.yonghui.portal.controller.AbstractController;
 import com.yonghui.portal.model.platform.BravoShop;
-import com.yonghui.portal.model.report.PortalProcedure;
-import com.yonghui.portal.model.sys.SysLog;
 import com.yonghui.portal.service.platform.BravoShopService;
-import com.yonghui.portal.util.ComputerUtils;
 import com.yonghui.portal.util.PageUtils;
 import com.yonghui.portal.util.Query;
 import com.yonghui.portal.util.R;
@@ -82,22 +80,10 @@ public class BravoShopController extends AbstractController {
     /**
      * 修改
      */
+    @SysLog("删除绿标门店")
     @RequestMapping("/delete")
     @RequiresPermissions("bravoshop:delete")
     public R delete(@RequestBody String[] shopids){
-
-        StringBuffer str = new StringBuffer();
-        for (int i = 0; i < shopids.length; i++) {
-            BravoShop bravoShop = bravoShopService.queryObject(shopids[i]);
-            str.append("sapshopid:"+bravoShop.getSapShopid()+"==name:"+bravoShop.getSname()+"===");
-        }
-
-        SysLog log = new SysLog();
-        log.setIp(ComputerUtils.getIp());
-        log.setUsername(ShiroUtils.getUserEntity().getUsername());
-        log.setOperation(str.toString());
-
-        bravoShopService.savelog(log);
 
 		bravoShopService.deleteBatch(shopids);
         return R.success();

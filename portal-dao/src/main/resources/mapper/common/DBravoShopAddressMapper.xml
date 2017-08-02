@@ -61,6 +61,12 @@
             <if test="remark != null and remark !=''">
                 and remark like concat('%',#{remark},'%')
             </if>
+            <if test="keyword != null and keyword !=''">
+                and (
+                shopid like concat('%',#{keyword},'%')
+                or address like concat('%',#{keyword},'%')
+                )
+            </if>
         </where>
     </select>
 

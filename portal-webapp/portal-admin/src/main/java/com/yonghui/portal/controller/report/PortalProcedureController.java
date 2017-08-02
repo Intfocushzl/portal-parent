@@ -1,11 +1,10 @@
 package com.yonghui.portal.controller.report;
 
 import com.alibaba.fastjson.JSONObject;
+import com.yonghui.portal.annotation.SysLog;
 import com.yonghui.portal.controller.AbstractController;
 import com.yonghui.portal.model.report.PortalProcedure;
-import com.yonghui.portal.model.sys.SysLog;
 import com.yonghui.portal.service.report.PortalProcedureService;
-import com.yonghui.portal.util.ComputerUtils;
 import com.yonghui.portal.util.PageUtils;
 import com.yonghui.portal.util.Query;
 import com.yonghui.portal.util.R;
@@ -86,22 +85,10 @@ public class PortalProcedureController extends AbstractController {
     /**
      * 删除
      */
+    @SysLog("删除存储过程配置")
     @RequestMapping("/delete")
     @RequiresPermissions("portalprocedure:delete")
     public R delete(@RequestBody String[] procodes) {
-
-        StringBuffer str = new StringBuffer();
-        for (int i = 0; i < procodes.length; i++) {
-            PortalProcedure portalProcedure = portalProcedureService.queryObjectByProcode(procodes[i]);
-            str.append("procode:"+portalProcedure.getProcode()+"==title:"+portalProcedure.getTitle()+"===");
-        }
-
-        SysLog log = new SysLog();
-        log.setIp(ComputerUtils.getIp());
-        log.setUsername(ShiroUtils.getUserEntity().getUsername());
-        log.setOperation(str.toString());
-
-        portalProcedureService.savelog(log);
 
         portalProcedureService.deleteBatch(procodes);
         for (String procode : procodes) {

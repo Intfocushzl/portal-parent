@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title></title>
+    #parse("sys/header.html")
+
+	<!-- 图片自适应大小 -->
+	<script type="text/javascript"
+			src="${rc.contextPath}/statics/plugins/jquery-autoimg/jQuery.autoIMG.min.js"></script>
+</head>
+<body>
+<div id="rrapp" v-cloak>
+	<div v-show="showList">
+        <div id="queryDiv" class="queryDiv">
+            <div class="grid-btn">
+				<div class="form-group col-sm-2 keyword">
+					<input type="text" class="form-control" id="keyword" @keyup.enter="query"
+						   placeholder="工号 / 报表编码 / ip">
+				</div>
+                <a class="btn btn-primary" @click="query">查询</a>
+
+				<!--#if($shiro.hasPermission("sysoperationlog:save"))
+				<a class="btn btn-primary" @click="add"><i class="fa fa-plus"></i>&nbsp;新增</a>
+				#end-->
+				#if($shiro.hasPermission("sysoperationlog:update"))
+				<a class="btn btn-primary" @click="update"><i class="fa fa-pencil-square-o"></i>&nbsp;查看</a>
+				#end
+				<!--#if($shiro.hasPermission("sysoperationlog:delete"))
+				<a class="btn btn-primary" @click="del"><i class="fa fa-trash-o"></i>&nbsp;删除</a>
+				#end-->
+			</div>
+		</div>
+	    <table id="jqGrid"></table>
+	    <div id="jqGridPager"></div>
+    </div>
+    
+    <div v-show="!showList" class="panel panel-default">
+		<div class="panel-heading">{{title}}</div>
+		<form class="form-horizontal">
+			<div class="form-group">
+			   	<div class="col-sm-2 control-label">工号</div>
+			   	<div class="col-sm-10">
+			        <input type="text" class="form-control" v-model="sysOperationLog.jobnumber" placeholder="工号"/>
+			    </div>
+			</div>
+			<div class="form-group">
+			   	<div class="col-sm-2 control-label">请求路径</div>
+			   	<div class="col-sm-10">
+			        <input type="text" class="form-control" v-model="sysOperationLog.url" placeholder="请求路径"/>
+			    </div>
+			</div>
+			<div class="form-group">
+			   	<div class="col-sm-2 control-label">开始时间</div>
+			   	<div class="col-sm-10">
+			        <input type="text" class="form-control" v-model="sysOperationLog.starttime" placeholder="开始时间"/>
+			    </div>
+			</div>
+			<div class="form-group">
+			   	<div class="col-sm-2 control-label">结束时间</div>
+			   	<div class="col-sm-10">
+			        <input type="text" class="form-control" v-model="sysOperationLog.endtime" placeholder="结束时间"/>
+			    </div>
+			</div>
+			<div class="form-group">
+			   	<div class="col-sm-2 control-label">报表配置编码</div>
+			   	<div class="col-sm-10">
+			        <input type="text" class="form-control" v-model="sysOperationLog.reportcode" placeholder="报表配置编码"/>
+			    </div>
+			</div>
+			<div class="form-group">
+			   	<div class="col-sm-2 control-label">请求参数</div>
+			   	<div class="col-sm-10">
+			        <input type="text" class="form-control" v-model="sysOperationLog.parameter" placeholder="请求参数，多个用‘@@’分开"/>
+			    </div>
+			</div>
+			<div class="form-group">
+			   	<div class="col-sm-2 control-label">ip</div>
+			   	<div class="col-sm-10">
+			        <input type="text" class="form-control" v-model="sysOperationLog.ip" placeholder="ip"/>
+			    </div>
+			</div>
+			<div class="form-group">
+			   	<div class="col-sm-2 control-label">浏览器</div>
+			   	<div class="col-sm-10">
+			        <input type="text" class="form-control" v-model="sysOperationLog.browser" placeholder="浏览器"/>
+			    </div>
+			</div>
+			<div class="form-group">
+			   	<div class="col-sm-2 control-label">国家</div>
+			   	<div class="col-sm-10">
+			        <input type="text" class="form-control" v-model="sysOperationLog.country" placeholder="国家"/>
+			    </div>
+			</div>
+			<div class="form-group">
+			   	<div class="col-sm-2 control-label">地区</div>
+			   	<div class="col-sm-10">
+			        <input type="text" class="form-control" v-model="sysOperationLog.area" placeholder="地区"/>
+			    </div>
+			</div>
+			<div class="form-group">
+			   	<div class="col-sm-2 control-label">备注</div>
+			   	<div class="col-sm-10">
+			        <input type="text" class="form-control" v-model="sysOperationLog.remark" placeholder="备注"/>
+			    </div>
+			</div>
+			<div class="form-group">
+			   	<div class="col-sm-2 control-label">失败信息</div>
+			   	<div class="col-sm-10">
+			        <input type="text" class="form-control" v-model="sysOperationLog.error" placeholder="失败信息"/>
+			    </div>
+			</div>
+			<div class="form-group">
+			   	<div class="col-sm-2 control-label">请求状态</div>
+			   	<div class="col-sm-10">
+			        <input type="text" class="form-control" v-model="sysOperationLog.status" placeholder="请求状态0成功，1失败"/>
+			    </div>
+			</div>
+			<div class="form-group">
+				<div class="col-sm-2 control-label"></div> 
+				<input type="button" class="btn btn-primary" @click="saveOrUpdate" value="确定"/>
+				&nbsp;&nbsp;<input type="button" class="btn btn-warning" @click="reload" value="返回"/>
+			</div>
+		</form>
+	</div>
+</div>
+
+<script src="${rc.contextPath}/js/sys/sysoperationlog.js?_${date.systemTime}"></script>
+</body>
+</html>

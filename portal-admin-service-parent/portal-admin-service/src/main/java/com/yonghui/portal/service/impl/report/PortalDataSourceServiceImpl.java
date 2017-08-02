@@ -16,13 +16,6 @@ public class PortalDataSourceServiceImpl implements PortalDataSourceService {
 	@Autowired
 	private PortalDataSourceMapper portalDataSourceMapper;
 
-	@Autowired
-	private SysLogMapper sysLogMapper;
-
-	@Override
-	public void savelog(SysLog sysLog) {
-		sysLogMapper.save(sysLog);
-	}
 	@Override
 	public PortalDataSource queryObject(Integer id){
 		return portalDataSourceMapper.queryObject(id);
