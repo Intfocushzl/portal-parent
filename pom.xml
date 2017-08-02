@@ -57,7 +57,7 @@
         <quartz-version>2.2.3</quartz-version>
         <jsch-version>0.1.51</jsch-version>
         <joda-time-version>2.9.9</joda-time-version>
-        <swagger2-version>2.6.1</swagger2-version>
+        <swagger2-version>2.5.0</swagger2-version>
     </properties>
 
     <build>
