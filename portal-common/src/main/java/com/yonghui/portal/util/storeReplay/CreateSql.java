@@ -58,9 +58,6 @@ public class CreateSql<T> {
         return sql;
     }
 
-    ;
-
-
     /**
      * 通过 UserNum  查询用户基本信息 包括 权限，组织
      */
@@ -212,7 +209,6 @@ public class CreateSql<T> {
         }
         return sql;
     }
-
 
     /**
      * 品类教练查询用户的评价列表
