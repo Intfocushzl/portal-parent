@@ -87,13 +87,13 @@ public class StoreReplayServiceImpl implements StoreRePlayService {
             areaName = list.get(0).get("areaMans") + "";
         }
 
-        //通过 role_id 获取行动方
+        //通过 role_id 获取行动方案
         if (44 == roleId) { //小店长 role_id = 44
             sql = createSql.getActionPlan("xd", userId, null, areaName, createdAt.replace("/", ""));
             //小店回复 行动方案
             listAction = getBaseList(sql, portalDataSource);
             //小店回复 评论
-            sql = createSql.getEvaluateList(userId, areaName, createdAt.replace("/", ""));
+            sql = createSql.getEvaluateList(null, areaName, createdAt.replace("/", ""));
             list = getBaseList(sql, portalDataSource);
             for (Map<String, Object> evaluates : list) {
                 //通过行动方案 ID 获取评价列表
