@@ -142,7 +142,6 @@ public class StoreReplayServiceImpl implements StoreRePlayService {
             //1.小店回复
             sql = createSql.getEvaluateListByRole("44", areaName, createdAt.replace("/", "-"));
             list = getBaseList(sql, portalDataSource);
-
             for (Map<String, Object> mapObj : listActionXd) {
                 List<Map<String, Object>> listEvaluatesXd = new ArrayList<>();
                 for (Map<String, Object> evaluates : list) {
@@ -172,7 +171,6 @@ public class StoreReplayServiceImpl implements StoreRePlayService {
             //3.个人所有行动方案的评论
             sql = createSql.getEvaluateList(userId, null, createdAt.replace("/", "-"));
             list = getBaseList(sql, portalDataSource);
-
             for (Map<String, Object> mapObj : listActionGr) {
                 List<Map<String, Object>> listEvaluatesGr = new ArrayList<>();
                 for (Map<String, Object> evaluates : list) {
