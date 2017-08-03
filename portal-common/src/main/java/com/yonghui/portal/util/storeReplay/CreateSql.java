@@ -10,37 +10,37 @@ import java.util.List;
 import java.util.Map;
 
 /**
- *  SQL 语句生成
- *  huangzenglei@intfocus.com
+ * SQL 语句生成
+ * huangzenglei@intfocus.com
  */
 public class CreateSql<T> {
     private static final Logger logger = Logger.getLogger(CreateSql.class);
 
     /**
      * 生成 insert SQL
-     * */
+     */
     public String createInsert(T entity, String sqlType, String tableName) {
         String sql = sqlType + " into " + tableName;
         String column = ""; // 列
         String c_values = ""; // 列值
         List<Map<String, Object>> list = getFiledsInfo(entity);
         for (int i = 0; i < list.size(); i++) {
-            if (list.get(i).get("f_value") != null ) {
+            if (list.get(i).get("f_value") != null) {
                 column += list.get(i).get("f_name") + ",";
                 c_values += "'" + list.get(i).get("f_value") + "',";
             }
         }
         sql += "(" + column.substring(0, column.length() - 1) + ") values ("
                 + c_values.substring(0, c_values.length() - 1) + ");";
-        logger.info("创建 Insert " + tableName +" SQL语句： " + sql);
+        logger.info("创建 Insert " + tableName + " SQL语句： " + sql);
         return sql;
     }
 
     /**
-     *通过 UserNum  生成查询用户信息SQL
+     * 通过 UserNum  生成查询用户信息SQL
      */
-    public String createSelectUserInfoById(String userId){
-       String sql = "select * from (select `t1`.`id` AS `user_id`" +
+    public String createSelectUserInfoById(String userId) {
+        String sql = "select * from (select `t1`.`id` AS `user_id`" +
                 "        ,`t1`.`user_num` AS `user_num`" +
                 "				,`t1`.`user_name` AS `user_name`" +
                 "				,`t3`.`id` AS `group_id`" +
@@ -55,33 +55,74 @@ public class CreateSql<T> {
                 " where `t1`.`user_num` = '" + userId + "') AS pp";
         logger.info("创建查询用户信息 SQL 语句： " + sql);
         return sql;
-    };
+    }
+
+    ;
+
 
     /**
-     *  SQL 取得行动方案
+     * 通过 UserNum  查询用户基本信息 包括 权限，组织
      */
-    public String createSelectActionPlan(String str){
+    public String getUserInfoAndAreaStireShopInfoById(String userId) {
+        String sql = "select pp.*, a.* from " +
+                "(select `t1`.`id` AS `user_id`" +
+                "        ,`t1`.`user_num` AS `user_num`" +
+                "				,`t1`.`user_name` AS `user_name`" +
+                "				,`t3`.`id` AS `group_id`" +
+                "				,`t3`.`group_name` AS `group_name`" +
+                "				,`t5`.`id` AS `role_id`,`t5`" +
+                "				.`role_name` AS `role_name` " +
+                "     from `sys_users` `t1` " +
+                "left join `sys_user_groups` `t2` on `t1`.`user_num` = '" + userId + "' and `t1`.`id` = `t2`.`user_id` " +
+                "left join `sys_groups` `t3` on `t2`.`group_id` = `t3`.`id` " +
+                "left join `sys_user_roles` `t4` on `t1`.`id` = `t4`.`user_id` " +
+                "left join `sys_roles` `t5` on `t4`.`role_id` = `t5`.`id`" +
+                " where `t1`.`user_num` = '" + userId + "') AS pp ";
+
+        sql = sql + "LEFT JOIN ( " +
+                " select " +
+                "employeeNo " +
+                ",b.AreaName " +
+                ",b.areaMans as areaMans " +
+                ",a.shopid as dept_ids " +
+                ",b.sname" +
+                ",groupid  as class_ids " +
+                ",groupname " +
+                "from dw.d_hana_hr_employee a " +
+                "left join dw.d_bravo_shop b " +
+                "on a.shopID = b.SAP_ShopID " +
+                "where a.employeeNo = " + userId +
+                " and a.lkpdate = DATE_FORMAT(DATE_ADD(now(),INTERVAL -1 day),'%Y%m') " +
+                " and groupid is not null) as a ON pp.user_num = a.employeeNo";
+
+        return sql;
+    }
+
+    /**
+     * SQL 取得行动方案
+     */
+    public String createSelectActionPlan(String str) {
         String sql = "select" +
-                    "     id," +
-                    "     user_id," +
-                    "     user_name," +
-                    "     store_code," +
-                    "     store_name," +
-                    "     user_role_id," +
-                    "     situation_analysis," +
-                    "     action_plan," +
-                    "     remark," +
-                    "     created_at," +
-                    "     updated_at" +
-                    "  from store_replay.action_plan " ;
+                "     id," +
+                "     user_id," +
+                "     user_name," +
+                "     store_code," +
+                "     store_name," +
+                "     user_role_id," +
+                "     situation_analysis," +
+                "     action_plan," +
+                "     remark," +
+                "     created_at," +
+                "     updated_at" +
+                "  from store_replay.action_plan ";
         logger.info("创建查询行动方案 SQL 语句： " + sql);
         return sql;
     }
 
     /**
      * 根据 actionId 查询 评价列表
-     * */
-    public String createSelectEvaluateInfo(String actionId){
+     */
+    public String createSelectEvaluateInfo(String actionId) {
         String sql = null;
         sql = "SELECT id, user_name, reply_user_id, store_id, store_name" +
                 "	, user_role_id, action_plan_id, evaluation, remark, created_at" +
@@ -95,8 +136,8 @@ public class CreateSql<T> {
 
     /**
      * 根据 userId（usernum） 查询 大区 - 门店 - 商行
-     * */
-    public String createSelectAreaStireShopInfo(String userId){
+     */
+    public String createSelectAreaStireShopInfo(String userId) {
         String sql = null;
         sql = " select * from (select employeename as user_name" +
                 ",employeeNo as user_num" +
@@ -117,13 +158,13 @@ public class CreateSql<T> {
 
     /**
      * 根据属性名获取属性值
-     * */
+     */
     protected Object getFieldValueByName(String fieldName, Object o) {
         try {
             String firstLetter = fieldName.substring(0, 1).toUpperCase();
             String getter = "get" + firstLetter + fieldName.substring(1);
-            Method method = o.getClass().getMethod(getter, new Class[] {});
-            Object value = method.invoke(o, new Object[] {});
+            Method method = o.getClass().getMethod(getter, new Class[]{});
+            Object value = method.invoke(o, new Object[]{});
             return value;
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
@@ -132,8 +173,8 @@ public class CreateSql<T> {
     }
 
     /**
-     *属性名(f_name)，属性值(f_value)的map组成的list
-     * */
+     * 属性名(f_name)，属性值(f_value)的map组成的list
+     */
     protected List getFiledsInfo(Object o) {
         String obj_name = o.getClass().getSimpleName().toString();
         Field[] fields = o.getClass().getDeclaredFields();

@@ -79,18 +79,11 @@ public class StoreReplayServiceImpl implements StoreRePlayService {
         List listActionPlans = new ArrayList<List<Map<String, Object>>>();
         CreateSql createSql = new CreateSql();
 
-        //获取当前用户 role_id
-        sql = createSql.createSelectUserInfoById(userId);
+        //获取当前用户 权限-大区-门店-商行
+        sql = createSql.getUserInfoAndAreaStireShopInfoById(userId);
         list = getBaseList(sql, portalDataSource);
         if (list.size() > 0) {
             roleId = list.get(0).get("role_id") == null ? 0 : (Integer) list.get(0).get("role_id");
-        }
-
-        //获取 用户 大区-门店-商行
-        sql = createSql.createSelectAreaStireShopInfo(userId);
-        list = getBaseList(sql, portalDataSource);
-        if (list.size() > 0) {
-            //根据权限返回信息
             areaName = list.get(0).get("areaMans") + "";
         }
 
