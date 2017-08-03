@@ -10,7 +10,9 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -36,6 +38,10 @@ public class StoreReplayServiceImpl implements StoreRePlayService {
         CreateSql createSql = new CreateSql();
         String sql = null;
         //保存 现在分析 和 行动方案
+        SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd");
+        String dateIndex = format.format(new Date());
+        actionPlan.setDateIndex(dateIndex);
+
         sql = createSql.createInsert(actionPlan, "insert", "action_plan");
         log.info("执行的sql:" + sql);
         apiDataBaseSqlService.insertTable(sql, portalDataSource);
@@ -93,7 +99,7 @@ public class StoreReplayServiceImpl implements StoreRePlayService {
             //小店回复 行动方案
             listAction = getBaseList(sql, portalDataSource);
             //小店回复 评论
-            sql = createSql.getEvaluateList(null, areaName, createdAt.replace("/", ""));
+            sql = createSql.getEvaluateList(null, areaName, createdAt.replace("/", "-"));
             list = getBaseList(sql, portalDataSource);
             for (Map<String, Object> evaluates : list) {
                 //通过行动方案 ID 获取评价列表
@@ -144,7 +150,7 @@ public class StoreReplayServiceImpl implements StoreRePlayService {
             }
 
             //1.小店回复
-            sql = createSql.getEvaluateListByRole("43", areaName, createdAt.replace("/", ""));
+            sql = createSql.getEvaluateListByRole("43", areaName, createdAt.replace("/", "-"));
             list = getBaseList(sql, portalDataSource);
             for (Map<String, Object> mapObj : listActionXd) {
                 List<Map<String, Object>> listEvaluatesXd = new ArrayList<>();
@@ -161,7 +167,7 @@ public class StoreReplayServiceImpl implements StoreRePlayService {
              }
 
             //2.品类教练回复 评论
-            sql = createSql.getEvaluateListByRole("111", areaName, createdAt.replace("/", ""));
+            sql = createSql.getEvaluateListByRole("111", areaName, createdAt.replace("/", "-"));
             list = getBaseList(sql, portalDataSource);
             for (Map<String, Object> mapObj : listActionPj) {
                 List<Map<String, Object>> listEvaluatesPj = new ArrayList<>();
@@ -177,7 +183,7 @@ public class StoreReplayServiceImpl implements StoreRePlayService {
             }
 
             //3.个人所有行动方案的评论
-            sql = createSql.getEvaluateList(null, areaName, createdAt.replace("/", ""));
+            sql = createSql.getEvaluateList(null, areaName, createdAt.replace("/", "-"));
             list = getBaseList(sql, portalDataSource);
             for (Map<String, Object> mapObj : listActionGr) {
                 List<Map<String, Object>> listEvaluatesGr = new ArrayList<>();

@@ -33,13 +33,24 @@ public class ActionPlan extends Base implements Serializable{
 	//回复类型 如：小店回复
 	private String replyer;
 
+	//时间索引
+	private String dateIndex;
+
+	public String getDateIndex() {
+		return dateIndex;
+	}
+
+	public void setDateIndex(String dateIndex) {
+		this.dateIndex = dateIndex;
+	}
+
 	//评价列表
 	private List<Evaluate> evaluates;
 
 	public ActionPlan() {}
 
-	public ActionPlan(String userId, String userName, String storeCode, String storeName, String userRoleId,
-					  String situationAnalysis, String actionPlan) {
+
+	public ActionPlan(String userId, String userName, String storeCode, String storeName, String userRoleId, String situationAnalysis, String actionPlan, String replyer, String dateIndex, List<Evaluate> evaluates) {
 		this.userId = userId;
 		this.userName = userName;
 		this.storeCode = storeCode;
@@ -47,6 +58,9 @@ public class ActionPlan extends Base implements Serializable{
 		this.userRoleId = userRoleId;
 		this.situationAnalysis = situationAnalysis;
 		this.actionPlan = actionPlan;
+		this.replyer = replyer;
+		this.dateIndex = dateIndex;
+		this.evaluates = evaluates;
 	}
 
 	public String getReplyer() {
