@@ -254,7 +254,7 @@ LPB.plugins['tables_v3'] = function (active_component, leipiplugins) {
                             headerstr = headerstr + prop + "=" + value.table.head[p][prop] + "\n";
                         }
                     }
-                    headerstr = headerstr.substr(1, headerstr.length - 2);
+                    headerstr = headerstr.substr(0, headerstr.length - 2);
                     $(popover).find("#tables_v3_config_table_head_" + document).val(headerstr);
                 }
                 // 加载数据源
