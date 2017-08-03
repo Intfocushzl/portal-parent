@@ -45,7 +45,6 @@ public class ApiServiceImpl implements ApiService {
             sb.append(portalPro.getProname() + " (" + proParameter + ")}");
         }
         log.info("请求的参数：parameter" + parameter);
-        log.info("执行的存储过程:" + sb.toString());
         return apiDataBaseSqlService.queryCallPro(sb.toString(), portalDataSource);
     }
 
@@ -60,7 +59,6 @@ public class ApiServiceImpl implements ApiService {
         // 封装执行的sql语句
         String sql = getSqlByParameter(portalExecuteSql.getExecuteSql(), parameter, portalExecuteSql.getParameter());
         log.info("请求的参数：parameter" + parameter);
-        log.info("执行的sql:" + sql);
         return apiDataBaseSqlService.queryExecuteSql(sql, portalDataSource);
     }
 

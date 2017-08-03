@@ -321,6 +321,7 @@ public class ApiDataBaseSqlServiceImpl implements ApiDataBaseSqlService {
      */
     @Override
     public List<Map<String, Object>> queryCallPro(String sql, PortalDataSource portalDataSource) {
+        logger.info("执行的SQL语句(queryCallPro): " + sql);
         Connection conn;
         ResultSet rs = null;
         CallableStatement cs = null;
@@ -365,6 +366,7 @@ public class ApiDataBaseSqlServiceImpl implements ApiDataBaseSqlService {
      */
     @Override
     public List<Map<String, Object>> queryExecuteSql(String sql, PortalDataSource portalDataSource) {
+        logger.info("执行的SQL语句(queryExecuteSql): " + sql);
         Connection conn = null;
         Statement stmt = null;
         ResultSet rs = null;
@@ -404,6 +406,7 @@ public class ApiDataBaseSqlServiceImpl implements ApiDataBaseSqlService {
      */
     @Override
     public void insertTable(String sql, PortalDataSource portalDataSource) {
+        logger.info("执行的SQL语句(insertTable): " + sql);
         Connection conn = null;
         Statement st = null;
         try {
@@ -426,6 +429,7 @@ public class ApiDataBaseSqlServiceImpl implements ApiDataBaseSqlService {
      */
     @Override
     public void updateTable(String sql, PortalDataSource portalDataSource) {
+        logger.info("执行的SQL语句(updateTable): " + sql);
         Connection conn = null;
         PreparedStatement ps = null;
         try {

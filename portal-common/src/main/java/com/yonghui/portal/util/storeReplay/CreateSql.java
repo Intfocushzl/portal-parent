@@ -86,7 +86,7 @@ public class CreateSql<T> {
         sql = "SELECT id, user_name, reply_user_id, store_id, store_name" +
                 "	, user_role_id, action_plan_id, evaluation, remark, created_at" +
                 "	, updated_at" +
-                " FROM evaluate" +
+                " FROM store_replay.evaluate" +
                 " WHERE action_plan_id = " + actionId;
         logger.info("创建查询评价列表 SQL 语句： " + sql);
         return sql;
