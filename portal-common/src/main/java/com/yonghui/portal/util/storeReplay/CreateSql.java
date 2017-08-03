@@ -121,6 +121,46 @@ public class CreateSql<T> {
     }
 
     /**
+     * 获取 小店，品类教练，个人 行动方案
+     *
+     * @param tag       类型标记
+     * @param userId    用户id
+     * @param roleids   权限
+     * @param areaName  区域
+     * @param createdAt 日期
+     * @return
+     */
+    public String getActionPlan(String tag, String userId, String roleids, String areaName, String createdAt) {
+        String sql = "select" +
+                "     '" + tag + "' as tag," +
+                "     id," +
+                "     user_id," +
+                "     user_name," +
+                "     store_code," +
+                "     store_name," +
+                "     user_role_id," +
+                "     situation_analysis," +
+                "     action_plan," +
+                "     remark," +
+                "     created_at," +
+                "     updated_at" +
+                "  from store_replay.action_plan as plan where 1=1 ";
+        if (StringUtils.isNotBlank(userId)) {
+            sql = sql + " AND plan.user_id = " + userId;
+        }
+        if (StringUtils.isNotBlank(roleids)) {
+            sql = sql + " AND plan.user_role_id in (" + roleids + ")";
+        }
+        if (StringUtils.isNotBlank(areaName)) {
+            sql = sql + " AND locate('" + areaName + "',plan.store_name) > 0 ";
+        }
+        if (StringUtils.isNotBlank(createdAt)) {
+            sql = sql + " AND DATE_FORMAT(plan.created_at, '%Y-%m-%d') = '" + createdAt + "'";
+        }
+        return sql;
+    }
+
+    /**
      * 根据 actionId 查询 评价列表
      */
     public String createSelectEvaluateInfo(String actionId) {

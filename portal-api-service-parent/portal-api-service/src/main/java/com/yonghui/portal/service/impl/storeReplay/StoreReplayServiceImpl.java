@@ -89,10 +89,7 @@ public class StoreReplayServiceImpl implements StoreRePlayService {
 
         //通过 role_id 获取行动方
         if (44 == roleId) { //小店长 role_id = 44
-            sql = createSql.createSelectActionPlan(null) + " where user_id = " + userId + " and locate('" + areaName + "',store_name) > 0 ";
-            if (null != createdAt) {
-                sql += " and DATE_FORMAT(created_at, '%Y-%m-%d') = '" + createdAt.replace("/", "-") + "'";
-            }
+            sql = createSql.getActionPlan("xd", userId, null, areaName, createdAt.replace("/", "-"));
             //小店回复 行动方案
             listAction = getBaseList(sql, portalDataSource);
             //小店回复 评论
@@ -109,10 +106,7 @@ public class StoreReplayServiceImpl implements StoreRePlayService {
             }
             listActionPlans.add(listAction);
         } else if (7 == roleId) {   //战略团队: role_id = 7  只看 区长：role_id = 111
-            sql = createSql.createSelectActionPlan(null) + "  where user_role_id = 111 ";
-            if (null != createdAt) {
-                sql += " and DATE_FORMAT(created_at, '%Y-%m-%d') = '" + createdAt.replace("/", "-") + "'";
-            }
+            sql = createSql.getActionPlan("qz", null, "111", null, createdAt.replace("/", "-"));
             //"区总回复 行动方案
             listAction = getBaseList(sql, portalDataSource);
             for (Map<String, Object> mapObj : listAction) {
@@ -120,67 +114,68 @@ public class StoreReplayServiceImpl implements StoreRePlayService {
             }
             listActionPlans.add(listAction);
         } else if (43 == roleId || 111 == roleId) { //区总团队：品类教练 role_id = 43, 店长 role_id = 43,  区长 role_id = 111
-            //1.小店回复
-            sql = createSql.createSelectActionPlan(null) + " where user_role_id = 44 and locate('" + areaName + "',store_name) > 0 ";
-            if (null != createdAt) {
-                sql += " and DATE_FORMAT(created_at, '%Y-%m-%d') = '" + createdAt.replace("/", "-") + "'";
-            }
-            //小店回复 行动方案
+
+            //行动方案
+            sql = createSql.getActionPlan("xd", null, "44", areaName, createdAt.replace("/", "-"));
+            sql = sql + " UNION ALL ";
+            sql = sql + createSql.getActionPlan("pj", null, "43,111", areaName, createdAt.replace("/", "-"));
+            sql = sql + " UNION ALL ";
+            sql = sql + createSql.getActionPlan("gr", userId, null, null, createdAt.replace("/", "-"));
             listAction = getBaseList(sql, portalDataSource);
-            //小店回复 评论
+
+            List<Map<String, Object>> listActionXd = new ArrayList<>();
+            List<Map<String, Object>> listActionPj = new ArrayList<>();
+            List<Map<String, Object>> listActionGr = new ArrayList<>();
+
+            for (Map<String, Object> mapObj : listAction) {
+                if (mapObj.containsKey("tag")) {
+                    if ("xd".equals(mapObj.get("tag").toString())) {
+                        listActionXd.add(mapObj);
+                    } else if ("pj".equals(mapObj.get("tag").toString())) {
+                        listActionPj.add(mapObj);
+                    } else if ("gr".equals(mapObj.get("tag").toString())) {
+                        listActionGr.add(mapObj);
+                    }
+                }
+            }
+
+            //1.小店回复
             sql = createSql.getEvaluateListByRole("44", areaName, createdAt.replace("/", "-"));
             list = getBaseList(sql, portalDataSource);
             for (Map<String, Object> evaluates : list) {
-                //通过行动方案 ID 获取评价列表
-                for (Map<String, Object> mapObj : listAction) {
+                for (Map<String, Object> mapObj : listActionXd) {
                     if (evaluates.get("action_plan_id").toString().equals(mapObj.get("id").toString())) {
                         mapObj.put("replyer", "小店回复");
                         mapObj.put("evaluates", evaluates);
                     }
                 }
             }
-            listActionPlans.add(listAction);
+            listActionPlans.add(listActionXd);
 
-            //2.品类教练回复
-            sql = createSql.createSelectActionPlan(null) + " where user_role_id in (43, 111) and locate('" + areaName + "',store_name) > 0 ";
-            if (null != createdAt) {
-                sql += " and DATE_FORMAT(created_at, '%Y-%m-%d') = '" + createdAt.replace("/", "-") + "'";
-            }
-            //品类教练回复 行动方案
-            listAction = getBaseList(sql, portalDataSource);
-            //品类教练回复 评论
+            //2.品类教练回复 评论
             sql = createSql.getEvaluateListByRole("43,111", areaName, createdAt.replace("/", "-"));
             list = getBaseList(sql, portalDataSource);
             for (Map<String, Object> evaluates : list) {
-                //通过行动方案 ID 获取评价列表
-                for (Map<String, Object> mapObj : listAction) {
+                for (Map<String, Object> mapObj : listActionPj) {
                     if (evaluates.get("action_plan_id").toString().equals(mapObj.get("id").toString())) {
                         mapObj.put("evaluates", evaluates);
                     }
                 }
             }
-            listActionPlans.add(listAction);
+            listActionPlans.add(listActionPj);
 
-            //3.个人回复
-            sql = createSql.createSelectActionPlan(null) + " where user_id = " + userId;
-            if (null != createdAt) {
-                sql += " and DATE_FORMAT(created_at, '%Y-%m-%d') = '" + createdAt.replace("/", "-") + "'";
-            }
-            //个人所有行动方案
-            listAction = getBaseList(sql, portalDataSource);
-            //个人所有行动方案的评论
+            //3.个人所有行动方案的评论
             sql = createSql.getEvaluateList(userId, null, createdAt.replace("/", "-"));
             list = getBaseList(sql, portalDataSource);
             for (Map<String, Object> evaluates : list) {
-                //通过行动方案 ID 获取评价列表
-                for (Map<String, Object> mapObj : listAction) {
+                for (Map<String, Object> mapObj : listActionGr) {
                     if (evaluates.get("action_plan_id").toString().equals(mapObj.get("id").toString())) {
                         mapObj.put("replyer", "个人回复");
                         mapObj.put("evaluates", evaluates);
                     }
                 }
             }
-            listActionPlans.add(listAction);
+            listActionPlans.add(listActionGr);
         }
         return listActionPlans;
     }
