@@ -248,7 +248,14 @@ LPB.plugins['tables_v3'] = function (active_component, leipiplugins) {
                     $(popover).find("#tables_v3_config_title_" + document).val(value.title);
                 }
                 if (value.table.head !== undefined) {
-                    $(popover).find("#tables_v3_config_table_head_" + document).val(value.table.head);
+                    var headerstr = "";
+                    for (var p in value.table.head) {
+                        for (var prop in value.table.head[p]) {
+                            headerstr = headerstr + prop + "=" + value.table.head[p][prop] + "\n";
+                        }
+                    }
+                    headerstr = headerstr.substr(0, headerstr.length - 2);
+                    $(popover).find("#tables_v3_config_table_head_" + document).val(headerstr);
                 }
                 // 加载数据源
                 forSelectOption("#tables_v3_config_data_url_" + document, value.dataUrl);
