@@ -89,11 +89,11 @@ public class StoreReplayServiceImpl implements StoreRePlayService {
 
         //通过 role_id 获取行动方
         if (44 == roleId) { //小店长 role_id = 44
-            sql = createSql.getActionPlan("xd", userId, null, areaName, createdAt.replace("/", "-"));
+            sql = createSql.getActionPlan("xd", userId, null, areaName, createdAt.replace("/", ""));
             //小店回复 行动方案
             listAction = getBaseList(sql, portalDataSource);
             //小店回复 评论
-            sql = createSql.getEvaluateList(userId, areaName, createdAt.replace("/", "-"));
+            sql = createSql.getEvaluateList(userId, areaName, createdAt.replace("/", ""));
             list = getBaseList(sql, portalDataSource);
             for (Map<String, Object> evaluates : list) {
                 //通过行动方案 ID 获取评价列表
@@ -108,7 +108,7 @@ public class StoreReplayServiceImpl implements StoreRePlayService {
                 listActionPlans.add(listAction);
             }
         } else if (7 == roleId) {   //战略团队: role_id = 7  只看 区长：role_id = 111
-            sql = createSql.getActionPlan("qz", null, "111", null, createdAt.replace("/", "-"));
+            sql = createSql.getActionPlan("qz", null, "111", null, createdAt.replace("/", ""));
             //"区总回复 行动方案
             listAction = getBaseList(sql, portalDataSource);
             for (Map<String, Object> mapObj : listAction) {
@@ -120,11 +120,11 @@ public class StoreReplayServiceImpl implements StoreRePlayService {
         } else if (43 == roleId || 111 == roleId) { //区总团队：品类教练 role_id = 43, 店长 role_id = 43,  区长 role_id = 111
 
             //行动方案
-            sql = createSql.getActionPlan("xd", null, "44", areaName, createdAt.replace("/", "-"));
+            sql = createSql.getActionPlan("xd", null, "44", areaName, createdAt.replace("/", ""));
             sql = sql + " UNION ALL ";
-            sql = sql + createSql.getActionPlan("pj", null, "43,111", areaName, createdAt.replace("/", "-"));
+            sql = sql + createSql.getActionPlan("pj", null, "43,111", areaName, createdAt.replace("/", ""));
             sql = sql + " UNION ALL ";
-            sql = sql + createSql.getActionPlan("gr", userId, null, null, createdAt.replace("/", "-"));
+            sql = sql + createSql.getActionPlan("gr", userId, null, null, createdAt.replace("/", ""));
             listAction = getBaseList(sql, portalDataSource);
 
             List<Map<String, Object>> listActionXd = new ArrayList<>();
@@ -144,7 +144,7 @@ public class StoreReplayServiceImpl implements StoreRePlayService {
             }
 
             //1.小店回复
-            sql = createSql.getEvaluateListByRole("44", areaName, createdAt.replace("/", "-"));
+            sql = createSql.getEvaluateListByRole("44", areaName, createdAt.replace("/", ""));
             list = getBaseList(sql, portalDataSource);
             for (Map<String, Object> mapObj : listActionXd) {
                 List<Map<String, Object>> listEvaluatesXd = new ArrayList<>();
@@ -161,7 +161,7 @@ public class StoreReplayServiceImpl implements StoreRePlayService {
              }
 
             //2.品类教练回复 评论
-            sql = createSql.getEvaluateListByRole("43,111", areaName, createdAt.replace("/", "-"));
+            sql = createSql.getEvaluateListByRole("43,111", areaName, createdAt.replace("/", ""));
             list = getBaseList(sql, portalDataSource);
             for (Map<String, Object> mapObj : listActionPj) {
                 List<Map<String, Object>> listEvaluatesPj = new ArrayList<>();
@@ -177,7 +177,7 @@ public class StoreReplayServiceImpl implements StoreRePlayService {
             }
 
             //3.个人所有行动方案的评论
-            sql = createSql.getEvaluateList(userId, null, createdAt.replace("/", "-"));
+            sql = createSql.getEvaluateList(userId, null, createdAt.replace("/", ""));
             list = getBaseList(sql, portalDataSource);
             for (Map<String, Object> mapObj : listActionGr) {
                 List<Map<String, Object>> listEvaluatesGr = new ArrayList<>();
