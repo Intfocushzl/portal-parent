@@ -142,38 +142,46 @@ public class StoreReplayServiceImpl implements StoreRePlayService {
             //1.小店回复
             sql = createSql.getEvaluateListByRole("44", areaName, createdAt.replace("/", "-"));
             list = getBaseList(sql, portalDataSource);
-            for (Map<String, Object> evaluates : list) {
-                for (Map<String, Object> mapObj : listActionXd) {
+
+            for (Map<String, Object> mapObj : listActionXd) {
+                List<Map<String, Object>> listEvaluatesXd = new ArrayList<>();
+                for (Map<String, Object> evaluates : list) {
                     if (evaluates.get("action_plan_id").toString().equals(mapObj.get("id").toString())) {
-                        mapObj.put("replyer", "小店回复");
-                        mapObj.put("evaluates", evaluates);
+                        listEvaluatesXd.add(evaluates);
                     }
                 }
+                mapObj.put("replyer", "小店回复");
+                mapObj.put("evaluates", listEvaluatesXd);
             }
             listActionPlans.add(listActionXd);
 
             //2.品类教练回复 评论
             sql = createSql.getEvaluateListByRole("43,111", areaName, createdAt.replace("/", "-"));
             list = getBaseList(sql, portalDataSource);
-            for (Map<String, Object> evaluates : list) {
-                for (Map<String, Object> mapObj : listActionPj) {
+            for (Map<String, Object> mapObj : listActionPj) {
+                List<Map<String, Object>> listEvaluatesPj = new ArrayList<>();
+                for (Map<String, Object> evaluates : list) {
                     if (evaluates.get("action_plan_id").toString().equals(mapObj.get("id").toString())) {
-                        mapObj.put("evaluates", evaluates);
+                        listEvaluatesPj.add(evaluates);
                     }
                 }
+                mapObj.put("evaluates", listEvaluatesPj);
             }
             listActionPlans.add(listActionPj);
 
             //3.个人所有行动方案的评论
             sql = createSql.getEvaluateList(userId, null, createdAt.replace("/", "-"));
             list = getBaseList(sql, portalDataSource);
-            for (Map<String, Object> evaluates : list) {
-                for (Map<String, Object> mapObj : listActionGr) {
+
+            for (Map<String, Object> mapObj : listActionGr) {
+                List<Map<String, Object>> listEvaluatesGr = new ArrayList<>();
+                for (Map<String, Object> evaluates : list) {
                     if (evaluates.get("action_plan_id").toString().equals(mapObj.get("id").toString())) {
-                        mapObj.put("replyer", "个人回复");
-                        mapObj.put("evaluates", evaluates);
+                        listEvaluatesGr.add(evaluates);
                     }
                 }
+                mapObj.put("replyer", "个人回复");
+                mapObj.put("evaluates", listEvaluatesGr);
             }
             listActionPlans.add(listActionGr);
         }
