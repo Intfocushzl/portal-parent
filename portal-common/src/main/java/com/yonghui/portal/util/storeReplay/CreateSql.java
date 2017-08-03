@@ -323,6 +323,9 @@ public class CreateSql<T> {
                     case "remark":
                         infoMap.put("f_name", "remark");
                         break;
+                    case "dateIndex":
+                        infoMap.put("f_name", "date_index");
+                        break;
                     default:
                         break;
                 }
