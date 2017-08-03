@@ -297,6 +297,19 @@ LPB.plugins['tables_v3'] = function (active_component, leipiplugins) {
                     "head": []
                 }
             };
+
+            var headstr = $('#tables_v3_config_table_head_' + document).val();
+            if (getStringValue(headstr) != "") {
+                var headarr = headstr.replace(/\n/g, "|").split("|");
+                var headjsonarr = [];
+                $.each(headarr, function (i, value) {
+                    var headjson = {};
+                    headjson[value.split("=")[0]] = value.split("=")[1];
+                    headjsonarr[i] = headjson;
+                });
+                jsonConfigObj.table.head = headjsonarr;
+            }
+
             // 遍历 所有input内容
             var inputs = $(tabDoc).find("input");
             var nameString = "";
@@ -308,10 +321,6 @@ LPB.plugins['tables_v3'] = function (active_component, leipiplugins) {
                     case 'tables_v3_config_title_' + document:
                         nameString = nameString + "_" + attr_val;
                         jsonConfigObj.title = attr_val;
-                        break;
-                    case 'tables_v3_config_table_head_' + document:
-                        nameString = nameString + "_" + attr_val;
-                        jsonConfigObj.table.head = attr_val;
                         break;
                 }
                 active_component.popover("hide");
