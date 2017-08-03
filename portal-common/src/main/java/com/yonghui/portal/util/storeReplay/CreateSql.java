@@ -1,5 +1,6 @@
 package com.yonghui.portal.util.storeReplay;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 import java.lang.reflect.Field;
@@ -132,6 +133,83 @@ public class CreateSql<T> {
         logger.info("创建查询评价列表 SQL 语句： " + sql);
         return sql;
 
+    }
+
+    /**
+     * 查询用户的评价列表
+     *
+     * @param userId
+     * @param areaName
+     * @param createdAt
+     * @return
+     */
+    public String getEvaluateList(String userId, String areaName, String createdAt) {
+        String sql = null;
+        sql = " SELECT"
+                + " e.id,"
+                + "         e.user_name,"
+                + "         e.reply_user_id,"
+                + "         e.store_id,"
+                + "         e.store_name,"
+                + "         e.user_role_id,"
+                + "         e.action_plan_id,"
+                + "         e.evaluation,"
+                + "         e.remark,"
+                + "         e.created_at,"
+                + "         e.updated_at"
+                + " FROM"
+                + " store_replay.action_plan as plan,"
+                + " store_replay.evaluate AS e"
+                + " WHERE plan.id = e.action_plan_id";
+        if (StringUtils.isNotBlank(userId)) {
+            sql = sql + " AND plan.user_id = " + userId;
+        }
+        if (StringUtils.isNotBlank(areaName)) {
+            sql = sql + " AND locate('" + areaName + "',plan.store_name) > 0 ";
+        }
+        if (StringUtils.isNotBlank(createdAt)) {
+            sql = sql + " AND DATE_FORMAT(plan.created_at, '%Y-%m-%d') = '" + createdAt + "'";
+        }
+        return sql;
+    }
+
+
+    /**
+     * 品类教练查询用户的评价列表
+     *
+     * @param roleids
+     * @param areaName
+     * @param createdAt
+     * @return
+     */
+    public String getEvaluateListByRole(String roleids, String areaName, String createdAt) {
+        String sql = null;
+        sql = " SELECT"
+                + " e.id,"
+                + "         e.user_name,"
+                + "         e.reply_user_id,"
+                + "         e.store_id,"
+                + "         e.store_name,"
+                + "         e.user_role_id,"
+                + "         e.action_plan_id,"
+                + "         e.evaluation,"
+                + "         e.remark,"
+                + "         e.created_at,"
+                + "         e.updated_at"
+                + " FROM"
+                + " store_replay.action_plan as plan,"
+                + " store_replay.evaluate AS e"
+                + " WHERE plan.id = e.action_plan_id";
+        if (StringUtils.isNotBlank(roleids)) {
+            sql = sql + " AND plan.user_role_id in (" + roleids + ")";
+        }
+        if (StringUtils.isNotBlank(areaName)) {
+            sql = sql + " AND locate('" + areaName + "',plan.store_name) > 0 ";
+        }
+        if (StringUtils.isNotBlank(createdAt)) {
+            sql = sql + " AND DATE_FORMAT(plan.created_at, '%Y-%m-%d') = '" + createdAt + "'";
+        }
+        return sql;
     }
 
     /**
