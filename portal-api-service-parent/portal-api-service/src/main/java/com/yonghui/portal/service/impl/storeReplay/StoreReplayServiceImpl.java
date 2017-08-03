@@ -87,13 +87,13 @@ public class StoreReplayServiceImpl implements StoreRePlayService {
             areaName = list.get(0).get("areaMans") + "";
         }
 
-        //通过 role_id 获取行动方
+        //通过 role_id 获取行动方案
         if (44 == roleId) { //小店长 role_id = 44
             sql = createSql.getActionPlan("xd", userId, null, areaName, createdAt.replace("/", ""));
             //小店回复 行动方案
             listAction = getBaseList(sql, portalDataSource);
             //小店回复 评论
-            sql = createSql.getEvaluateList(userId, areaName, createdAt.replace("/", ""));
+            sql = createSql.getEvaluateList(null, areaName, createdAt.replace("/", ""));
             list = getBaseList(sql, portalDataSource);
             for (Map<String, Object> evaluates : list) {
                 //通过行动方案 ID 获取评价列表
@@ -144,7 +144,7 @@ public class StoreReplayServiceImpl implements StoreRePlayService {
             }
 
             //1.小店回复
-            sql = createSql.getEvaluateListByRole("44", areaName, createdAt.replace("/", ""));
+            sql = createSql.getEvaluateListByRole("43", areaName, createdAt.replace("/", ""));
             list = getBaseList(sql, portalDataSource);
             for (Map<String, Object> mapObj : listActionXd) {
                 List<Map<String, Object>> listEvaluatesXd = new ArrayList<>();
@@ -161,7 +161,7 @@ public class StoreReplayServiceImpl implements StoreRePlayService {
              }
 
             //2.品类教练回复 评论
-            sql = createSql.getEvaluateListByRole("43,111", areaName, createdAt.replace("/", ""));
+            sql = createSql.getEvaluateListByRole("111", areaName, createdAt.replace("/", ""));
             list = getBaseList(sql, portalDataSource);
             for (Map<String, Object> mapObj : listActionPj) {
                 List<Map<String, Object>> listEvaluatesPj = new ArrayList<>();
@@ -177,7 +177,7 @@ public class StoreReplayServiceImpl implements StoreRePlayService {
             }
 
             //3.个人所有行动方案的评论
-            sql = createSql.getEvaluateList(userId, null, createdAt.replace("/", ""));
+            sql = createSql.getEvaluateList(null, areaName, createdAt.replace("/", ""));
             list = getBaseList(sql, portalDataSource);
             for (Map<String, Object> mapObj : listActionGr) {
                 List<Map<String, Object>> listEvaluatesGr = new ArrayList<>();
