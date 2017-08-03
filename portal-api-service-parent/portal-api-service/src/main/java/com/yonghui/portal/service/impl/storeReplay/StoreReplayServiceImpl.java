@@ -104,7 +104,9 @@ public class StoreReplayServiceImpl implements StoreRePlayService {
                     }
                 }
             }
-            listActionPlans.add(listAction);
+            if (listAction.size() != 0) {
+                listActionPlans.add(listAction);
+            }
         } else if (7 == roleId) {   //战略团队: role_id = 7  只看 区长：role_id = 111
             sql = createSql.getActionPlan("qz", null, "111", null, createdAt.replace("/", "-"));
             //"区总回复 行动方案
@@ -112,7 +114,9 @@ public class StoreReplayServiceImpl implements StoreRePlayService {
             for (Map<String, Object> mapObj : listAction) {
                 mapObj.put("replyer", "区总回复");
             }
-            listActionPlans.add(listAction);
+            if (listAction.size() != 0) {
+                listActionPlans.add(listAction);
+            }
         } else if (43 == roleId || 111 == roleId) { //区总团队：品类教练 role_id = 43, 店长 role_id = 43,  区长 role_id = 111
 
             //行动方案
@@ -152,7 +156,9 @@ public class StoreReplayServiceImpl implements StoreRePlayService {
                 mapObj.put("replyer", "小店回复");
                 mapObj.put("evaluates", listEvaluatesXd);
             }
-            listActionPlans.add(listActionXd);
+             if (listActionXd.size() != 0) {
+                 listActionPlans.add(listActionXd);
+             }
 
             //2.品类教练回复 评论
             sql = createSql.getEvaluateListByRole("43,111", areaName, createdAt.replace("/", "-"));
@@ -166,7 +172,9 @@ public class StoreReplayServiceImpl implements StoreRePlayService {
                 }
                 mapObj.put("evaluates", listEvaluatesPj);
             }
-            listActionPlans.add(listActionPj);
+            if (listActionPj.size() != 0) {
+                listActionPlans.add(listActionPj);
+            }
 
             //3.个人所有行动方案的评论
             sql = createSql.getEvaluateList(userId, null, createdAt.replace("/", "-"));
@@ -181,7 +189,9 @@ public class StoreReplayServiceImpl implements StoreRePlayService {
                 mapObj.put("replyer", "个人回复");
                 mapObj.put("evaluates", listEvaluatesGr);
             }
-            listActionPlans.add(listActionGr);
+            if (listActionGr.size() != 0) {
+                listActionPlans.add(listActionGr);
+            }
         }
         return listActionPlans;
     }

@@ -152,7 +152,7 @@ public class CreateSql<T> {
             sql = sql + " AND locate('" + areaName + "',plan.store_name) > 0 ";
         }
         if (StringUtils.isNotBlank(createdAt)) {
-            sql = sql + " AND DATE_FORMAT(plan.created_at, '%Y-%m-%d') = '" + createdAt + "'";
+            sql = sql + " AND date_index = '" + createdAt + "'";
         }
         return sql;
     }
