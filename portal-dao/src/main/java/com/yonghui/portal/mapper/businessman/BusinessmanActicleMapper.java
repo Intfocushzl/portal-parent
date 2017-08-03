@@ -17,6 +17,8 @@ public interface BusinessmanActicleMapper extends BaseMapper<BusinessmanActicle>
 
     List<Map<String, Object>> acticleList(Map<String, Object> map);
 
+    int acticleTotal(Map<String,Object> map);
+
     List<Map<String, Object>> acticleDetail(Map<String, Object> map);
 
     List<Map<String, Object>> acticleListForPc(Map<String, Object> map);

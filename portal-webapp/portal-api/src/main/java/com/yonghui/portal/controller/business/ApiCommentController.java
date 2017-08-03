@@ -62,7 +62,7 @@ public class ApiCommentController {
         try {
             ApiQuery query = new ApiQuery(params);
             List<Map<String, Object>> commentList = apiCommentService.commentList(query);
-            int total = apiCommentService.queryTotal(query);
+            int total = apiCommentService.commentTotal(query);
             pageUtil = new PageUtils(commentList, total, query.getLimit(), query.getPage());
         } catch (Exception e) {
             return R.error("获取用户评论列表失败");

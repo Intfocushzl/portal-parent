@@ -21,4 +21,5 @@ public interface BusinessmanCommentMapper extends BaseMapper<BusinessmanComment>
 
     void updateIsopen(Integer id,Integer status);
 
+    int commentTotal(Map<String, Object> map);
 }

@@ -3,6 +3,7 @@ package com.yonghui.portal.service.business;
 
 import com.yonghui.portal.model.businessman.BusinessmanActicle;
 import com.yonghui.portal.model.businessman.BusinessmanSubjectInfo;
+import com.yonghui.portal.util.ApiQuery;
 
 import java.util.List;
 import java.util.Map;
@@ -31,4 +32,6 @@ public interface ApiActicleService {
 	List<Map<String, Object>> acticleListForPc(Map<String, Object> map);
 
 	List<Map<String, Object>> acticleDetailForPc(Map<String, Object> map);
+
+    int acticleTotal(Map<String, Object> map);
 }

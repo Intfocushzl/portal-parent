@@ -18,4 +18,5 @@ public interface ApiCommentService {
 
     List<Map<String, Object>> commentList(Map<String, Object> params);
 
+    int commentTotal(Map<String, Object> map);
 }

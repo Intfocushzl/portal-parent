@@ -67,4 +67,9 @@ public class ApiActicleServiceImpl implements ApiActicleService {
         return businessmanActicleMapper.acticleDetailForPc(map);
     }
 
+    @Override
+    public int acticleTotal(Map<String, Object> map) {
+        return businessmanActicleMapper.acticleTotal(map);
+    }
+
 }

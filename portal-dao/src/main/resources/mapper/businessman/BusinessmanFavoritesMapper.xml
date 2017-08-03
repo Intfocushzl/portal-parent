@@ -64,6 +64,19 @@
 		</if>
 	</select>
 
+    <select id="favoriteTotal" resultType="int"  parameterType="Map">
+        SELECT count(*)
+        FROM  businessman_favorites a
+        LEFT JOIN businessman_acticle b ON a.acticle_id = b.id
+        <where>
+            <if test="userId != null and userId !=''">
+                and user_id = #{userId}
+            </if>
+        </where>
+        order by b.CREATE_TIME desc
+    </select>
+
+
 	<select id="favoriteDetail" parameterType="Map" resultType="com.yonghui.portal.model.businessman.BusinessmanFavorites">
 		select * from businessman_favorites where acticle_id = #{acticleId} AND user_id = #{userId};
 	</select>

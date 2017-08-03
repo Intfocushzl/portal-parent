@@ -38,5 +38,8 @@ public class ApiCommentServiceImpl implements ApiCommentService {
         return businessmanCommentMapper.commentList(params);
     }
 
-    ;
+    @Override
+    public int commentTotal(Map<String, Object> map) {
+        return businessmanCommentMapper.commentTotal(map);
+    }
 }

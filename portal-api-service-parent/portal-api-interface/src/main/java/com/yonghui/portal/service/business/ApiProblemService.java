@@ -2,6 +2,7 @@ package com.yonghui.portal.service.business;
 
 
 import com.yonghui.portal.model.businessman.BusinessmanProblem;
+import com.yonghui.portal.util.ApiQuery;
 
 import java.util.List;
 import java.util.Map;
@@ -26,4 +27,6 @@ public interface ApiProblemService {
 	List<Map<String, Object>> problemDetail(Map<String, Object> map);
 
 	List<Map<String, Object>> problemList(Map<String, Object> map);
+
+    int problemTotal(Map<String, Object> map);
 }

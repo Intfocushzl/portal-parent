@@ -16,5 +16,5 @@ public interface ApiNoticeService {
     int queryTotal(Map<String, Object> map);
 
 
-
+    int noticeTotal(Map<String, Object> map);
 }

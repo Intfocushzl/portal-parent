@@ -63,7 +63,7 @@ public class ApiFavoritesController {
         try {
             ApiQuery query = new ApiQuery(params);
             List<Map<String, Object>> favoriteList = apiFavoritesService.favoriteList(query);
-            int total = apiFavoritesService.queryTotal(query);
+            int total = apiFavoritesService.favoriteTotal(query);
             pageUtil = new PageUtils(favoriteList, total, query.getLimit(), query.getPage());
         } catch (Exception e) {
             return R.error("获取用户收藏列表失败");

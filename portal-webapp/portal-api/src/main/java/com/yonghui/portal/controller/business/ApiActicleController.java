@@ -60,7 +60,7 @@ public class ApiActicleController {
         try {
             ApiQuery query = new ApiQuery(params);
             List<Map<String, Object>> acticleList = apiActicleService.acticleList(query);
-            int total = apiActicleService.queryTotal(query);
+            int total = apiActicleService.acticleTotal(query);
             pageUtil = new PageUtils(acticleList, total, query.getLimit(), query.getPage());
         } catch (Exception e) {
             return R.error("获取文章信息失败");

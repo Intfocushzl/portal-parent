@@ -41,6 +41,18 @@
 		ORDER BY n.CREATE_TIME DESC limit #{offset}, #{limit}
 	</select>
 
+    <select id="noticeTotal" resultType="int"  parameterType="Map">
+        SELECT COUNT(*)
+        from platform.businessman_notice n LEFT JOIN (
+        SELECT a.id,0 as see from platform.businessman_notice a,platform.businessman_notice_log b where a.id =
+        b.notice_id and b.CREATER = #{userId}
+        ) c on n.id = c.id where n.expire_time > NOW() and n.`status` = 2 and n.DISABLED = 0  and n.notice_type in
+        <foreach collection="noticeType" item="item" open="(" separator="," close=")">
+            '${item}'
+        </foreach>
+        ORDER BY n.CREATE_TIME DESC
+    </select>
+
 	<select id="queryById" parameterType="Object" resultType="Map">
 		select id,notice_type,title,abstracts,content,CREATE_TIME from businessman_notice where id = #{id}
 	</select>
@@ -77,7 +89,7 @@
 		</if>
 	</select>
 	
- 	<select id="queryTotal" resultType="int">
+ 	<select id="queryTotal"  resultType="int">
 		select count(*) from businessman_notice
         <where>
             <if test="id != null and id !=''">

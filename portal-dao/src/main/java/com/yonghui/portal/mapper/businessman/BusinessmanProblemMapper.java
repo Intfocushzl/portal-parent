@@ -19,4 +19,5 @@ public interface BusinessmanProblemMapper extends BaseMapper<BusinessmanProblem>
 
     public List<Map<String, Object>> problemList(Map<String, Object> map);
 
+    int problemTotal(Map<String, Object> map);
 }

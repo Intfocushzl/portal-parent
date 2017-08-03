@@ -68,7 +68,7 @@ public class ApiProblemController {
         try {
             ApiQuery query = new ApiQuery(params);
             List<Map<String, Object>> problemList = apiProblemService.problemList(query);
-            int total = apiProblemService.queryTotal(query);
+            int total = apiProblemService.problemTotal(query);
             pageUtil = new PageUtils(problemList, total, query.getLimit(), query.getPage());
         } catch (Exception e) {
             return R.error("获取用户返回问题信息失败");

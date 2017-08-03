@@ -26,12 +26,12 @@
 
     <select id="getLargeAreaListByUser" resultType="Map">
         <!-- select '全部' as district union -->
-        select DISTINCT AreaName as district,AreaID from platform.`d_bravo_shop`
+        select DISTINCT AreaName as district,AreaID from dw.`d_bravo_shop`
         where AreaName=#{district}
     </select>
 
     <select id="getNewStoreListByDistrict" resultType="Map">
-        SELECT sap_shopId as id, SName as text FROM platform.`d_bravo_shop` WHERE
+        SELECT sap_shopId as id, SName as text FROM dw.`d_bravo_shop` WHERE
         1=1
         <if
                 test="district != '' and district != null  and district != 'ALL' and district !='全部'">
@@ -49,14 +49,14 @@
     </select>
 
     <select id="getNewStoreListByDistrictNotUser" resultType="Map">
-        SELECT sap_shopId as id, SName as text FROM platform.`d_bravo_shop` WHERE areaMans =#{district}
+        SELECT sap_shopId as id, SName as text FROM dw.`d_bravo_shop` WHERE areaMans =#{district}
     </select>
 
     <select id="getStoreListByDistrict" resultType="Map">
         SELECT
         sap_shopId as id, SName as text
         FROM
-        platform.`d_bravo_shop`
+        dw.`d_bravo_shop`
         WHERE
         1=1
         <if test="district != '' and district != null  and district != 'ALL' and district !='全部'">
@@ -139,11 +139,11 @@
 
     <!--以下确认有用到-->
     <select id="getLargeAreaList" resultType="Map">
-        select DISTINCT AreaName as district,AreaID from platform.`d_bravo_shop`
+        select DISTINCT AreaName as district,AreaID from dw.`d_bravo_shop`
     </select>
 
     <select id="getNewAreaMansListByUser" resultType="Map">
-        select DISTINCT areaMans from platform.`d_bravo_shop`
+        select DISTINCT areaMans from dw.`d_bravo_shop`
         <where>
             Congou=1
             <if test="largeArea != null and largeArea !=''">
@@ -153,11 +153,11 @@
     </select>
     <!-- 新大区 -->
     <select id="getNewAreaMansList" resultType="Map">
-        select DISTINCT areaMans from platform.`d_bravo_shop` WHERE Congou=1;
+        select DISTINCT areaMans from dw.`d_bravo_shop` WHERE Congou=1;
     </select>
 
     <select id="getNewAreaMansListByLargeArea" parameterType="Map" resultType="Map">
-        select DISTINCT areaMans from platform.`d_bravo_shop`
+        select DISTINCT areaMans from dw.`d_bravo_shop`
         <where>
             Congou=1
             <if test="largeArea != null and largeArea !=''">

@@ -24,4 +24,6 @@ public interface BusinessmanFavoritesMapper extends BaseMapper<BusinessmanFavori
     List<BusinessmanFavorites> getListByArticleId(Integer id);
 
     void addFavorites(Map<String, Object> map);
+
+    int favoriteTotal(Map<String, Object> map);
 }

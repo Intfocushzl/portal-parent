@@ -54,17 +54,24 @@
 
     <select id="problemList" resultType="Map" parameterType="Map">
         select a.id , a.content , a.status ,a.CREATE_TIME as createTime from platform.businessman_problem a where a.user_id = #{userId}
+        <if test="keyword != null and keyword !=''">
+            and (
+            title like concat('%',#{keyword},'%')
+            )
+        </if>
         GROUP BY a.CREATE_TIME DESC
         <if test="offset != null and limit != null">
             limit #{offset}, #{limit}
         </if>
+    </select>
+    <select id="problemTotal" resultType="int" parameterType="Map">
+        select count(*) from platform.businessman_problem a where a.user_id = #{userId}
         <if test="keyword != null and keyword !=''">
             and (
             title like concat('%',#{keyword},'%')
             )
         </if>
     </select>
-
     <select id="problemDetail" resultType="Map" parameterType="Map">
       select a.CREATE_TIME as createTime , a.content , a.images , a.status from platform.businessman_problem a where a.id = #{id}
 	</select>

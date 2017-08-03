@@ -41,6 +41,12 @@ public class ApiNoticeServiceImpl implements ApiNoticeService {
 
     @Override
     public int queryTotal(Map<String, Object> map) {
-        return businessmanNoticeMapper.queryTotal();
+        return businessmanNoticeMapper.queryTotal(map);
     }
+
+    @Override
+    public int noticeTotal(Map<String, Object> map) {
+        return businessmanNoticeMapper.noticeTotal(map);
+    }
+
 }

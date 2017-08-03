@@ -57,7 +57,7 @@ public class ApiNoticeController {
         //查询列表数据
         ApiQuery query = new ApiQuery(params);
         List<Map<String,Object>> list = apiNoticeService.noticeList(query);
-        int total = apiNoticeService.queryTotal(query);
+        int total = apiNoticeService.noticeTotal(query);
 
         PageUtils pageUtil = new PageUtils(list, total, query.getLimit(), query.getPage());
         return R.success().put("page", pageUtil);

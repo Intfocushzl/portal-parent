@@ -2,6 +2,7 @@ package com.yonghui.portal.service.business;
 
 
 import com.yonghui.portal.model.businessman.BusinessmanFavorites;
+import com.yonghui.portal.util.ApiQuery;
 
 import java.util.List;
 import java.util.Map;
@@ -36,4 +37,6 @@ public interface ApiFavoritesService {
     BusinessmanFavorites favoriteDetail(Map<String, Object> map);
 
     void addFavorites(Map<String, Object> map);
+
+    int favoriteTotal(Map<String, Object> map);
 }
