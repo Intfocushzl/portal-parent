@@ -107,8 +107,10 @@ public class StoreReplayServiceImpl implements StoreRePlayService {
         list = getBaseList(sql, portalDataSource);
         if (list.size() > 0) {
             roleId = Integer.parseInt(list.get(0).get("role_id").toString()) ;
-            skuRoleId = list.get(0).get("sku_role_id").toString();
-            areaName = list.get(0).get("areaMans") + "";
+             if (43 == roleId) {
+                 skuRoleId = list.get(0).get("sku_role_id").toString();
+             }
+            areaName = list.get(0).get("areaMans") == null ? null :list.get(0).get("areaMans") + "";
         }
 
         //通过 role_id 获取行动方案
