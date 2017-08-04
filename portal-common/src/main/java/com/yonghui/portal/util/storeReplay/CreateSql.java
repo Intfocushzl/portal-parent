@@ -95,7 +95,7 @@ public class CreateSql<T> {
                 " and a.lkpdate = DATE_FORMAT(DATE_ADD(now(),INTERVAL -1 day),'%Y%m') " +
                 " and groupid is not null) as a ON pp.user_num = a.employeeNo ";
 
-        sql = sql + " LEFT JOIN (select user_num , role_id as sku_role_id from  store_replay.sku_coach " +
+        sql = sql + " LEFT JOIN (select user_num , role_id as sku_role_id from  store_replay.sku_coach\n" +
                 " ) AS sku ON pp.user_num = sku.user_num ";
 
         return sql;
@@ -221,7 +221,7 @@ public class CreateSql<T> {
 //                + " e.id,"
                 + "         e.user_name,"
                 + "         e.reply_user_id,"
-                + "         e.store_id,"
+//                + "         e.store_id,"
                 + "         e.store_name,"
                 + "         e.user_role_id,"
                 + "         e.action_plan_id,"
@@ -274,7 +274,7 @@ public class CreateSql<T> {
         if (StringUtils.isNotBlank(roleids)) {
             sql = sql + " AND plan.user_role_id in (" + roleids + ")";
         }
-        if (null != areaName && !"".equals(areaName) && !"null".equals(areaName)) {
+        if (StringUtils.isNotBlank(areaName)) {
             sql = sql + " AND locate('" + areaName + "',plan.store_name) > 0 ";
         }
         if (StringUtils.isNotBlank(createdAt)) {

@@ -121,12 +121,15 @@ public class StoreReplayServiceImpl implements StoreRePlayService {
             //小店回复 评论
             sql = createSql.getEvaluateList(null, areaName, createdAt.replace("/", "-"));
             list = getBaseList(sql, portalDataSource);
+            List<Map<String, Object>> evaluate = null;
             for (Map<String, Object> evaluates : list) {
                 //通过行动方案 ID 获取评价列表
                 for (Map<String, Object> mapObj : listAction) {
                     if (evaluates.get("action_plan_id").toString().equals(mapObj.get("id").toString())) {
 //                        mapObj.put("replyer", "小店回复");
-                        mapObj.put("evaluates", evaluates);
+                        evaluate = new ArrayList<Map<String, Object>>();
+                        evaluate.add(evaluates);
+                        mapObj.put("evaluates", evaluate);
                     }
                 }
             }
