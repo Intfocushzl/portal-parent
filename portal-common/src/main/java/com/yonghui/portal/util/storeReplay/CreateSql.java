@@ -161,7 +161,7 @@ public class CreateSql<T> {
                 "     user_id," +
                 "     user_name," +
                 "     store_code," +
-                "     CONCAT(a.AreaMans,'-',a.sname , '-' , b.groupname) store_name," +
+                "     CONCAT(IFNULL(a.AreaMans,''),'-',IFNULL(a.sname,'') , '-' , IFNULL(b.groupname,'')) store_name," +
                 "     user_role_id," +
                 "     situation_analysis," +
                 "     action_plan," +
@@ -362,7 +362,7 @@ public class CreateSql<T> {
                         infoMap.put("f_name", "date_index");
                         break;
                     case "areaMans":
-                        infoMap.put("f_name", "arae_mans");
+                        infoMap.put("f_name", "area_mans");
                         break;
                     case "groupCode":
                         infoMap.put("f_name", "group_code");

@@ -37,7 +37,15 @@ public class ActionPlan extends Base implements Serializable{
 	private String dateIndex;
 
 	//大区
-	private String arearMans;
+	private String areaMans;
+
+	public String getAreaMans() {
+		return areaMans;
+	}
+
+	public void setAreaMans(String areaMans) {
+		this.areaMans = areaMans;
+	}
 
 	//品类名称
 	private String groupName;
@@ -58,7 +66,7 @@ public class ActionPlan extends Base implements Serializable{
 
 	public ActionPlan() {}
 
-	public ActionPlan(String userId, String userName, String storeCode, String storeName, String userRoleId, String situationAnalysis, String actionPlan, String replyer, String dateIndex, String arearMans, String groupName, String groupCode, List<Evaluate> evaluates) {
+	public ActionPlan(String userId, String userName, String storeCode, String storeName, String userRoleId, String situationAnalysis, String actionPlan, String replyer, String dateIndex, String areaMans, String groupName, String groupCode, List<Evaluate> evaluates) {
 		this.userId = userId;
 		this.userName = userName;
 		this.storeCode = storeCode;
@@ -68,19 +76,12 @@ public class ActionPlan extends Base implements Serializable{
 		this.actionPlan = actionPlan;
 		this.replyer = replyer;
 		this.dateIndex = dateIndex;
-		this.arearMans = arearMans;
+		this.areaMans = areaMans;
 		this.groupName = groupName;
 		this.groupCode = groupCode;
 		this.evaluates = evaluates;
 	}
 
-	public String getArearMans() {
-		return arearMans;
-	}
-
-	public void setArearMans(String arearMans) {
-		this.arearMans = arearMans;
-	}
 
 	public String getGroupName() {
 		return groupName;
