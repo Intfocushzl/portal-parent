@@ -237,7 +237,7 @@ public class CreateSql<T> {
             sql = sql + " AND plan.user_id = " + userId;
         }
         if (null != areaName && !"".equals(areaName) && !"null".equals(areaName)) {
-            sql = sql + " AND locate('" + areaName + "',plan.store_name) > 0 ";
+            sql = sql + " AND locate('" + areaName + "',e.store_name) > 0 ";
         }
         if (StringUtils.isNotBlank(createdAt)) {
             sql = sql + " AND DATE_FORMAT(plan.created_at, '%Y-%m-%d') = '" + createdAt + "'";
