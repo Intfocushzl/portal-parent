@@ -166,7 +166,7 @@ public class CreateSql<T> {
                 "     situation_analysis," +
                 "     action_plan," +
 //                "     remark," +
-//                "     updated_at," +
+                "     updated_at," +
                 "     created_at " +
                 "  from store_replay.action_plan as plan " +
                 "    left join (select DISTINCT sname , sap_shopid ,areaMans from dw.d_bravo_shop ) as a on  plan.store_code = a.SAP_ShopID " +
@@ -184,7 +184,7 @@ public class CreateSql<T> {
             sql = sql + " AND plan.user_role_id in (" + roleids + ")";
         }
         if (null != areaName && !"".equals(areaName) && !"null".equals(areaName)) {
-            sql = sql + " AND locate('" + areaName + "',plan.store_name) > 0 ";
+            sql = sql + " AND locate('" + areaName + "',plan.area_mans) > 0 ";
         }
         if (StringUtils.isNotBlank(createdAt)) {
             sql = sql + " AND date_index = '" + createdAt + "'";
@@ -221,13 +221,13 @@ public class CreateSql<T> {
 //                + " e.id,"
                 + "         e.user_name,"
                 + "         e.reply_user_id,"
-//                + "         e.store_id,"
+                + "         e.store_id,"
                 + "         e.store_name,"
                 + "         e.user_role_id,"
                 + "         e.action_plan_id,"
                 + "         e.evaluation,"
 //                + "         e.remark,"
-//                + "         e.updated_at,"
+                + "         e.updated_at,"
                 + "         e.created_at "
                 + " FROM"
                 + " store_replay.action_plan as plan,"
