@@ -36,6 +36,15 @@ public class ActionPlan extends Base implements Serializable{
 	//时间索引
 	private String dateIndex;
 
+	//大区
+	private String arearMans;
+
+	//品类名称
+	private String groupName;
+
+	//品类编号
+	private String groupCode;
+
 	public String getDateIndex() {
 		return dateIndex;
 	}
@@ -49,8 +58,7 @@ public class ActionPlan extends Base implements Serializable{
 
 	public ActionPlan() {}
 
-
-	public ActionPlan(String userId, String userName, String storeCode, String storeName, String userRoleId, String situationAnalysis, String actionPlan, String replyer, String dateIndex, List<Evaluate> evaluates) {
+	public ActionPlan(String userId, String userName, String storeCode, String storeName, String userRoleId, String situationAnalysis, String actionPlan, String replyer, String dateIndex, String arearMans, String groupName, String groupCode, List<Evaluate> evaluates) {
 		this.userId = userId;
 		this.userName = userName;
 		this.storeCode = storeCode;
@@ -60,9 +68,35 @@ public class ActionPlan extends Base implements Serializable{
 		this.actionPlan = actionPlan;
 		this.replyer = replyer;
 		this.dateIndex = dateIndex;
+		this.arearMans = arearMans;
+		this.groupName = groupName;
+		this.groupCode = groupCode;
 		this.evaluates = evaluates;
 	}
 
+	public String getArearMans() {
+		return arearMans;
+	}
+
+	public void setArearMans(String arearMans) {
+		this.arearMans = arearMans;
+	}
+
+	public String getGroupName() {
+		return groupName;
+	}
+
+	public void setGroupName(String groupName) {
+		this.groupName = groupName;
+	}
+
+	public String getGroupCode() {
+		return groupCode;
+	}
+
+	public void setGroupCode(String groupCode) {
+		this.groupCode = groupCode;
+	}
 	public String getReplyer() {
 		return replyer;
 	}

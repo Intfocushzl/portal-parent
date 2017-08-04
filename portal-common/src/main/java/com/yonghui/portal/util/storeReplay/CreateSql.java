@@ -62,7 +62,7 @@ public class CreateSql<T> {
      * 通过 UserNum  查询用户基本信息 包括 权限，组织
      */
     public String getUserInfoAndAreaStireShopInfoById(String userId) {
-        String sql = "select pp.*, a.* from " +
+        String sql = "select pp.*, a.*,sku.sku_role_id  from " +
                 "(select `t1`.`id` AS `user_id`" +
                 "        ,`t1`.`user_num` AS `user_num`" +
                 "				,`t1`.`user_name` AS `user_name`" +
@@ -86,14 +86,41 @@ public class CreateSql<T> {
                 ",b.sname" +
                 ",groupid  as class_ids " +
                 ",groupname " +
-                "from dw.d_hana_hr_employee a " +
-                "left join dw.d_bravo_shop b " +
-                "on a.shopID = b.SAP_ShopID " +
-                "where a.employeeNo = " + userId +
+                ",concat(b.AreaMans,'-',a.shopid,'-',groupid) as type2_code " +
+                ",concat(b.AreaMans,'-',b.sname,'-',groupname) as type2_name " +
+                " from dw.d_hana_hr_employee a " +
+                " left join dw.d_bravo_shop b " +
+                " on a.shopID = b.SAP_ShopID " +
+                " where a.employeeNo = " + userId +
                 " and a.lkpdate = DATE_FORMAT(DATE_ADD(now(),INTERVAL -1 day),'%Y%m') " +
-                " and groupid is not null) as a ON pp.user_num = a.employeeNo";
+                " and groupid is not null) as a ON pp.user_num = a.employeeNo ";
+
+        sql = sql + " LEFT JOIN (select user_num , role_id as sku_role_id from  store_replay.sku_coach " +
+                " ) AS sku ON pp.user_num = sku.user_num ";
 
         return sql;
+    }
+
+
+    /**
+     * 获取品类教练信息
+     *
+     * @param userId
+     * @return
+     */
+    public String getSkuInfo(String userId) {
+        return "select  a.role_id" +
+                "       ,concat(b.area_mans , '-' ,c.store_code) as store_code " +
+                "       , concat(b.area_mans , '-' , c.store_name) as store_name " +
+                "       , concat(b.area_mans , '-' , d.group_code) as group_code" +
+                "        , concat(b.area_mans , '-' , d.group_name) as group_name " +
+                "        , b.area_mans" +
+                "        from store_replay.sku_coach as a" +
+                "        LEFT join store_replay.user_area as b on a.user_num = b.user_num" +
+                "        LEFT join store_replay.user_store as c on a.user_num = c.user_num" +
+                "        LEFT join store_replay.user_xiaodian as d on a.user_num = d.user_num where " +
+                "        a.user_num = " + userId;
+
     }
 
     /**
@@ -127,28 +154,36 @@ public class CreateSql<T> {
      * @param createdAt 日期
      * @return
      */
-    public String getActionPlan(String tag, String userId, String roleids, String areaName, String createdAt) {
+    public String getActionPlan(String tag, String userId, String roleids, String areaName, String createdAt ,boolean sku) {
         String sql = "select" +
                 "     '" + tag + "' as tag," +
                 "     id," +
                 "     user_id," +
                 "     user_name," +
                 "     store_code," +
-                "     store_name," +
+                "     CONCAT(a.AreaMans,'-',a.sname , '-' , b.groupname) store_name," +
                 "     user_role_id," +
                 "     situation_analysis," +
                 "     action_plan," +
-                "     remark," +
-                "     created_at," +
-                "     updated_at" +
-                "  from store_replay.action_plan as plan where 1=1 ";
-        if (StringUtils.isNotBlank(userId)) {
+//                "     remark," +
+//                "     updated_at," +
+                "     created_at " +
+                "  from store_replay.action_plan as plan " +
+                "    left join (select DISTINCT sname , sap_shopid ,areaMans from dw.d_bravo_shop ) as a on  plan.store_code = a.SAP_ShopID " +
+                "    left join (select DISTINCT groupid ,groupname from  dw.d_category) as b on b.groupid = plan.group_code " +
+                " where 1=1 ";
+        if (StringUtils.isNotBlank(userId) && !sku) {
             sql = sql + " AND plan.user_id = " + userId;
+            // 品类教练
+        }
+        if (sku) {
+            sql = sql + " AND plan.group_code in (select xd.group_code " +
+                    "    from store_replay.user_xiaodian xd where xd.user_num =  " + userId + ") ";
         }
         if (StringUtils.isNotBlank(roleids)) {
             sql = sql + " AND plan.user_role_id in (" + roleids + ")";
         }
-        if (StringUtils.isNotBlank(areaName)) {
+        if (null != areaName && !"".equals(areaName) && !"null".equals(areaName)) {
             sql = sql + " AND locate('" + areaName + "',plan.store_name) > 0 ";
         }
         if (StringUtils.isNotBlank(createdAt)) {
@@ -183,7 +218,7 @@ public class CreateSql<T> {
     public String getEvaluateList(String userId, String areaName, String createdAt) {
         String sql = null;
         sql = " SELECT"
-                + " e.id,"
+//                + " e.id,"
                 + "         e.user_name,"
                 + "         e.reply_user_id,"
                 + "         e.store_id,"
@@ -191,9 +226,9 @@ public class CreateSql<T> {
                 + "         e.user_role_id,"
                 + "         e.action_plan_id,"
                 + "         e.evaluation,"
-                + "         e.remark,"
-                + "         e.created_at,"
-                + "         e.updated_at"
+//                + "         e.remark,"
+//                + "         e.updated_at,"
+                + "         e.created_at "
                 + " FROM"
                 + " store_replay.action_plan as plan,"
                 + " store_replay.evaluate AS e"
@@ -201,7 +236,7 @@ public class CreateSql<T> {
         if (StringUtils.isNotBlank(userId)) {
             sql = sql + " AND plan.user_id = " + userId;
         }
-        if (StringUtils.isNotBlank(areaName)) {
+        if (null != areaName && !"".equals(areaName) && !"null".equals(areaName)) {
             sql = sql + " AND locate('" + areaName + "',plan.store_name) > 0 ";
         }
         if (StringUtils.isNotBlank(createdAt)) {
@@ -239,7 +274,7 @@ public class CreateSql<T> {
         if (StringUtils.isNotBlank(roleids)) {
             sql = sql + " AND plan.user_role_id in (" + roleids + ")";
         }
-        if (StringUtils.isNotBlank(areaName)) {
+        if (null != areaName && !"".equals(areaName) && !"null".equals(areaName)) {
             sql = sql + " AND locate('" + areaName + "',plan.store_name) > 0 ";
         }
         if (StringUtils.isNotBlank(createdAt)) {
@@ -325,6 +360,12 @@ public class CreateSql<T> {
                         break;
                     case "dateIndex":
                         infoMap.put("f_name", "date_index");
+                        break;
+                    case "arearMans":
+                        infoMap.put("f_name", "arae_mans");
+                        break;
+                    case "groupCode":
+                        infoMap.put("f_name", "group_code");
                         break;
                     default:
                         break;

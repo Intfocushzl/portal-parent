@@ -5,6 +5,7 @@ import com.yonghui.portal.model.storeReplay.ActionPlan;
 import com.yonghui.portal.model.storeReplay.Evaluate;
 import com.yonghui.portal.service.data.ApiDataBaseSqlService;
 import com.yonghui.portal.service.storeReplay.StoreRePlayService;
+import com.yonghui.portal.util.RRException;
 import com.yonghui.portal.util.storeReplay.CreateSql;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,11 +37,26 @@ public class StoreReplayServiceImpl implements StoreRePlayService {
     @Override
     public void excuteUpdateActionPlan(ActionPlan actionPlan, PortalDataSource portalDataSource) {
         CreateSql createSql = new CreateSql();
+        List<Map<String, Object>> listSku = new ArrayList<>();
         String sql = null;
+        String skuRoleId = null;
         //保存 现在分析 和 行动方案
         SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd");
         String dateIndex = format.format(new Date());
         actionPlan.setDateIndex(dateIndex);
+
+        if ("43".equals(actionPlan.getUserRoleId())) {
+            sql = createSql.getSkuInfo(actionPlan.getUserId());
+            listSku = getBaseList(sql, portalDataSource);
+            if (listSku.size() > 0) {
+                skuRoleId = listSku.get(0).get("role_id").toString();
+                if (null != skuRoleId) {
+                    actionPlan.setUserRoleId(skuRoleId);
+                }
+            } else {
+                throw new RRException("当前用户不区总团队表中");
+            }
+        }
 
         sql = createSql.createInsert(actionPlan, "insert", "action_plan");
         log.info("执行的sql:" + sql);
@@ -78,6 +94,7 @@ public class StoreReplayServiceImpl implements StoreRePlayService {
     @Override
     public List<Map<String, Object>> getActionPlanList(String userId, String createdAt, PortalDataSource portalDataSource) {
         Integer roleId = null;
+        String skuRoleId = null;
         String areaName = null;
         List<Map<String, Object>> list = null;
         List<Map<String, Object>> listAction = null;
@@ -89,13 +106,14 @@ public class StoreReplayServiceImpl implements StoreRePlayService {
         sql = createSql.getUserInfoAndAreaStireShopInfoById(userId);
         list = getBaseList(sql, portalDataSource);
         if (list.size() > 0) {
-            roleId = list.get(0).get("role_id") == null ? 0 : (Integer) list.get(0).get("role_id");
+            roleId = Integer.parseInt(list.get(0).get("role_id").toString()) ;
+            skuRoleId = list.get(0).get("sku_role_id").toString();
             areaName = list.get(0).get("areaMans") + "";
         }
 
         //通过 role_id 获取行动方案
         if (44 == roleId) { //小店长 role_id = 44
-            sql = createSql.getActionPlan("xd", userId, null, areaName, createdAt.replace("/", ""));
+            sql = createSql.getActionPlan("xd", userId, null, areaName, createdAt.replace("/", ""),false);
             //小店回复 行动方案
             listAction = getBaseList(sql, portalDataSource);
             //小店回复 评论
@@ -105,7 +123,7 @@ public class StoreReplayServiceImpl implements StoreRePlayService {
                 //通过行动方案 ID 获取评价列表
                 for (Map<String, Object> mapObj : listAction) {
                     if (evaluates.get("action_plan_id").toString().equals(mapObj.get("id").toString())) {
-                        mapObj.put("replyer", "小店回复");
+//                        mapObj.put("replyer", "小店回复");
                         mapObj.put("evaluates", evaluates);
                     }
                 }
@@ -114,7 +132,7 @@ public class StoreReplayServiceImpl implements StoreRePlayService {
                 listActionPlans.add(listAction);
             }
         } else if (7 == roleId) {   //战略团队: role_id = 7  只看 区长：role_id = 111
-            sql = createSql.getActionPlan("qz", null, "111", null, createdAt.replace("/", ""));
+            sql = createSql.getActionPlan("qz", null, "111", null, createdAt.replace("/", ""),false);
             //"区总回复 行动方案
             listAction = getBaseList(sql, portalDataSource);
             for (Map<String, Object> mapObj : listAction) {
@@ -124,13 +142,25 @@ public class StoreReplayServiceImpl implements StoreRePlayService {
                 listActionPlans.add(listAction);
             }
         } else if (43 == roleId || 111 == roleId) { //区总团队：品类教练 role_id = 43, 店长 role_id = 43,  区长 role_id = 111
+            //行动方案  xd小店    pj品类教练   gr个人  dq大区
+            boolean sku = false;
+            if("45".equals(skuRoleId)){
+                sku = true ;
+            }
 
-            //行动方案
-            sql = createSql.getActionPlan("xd", null, "44", areaName, createdAt.replace("/", ""));
+            sql = createSql.getActionPlan("xd", userId, "44", areaName, createdAt.replace("/", "") , sku);
             sql = sql + " UNION ALL ";
-            sql = sql + createSql.getActionPlan("pj", null, "43,111", areaName, createdAt.replace("/", ""));
+            sql = sql + createSql.getActionPlan("pj", null, "43,111", areaName, createdAt.replace("/", ""),false);
             sql = sql + " UNION ALL ";
-            sql = sql + createSql.getActionPlan("gr", userId, null, null, createdAt.replace("/", ""));
+            sql = sql + createSql.getActionPlan("gr", userId, null, null, createdAt.replace("/",  ""),false);
+
+            //sql = sql + " UNION ALL ";
+            //sql = sql + createSql.getActionPlan("dq", null, "45,111", areaName, createdAt.replace("/", ""));
+            // 品类教练
+            //sql = sql + " UNION ALL ";
+            //sql = sql + createSql.getActionPlan("pl", null, "45,111", areaName, createdAt.replace("/", ""));
+
+
             listAction = getBaseList(sql, portalDataSource);
 
             List<Map<String, Object>> listActionXd = new ArrayList<>();
@@ -150,7 +180,7 @@ public class StoreReplayServiceImpl implements StoreRePlayService {
             }
 
             //1.小店回复
-            sql = createSql.getEvaluateListByRole("43", areaName, createdAt.replace("/", "-"));
+            sql = createSql.getEvaluateListByRole("45", areaName, createdAt.replace("/", "-"));
             list = getBaseList(sql, portalDataSource);
             for (Map<String, Object> mapObj : listActionXd) {
                 List<Map<String, Object>> listEvaluatesXd = new ArrayList<>();
@@ -159,12 +189,12 @@ public class StoreReplayServiceImpl implements StoreRePlayService {
                         listEvaluatesXd.add(evaluates);
                     }
                 }
-                mapObj.put("replyer", "小店回复");
+//                mapObj.put("replyer", "小店回复");
                 mapObj.put("evaluates", listEvaluatesXd);
             }
-             if (listActionXd.size() != 0) {
-                 listActionPlans.add(listActionXd);
-             }
+            if (listActionXd.size() != 0) {
+                listActionPlans.add(listActionXd);
+            }
 
             //2.品类教练回复 评论
             sql = createSql.getEvaluateListByRole("111", areaName, createdAt.replace("/", "-"));
@@ -192,7 +222,7 @@ public class StoreReplayServiceImpl implements StoreRePlayService {
                         listEvaluatesGr.add(evaluates);
                     }
                 }
-                mapObj.put("replyer", "个人回复");
+//                mapObj.put("replyer", "个人回复");
                 mapObj.put("evaluates", listEvaluatesGr);
             }
             if (listActionGr.size() != 0) {

@@ -9,6 +9,7 @@ import com.yonghui.portal.service.storeReplay.StoreRePlayService;
 import com.yonghui.portal.util.R;
 import com.yonghui.portal.util.redis.ReportUtil;
 import com.yonghui.portal.util.storeReplay.CreateSql;
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.WebDataBinder;
@@ -54,6 +55,7 @@ public class ActionPlanController {
             }
         } catch (Exception e) {
             logger.error("ActionPlan添加失败： ", e);
+            return R.error(e.getMessage());
         }
         return R.success("提交成功！");
     }
@@ -89,10 +91,10 @@ public class ActionPlanController {
     @ResponseBody
     public R listActionPlan(HttpServletRequest req, HttpServletResponse response, String userId, String createdAt, String dataSourceCode) {
         List listActionPlans = new ArrayList<List<Map<String, Object>>>();
-        if (null != userId) {
+        if (StringUtils.isNotBlank(userId)) {
             try {
                 PortalDataSource portalDataSource = reportUtil.getPortalDataSource(dataSourceCode);
-                listActionPlans = storeRePlayService.getActionPlanList(userId,createdAt,portalDataSource);
+                listActionPlans = storeRePlayService.getActionPlanList(userId, createdAt, portalDataSource);
             } catch (Exception e) {
                 logger.error("查询 ActionPlan 以及评价失败：", e);
                 return R.error("查询 ActionPlan 以及评价失败");
@@ -112,11 +114,15 @@ public class ActionPlanController {
     public R listEvaluation(HttpServletRequest req, HttpServletResponse response, String userId, String actionId, String dataSourceCode) {
         String sql = null;
         List<Map<String, Object>> list = null;
-        sql = new CreateSql().createSelectEvaluateInfo(actionId);
-        PortalDataSource portalDataSource = reportUtil.getPortalDataSource(dataSourceCode);
-        list = storeRePlayService.getBaseList(sql, portalDataSource);
-        if (list.size() == 0) {
-            return R.error("目前无评价信息");
+        if (StringUtils.isNotBlank(actionId)) {
+            sql = new CreateSql().createSelectEvaluateInfo(actionId);
+            PortalDataSource portalDataSource = reportUtil.getPortalDataSource(dataSourceCode);
+            list = storeRePlayService.getBaseList(sql, portalDataSource);
+            if (list.size() == 0) {
+                return R.error("目前无评价信息");
+            }
+        } else {
+            return R.error("请选择行动方案ID");
         }
         return R.success(list);
     }
@@ -132,7 +138,7 @@ public class ActionPlanController {
         String sql = null;
         Map<String, Object> userMap = new HashMap<String, Object>();
         List<Map<String, Object>> list = null;
-        if (null != userId) {
+        if (StringUtils.isNotBlank(userId)) {
             CreateSql createSql = new CreateSql();
             try {
                 PortalDataSource portalDataSource = reportUtil.getPortalDataSource(dataSourceCode);
@@ -164,48 +170,67 @@ public class ActionPlanController {
     @ResponseBody
     public R listStore(HttpServletRequest req, HttpServletResponse response, String userId, String dataSourceCode) {
         String sql = null;
-        String res = null;
         String roleId = null;
+        String skuRoleId = null;
+        List<Map<String, Object>> result = new ArrayList<Map<String, Object>>();
+        Map<String, Object> mapValue = new HashMap<>();
         List<Map<String, Object>> list = null;
-        List<String> returnList = new ArrayList<String>();
+        List<Map<String, Object>> listSku = new ArrayList<>();
         PortalDataSource portalDataSource = reportUtil.getPortalDataSource(dataSourceCode);
         if (null != userId) {
             CreateSql createSql = new CreateSql();
             //获取用户权限
-            sql = createSql.createSelectUserInfoById(userId);
+            sql = createSql.getUserInfoAndAreaStireShopInfoById(userId);
             list = storeRePlayService.getBaseList(sql, portalDataSource);
-            for (Map<String, Object> map : list) {
-                roleId = map.get("role_id") == null ? null : Integer.toString((Integer) map.get("role_id"));
+            if (list.size() > 0) {
+                roleId = list.get(0).get("role_id").toString();
             }
-
             //获取 用户 大区-门店-商行
-            sql = createSql.createSelectAreaStireShopInfo(userId);
-            list = storeRePlayService.getBaseList(sql, portalDataSource);
-            for (Map<String, Object> map : list) {
+            if (list.size() > 0) {
                 //根据权限返回信息
+
                 if ("44".equals(roleId)) { //小店长
-                    res = map.get("areaMans") + "-" + map.get("sname") + "-" + map.get("groupname");
+                    //大区-门店-小店
+                    mapValue.put("type", 3);
+                    mapValue.put("code", list.get(0).get("type2_code"));
+                    mapValue.put("name", list.get(0).get("type2_name"));
+                    result.add(mapValue);
                 } else if ("43".equals(roleId)) { //品类教练 店长 区总
-                    res = map.get("areaMans") + "-" + map.get("sname");
-                } else if ("111".equals(roleId)) { //战略团队
-                    res = map.get("areaMans") + "";
+                    sql = createSql.getSkuInfo(userId);
+                    listSku = storeRePlayService.getBaseList(sql, portalDataSource);
+                    skuRoleId = listSku.get(0).get("role_id").toString();
+                    if ("45".equalsIgnoreCase(skuRoleId)) {
+                        // 品类教练，需要取出“大区-门店”、“大区-品类”
+                        for (Map<String, Object> map : listSku) {
+                            if (null != map.get("store_code")) {
+                                //大区-门店
+                                mapValue.put("type", 2);
+                                mapValue.put("code", map.get("store_code").toString());
+                                mapValue.put("name", map.get("store_name").toString());
+                                result.add(mapValue);
+                            }
+                            if (null != map.get("group_code")) {
+                                //大区-商行
+                                mapValue = new HashMap<String, Object>();
+                                mapValue.put("type", 4);
+                                mapValue.put("code", map.get("group_code").toString());
+                                mapValue.put("name", map.get("group_name").toString());
+                                result.add(mapValue);
+                            }
+                        }
+                    } else if ("111".equalsIgnoreCase(skuRoleId)) {
+                        for (Map<String, Object> mp : listSku) {
+                            //只有大区
+                            mapValue = new HashMap<String, Object>();
+                            mapValue.put("type", 1);
+                            mapValue.put("code", mp.get("area_mans").toString());
+                            mapValue.put("name", mp.get("area_mans").toString());
+                            result.add(mapValue);
+                        }
+                    }
                 }
             }
-            if (null == res || "".equals(res)) {
-                return R.error("获取用户门店信息失败！ 用户编号为: " + userId);
-            }
-            returnList.add(res);
         }
-        return R.success(returnList);
-    }
-
-    @InitBinder("actionPlan")
-    public void initBinderActionPlan(WebDataBinder binder) {
-        binder.setFieldDefaultPrefix("actionPlan.");
-    }
-
-    @InitBinder("evaluate")
-    public void initBinderEvaluate(WebDataBinder binder) {
-        binder.setFieldDefaultPrefix("evaluate.");
+        return R.success(result);
     }
 }
