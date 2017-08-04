@@ -93,8 +93,12 @@ public class ActionPlanController {
         List listActionPlans = new ArrayList<List<Map<String, Object>>>();
         if (StringUtils.isNotBlank(userId)) {
             try {
-                PortalDataSource portalDataSource = reportUtil.getPortalDataSource(dataSourceCode);
-                listActionPlans = storeRePlayService.getActionPlanList(userId, createdAt, portalDataSource);
+                if (null != createdAt) {
+                    PortalDataSource portalDataSource = reportUtil.getPortalDataSource(dataSourceCode);
+                    listActionPlans = storeRePlayService.getActionPlanList(userId, createdAt, portalDataSource);
+                } else {
+                    return R.error("日期为必填");
+                }
             } catch (Exception e) {
                 logger.error("查询 ActionPlan 以及评价失败：", e);
                 return R.error("查询 ActionPlan 以及评价失败");
