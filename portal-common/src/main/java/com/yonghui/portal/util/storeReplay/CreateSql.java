@@ -161,7 +161,10 @@ public class CreateSql<T> {
                 "     user_id," +
                 "     user_name," +
                 "     store_code," +
-                "     CONCAT(IFNULL(a.AreaMans,''),'-',IFNULL(a.sname,'') , '-' , IFNULL(b.groupname,'')) store_name," +
+//                "     CONCAT(IFNULL(a.AreaMans,''),'-',IFNULL(a.sname,'') , '-' , IFNULL(b.groupname,'')) store_name," +
+                "     CONCAT(IF(plan.area_mans is null ,'',CONCAT(plan.area_mans,'')) " +
+                "       ,IF(a.sname is null ,'',CONCAT('-',a.sname)) " +
+                "       ,IF(b.groupname is null ,'',CONCAT('-',b.groupname) )) store_name," +
                 "     user_role_id," +
                 "     situation_analysis," +
                 "     action_plan," +
@@ -259,12 +262,12 @@ public class CreateSql<T> {
                 + " e.id,"
                 + "         e.user_name,"
                 + "         e.reply_user_id,"
-                + "         e.store_id,"
+//                + "         e.store_id,"
                 + "         e.store_name,"
                 + "         e.user_role_id,"
                 + "         e.action_plan_id,"
                 + "         e.evaluation,"
-                + "         e.remark,"
+//                + "         e.remark,"
                 + "         e.created_at,"
                 + "         e.updated_at"
                 + " FROM"
@@ -272,13 +275,13 @@ public class CreateSql<T> {
                 + " store_replay.evaluate AS e"
                 + " WHERE plan.id = e.action_plan_id";
         if (StringUtils.isNotBlank(roleids)) {
-            sql = sql + " AND plan.user_role_id in (" + roleids + ")";
+            sql = sql + " AND e.user_role_id in (" + roleids + ")";
         }
         if (StringUtils.isNotBlank(areaName)) {
-            sql = sql + " AND locate('" + areaName + "',plan.store_name) > 0 ";
+            sql = sql + " AND locate('" + areaName + "',e.store_name) > 0 ";
         }
         if (StringUtils.isNotBlank(createdAt)) {
-            sql = sql + " AND DATE_FORMAT(plan.created_at, '%Y-%m-%d') = '" + createdAt + "'";
+            sql = sql + " AND DATE_FORMAT(e.created_at, '%Y-%m-%d') = '" + createdAt + "'";
         }
         return sql;
     }

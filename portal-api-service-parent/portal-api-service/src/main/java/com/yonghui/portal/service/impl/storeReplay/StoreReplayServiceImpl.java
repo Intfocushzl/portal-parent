@@ -188,7 +188,7 @@ public class StoreReplayServiceImpl implements StoreRePlayService {
             }
 
             //1.小店回复
-            sql = createSql.getEvaluateListByRole("45", areaName, createdAt.replace("/", "-"));
+            sql = createSql.getEvaluateListByRole("45,43", areaName, createdAt.replace("/", "-"));
             list = getBaseList(sql, portalDataSource);
             for (Map<String, Object> mapObj : listActionXd) {
                 List<Map<String, Object>> listEvaluatesXd = new ArrayList<>();
