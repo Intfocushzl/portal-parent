@@ -139,9 +139,12 @@ public class StoreReplayServiceImpl implements StoreRePlayService {
         } else if (7 == roleId) {   //战略团队: role_id = 7  只看 区长：role_id = 111
             sql = createSql.getActionPlan("qz", null, "111", null, createdAt.replace("/", ""),false);
             //"区总回复 行动方案
+            List<Map<String, Object>> evaluate = new ArrayList<Map<String, Object>>();
             listAction = getBaseList(sql, portalDataSource);
             for (Map<String, Object> mapObj : listAction) {
+                evaluate = new ArrayList<Map<String, Object>>();
                 mapObj.put("replyer", "区总回复");
+                mapObj.put("evaluates", evaluate);
             }
             if (listAction.size() != 0) {
                 listActionPlans.add(listAction);

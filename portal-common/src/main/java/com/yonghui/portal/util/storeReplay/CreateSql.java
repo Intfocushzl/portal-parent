@@ -361,7 +361,7 @@ public class CreateSql<T> {
                     case "dateIndex":
                         infoMap.put("f_name", "date_index");
                         break;
-                    case "arearMans":
+                    case "areaMans":
                         infoMap.put("f_name", "arae_mans");
                         break;
                     case "groupCode":
