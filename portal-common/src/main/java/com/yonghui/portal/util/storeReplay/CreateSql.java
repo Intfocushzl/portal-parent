@@ -170,7 +170,7 @@ public class CreateSql<T> {
             sql = sql + " AND plan.user_role_id in (" + roleids + ")";
         }
         if (null != areaName && !"".equals(areaName) && !"null".equals(areaName)) {
-            sql = sql + " AND area_mans in ('"+ areaName +"')";
+            sql = sql + " AND area_mans in ("+ areaName +")";
         }
         if (StringUtils.isNotBlank(createdAt)) {
             sql = sql + " AND date_index = '" + createdAt + "'";
@@ -224,7 +224,7 @@ public class CreateSql<T> {
             sql = sql + " AND plan.user_id = '" + userId + "'";
         }
         if (null != areaName && !"".equals(areaName) && !"null".equals(areaName)) {
-            sql = sql + " AND substring_index(e.store_name,'-',1) in ('" + areaName + "')";
+            sql = sql + " AND substring_index(e.store_name,'-',1) in (" + areaName + ")";
         }
         if (StringUtils.isNotBlank(createdAt)) {
             sql = sql + " AND DATE_FORMAT(plan.created_at, '%Y-%m-%d') = '" + createdAt + "'";

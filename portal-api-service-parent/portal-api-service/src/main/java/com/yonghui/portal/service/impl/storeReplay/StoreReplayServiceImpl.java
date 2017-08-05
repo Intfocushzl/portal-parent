@@ -188,7 +188,7 @@ public class StoreReplayServiceImpl implements StoreRePlayService {
         list = getBaseList(sql, portalDataSource);
         if (list.size() > 0) {
             roleId = Integer.parseInt(list.get(0).get("role_id").toString());
-            areaName = list.get(0).get("areaMans") == null ? "" : list.get(0).get("areaMans").toString();
+            areaName = list.get(0).get("areaMans") == null ? "" : "'" + list.get(0).get("areaMans").toString() + "'";
             if (43 == roleId) {
                 //具体角色划分 45：品类教练   111：区长
                 skuRoleId = list.get(0).get("sku_role_id") == null ? "" : list.get(0).get("sku_role_id").toString();
