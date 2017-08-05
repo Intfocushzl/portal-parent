@@ -63,40 +63,41 @@ public class CreateSql<T> {
      */
     public String getUserInfoAndAreaStireShopInfoById(String userId) {
         String sql = "select pp.*, a.*,sku.sku_role_id  from " +
-                "(select `t1`.`id` AS `user_id`" +
-                "        ,`t1`.`user_num` AS `user_num`" +
-                "				,`t1`.`user_name` AS `user_name`" +
-                "				,`t3`.`id` AS `group_id`" +
-                "				,`t3`.`group_name` AS `group_name`" +
+                "(select " +
+                " /*`t1`.`id` AS `user_id`" +
+                "        ,*/`t1`.`user_num` AS `user_num`" +
+                //"				,`t1`.`user_name` AS `user_name`" +
+               // "				,`t3`.`id` AS `group_id`" +
+               // "				,`t3`.`group_name` AS `group_name`" +
                 "				,`t5`.`id` AS `role_id`,`t5`" +
                 "				.`role_name` AS `role_name` " +
                 "     from `sys_users` `t1` " +
-                "left join `sys_user_groups` `t2` on `t1`.`user_num` = '" + userId + "' and `t1`.`id` = `t2`.`user_id` " +
-                "left join `sys_groups` `t3` on `t2`.`group_id` = `t3`.`id` " +
+              //  "left join `sys_user_groups` `t2` on `t1`.`user_num` = '" + userId + "' and `t1`.`id` = `t2`.`user_id` " +
+            //    "left join `sys_groups` `t3` on `t2`.`group_id` = `t3`.`id` " +
                 "left join `sys_user_roles` `t4` on `t1`.`id` = `t4`.`user_id` " +
                 "left join `sys_roles` `t5` on `t4`.`role_id` = `t5`.`id`" +
                 " where `t1`.`user_num` = '" + userId + "') AS pp ";
 
         sql = sql + "LEFT JOIN ( " +
                 " select " +
-                "employeeNo " +
+                " employeeNo " +
                 ",b.AreaName " +
                 ",b.areaMans as areaMans " +
-                ",a.shopid as dept_ids " +
+/*                ",a.shopid as dept_ids " +
                 ",b.sname" +
                 ",groupid  as class_ids " +
-                ",groupname " +
+                ",groupname " +*/
                 ",concat(b.AreaMans,'-',a.shopid,'-',groupid) as type2_code " +
                 ",concat(b.AreaMans,'-',b.sname,'-',groupname) as type2_name " +
                 " from dw.d_hana_hr_employee a " +
                 " left join dw.d_bravo_shop b " +
                 " on a.shopID = b.SAP_ShopID " +
-                " where a.employeeNo = " + userId +
+                " where a.employeeNo = '" + userId + "'" +
                 " and a.lkpdate = DATE_FORMAT(DATE_ADD(now(),INTERVAL -1 day),'%Y%m') " +
-                " and groupid is not null) as a ON pp.user_num = a.employeeNo ";
+                " ) as a ON pp.user_num = a.employeeNo ";
 
-        sql = sql + " LEFT JOIN (select user_num , role_id as sku_role_id from  store_replay.sku_coach" +
-                " ) AS sku ON pp.user_num = sku.user_num ";
+        sql = sql + " LEFT JOIN (select user_num , role_id as sku_role_id from  store_replay.sku_coach where user_num = '"+ userId +
+                "') AS sku ON pp.user_num = sku.user_num ";
 
         return sql;
     }
@@ -115,11 +116,14 @@ public class CreateSql<T> {
                 "       , concat(b.area_mans , '-' , d.group_code) as group_code" +
                 "        , concat(b.area_mans , '-' , d.group_name) as group_name " +
                 "        , b.area_mans" +
-                "        from store_replay.sku_coach as a" +
-                "        LEFT join store_replay.user_area as b on a.user_num = b.user_num" +
-                "        LEFT join store_replay.user_store as c on a.user_num = c.user_num" +
-                "        LEFT join store_replay.user_xiaodian as d on a.user_num = d.user_num where " +
-                "        a.user_num = " + userId;
+                "        from ( select  role_id " +
+                "                      ,user_num " +
+                "                 from store_replay.sku_coach " +
+                "                where user_num = '"+userId+"'" +
+                "        ) as a" +
+                "        LEFT join store_replay.user_area as b on b.user_num = '"+userId+"'" +
+                "        LEFT join store_replay.user_store as c on c.user_num = '"+userId+"'" +
+                "        LEFT join store_replay.user_xiaodian as d on d.user_num = '"+userId+"'";
 
     }
 
@@ -155,18 +159,18 @@ public class CreateSql<T> {
                 "    left join (select DISTINCT groupid ,groupname from  dw.d_category) as b on b.groupid = plan.group_code " +
                 " where 1=1 ";
         if (StringUtils.isNotBlank(userId) && !sku) {
-            sql = sql + " AND plan.user_id = " + userId;
+            sql = sql + " AND plan.user_id = '" + userId + "'";
         }
         // 品类教练
         if (sku) {
             sql = sql + " AND plan.group_code in (select xd.group_code " +
-                    "    from store_replay.user_xiaodian xd where xd.user_num =  " + userId + ") ";
+                    "    from store_replay.user_xiaodian xd where xd.user_num = '" + userId + "')";
         }
         if (StringUtils.isNotBlank(roleids)) {
             sql = sql + " AND plan.user_role_id in (" + roleids + ")";
         }
         if (null != areaName && !"".equals(areaName) && !"null".equals(areaName)) {
-            sql = sql + " AND area_mans in ("+ areaName +")";
+            sql = sql + " AND area_mans in ('"+ areaName +"')";
         }
         if (StringUtils.isNotBlank(createdAt)) {
             sql = sql + " AND date_index = '" + createdAt + "'";
@@ -183,7 +187,7 @@ public class CreateSql<T> {
                 "	, user_role_id, action_plan_id, evaluation, remark, created_at" +
                 "	, updated_at" +
                 " FROM store_replay.evaluate" +
-                " WHERE action_plan_id = " + actionId;
+                " WHERE action_plan_id = '" + actionId + "'";
         logger.info("创建查询评价列表 SQL 语句： " + sql);
         return sql;
 
@@ -197,10 +201,11 @@ public class CreateSql<T> {
      * @param createdAt
      * @return
      */
-    public String getEvaluateList(String userId, String areaName, String createdAt) {
+    public String getEvaluateList(String tag, String userId, String areaName, String createdAt) {
         String sql = null;
         sql = " SELECT"
 //                + " e.id,"
+                + "     '" + tag + "' as tag,"
                 + "         e.user_name,"
                 + "         e.reply_user_id,"
 //                + "         e.store_id,"
@@ -216,10 +221,10 @@ public class CreateSql<T> {
                 + " store_replay.evaluate AS e"
                 + " WHERE plan.id = e.action_plan_id";
         if (StringUtils.isNotBlank(userId)) {
-            sql = sql + " AND plan.user_id = " + userId;
+            sql = sql + " AND plan.user_id = '" + userId + "'";
         }
         if (null != areaName && !"".equals(areaName) && !"null".equals(areaName)) {
-            sql = sql + " AND substring_index(e.store_name,'-',1) in (" + areaName + ")";
+            sql = sql + " AND substring_index(e.store_name,'-',1) in ('" + areaName + "')";
         }
         if (StringUtils.isNotBlank(createdAt)) {
             sql = sql + " AND DATE_FORMAT(plan.created_at, '%Y-%m-%d') = '" + createdAt + "'";
@@ -235,10 +240,11 @@ public class CreateSql<T> {
      * @param createdAt
      * @return
      */
-    public String getEvaluateListByRole(String roleids, String areaName, String createdAt) {
+    public String getEvaluateListByRole(String tag, String roleids, String areaName, String createdAt) {
         String sql = null;
         sql = " SELECT"
-                + " e.id,"
+//                + " e.id,"
+                + "     '" + tag + "' as tag,"
                 + "         e.user_name,"
                 + "         e.reply_user_id,"
 //                + "         e.store_id,"
@@ -253,6 +259,9 @@ public class CreateSql<T> {
                 + " store_replay.action_plan as plan,"
                 + " store_replay.evaluate AS e"
                 + " WHERE plan.id = e.action_plan_id";
+//        if (StringUtils.isNotBlank(userId)) {
+//            sql = sql + " AND plan.user_id = " + userId;
+//        }
         if (StringUtils.isNotBlank(roleids)) {
             sql = sql + " AND e.user_role_id in (" + roleids + ")";
         }
