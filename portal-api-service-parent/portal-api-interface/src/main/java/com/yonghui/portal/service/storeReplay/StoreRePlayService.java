@@ -42,5 +42,12 @@ public interface StoreRePlayService {
      */
     public List<Map<String, Object>> getActionPlanList(String userId, String createdAt,PortalDataSource portalDataSource);
 
+    /**
+     * 查询 大区- 门店 - 商行
+     * @param userId
+     * @param portalDataSource
+     * @return
+     */
+    public List<Map<String, Object>> listStore(String userId, PortalDataSource portalDataSource);
 
 }
