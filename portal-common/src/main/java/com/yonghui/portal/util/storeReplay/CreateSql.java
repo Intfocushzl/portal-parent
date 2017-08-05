@@ -158,7 +158,7 @@ public class CreateSql<T> {
                 "    left join (select DISTINCT sname , sap_shopid ,areaMans from dw.d_bravo_shop ) as a on  plan.store_code = a.SAP_ShopID " +
                 "    left join (select DISTINCT groupid ,groupname from  dw.d_category) as b on b.groupid = plan.group_code " +
                 " where 1=1 ";
-        if (StringUtils.isNotBlank(userId) && !sku) {
+        if (StringUtils.isNotBlank(userId) && !"null".equalsIgnoreCase(userId) && !sku) {
             sql = sql + " AND plan.user_id = '" + userId + "'";
         }
         // 品类教练
@@ -166,13 +166,13 @@ public class CreateSql<T> {
             sql = sql + " AND plan.group_code in (select xd.group_code " +
                     "    from store_replay.user_xiaodian xd where xd.user_num = '" + userId + "')";
         }
-        if (StringUtils.isNotBlank(roleids)) {
+        if (StringUtils.isNotBlank(roleids) && !"null".equalsIgnoreCase(roleids)) {
             sql = sql + " AND plan.user_role_id in (" + roleids + ")";
         }
-        if (null != areaName && !"".equals(areaName) && !"null".equals(areaName)) {
+        if (StringUtils.isNotBlank(areaName) && !"null".equalsIgnoreCase(areaName)) {
             sql = sql + " AND area_mans in ("+ areaName +")";
         }
-        if (StringUtils.isNotBlank(createdAt)) {
+        if (StringUtils.isNotBlank(createdAt) && !"null".equalsIgnoreCase(createdAt)) {
             sql = sql + " AND date_index = '" + createdAt + "'";
         }
         return sql;
@@ -220,13 +220,13 @@ public class CreateSql<T> {
                 + " store_replay.action_plan as plan,"
                 + " store_replay.evaluate AS e"
                 + " WHERE plan.id = e.action_plan_id";
-        if (StringUtils.isNotBlank(userId)) {
+        if (StringUtils.isNotBlank(userId) && !"null".equalsIgnoreCase(userId)) {
             sql = sql + " AND plan.user_id = '" + userId + "'";
         }
-        if (null != areaName && !"".equals(areaName) && !"null".equals(areaName)) {
+        if (StringUtils.isNotBlank(areaName) && !"null".equalsIgnoreCase(areaName)) {
             sql = sql + " AND substring_index(e.store_name,'-',1) in (" + areaName + ")";
         }
-        if (StringUtils.isNotBlank(createdAt)) {
+        if (StringUtils.isNotBlank(createdAt) && !"null".equalsIgnoreCase(createdAt)) {
             sql = sql + " AND DATE_FORMAT(plan.created_at, '%Y-%m-%d') = '" + createdAt + "'";
         }
         return sql;
@@ -262,13 +262,13 @@ public class CreateSql<T> {
 //        if (StringUtils.isNotBlank(userId)) {
 //            sql = sql + " AND plan.user_id = " + userId;
 //        }
-        if (StringUtils.isNotBlank(roleids)) {
+        if (StringUtils.isNotBlank(roleids) && !"null".equalsIgnoreCase(roleids)) {
             sql = sql + " AND e.user_role_id in (" + roleids + ")";
         }
-        if (StringUtils.isNotBlank(areaName) && !"null".equals(areaName)) {
+        if (StringUtils.isNotBlank(areaName) && !"null".equalsIgnoreCase(areaName)) {
             sql = sql + " AND substring_index(e.store_name,'-',1) in (" + areaName + ")";
         }
-        if (StringUtils.isNotBlank(createdAt)) {
+        if (StringUtils.isNotBlank(createdAt) && !"null".equalsIgnoreCase(createdAt)) {
             sql = sql + " AND DATE_FORMAT(e.created_at, '%Y-%m-%d') = '" + createdAt + "'";
         }
         return sql;

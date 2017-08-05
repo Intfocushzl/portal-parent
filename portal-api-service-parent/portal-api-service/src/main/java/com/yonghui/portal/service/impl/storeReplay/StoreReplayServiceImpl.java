@@ -205,25 +205,28 @@ public class StoreReplayServiceImpl implements StoreRePlayService {
             }
         }
 
+        Integer size = null ;
         //通过 role_id 获取行动方案
         if (44 == roleId) { //小店长 role_id = 44
             sql = createSql.getActionPlan("xd", userId, null, areaName, createdAt.replace("/", ""), false);
             //小店回复 行动方案
             listAction = getBaseList(sql, portalDataSource);
             //小店回复 评论
-            sql = createSql.getEvaluateList("xd",null, areaName, createdAt.replace("/", "-"));
+            sql = createSql.getEvaluateListByRole("xd","45,43", areaName, createdAt.replace("/", "-"));
             list = getBaseList(sql, portalDataSource);
-            List<Map<String, Object>> evaluate = null;
-            for (Map<String, Object> evaluates : list) {
+            List<Map<String, Object>> evaluates = null;
+            for (Map<String, Object> mapObj : listAction) {
                 //通过行动方案 ID 获取评价列表
-                for (Map<String, Object> mapObj : listAction) {
-                    if (evaluates.get("action_plan_id").toString().equals(mapObj.get("id").toString())) {
-//                        mapObj.put("replyer", "小店回复");
-                        evaluate = new ArrayList<Map<String, Object>>();
-                        evaluate.add(evaluates);
-                        mapObj.put("evaluates", evaluate);
+                size = list.size();
+                evaluates = new ArrayList<Map<String, Object>>();
+                for (int i = size - 1; i >= 0; i--) {
+                    Map<String, Object> evaluate = list.get(i);
+                    if (evaluate.get("action_plan_id").toString().equals(mapObj.get("id").toString())) {
+                        evaluates.add(evaluate);
+                        list.remove(evaluate);
                     }
                 }
+                mapObj.put("evaluates", evaluates);
             }
             if (listAction.size() != 0) {
                 listActionPlans.add(listAction);
@@ -235,7 +238,6 @@ public class StoreReplayServiceImpl implements StoreRePlayService {
             listAction = getBaseList(sql, portalDataSource);
             for (Map<String, Object> mapObj : listAction) {
                 evaluate = new ArrayList<Map<String, Object>>();
-                mapObj.put("replyer", "区总回复");
                 mapObj.put("evaluates", evaluate);
             }
             if (listAction.size() != 0) {
@@ -246,9 +248,11 @@ public class StoreReplayServiceImpl implements StoreRePlayService {
             boolean sku = false;
             if ("45".equals(skuRoleId)) {
                 sku = true;
+                sql = createSql.getActionPlan("xd", userId, "44", areaName, createdAt.replace("/", ""), sku);
+            } else {
+                sql = createSql.getActionPlan("xd", null, "44", areaName, createdAt.replace("/", ""), sku);
             }
 
-            sql = createSql.getActionPlan("xd", userId, "44", areaName, createdAt.replace("/", ""), sku);
             sql = sql + " UNION ALL ";
             sql = sql + createSql.getActionPlan("pj", null, "45,111", areaName, createdAt.replace("/", ""), false);
             sql = sql + " UNION ALL ";
@@ -306,105 +310,74 @@ public class StoreReplayServiceImpl implements StoreRePlayService {
             }
 
             //小店
+            List<Map<String, Object>> listEvaluatesXd = null;
             for (Map<String, Object> mapObj : listActionXd) {
-                List<Map<String, Object>> listEvaluatesXd = new ArrayList<>();
-                for (Map<String, Object> evaluates : listEvaluateXd) {
-                    if (evaluates.get("action_plan_id").toString().equals(mapObj.get("id").toString())) {
-                        listEvaluatesXd.add(evaluates);
+                size = listEvaluateXd.size();
+                listEvaluatesXd = new ArrayList<>();
+//                for (Map<String, Object> evaluate : listEvaluateXd) {
+//                    if (evaluate.get("action_plan_id").toString().equals(mapObj.get("id").toString())) {
+//                        listEvaluatesXd.add(evaluate);
+//                    }
+//                }
+                for (int i = size - 1; i >= 0; i--) {
+                    Map<String, Object> evaluate = listEvaluateXd.get(i);
+                    if (evaluate.get("action_plan_id").toString().equals(mapObj.get("id").toString())) {
+                        listEvaluatesXd.add(evaluate);
+                        listEvaluateXd.remove(evaluate);
                     }
                 }
                 mapObj.put("evaluates", listEvaluatesXd);
-
             }
             if (listActionXd.size() != 0) {
                 listActionPlans.add(listActionXd);
             }
 
             //品类
+            List<Map<String, Object>> listEvaluatesPj = null;
             for (Map<String, Object> mapObj : listActionPj) {
-                List<Map<String, Object>> listEvaluatesPj = new ArrayList<>();
-                for (Map<String, Object> evaluates : listEvaluatePj) {
-                    if (evaluates.get("action_plan_id").toString().equals(mapObj.get("id").toString())) {
-                        listEvaluatesPj.add(evaluates);
+                size = listEvaluatePj.size();
+                listEvaluatesPj = new ArrayList<>();
+//                for (Map<String, Object> evaluate : listEvaluatePj) {
+//                    if (evaluate.get("action_plan_id").toString().equals(mapObj.get("id").toString())) {
+//                        listEvaluatesPj.add(evaluate);
+//                    }
+//                }
+                for (int i = size - 1; i >= 0; i--) {
+                    Map<String, Object> evaluate = listEvaluatePj.get(i);
+                    if (evaluate.get("action_plan_id").toString().equals(mapObj.get("id").toString())) {
+                        listEvaluatesPj.add(evaluate);
+                        listEvaluatePj.remove(evaluate);
                     }
                 }
                 mapObj.put("evaluates", listEvaluatesPj);
-
             }
+
             if (listActionPj.size() != 0) {
                 listActionPlans.add(listActionPj);
             }
 
             //个人
+            List<Map<String, Object>> listEvaluatesGr = null;
             for (Map<String, Object> mapObj : listActionGr) {
-                List<Map<String, Object>> listEvaluatesGr = new ArrayList<>();
-                for (Map<String, Object> evaluates : listEvaluateXd) {
-                    if (evaluates.get("action_plan_id").toString().equals(mapObj.get("id").toString())) {
-                        listEvaluatesGr.add(evaluates);
+                size = listEvaluateGr.size();
+                listEvaluatesGr = new ArrayList<>();
+//                for (Map<String, Object> evaluate : listEvaluateGr) {
+//                    if (evaluate.get("action_plan_id").toString().equals(mapObj.get("id").toString())) {
+//                        listEvaluatesGr.add(evaluate);
+//                    }
+//                }
+                for (int i = size - 1; i >= 0; i--) {
+                    Map<String, Object> evaluate = listEvaluateGr.get(i);
+                    if (evaluate.get("action_plan_id").toString().equals(mapObj.get("id").toString())) {
+                        listEvaluatesGr.add(evaluate);
+                        listEvaluateGr.remove(evaluate);
                     }
                 }
                 mapObj.put("evaluates", listEvaluatesGr);
-
             }
             if (listActionGr.size() != 0) {
                 listActionPlans.add(listActionGr);
             }
-
-
-
-
-
-
-
-            //1.小店回复
-//            sql = createSql.getEvaluateListByRole("xd","45,43", areaName, createdAt.replace("/", "-"));
-//            list = getBaseList(sql, portalDataSource);
-//            for (Map<String, Object> mapObj : listActionXd) {
-//                List<Map<String, Object>> listEvaluatesXd = new ArrayList<>();
-//                for (Map<String, Object> evaluates : list) {
-//                    if (evaluates.get("action_plan_id").toString().equals(mapObj.get("id").toString())) {
-//                        listEvaluatesXd.add(evaluates);
-//                    }
-//                }
-////                mapObj.put("replyer", "小店回复");
-//                mapObj.put("evaluates", listEvaluatesXd);
-//            }
-//            if (listActionXd.size() != 0) {
-//                listActionPlans.add(listActionXd);
-//            }
-            //2.品类教练回复 评论
-//            sql = createSql.getEvaluateListByRole("pj","111", areaName, createdAt.replace("/", "-"));
-//            list = getBaseList(sql, portalDataSource);
-//            for (Map<String, Object> mapObj : listActionPj) {
-//                List<Map<String, Object>> listEvaluatesPj = new ArrayList<>();
-//                for (Map<String, Object> evaluates : list) {
-//                    if (evaluates.get("action_plan_id").toString().equals(mapObj.get("id").toString())) {
-//                        listEvaluatesPj.add(evaluates);
-//                    }
-//                }
-//                mapObj.put("evaluates", listEvaluatesPj);
-//            }
-//            if (listActionPj.size() != 0) {
-//                listActionPlans.add(listActionPj);
-//            }
-
-            //3.个人所有行动方案的评论
-//            sql = createSql.getEvaluateList("gr",null, areaName, createdAt.replace("/", "-"));
-//            list = getBaseList(sql, portalDataSource);
-//            for (Map<String, Object> mapObj : listActionGr) {
-//                List<Map<String, Object>> listEvaluatesGr = new ArrayList<>();
-//                for (Map<String, Object> evaluates : list) {
-//                    if (evaluates.get("action_plan_id").toString().equals(mapObj.get("id").toString())) {
-//                        listEvaluatesGr.add(evaluates);
-//                    }
-//                }
-////                mapObj.put("replyer", "个人回复");
-//                mapObj.put("evaluates", listEvaluatesGr);
-//            }
-//            if (listActionGr.size() != 0) {
-//                listActionPlans.add(listActionGr);
-//            }
-
         }
         return listActionPlans;
     }
