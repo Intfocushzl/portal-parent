@@ -45,7 +45,7 @@ public class StoreReplayServiceImpl implements StoreRePlayService {
         String dateIndex = format.format(new Date());
         actionPlan.setDateIndex(dateIndex);
         //判断是否为品类教练
-        if ("43".equals(actionPlan.getUserRoleId())) {
+        if (null != actionPlan.getUserRoleId() && "43".equals(actionPlan.getUserRoleId())) {
             sql = createSql.getSkuInfo(actionPlan.getUserId());
             listSku = getBaseList(sql, portalDataSource);
             if (listSku.size() > 0) {
@@ -77,7 +77,7 @@ public class StoreReplayServiceImpl implements StoreRePlayService {
         String skuRoleId = null;
 
         //判断是否为品类教练
-        if ("43".equals(evaluate.getUserRoleId())) {
+        if (null != evaluate.getUserRoleId() && "43".equals(evaluate.getUserRoleId())) {
             sql = createSql.getSkuInfo(evaluate.getReplyUserId());
             listSku = getBaseList(sql, portalDataSource);
             if (listSku.size() > 0) {
@@ -204,19 +204,21 @@ public class StoreReplayServiceImpl implements StoreRePlayService {
         sql = createSql.getUserInfoAndAreaStireShopInfoById(userId);
         list = getBaseList(sql, portalDataSource);
         if (list.size() > 0) {
-            roleId = Integer.parseInt(list.get(0).get("role_id").toString());
+            roleId = list.get(0).get("role_id") == null ? 0 : Integer.parseInt(list.get(0).get("role_id").toString());
             areaName = list.get(0).get("areaMans") == null ? "" : "'" + list.get(0).get("areaMans").toString() + "'";
             if (43 == roleId) {
                 //具体角色划分 45：品类教练   111：区长
                 skuRoleId = list.get(0).get("sku_role_id") == null ? "" : list.get(0).get("sku_role_id").toString();
                 sql = createSql.getSkuInfo(userId);
                 list = getBaseList(sql, portalDataSource);
-                for (int i = list.size(); ; i--) {
-                    if (i == 1) {
-                        areaName = areaName + "'" + list.get(i - 1).get("area_mans") + "'";
-                        break;
-                    } else {
-                        areaName = areaName + "'" + list.get(i - 1).get("area_mans") + "',";
+                if (list.size() > 0) {
+                    for (int i = list.size(); ; i--) {
+                        if (i == 1) {
+                            areaName = areaName + list.get(i - 1).get("area_mans") == null ? "" :  "'" + list.get(i - 1).get("area_mans") + "'";
+                            break;
+                        } else {
+                            areaName = areaName + list.get(i - 1).get("area_mans") == null ? "" : "'" + list.get(i - 1).get("area_mans") + "',";
+                        }
                     }
                 }
             }
@@ -245,7 +247,7 @@ public class StoreReplayServiceImpl implements StoreRePlayService {
                 }
                 mapObj.put("evaluates", evaluates);
             }
-            if (listAction != null) {
+            if (listAction.size() > 0) {
                 listActionPlans.add(listAction);
             }
         } else if (7 == roleId) {   //战略团队: role_id = 7  只看 区长：role_id = 111
@@ -269,7 +271,7 @@ public class StoreReplayServiceImpl implements StoreRePlayService {
                 }
                 mapObj.put("evaluates", evaluates);
             }
-            if (listAction != null) {
+            if (listAction.size() > 0) {
                 listActionPlans.add(listAction);
             }
         } else if (43 == roleId || 111 == roleId) { //区总团队：品类教练 role_id = 43, 店长 role_id = 43,  区长 role_id = 111
@@ -313,7 +315,6 @@ public class StoreReplayServiceImpl implements StoreRePlayService {
                 }
             }
 
-
             //评价  能够评价自己，作为发盘使用
             sql = createSql.getEvaluateListByRole("xd","45,43,44", areaName, createdAt.replace("/", "-"));
             sql = sql + " UNION ALL ";
@@ -345,11 +346,6 @@ public class StoreReplayServiceImpl implements StoreRePlayService {
             for (Map<String, Object> mapObj : listActionXd) {
                 size = listEvaluateXd.size();
                 listEvaluatesXd = new ArrayList<>();
-//                for (Map<String, Object> evaluate : listEvaluateXd) {
-//                    if (evaluate.get("action_plan_id").toString().equals(mapObj.get("id").toString())) {
-//                        listEvaluatesXd.add(evaluate);
-//                    }
-//                }
                 for (int i = size - 1; i >= 0; i--) {
                     Map<String, Object> evaluate = listEvaluateXd.get(i);
                     if (evaluate.get("action_plan_id").toString().equals(mapObj.get("id").toString())) {
@@ -359,7 +355,7 @@ public class StoreReplayServiceImpl implements StoreRePlayService {
                 }
                 mapObj.put("evaluates", listEvaluatesXd);
             }
-            if (listActionXd.size() != 0) {
+            if (listActionXd.size() > 0) {
                 listActionPlans.add(listActionXd);
             }
 
@@ -368,11 +364,6 @@ public class StoreReplayServiceImpl implements StoreRePlayService {
             for (Map<String, Object> mapObj : listActionPj) {
                 size = listEvaluatePj.size();
                 listEvaluatesPj = new ArrayList<>();
-//                for (Map<String, Object> evaluate : listEvaluatePj) {
-//                    if (evaluate.get("action_plan_id").toString().equals(mapObj.get("id").toString())) {
-//                        listEvaluatesPj.add(evaluate);
-//                    }
-//                }
                 for (int i = size - 1; i >= 0; i--) {
                     Map<String, Object> evaluate = listEvaluatePj.get(i);
                     if (evaluate.get("action_plan_id").toString().equals(mapObj.get("id").toString())) {
@@ -383,7 +374,7 @@ public class StoreReplayServiceImpl implements StoreRePlayService {
                 mapObj.put("evaluates", listEvaluatesPj);
             }
 
-            if (listActionPj.size() != 0) {
+            if (listActionPj.size() > 0) {
                 listActionPlans.add(listActionPj);
             }
 
@@ -392,11 +383,6 @@ public class StoreReplayServiceImpl implements StoreRePlayService {
             for (Map<String, Object> mapObj : listActionGr) {
                 size = listEvaluateGr.size();
                 listEvaluatesGr = new ArrayList<>();
-//                for (Map<String, Object> evaluate : listEvaluateGr) {
-//                    if (evaluate.get("action_plan_id").toString().equals(mapObj.get("id").toString())) {
-//                        listEvaluatesGr.add(evaluate);
-//                    }
-//                }
                 for (int i = size - 1; i >= 0; i--) {
                     Map<String, Object> evaluate = listEvaluateGr.get(i);
                     if (evaluate.get("action_plan_id").toString().equals(mapObj.get("id").toString())) {
@@ -406,7 +392,7 @@ public class StoreReplayServiceImpl implements StoreRePlayService {
                 }
                 mapObj.put("evaluates", listEvaluatesGr);
             }
-            if (listActionGr.size() != 0) {
+            if (listActionGr.size() > 0) {
                 listActionPlans.add(listActionGr);
             }
         }

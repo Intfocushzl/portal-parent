@@ -210,24 +210,25 @@ public class CreateSql<T> {
                 + "         e.reply_user_id,"
 //                + "         e.store_id,"
                 + "         e.store_name,"
-                + "         e.user_role_id,"
+//                + "         e.user_role_id,"
                 + "         e.action_plan_id,"
                 + "         e.evaluation,"
 //                + "         e.remark,"
                 + "         e.updated_at,"
                 + "         e.created_at "
-                + " FROM"
-                + " store_replay.action_plan as plan,"
+                + " FROM "
+//                + " store_replay.action_plan as plan,"
                 + " store_replay.evaluate AS e"
-                + " WHERE plan.id = e.action_plan_id";
+//                + " WHERE plan.id = e.action_plan_id";
+                + " WHERE 1 = 1 ";
         if (StringUtils.isNotBlank(userId) && !"null".equalsIgnoreCase(userId)) {
-            sql = sql + " AND plan.user_id = '" + userId + "'";
+            sql = sql + " AND e.user_id = '" + userId + "'";
         }
         if (StringUtils.isNotBlank(areaName) && !"null".equalsIgnoreCase(areaName)) {
             sql = sql + " AND substring_index(e.store_name,'-',1) in (" + areaName + ")";
         }
         if (StringUtils.isNotBlank(createdAt) && !"null".equalsIgnoreCase(createdAt)) {
-            sql = sql + " AND DATE_FORMAT(plan.created_at, '%Y-%m-%d') = '" + createdAt + "'";
+            sql = sql + " AND DATE_FORMAT(e.created_at, '%Y-%m-%d') = '" + createdAt + "'";
         }
         return sql;
     }
@@ -249,16 +250,17 @@ public class CreateSql<T> {
                 + "         e.reply_user_id,"
 //                + "         e.store_id,"
                 + "         e.store_name,"
-                + "         e.user_role_id,"
+//                + "         e.user_role_id,"
                 + "         e.action_plan_id,"
                 + "         e.evaluation,"
 //                + "         e.remark,"
                 + "         e.created_at,"
                 + "         e.updated_at"
                 + " FROM"
-                + " store_replay.action_plan as plan,"
+//                + " store_replay.action_plan as plan,"
                 + " store_replay.evaluate AS e"
-                + " WHERE plan.id = e.action_plan_id";
+                + " WHERE 1 = 1 ";
+//                + " WHERE plan.id = e.action_plan_id";
 //        if (StringUtils.isNotBlank(userId)) {
 //            sql = sql + " AND plan.user_id = " + userId;
 //        }
