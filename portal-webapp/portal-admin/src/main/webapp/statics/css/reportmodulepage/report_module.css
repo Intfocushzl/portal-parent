@@ -114,8 +114,9 @@
     float: left;
     display: block;
     padding: 5px;
-    background-color: rgb(60, 118, 61);
+    background-color: #6fc8ef;
     margin-right: 5px;
+    margin-top: 2px;
 }
 
 #tabs li a {
@@ -124,7 +125,7 @@
 }
 
 #tabs li.current {
-    background-color: #00a65a;
+    background-color: #006dcc;
 }
 
 #tabs li.current a {
@@ -135,11 +136,12 @@
 #tabs li a.remove {
     color: #f00;
     margin-left: 10px;
+    margin-right: 5px;
 }
 
 #content {
-    border: 1px solid #00a65a;
-    min-height: 230px;
+    border: 1px solid #006dcc;
+    min-height: 400px;
     padding: 10px;
     margin-top: 5px;
 }
@@ -171,16 +173,17 @@
     height: 40px;
 }
 
-.content-label-input label{
+.content-label-input label {
     width: 80px;
 }
 
-.content-label-input input{
+.content-label-input input {
     width: 300px;
 }
 
-.content-label-input textarea{
+.content-label-input textarea {
     width: 300px;
+    min-height: 240px;
 }
 
 .content-left {

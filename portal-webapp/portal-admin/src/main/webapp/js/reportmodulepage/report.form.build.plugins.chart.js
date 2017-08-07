@@ -221,7 +221,7 @@ LPB.plugins['chart_line'] = function (active_component, leipiplugins) {
 
 
 /*
- * 表格tab切换 tables_v3
+ * 页签表格tab切换 tables_v3
  * acc  是 class="component" 的DIV
  * e 是 class="leipiplugins" 的控件
  */
@@ -250,9 +250,7 @@ LPB.plugins['tables_v3'] = function (active_component, leipiplugins) {
                 if (value.table.head !== undefined) {
                     var headerstr = "";
                     for (var p in value.table.head) {
-                        for (var prop in value.table.head[p]) {
-                            headerstr = headerstr + prop + "=" + value.table.head[p][prop] + "\n";
-                        }
+                        headerstr = headerstr + value.table.head[p]["title"] + "=" + value.table.head[p]["value"] + "\n";
                     }
                     headerstr = headerstr.substr(0, headerstr.length - 1);
                     $(popover).find("#tables_v3_config_table_head_" + document).val(headerstr);
@@ -311,7 +309,9 @@ LPB.plugins['tables_v3'] = function (active_component, leipiplugins) {
                 var headjsonarr = [];
                 $.each(headarr, function (i, value) {
                     var headjson = {};
-                    headjson[value.split("=")[0]] = value.split("=")[1];
+                    //headjson[value.split("=")[0]] = value.split("=")[1];
+                    headjson["title"] = value.split("=")[0];
+                    headjson["value"] = value.split("=")[1];
                     headjsonarr[i] = headjson;
                 });
                 jsonConfigObj.table.head = headjsonarr;
@@ -342,7 +342,7 @@ LPB.plugins['tables_v3'] = function (active_component, leipiplugins) {
 }
 
 /**
- * 初始化tabs绑定事件
+ * 初始化页签tabs绑定事件
  */
 function tabsEvent() {
     var contentname;
@@ -352,6 +352,9 @@ function tabsEvent() {
         $("#tabs li").removeClass("current");
         $("#" + contentname).show();
         $(this).parent().addClass("current");
+        // 保持高度
+        var sc = $(window).scrollTop();
+        $('body,html').animate({scrollTop: sc}, 500);
     });
     $('#tabs').on('click', '.remove', function () {
         var document = $(this).parent().find(".tab").attr("document");
@@ -368,7 +371,7 @@ function tabsEvent() {
 };
 
 /**
- * tab控件添加标签
+ * 页签tab控件添加标签
  * @returns {string}
  */
 function addTab() {
@@ -385,10 +388,10 @@ function addTab() {
     $("#content").append("<div class='tab_document content-label-input' document='" + document + "' id='" + document + "_content'>"
         + "<label class='control-label content-left'>标题</label>"
         + "<input type='text'class='tables_v3_config_title content-left' document='" + document + "' id='tables_v3_config_title_" + document + "' placeholder='标题' onchange='onchangeTabTitle(this)'>"
-        + "<label class='control-label content-left'>表头</label>"
-        + "<textarea class='tables_v3_config_table_head content-left' document='" + document + "' id='tables_v3_config_table_head_" + document + "' placeholder='表头'></textarea>"
         + "<label class='control-label content-left'>数据源</label>"
         + "<select id='tables_v3_config_data_url_" + document + "' class='selectpicker form-control content-left' data-live-search='true' title='数据源'></select>"
+        + "<label class='control-label content-left'>表头</label>"
+        + "<textarea class='tables_v3_config_table_head content-left' document='" + document + "' id='tables_v3_config_table_head_" + document + "' placeholder='表头'></textarea>"
         + "</div>");
 
     // 加载数据源
@@ -404,7 +407,7 @@ function addTab() {
 }
 
 /**
- * 修改tab标题
+ * 修改页签tab标题
  * @param obj
  */
 function onchangeTabTitle(obj) {
