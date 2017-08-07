@@ -141,7 +141,7 @@
 
 #content {
     border: 1px solid #006dcc;
-    min-height: 360px;
+    min-height: 400px;
     padding: 10px;
     margin-top: 5px;
 }
@@ -183,7 +183,7 @@
 
 .content-label-input textarea {
     width: 300px;
-    min-height: 220px;
+    min-height: 240px;
 }
 
 .content-left {
