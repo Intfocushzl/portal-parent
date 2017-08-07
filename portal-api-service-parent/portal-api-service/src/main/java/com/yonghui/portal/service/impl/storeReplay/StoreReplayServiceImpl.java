@@ -131,34 +131,36 @@ public class StoreReplayServiceImpl implements StoreRePlayService {
             } else if ("43".equals(roleId)) { //品类教练 店长 区总
                 sql = createSql.getSkuInfo(userId);
                 listSku = getBaseList(sql, portalDataSource);
-                skuRoleId = listSku.get(0).get("role_id").toString();
-                if ("45".equalsIgnoreCase(skuRoleId)) {
-                    // 品类教练，需要取出“大区-门店”、“大区-品类”
-                    for (Map<String, Object> map : listSku) {
-                        if (null != map.get("store_code")) {
-                            //大区-门店
-                            mapValue.put("type", 2);
-                            mapValue.put("code", map.get("store_code").toString());
-                            mapValue.put("name", map.get("store_name").toString());
-                            result.add(mapValue);
+                if (listSku.size() > 0) {
+                    skuRoleId = listSku.get(0).get("role_id").toString();
+                    if ("45".equalsIgnoreCase(skuRoleId)) {
+                        // 品类教练，需要取出“大区-门店”、“大区-品类”
+                        for (Map<String, Object> map : listSku) {
+                            if (null != map.get("store_code")) {
+                                //大区-门店
+                                mapValue.put("type", 2);
+                                mapValue.put("code", map.get("store_code").toString());
+                                mapValue.put("name", map.get("store_name").toString());
+                                result.add(mapValue);
+                            }
+                            if (null != map.get("group_code")) {
+                                //大区-商行
+                                mapValue = new HashMap<String, Object>();
+                                mapValue.put("type", 4);
+                                mapValue.put("code", map.get("group_code").toString());
+                                mapValue.put("name", map.get("group_name").toString());
+                                result.add(mapValue);
+                            }
                         }
-                        if (null != map.get("group_code")) {
-                            //大区-商行
+                    } else if ("111".equalsIgnoreCase(skuRoleId)) {
+                        for (Map<String, Object> mp : listSku) {
+                            //只有大区
                             mapValue = new HashMap<String, Object>();
-                            mapValue.put("type", 4);
-                            mapValue.put("code", map.get("group_code").toString());
-                            mapValue.put("name", map.get("group_name").toString());
+                            mapValue.put("type", 1);
+                            mapValue.put("code", mp.get("area_mans").toString());
+                            mapValue.put("name", mp.get("area_mans").toString());
                             result.add(mapValue);
                         }
-                    }
-                } else if ("111".equalsIgnoreCase(skuRoleId)) {
-                    for (Map<String, Object> mp : listSku) {
-                        //只有大区
-                        mapValue = new HashMap<String, Object>();
-                        mapValue.put("type", 1);
-                        mapValue.put("code", mp.get("area_mans").toString());
-                        mapValue.put("name", mp.get("area_mans").toString());
-                        result.add(mapValue);
                     }
                 }
             }
@@ -211,12 +213,13 @@ public class StoreReplayServiceImpl implements StoreRePlayService {
                 sql = createSql.getSkuInfo(userId);
                 list = getBaseList(sql, portalDataSource);
                 if (list.size() > 0) {
+                    areaName = "";
                     for (int i = list.size(); ; i--) {
                         if (i == 1) {
-                            areaName = areaName + list.get(i - 1).get("area_mans") == null ? "" : "'" + list.get(i - 1).get("area_mans") + "'";
+                            areaName = areaName + (list.get(i - 1).get("area_mans") == null ? "" : "'" + list.get(i - 1).get("area_mans") + "'");
                             break;
                         } else {
-                            areaName = areaName + list.get(i - 1).get("area_mans") == null ? "" : "'" + list.get(i - 1).get("area_mans") + "',";
+                            areaName = areaName + (list.get(i - 1).get("area_mans") == null ? "" : "'" + list.get(i - 1).get("area_mans") + "',");
                         }
                     }
                 }
