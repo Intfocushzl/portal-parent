@@ -311,7 +311,9 @@ LPB.plugins['tables_v3'] = function (active_component, leipiplugins) {
                 var headjsonarr = [];
                 $.each(headarr, function (i, value) {
                     var headjson = {};
-                    headjson[value.split("=")[0]] = value.split("=")[1];
+                    //headjson[value.split("=")[0]] = value.split("=")[1];
+                    headjson["title"] = value.split("=")[0];
+                    headjson["value"] = value.split("=")[1];
                     headjsonarr[i] = headjson;
                 });
                 jsonConfigObj.table.head = headjsonarr;
