@@ -268,6 +268,9 @@ LPB.plugins['tables_v3'] = function (active_component, leipiplugins) {
     }
     // 初始化tab绑定事件
     tabsEvent();
+    // 初始化tab下钻页面绑定事件
+    $(".wrapper_level").hide();
+    tabsLevelEvent();
 
     // 右弹form  取消控件
     $(popover).delegate(".btn-danger", "click", function (e) {
@@ -309,7 +312,6 @@ LPB.plugins['tables_v3'] = function (active_component, leipiplugins) {
                 var headjsonarr = [];
                 $.each(headarr, function (i, value) {
                     var headjson = {};
-                    //headjson[value.split("=")[0]] = value.split("=")[1];
                     headjson["title"] = value.split("=")[0];
                     headjson["value"] = value.split("=")[1];
                     headjsonarr[i] = headjson;
@@ -371,6 +373,35 @@ function tabsEvent() {
 };
 
 /**
+ * 初始化页签下钻页面tabs绑定事件
+ */
+function tabsLevelEvent() {
+    var contentname;
+    $('#tabs_level').on('click', '.tab', function () {
+        contentname = $(this).attr("document_level") + "_content";
+        $(".tab_document_level").hide();
+        $("#tabs_level li").removeClass("current");
+        $("#" + contentname).show();
+        $(this).parent().addClass("current");
+        // 保持高度
+        var sc = $(window).scrollTop();
+        $('body,html').animate({scrollTop: sc}, 500);
+    });
+    $('#tabs_level').on('click', '.remove', function () {
+        var document_level = $(this).parent().find(".tab").attr("document_level");
+        contentname = document_level + "_content";
+        $("#" + contentname).remove();
+        $(this).parent().remove();
+        if ($("#tabs_level li.current").length == 0 && $("#tabs_level li").length > 0) {
+            var firsttab = $("#tabs_level li:first-child");
+            firsttab.addClass("current");
+            var firsttabid = $(firsttab).find("a.tab").attr("document_level");
+            $("#" + firsttabid + "_content").show();
+        }
+    });
+};
+
+/**
  * 页签tab控件添加标签
  * @returns {string}
  */
@@ -385,14 +416,17 @@ function addTab() {
         + "标题"
         + "</a><a href='#' class='remove'>x</a></li>");
 
-    $("#content").append("<div class='tab_document content-label-input' document='" + document + "' id='" + document + "_content'>"
+    $("#content").append(
+        "<div class='tab_document content-label-input' document='" + document + "' id='" + document + "_content'>"
         + "<label class='control-label content-left'>标题</label>"
         + "<input type='text'class='tables_v3_config_title content-left' document='" + document + "' id='tables_v3_config_title_" + document + "' placeholder='标题' onchange='onchangeTabTitle(this)'>"
         + "<label class='control-label content-left'>数据源</label>"
         + "<select id='tables_v3_config_data_url_" + document + "' class='selectpicker form-control content-left' data-live-search='true' title='数据源'></select>"
         + "<label class='control-label content-left'>表头</label>"
         + "<textarea class='tables_v3_config_table_head content-left' document='" + document + "' id='tables_v3_config_table_head_" + document + "' placeholder='表头'></textarea>"
-        + "</div>");
+        + "<label class='add_tab_level' onclick='addTabLevel(\"" + document + "\")'> + 下钻页面</label>"
+        + "</div>"
+    );
 
     // 加载数据源
     forSelectOption("#tables_v3_config_data_url_" + document, "");
@@ -404,6 +438,41 @@ function addTab() {
     // autosize($('textarea'));
 
     return document;
+}
+
+/**
+ * 页签tab控件添加下钻页面
+ * @returns {string}
+ */
+function addTabLevel(document) {
+    $(".wrapper_level").show();
+    var document_level = document + "_level";
+
+    $("#tabs_level li").removeClass("current");
+    // 隐藏所有tab div
+    $(".tab_document_level").hide();
+
+    $("#tabs_level").append("<li class='current' id='li_" + document_level + "'><a class='tab' document_level='" + document_level + "' id='a_" + document_level + "' href='#'>"
+        + "标题"
+        + "</a><a href='#' class='remove'>x</a></li>");
+
+    $("#content_level").append(
+        "<div class='tab_document_level content-label-input' document_level='" + document_level + "' id='" + document_level + "_content'>"
+        + "<label class='control-label content-left'>标题</label>"
+        + "<input type='text'class='tables_v3_config_title content-left' document_level='" + document_level + "' id='tables_v3_config_title_" + document_level + "' placeholder='标题' onchange='onchangeTabTitle(this)'>"
+        + "<label class='control-label content-left'>数据源</label>"
+        + "<select id='tables_v3_config_data_url_" + document_level + "' class='selectpicker form-control content-left' data-live-search='true' title='数据源'></select>"
+        + "<label class='control-label content-left'>表头</label>"
+        + "<textarea class='tables_v3_config_table_head content-left' document_level='" + document_level + "' id='tables_v3_config_table_head_" + document_level + "' placeholder='表头'></textarea>"
+        + "</div>"
+    );
+
+    // 加载数据源
+    forSelectOption("#tables_v3_config_data_url_" + document_level, "");
+
+    // 显示新增tab div
+    $("#" + document_level + "_content").show();
+    return document_level;
 }
 
 /**

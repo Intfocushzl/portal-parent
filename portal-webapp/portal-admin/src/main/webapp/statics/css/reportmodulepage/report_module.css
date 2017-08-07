@@ -103,37 +103,37 @@
 }*/
 
 /* tabs */
-#tabs {
+#tabs, #tabs_level {
     margin: 0;
     padding: 0;
     list-style: none;
     overflow: hidden;
 }
 
-#tabs li {
+#tabs li, #tabs_level li {
     float: left;
     display: block;
     padding: 5px;
     background-color: #6fc8ef;
     margin-right: 5px;
-    margin-top: 2px;
+    margin-bottom: 2px;
 }
 
-#tabs li a {
+#tabs li a, #tabs_level li a {
     color: #fff;
     text-decoration: none;
 }
 
-#tabs li.current {
+#tabs li.current, #tabs_level li.current {
     background-color: #006dcc;
 }
 
-#tabs li.current a {
+#tabs li.current a, #tabs_level li.current a {
     color: #fff;
     text-decoration: none;
 }
 
-#tabs li a.remove {
+#tabs li a.remove, #tabs_level li a.remove {
     color: #f00;
     margin-left: 10px;
     margin-right: 5px;
@@ -141,12 +141,19 @@
 
 #content {
     border: 1px solid #006dcc;
-    min-height: 400px;
+    min-height: 360px;
     padding: 10px;
     margin-top: 5px;
 }
 
-#content p {
+#content_level {
+    border: 1px solid #006dcc;
+    min-height: 320px;
+    padding: 10px;
+    margin-top: 5px;
+}
+
+#content p, #content_level p {
     margin: 0;
     padding: 20px 20px 100px 20px;
 }
@@ -156,7 +163,7 @@
     padding: 0;
 }
 
-#wrapper {
+#wrapper, #wrapper_level {
     width: 100%;
 }
 
@@ -188,4 +195,37 @@
 
 .content-left {
     float: left;
+}
+
+.add_tab {
+    width: 70px !important;
+    display: inline-block;
+    padding: 4px 12px;
+    margin-bottom: 0;
+    font-size: 14px;
+    line-height: 20px;
+    color: #ffffff;
+    text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
+    background-color: #49afcd;
+    vertical-align: middle;
+    cursor: pointer;
+    border-radius: 4px;
+    margin-right: 5px;
+    border: none;
+}
+
+.add_tab_level {
+    width: 100px !important;
+    display: inline-block;
+    padding: 4px 12px;
+    margin-bottom: 0;
+    font-size: 14px;
+    line-height: 20px;
+    color: #ffffff;
+    text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
+    background-color: #49afcd;
+    vertical-align: middle;
+    cursor: pointer;
+    border-radius: 4px;
+    border: none;
 }
